@@ -15,10 +15,9 @@
 #include "ISource.hpp"
 #include "IDestination.hpp"
 //
-// Bencode types
+// BNode types
 //
 #include "BNode.hpp"
-#include "Bencoding.hpp"
 // =========
 // NAMESPACE
 // =========

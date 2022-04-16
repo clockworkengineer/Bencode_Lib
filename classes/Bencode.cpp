@@ -88,7 +88,7 @@ namespace BencodeLib
     /// <returns>String BNode.</returns>
     BNodePtr Bencode::decodeString(ISource &source)
     {
-        return (std::make_unique<BNodeString>(BNodeString(extractString(source))));
+        return (std::make_unique<BNodeString>(extractString(source)));
     }
     /// <summary>
     /// Decode an integer from the input stream of characters referenced by ISource.
@@ -110,7 +110,7 @@ namespace BencodeLib
             throw SyntaxError();
         }
         source.next();
-        return (std::make_unique<BNodeInteger>(BNodeInteger(integer)));
+        return (std::make_unique<BNodeInteger>(integer));
     }
     /// <summary>
     /// Decode a dictionary from the input stream of characters referenced by ISource.

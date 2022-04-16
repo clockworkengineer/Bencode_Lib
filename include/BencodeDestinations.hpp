@@ -4,6 +4,13 @@
 //
 #include <fstream>
 #include <string>
+// 
+//  Bencoded data structure
+//
+#include "Bencoding.hpp"
+// =========
+// NAMESPACE
+// =========
 namespace BencodeLib
 {
     //
