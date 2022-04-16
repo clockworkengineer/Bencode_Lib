@@ -118,13 +118,13 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ", "[Bencod
 //     {
 //         REQUIRE_THROWS_AS(bEncode.encodeBuffer(nullptr), std::invalid_argument);
 //         REQUIRE_THROWS_WITH(bEncode.encodeBuffer(nullptr), "Nullptr passed as bNode to be encoded." };
-//         REQUIRE_THROWS_AS(bEncode.encodeBuffer(std::unique_ptr<BNode>(nullptr)), std::invalid_argument);
-//         REQUIRE_THROWS_WITH(bEncode.encodeBuffer(std::unique_ptr<BNode>(nullptr)), "Nullptr passed as bNode to be encoded." };
+//         REQUIRE_THROWS_AS(bEncode.encodeBuffer(BNodePtr(nullptr)), std::invalid_argument);
+//         REQUIRE_THROWS_WITH(bEncode.encodeBuffer(BNodePtr(nullptr)), "Nullptr passed as bNode to be encoded." };
 //     }
 //     SECTION("Encode passed invalid BNode type", "[Bencode][Decode]")
 //     {
-//         REQUIRE_THROWS_AS(bEncode.encodeBuffer(std::unique_ptr<BNode>(new BNode())), std::runtime_error);
-//         REQUIRE_THROWS_WITH(bEncode.encodeBuffer(std::unique_ptr<BNode>(new BNode())), "Unknown BNode type encountered during encode." };
+//         REQUIRE_THROWS_AS(bEncode.encodeBuffer(BNodePtr(new BNode())), std::runtime_error);
+//         REQUIRE_THROWS_WITH(bEncode.encodeBuffer(BNodePtr(new BNode())), "Unknown BNode type encountered during encode." };
 //     }
 // }
 TEST_CASE("Encode torrent files using encodeToFile", "[Bencode][Encode][Torrents]")

@@ -52,13 +52,13 @@ namespace BencodeLib
     /// <returns>Positive integers value.</returns>
     long Bencode::extractPositiveInteger(ISource &source)
     {
-        m_workBuffer.clear();
+        std::string buffer;
         while (source.more() && std::isdigit(static_cast<char>(source.current())))
         {
-            m_workBuffer += static_cast<char>(source.current());
+            buffer += static_cast<char>(source.current());
             source.next();
         }
-        return (std::stol(m_workBuffer));
+        return (std::stol(buffer));
     }
     /// <summary>
     /// Extract a byte string from the input stream of characters referenced by ISource.
@@ -70,23 +70,23 @@ namespace BencodeLib
         long stringLength = extractPositiveInteger(source);
         if (source.current() != static_cast<std::byte>(':'))
         {
-            throw Bencode::SyntaxError();
+            throw SyntaxError();
         }
         source.next();
-        m_workBuffer.clear();
+        std::string buffer;
         while (stringLength-- > 0)
         {
-            m_workBuffer += static_cast<char>(source.current());
+            buffer += static_cast<char>(source.current());
             source.next();
         }
-        return (m_workBuffer);
+        return (buffer);
     }
     /// <summary>
     /// Decode a byte string from the input stream of characters referenced by ISource.
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>String BNode.</returns>
-    std::unique_ptr<BNode> Bencode::decodeString(ISource &source)
+    BNodePtr Bencode::decodeString(ISource &source)
     {
         return (std::make_unique<BNodeString>(BNodeString(extractString(source))));
     }
@@ -95,7 +95,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Integer BNode.</returns>
-    std::unique_ptr<BNode> Bencode::decodeInteger(ISource &source)
+    BNodePtr Bencode::decodeInteger(ISource &source)
     {
         long integer = 1;
         source.next();
@@ -107,7 +107,7 @@ namespace BencodeLib
         integer *= extractPositiveInteger(source);
         if (source.current() != static_cast<std::byte>('e'))
         {
-            throw Bencode::SyntaxError();
+            throw SyntaxError();
         }
         source.next();
         return (std::make_unique<BNodeInteger>(BNodeInteger(integer)));
@@ -117,9 +117,9 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Dictionary BNode.</returns>
-    std::unique_ptr<BNode> Bencode::decodeDictionary(ISource &source)
+    BNodePtr Bencode::decodeDictionary(ISource &source)
     {
-        std::unique_ptr<BNode> bNode = std::make_unique<BNodeDict>();
+        BNodePtr bNode = std::make_unique<BNodeDict>();
         source.next();
         while (source.more() && source.current() != static_cast<std::byte>('e'))
         {
@@ -128,7 +128,7 @@ namespace BencodeLib
         }
         if (source.current() != static_cast<std::byte>('e'))
         {
-            throw Bencode::SyntaxError();
+            throw SyntaxError();
         }
         source.next();
         return (bNode);
@@ -138,9 +138,9 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>List BNode.</returns>
-    std::unique_ptr<BNode> Bencode::decodeList(ISource &source)
+    BNodePtr Bencode::decodeList(ISource &source)
     {
-        std::unique_ptr<BNode> bNode = std::make_unique<BNodeList>();
+        BNodePtr bNode = std::make_unique<BNodeList>();
         source.next();
         while (source.more() && source.current() != static_cast<std::byte>('e'))
         {
@@ -148,7 +148,7 @@ namespace BencodeLib
         }
         if (source.current() != static_cast<std::byte>('e'))
         {
-            throw Bencode::SyntaxError();
+            throw SyntaxError();
         }
         source.next();
         return (bNode);
@@ -159,7 +159,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Root BNode.</returns>
-    std::unique_ptr<BNode> Bencode::decodeBNodes(ISource &source)
+    BNodePtr Bencode::decodeBNodes(ISource &source)
     {
         switch (static_cast<char>(source.current()))
         {
@@ -185,7 +185,7 @@ namespace BencodeLib
         case '9':
             return (decodeString(source));
         }
-        throw Bencode::SyntaxError();
+        throw SyntaxError();
     }
     /// <summary>
     /// Recursively traverse a BNode structure and produce an Bencode encoding of it on the output

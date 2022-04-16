@@ -31,10 +31,14 @@ namespace BencodeLib
         {
         }
         virtual ~BNode() {}
-        BNode &operator[](std::string key);
+        BNode &operator[](const std::string &key);
         BNode &operator[](int index);
         const BNodeType nodeType;
     };
+    //
+    // Pointer to BNode 
+    //
+    using BNodePtr = std::unique_ptr<BNode>;
     //
     // Dictionary BNode.
     //
@@ -49,7 +53,7 @@ namespace BencodeLib
         {
             return ((int)m_value.size());
         }
-        void addEntry(const std::string key, std::unique_ptr<BNode> entry)
+        void addEntry(const std::string key, BNodePtr entry)
         {
             m_value[key] = std::move(entry);
         }
@@ -57,12 +61,12 @@ namespace BencodeLib
         {
             return (m_value[key].get());
         }
-        std::map<std::string, std::unique_ptr<BNode>> &getDict() 
+        std::map<std::string, BNodePtr> &getDict() 
         {
             return (m_value);
         }
     protected:
-        std::map<std::string, std::unique_ptr<BNode>> m_value;
+        std::map<std::string, BNodePtr> m_value;
     };
     //
     // List BNode.
@@ -72,13 +76,13 @@ namespace BencodeLib
         BNodeList() : BNode(BNodeType::list) {}
         int size() const
         {
-            return ((int)m_value.size());
+            return (static_cast<int>(m_value.size()));
         }
-        void addEntry(std::unique_ptr<BNode> jNode)
+        void addEntry(BNodePtr jNode)
         {
             m_value.push_back(std::move(jNode));
         }
-        std::vector<std::unique_ptr<BNode>> &getArray()
+        std::vector<BNodePtr> &getArray()
         {
             return (m_value);
         }
@@ -87,7 +91,7 @@ namespace BencodeLib
             return (m_value[index].get());
         }
     protected:
-        std::vector<std::unique_ptr<BNode>> m_value;
+        std::vector<BNodePtr> m_value;
     };
     //
     // Integer BNode.
@@ -143,7 +147,7 @@ namespace BencodeLib
     //
     // Index overloads
     //
-    inline BNode &BNode::operator[](std::string key) //Dicionary
+    inline BNode &BNode::operator[](const std::string &key) //Dicionary
     {
         if (nodeType == BNodeType::dictionary)
         {
@@ -158,7 +162,7 @@ namespace BencodeLib
     {
         if (nodeType == BNodeType::list)
         {
-            if ((index >= 0) && (index < ((int)BNodeRef<BNodeList>(*this).size())))
+            if ((index >= 0) && (index < (static_cast<int>(BNodeRef<BNodeList>(*this).size()))))
             {
                 return (*((BNodeRef<BNodeList>(*this).getEntry(index))));
             }

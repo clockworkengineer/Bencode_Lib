@@ -57,7 +57,6 @@ namespace BencodeLib
         // ==============
         // PUBLIC METHODS
         // ==============
-
         void decode(ISource &source);
         void encode(IDestination &destination);
         BNode *getRoot();
@@ -76,16 +75,15 @@ namespace BencodeLib
         // ===============
         long extractPositiveInteger(ISource &source);
         std::string extractString(ISource &source);
-        std::unique_ptr<BNode> decodeString(ISource &source);
-        std::unique_ptr<BNode> decodeInteger(ISource &source);
-        std::unique_ptr<BNode> decodeDictionary(ISource &source);
-        std::unique_ptr<BNode> decodeList(ISource &source);
-        std::unique_ptr<BNode> decodeBNodes(ISource &source);
+        BNodePtr decodeString(ISource &source);
+        BNodePtr decodeInteger(ISource &source);
+        BNodePtr decodeDictionary(ISource &source);
+        BNodePtr decodeList(ISource &source);
+        BNodePtr decodeBNodes(ISource &source);
         void encodeBNodes(BNode *bNode, IDestination &destination);
         // =================
         // PRIVATE VARIABLES
         // =================
-        std::string m_workBuffer;
-        std::unique_ptr<BNode> m_bNodeRoot;
+        BNodePtr m_bNodeRoot;
     };
 } // namespace BencodeLib
