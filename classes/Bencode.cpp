@@ -214,7 +214,7 @@ namespace BencodeLib
             break;
         case BNodeType::list:
             destination.add("l");
-            for (auto &bNodeEntry : BNodeRef<BNodeList>(*bNode).getArray())
+            for (auto &bNodeEntry : BNodeRef<BNodeList>(*bNode).getList())
             {
                 encodeBNodes(bNodeEntry.get(), destination);
             }

@@ -58,7 +58,7 @@ namespace BencodeLib
         {
             return ((int)m_value.size());
         }
-        void addEntry(const std::string key, BNodePtr entry)
+        void addEntry(const std::string &key, BNodePtr entry)
         {
             m_value.push_back(std::make_pair(key,std::move(entry)));
         }
@@ -88,11 +88,11 @@ namespace BencodeLib
         {
             return (static_cast<int>(m_value.size()));
         }
-        void addEntry(BNodePtr jNode)
+        void addEntry(BNodePtr bNode)
         {
-            m_value.push_back(std::move(jNode));
+            m_value.push_back(std::move(bNode));
         }
-        std::vector<BNodePtr> &getArray()
+        std::vector<BNodePtr> &getList()
         {
             return (m_value);
         }

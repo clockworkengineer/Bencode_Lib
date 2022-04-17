@@ -116,7 +116,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     BufferSource bEncodeSource{"li266ei6780ei88ee"};
     bEncode.decode(bEncodeSource);
     std::vector<long> numbers;
-    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).getArray())
+    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).getList())
     {
       numbers.push_back(BNodeRef<BNodeInteger>(*bNode).getInteger());
     }
@@ -127,7 +127,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     BufferSource bEncodeSource{"l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
     std::vector<std::string> strings;
-    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).getArray())
+    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).getList())
     {
       strings.push_back(BNodeRef<BNodeString>(*bNode).getString());
     }
