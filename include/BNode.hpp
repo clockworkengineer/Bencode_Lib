@@ -3,7 +3,7 @@
 // C++ STL
 //
 #include <string>
-#include <map>
+#include <utility>
 #include <vector>
 #include <memory>
 // =========
@@ -47,7 +47,12 @@ namespace BencodeLib
         BNodeDict() : BNode(BNodeType::dictionary) {}
         bool containsKey(const std::string &key) const
         {
-            return (m_value.count(key) > 0);
+            for (const auto &entry : m_value) {
+                if (entry.first == key) {
+                    return(true);
+                }
+            }
+            return(false);
         }
         int size() const
         {
@@ -55,18 +60,23 @@ namespace BencodeLib
         }
         void addEntry(const std::string key, BNodePtr entry)
         {
-            m_value[key] = std::move(entry);
+            m_value.push_back(std::make_pair(key,std::move(entry)));
         }
         BNode *getEntry(const std::string &key)
         {
-            return (m_value[key].get());
+            for (const auto &entry : m_value) {
+                if (entry.first == key) {
+                    return(entry.second.get());
+                }
+            }
+            return(nullptr);
         }
-        std::map<std::string, BNodePtr> &getDict() 
+        std::vector<std::pair<std::string, BNodePtr>>  &getDict() 
         {
             return (m_value);
         }
     protected:
-        std::map<std::string, BNodePtr> m_value;
+        std::vector<std::pair<std::string, BNodePtr>> m_value;
     };
     //
     // List BNode.
