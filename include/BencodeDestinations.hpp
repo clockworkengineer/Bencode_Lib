@@ -20,7 +20,7 @@ namespace BencodeLib
         }
         void add(const std::string &sourceBuffer) override
         {
-            m_encodeBuffer = sourceBuffer;
+            m_encodeBuffer += sourceBuffer;
         }
         std::string &getBuffer()
         {
