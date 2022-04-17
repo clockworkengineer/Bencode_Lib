@@ -261,12 +261,4 @@ namespace BencodeLib
     {
         encodeBNodes(m_bNodeRoot.get(), destination);
     }
-    /// <summary>
-    /// Return root BNode structure of decoded string.
-    /// </summary>
-    /// <returns>BNode structure root.</returns>
-    BNode *Bencode::getRoot()
-    {
-        return (m_bNodeRoot.get());
-    }
 } // namespace BencodeLib

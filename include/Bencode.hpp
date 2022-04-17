@@ -60,7 +60,7 @@ namespace BencodeLib
         void decode(ISource &&source);
         void encode(IDestination &destination);
         void encode(IDestination &&destination);
-        BNode *getRoot();
+        BNode &operator*() { return (*m_bNodeRoot); }
         // ================
         // PUBLIC VARIABLES
         // ================

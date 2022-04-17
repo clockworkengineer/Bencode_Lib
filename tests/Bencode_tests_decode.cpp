@@ -21,31 +21,31 @@ TEST_CASE("Bencode for decode of simple types (number, string) ", "[Bencode][Dec
   {
     BufferSource bEncodeSource{"i266e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(bEncode.getRoot()->nodeType == BNodeType::integer);
+    REQUIRE((*bEncode).nodeType == BNodeType::integer);
   }
   SECTION("Decode an string", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"12:qwertyuiopas"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(bEncode.getRoot()->nodeType == BNodeType::string);
+    REQUIRE((*bEncode).nodeType == BNodeType::string);
   }
   SECTION("Decode an integer (266) and check value", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"i266e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeInteger>(*bEncode.getRoot()).getInteger() == 266);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == 266);
   }
   SECTION("Decode an integer (1000) and check value", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"i1000e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeInteger>(*bEncode.getRoot()).getInteger() == 1000);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == 1000);
   }
   SECTION("Decode an negative integer (-666) and check value", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"i-666e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeInteger>(*bEncode.getRoot()).getInteger() == -666);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == -666);
   }
   SECTION("Decode an negative zero (-0) is a syntax error", "[Bencode][Decode]")
   {
@@ -55,13 +55,13 @@ TEST_CASE("Bencode for decode of simple types (number, string) ", "[Bencode][Dec
   {
     BufferSource bEncodeSource{"12:qwertyuiopas"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeString>(*bEncode.getRoot()).getString() == "qwertyuiopas");
+    REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == "qwertyuiopas");
   }
   SECTION("Decode an string ('abcdefghijklmnopqrstuvwxyz') and check value", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"26:abcdefghijklmnopqrstuvwxyz"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeString>(*bEncode.getRoot()).getString() == "abcdefghijklmnopqrstuvwxyz");
+    REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == "abcdefghijklmnopqrstuvwxyz");
   }
 }
 TEST_CASE("Bencode for decode of a table of integer test data", "[Bencode][Decode]")
@@ -71,7 +71,7 @@ TEST_CASE("Bencode for decode of a table of integer test data", "[Bencode][Decod
                                                                   {"i32767e", 32767}}));
   BufferSource bEncodeSource{testInput};
   bEncode.decode(bEncodeSource);
-  REQUIRE(BNodeRef<BNodeInteger>(*bEncode.getRoot()).getInteger() == expected);
+  REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == expected);
 }
 TEST_CASE("Bencode for decode of a table of string test data", "[Bencode][Decode]")
 {
@@ -80,7 +80,7 @@ TEST_CASE("Bencode for decode of a table of string test data", "[Bencode][Decode
                                                                          {"6:mnbvcx", "mnbvcx"}}));
   BufferSource bEncodeSource{testInput};
   bEncode.decode(bEncodeSource);
-  REQUIRE(BNodeRef<BNodeString>(*bEncode.getRoot()).getString() == expected);
+  REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == expected);
 }
 TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencode][Decode]")
 {
@@ -89,34 +89,34 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
   {
     BufferSource bEncodeSource{"li266ei6780ei88e5:threee"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(bEncode.getRoot()->nodeType == BNodeType::list);
-    REQUIRE((*bEncode.getRoot())[0].nodeType == BNodeType::integer);
-    REQUIRE((*bEncode.getRoot())[1].nodeType == BNodeType::integer);
-    REQUIRE((*bEncode.getRoot())[2].nodeType == BNodeType::integer);
-    REQUIRE((*bEncode.getRoot())[3].nodeType == BNodeType::string);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode.getRoot())[0]).getInteger() == 266);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode.getRoot())[1]).getInteger() == 6780);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode.getRoot())[2]).getInteger() == 88);
-    REQUIRE(BNodeRef<BNodeString>((*bEncode.getRoot())[3]).getString() == "three");
+    REQUIRE((*bEncode).nodeType == BNodeType::list);
+    REQUIRE((*bEncode)[0].nodeType == BNodeType::integer);
+    REQUIRE((*bEncode)[1].nodeType == BNodeType::integer);
+    REQUIRE((*bEncode)[2].nodeType == BNodeType::integer);
+    REQUIRE((*bEncode)[3].nodeType == BNodeType::string);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)[0]).getInteger() == 266);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)[1]).getInteger() == 6780);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)[2]).getInteger() == 88);
+    REQUIRE(BNodeRef<BNodeString>((*bEncode)[3]).getString() == "three");
   }
   SECTION("Decode an Dictionary", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"d3:onei1e5:threei3e3:twoi2ee"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(bEncode.getRoot()->nodeType == BNodeType::dictionary);
-    REQUIRE((*bEncode.getRoot())["one"].nodeType == BNodeType::integer);
-    REQUIRE((*bEncode.getRoot())["two"].nodeType == BNodeType::integer);
-    REQUIRE((*bEncode.getRoot())["three"].nodeType == BNodeType::integer);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode.getRoot())["one"]).getInteger() == 1);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode.getRoot())["two"]).getInteger() == 2);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode.getRoot())["three"]).getInteger() == 3);
+    REQUIRE((*bEncode).nodeType == BNodeType::dictionary);
+    REQUIRE((*bEncode)["one"].nodeType == BNodeType::integer);
+    REQUIRE((*bEncode)["two"].nodeType == BNodeType::integer);
+    REQUIRE((*bEncode)["three"].nodeType == BNodeType::integer);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)["one"]).getInteger() == 1);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)["two"]).getInteger() == 2);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)["three"]).getInteger() == 3);
   }
   SECTION("Decode an list of integers and check values", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"li266ei6780ei88ee"};
     bEncode.decode(bEncodeSource);
     std::vector<long> numbers;
-    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode.getRoot()).getArray())
+    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).getArray())
     {
       numbers.push_back(BNodeRef<BNodeInteger>(*bNode).getInteger());
     }
@@ -127,7 +127,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     BufferSource bEncodeSource{"l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
     std::vector<std::string> strings;
-    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode.getRoot()).getArray())
+    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).getArray())
     {
       strings.push_back(BNodeRef<BNodeString>(*bNode).getString());
     }
@@ -138,7 +138,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     BufferSource bEncodeSource{"d3:onei1e5:threei3e3:twoi2ee"};
     bEncode.decode(bEncodeSource);
     std::map<std::string, long> entries;
-    for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode.getRoot()).getDict())
+    for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode).getDict())
     {
       entries[bNode.first] = BNodeRef<BNodeInteger>(*bNode.second).getInteger();
     }
@@ -149,7 +149,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     BufferSource bEncodeSource{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     bEncode.decode(bEncodeSource);
     std::map<std::string, std::string> entries;
-    for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode.getRoot()).getDict())
+    for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode).getDict())
     {
       entries[bNode.first] = BNodeRef<BNodeString>(*bNode.second).getString();
     }
@@ -192,7 +192,7 @@ TEST_CASE("Decode torrent files using decode", "[Bencode][Decode][Torrents]")
   {
     FileSource bEncodeSource{prefixTestDataPath(kSingleFileTorrent)};
     bEncode.decode(bEncodeSource);
-    REQUIRE(bEncode.getRoot()->nodeType == BNodeType::dictionary);
+    REQUIRE((*bEncode).nodeType == BNodeType::dictionary);
   }
   SECTION("Decode singlefile.torrent and check value ", "[Bencode][Decode][Torrents]")
   {
@@ -206,7 +206,7 @@ TEST_CASE("Decode torrent files using decode", "[Bencode][Decode][Torrents]")
   {
     FileSource bEncodeSource{prefixTestDataPath(kMultiFileTorrent)};
     bEncode.decode(bEncodeSource);
-    REQUIRE(bEncode.getRoot()->nodeType == BNodeType::dictionary);
+    REQUIRE((*bEncode).nodeType == BNodeType::dictionary);
   }
   SECTION("Decode multifile.torrent and check value ", "[Bencode][Decode][Torrents]")
   {

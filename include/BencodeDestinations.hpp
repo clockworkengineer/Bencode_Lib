@@ -29,10 +29,6 @@ namespace BencodeLib
         {
             return (m_encodeBuffer);
         }
-        // std::string getString()
-        // {
-        //     return (std::string{m_encodeBuffer.begin(), m_encodeBuffer.end()});
-        // }
 
     private:
         std::vector<std::byte> m_encodeBuffer;
