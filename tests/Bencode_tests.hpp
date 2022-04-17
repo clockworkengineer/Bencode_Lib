@@ -28,6 +28,7 @@
 // ==========================
 // Unit test helper functions
 // ==========================
-extern std::string prefixTestDataPath(const std::string &file);
-extern bool compareFiles(const std::string &fileName1, const std::string &fileName2);
-extern std::string readBencodedBytesFromFile(const std::string &bencodedFileName);
+std::string prefixTestDataPath(const std::string &file);
+bool compareFiles(const std::string &fileName1, const std::string &fileName2);
+std::string readBencodedBytesFromFile(const std::string &bencodedFileName);
+std::string bufferToString(const std::vector<std::byte> &buffer);

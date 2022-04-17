@@ -4,6 +4,7 @@
 //
 #include <fstream>
 #include <string>
+#include <vector>
 // =========
 // NAMESPACE
 // =========
@@ -21,8 +22,9 @@ namespace BencodeLib
             {
                 throw std::invalid_argument("Empty source buffer passed to be decoded.");
             }
-            for (int i = 0; i < sourceBuffer.size(); ++i) {
-                m_decodeBuffer.push_back(static_cast<char>(sourceBuffer[i]));
+            for (auto ch : sourceBuffer)
+            {
+                m_decodeBuffer.push_back(static_cast<std::byte>(ch));
             }
         }
         char current() const override
@@ -52,9 +54,10 @@ namespace BencodeLib
         {
             m_bufferPosition = 0;
         }
+
     private:
         std::size_t m_bufferPosition = 0;
-        std::string m_decodeBuffer;
+        std::vector<std::byte> m_decodeBuffer;
     };
     class FileSource : public ISource
     {
@@ -85,6 +88,7 @@ namespace BencodeLib
             m_source.clear();
             m_source.seekg(0, std::ios_base::beg);
         }
+
     private:
         mutable std::ifstream m_source;
     };

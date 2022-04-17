@@ -196,7 +196,7 @@ TEST_CASE("Decode torrent files using decode", "[Bencode][Decode][Torrents]")
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bEncodeDestination.getBuffer() == readBencodedBytesFromFile(prefixTestDataPath(kSingleFileTorrent)));
+    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == readBencodedBytesFromFile(prefixTestDataPath(kSingleFileTorrent)));
   }
   SECTION("Decode multifile.torrent", "[Bencode][Decode][Torrents]")
   {
@@ -210,7 +210,7 @@ TEST_CASE("Decode torrent files using decode", "[Bencode][Decode][Torrents]")
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bEncodeDestination.getBuffer() == readBencodedBytesFromFile(prefixTestDataPath(kMultiFileTorrent)));
+    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == readBencodedBytesFromFile(prefixTestDataPath(kMultiFileTorrent)));
   }
 }
 TEST_CASE("Decode erronous torrent files using decode", "[Bencode][Decode][Torrents]")

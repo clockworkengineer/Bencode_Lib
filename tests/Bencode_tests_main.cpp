@@ -65,6 +65,20 @@ std::string readBencodedBytesFromFile(const std::string &bencodedFileName)
   bencodedFile.close();
   return (bencodedFileBuffer.str());
 }
+/// <summary>
+/// Convert byte buffer to a string.
+/// the buffer.
+/// </summary>
+/// <param name="buffer">Bencoded byte buffer.</param>
+/// <returns></returns>
+std::string bufferToString(const std::vector<std::byte> &buffer)
+{
+    std::string destination;
+    for (auto ch : buffer) {
+        destination.push_back(static_cast<char>(ch));
+    }
+    return( destination);
+}
 // ==========
 // Test cases
 // ==========
@@ -165,7 +179,7 @@ TEST_CASE("IDestination (Buffer interface).", "[Bencode][Decode][ISource]")
     BufferDestination buffer;
     buffer.add("i65767e");
     REQUIRE(buffer.getBuffer().size() == 7);
-    REQUIRE(buffer.getBuffer() == "i65767e");
+    REQUIRE(bufferToString(buffer.getBuffer()) == "i65767e");
   }
 }
 TEST_CASE("IDestination (File interface).", "[Bencode][Decode][ISource]")

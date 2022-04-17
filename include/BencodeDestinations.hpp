@@ -20,15 +20,22 @@ namespace BencodeLib
         }
         void add(const std::string &sourceBuffer) override
         {
-            m_encodeBuffer += sourceBuffer;
+            for (auto ch : sourceBuffer)
+            {
+                m_encodeBuffer.push_back(static_cast<std::byte>(ch));
+            }
         }
-        std::string &getBuffer()
+        std::vector<std::byte> &getBuffer()
         {
             return (m_encodeBuffer);
         }
+        // std::string getString()
+        // {
+        //     return (std::string{m_encodeBuffer.begin(), m_encodeBuffer.end()});
+        // }
 
     private:
-        std::string m_encodeBuffer;
+        std::vector<std::byte> m_encodeBuffer;
     };
     class FileDestination : public IDestination
     {
