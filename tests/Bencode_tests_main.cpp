@@ -299,7 +299,7 @@ TEST_CASE("Check R-Value reference encode/decode.", "[Bencode][BNode][Reference]
   SECTION("Encode/Decode with R-Value reference (Buffer).", "[Bencode][BNode][R-Value Reference]")
   {
     bEncode.decode(BufferSource{"i45500e"});
-    bEncode.encode(BufferDestination{}); // Does nothing but for completeness
+    bEncode.encode(BufferDestination{}); // Does nothing as sink (for completeness)
     REQUIRE(BNodeRef<BNodeInteger>((*bEncode.getRoot())).getInteger() == 45500);
   }
   SECTION("Encode/Decode both with R-Value reference (File).", "[Bencode][BNode][R-alue Reference]")

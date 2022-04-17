@@ -55,7 +55,7 @@ namespace BencodeLib
         std::string buffer;
         while (source.more() && std::isdigit(source.current()))
         {
-            buffer +=source.current();
+            buffer += source.current();
             source.next();
         }
         return (std::stol(buffer));
@@ -97,14 +97,19 @@ namespace BencodeLib
     /// <returns>Integer BNode.</returns>
     BNodePtr Bencode::decodeInteger(ISource &source)
     {
-        long integer = 1;
+        long sign = 1;
         source.next();
         if (source.current() == '-')
         {
             source.next();
-            integer = -1;
+            sign = -1;
         }
-        integer *= extractPositiveInteger(source);
+        long integer = extractPositiveInteger(source);
+        if ((sign == -1) && (integer == 0))
+        {
+            throw SyntaxError();
+        }
+        integer *= sign;
         if (source.current() != 'e')
         {
             throw SyntaxError();
