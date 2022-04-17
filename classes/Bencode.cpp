@@ -68,7 +68,7 @@ namespace BencodeLib
     std::string Bencode::extractString(ISource &source)
     {
         long stringLength = extractPositiveInteger(source);
-        if (source.current() != static_cast<std::byte>(':'))
+        if (source.current() != ':')
         {
             throw SyntaxError();
         }
@@ -99,13 +99,13 @@ namespace BencodeLib
     {
         long integer = 1;
         source.next();
-        if (source.current() == static_cast<std::byte>('-'))
+        if (source.current() == '-')
         {
             source.next();
             integer = -1;
         }
         integer *= extractPositiveInteger(source);
-        if (source.current() != static_cast<std::byte>('e'))
+        if (source.current() != 'e')
         {
             throw SyntaxError();
         }
@@ -121,12 +121,12 @@ namespace BencodeLib
     {
         BNodePtr bNode = std::make_unique<BNodeDict>();
         source.next();
-        while (source.more() && source.current() != static_cast<std::byte>('e'))
+        while (source.more() && source.current() != 'e')
         {
             std::string key = extractString(source);
             BNodeRef<BNodeDict>(*bNode).addEntry(key, decodeBNodes(source));
         }
-        if (source.current() != static_cast<std::byte>('e'))
+        if (source.current() != 'e')
         {
             throw SyntaxError();
         }
@@ -142,11 +142,11 @@ namespace BencodeLib
     {
         BNodePtr bNode = std::make_unique<BNodeList>();
         source.next();
-        while (source.more() && source.current() != static_cast<std::byte>('e'))
+        while (source.more() && source.current() != 'e')
         {
             BNodeRef<BNodeList>(*bNode).addEntry(decodeBNodes(source));
         }
-        if (source.current() != static_cast<std::byte>('e'))
+        if (source.current() != 'e')
         {
             throw SyntaxError();
         }

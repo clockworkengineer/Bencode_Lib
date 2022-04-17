@@ -101,8 +101,8 @@ TEST_CASE("ISource (File interface).", "[Bencode][Decode][ISource]")
       source.next();
       length++;
     }
-    REQUIRE(length == 764);                 // eof
-    REQUIRE((int)source.current() == 0xff); // eof
+    REQUIRE(length == 764);                               // eof
+    REQUIRE(source.current() == static_cast<char>(0xff)); // eof
   }
 }
 TEST_CASE("ISource (Buffer interface). Contains file singlefile.torrent.", "[Bencode][Decode][ISource]")
@@ -139,8 +139,8 @@ TEST_CASE("ISource (Buffer interface). Contains file singlefile.torrent.", "[Ben
       source.next();
       length++;
     }
-    REQUIRE(length == 764);                // eof
-    REQUIRE((int)source.current() == 255); // eof
+    REQUIRE(length == 764);                              // eof
+    REQUIRE(source.current() == static_cast<char>(255)); // eof
   }
 }
 TEST_CASE("IDestination (Buffer interface).", "[Bencode][Decode][ISource]")

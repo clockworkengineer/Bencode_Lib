@@ -27,15 +27,15 @@ namespace BencodeLib
             }
             m_decodeBuffer = sourceBuffer;
         }
-        std::byte current() const override
+        char current() const override
         {
             if (more())
             {
-                return (m_decodeBuffer[static_cast<int>(m_bufferPosition)]);
+                return (static_cast<char>(m_decodeBuffer[static_cast<int>(m_bufferPosition)]));
             }
             else
             {
-                return (static_cast<std::byte>(EOF));
+                return (static_cast<char>(EOF));
             }
         }
         void next() override
@@ -69,9 +69,9 @@ namespace BencodeLib
                 throw std::runtime_error("Bencode file input stream failed to open or does not exist.");
             }
         }
-        std::byte current() const override
+        char current() const override
         {
-            return (static_cast<std::byte>(m_source.peek()));
+            return (static_cast<char>(m_source.peek()));
         }
         void next() override
         {
