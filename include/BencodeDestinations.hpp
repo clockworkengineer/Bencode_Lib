@@ -4,10 +4,6 @@
 //
 #include <fstream>
 #include <string>
-// 
-//  Bencoded data structure
-//
-#include "Bencoding.hpp"
 // =========
 // NAMESPACE
 // =========
@@ -22,19 +18,17 @@ namespace BencodeLib
         BufferDestination()
         {
         }
-        void add(const std::string &bytes) override
+        void add(const std::string &sourceBuffer) override
         {
-            for (auto byte : bytes)
-            {
-                m_encodeBuffer.add(static_cast<std::byte>(byte));
-            }
+            m_encodeBuffer = sourceBuffer;
         }
-        Bencoding getBuffer() const
+        std::string &getBuffer()
         {
             return (m_encodeBuffer);
         }
+
     private:
-        Bencoding m_encodeBuffer;
+        std::string m_encodeBuffer;
     };
     class FileDestination : public IDestination
     {
@@ -52,6 +46,7 @@ namespace BencodeLib
             m_destination.write(bytes.c_str(), bytes.length());
             m_destination.flush();
         }
+
     private:
         std::ofstream m_destination;
     };

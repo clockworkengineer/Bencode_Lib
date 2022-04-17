@@ -152,7 +152,7 @@ TEST_CASE("IDestination (Buffer interface).", "[Bencode][Decode][ISource]")
   SECTION("Create BufferDestination and get buffer which should be empty.", "[Bencode][Encode][IDesination]")
   {
     BufferDestination buffer;
-    REQUIRE_FALSE(!buffer.getBuffer().isEmpty());
+    REQUIRE_FALSE(!buffer.getBuffer().empty());
   }
   SECTION("Create BufferDestination and add one character.", "[Bencode][Encode][IDesination]")
   {
@@ -165,7 +165,7 @@ TEST_CASE("IDestination (Buffer interface).", "[Bencode][Decode][ISource]")
     BufferDestination buffer;
     buffer.add("i65767e");
     REQUIRE(buffer.getBuffer().size() == 7);
-    REQUIRE(buffer.getBuffer() == Bencoding("i65767e"));
+    REQUIRE(buffer.getBuffer() == "i65767e");
   }
 }
 TEST_CASE("IDestination (File interface).", "[Bencode][Decode][ISource]")

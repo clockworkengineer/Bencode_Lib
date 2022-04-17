@@ -4,10 +4,6 @@
 //
 #include <fstream>
 #include <string>
-// 
-//  Bencoded data structure
-//
-#include "Bencoding.hpp"
 // =========
 // NAMESPACE
 // =========
@@ -19,13 +15,15 @@ namespace BencodeLib
     class BufferSource : public ISource
     {
     public:
-        BufferSource(const Bencoding &sourceBuffer)
+        BufferSource(const std::string &sourceBuffer)
         {
-            if (sourceBuffer.isEmpty())
+            if (sourceBuffer.empty())
             {
                 throw std::invalid_argument("Empty source buffer passed to be decoded.");
             }
-            m_decodeBuffer = sourceBuffer;
+            for (int i = 0; i < sourceBuffer.size(); ++i) {
+                m_decodeBuffer.push_back(static_cast<char>(sourceBuffer[i]));
+            }
         }
         char current() const override
         {
@@ -56,7 +54,7 @@ namespace BencodeLib
         }
     private:
         std::size_t m_bufferPosition = 0;
-        Bencoding m_decodeBuffer;
+        std::string m_decodeBuffer;
     };
     class FileSource : public ISource
     {

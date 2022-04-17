@@ -23,7 +23,7 @@ TEST_CASE("Bencode for encode of simple types (number, string) ", "[Bencode][Enc
         BufferDestination bEncodeDestination;
         bEncode.decode(bEncodeSource);
         bEncode.encode(bEncodeDestination);
-        REQUIRE(bEncodeDestination.getBuffer() == Bencoding("i266e"));
+        REQUIRE(bEncodeDestination.getBuffer() == "i266e");
     }
     SECTION("Encode an integer (10000) and check value", "[Bencode][Encode]")
     {
@@ -31,7 +31,7 @@ TEST_CASE("Bencode for encode of simple types (number, string) ", "[Bencode][Enc
         BufferDestination bEncodeDestination;
         bEncode.decode(bEncodeSource);
         bEncode.encode(bEncodeDestination);
-        REQUIRE(bEncodeDestination.getBuffer() == Bencoding("i10000e"));
+        REQUIRE(bEncodeDestination.getBuffer() == "i10000e");
     }
     SECTION("Encode an string ('qwertyuiopas') and check its value", "[Bencode][Encode]")
     {
@@ -39,7 +39,7 @@ TEST_CASE("Bencode for encode of simple types (number, string) ", "[Bencode][Enc
         BufferDestination bEncodeDestination;
         bEncode.decode(bEncodeSource);
         bEncode.encode(bEncodeDestination);
-        REQUIRE(bEncodeDestination.getBuffer() == Bencoding("12:qwertyuiopas"));
+        REQUIRE(bEncodeDestination.getBuffer() == "12:qwertyuiopas");
     }
     SECTION("Encode an string ('abcdefghijklmnopqrstuvwxyz') and check its value", "[Bencode][Encode]")
     {
@@ -47,13 +47,13 @@ TEST_CASE("Bencode for encode of simple types (number, string) ", "[Bencode][Enc
         BufferDestination bEncodeDestination;
         bEncode.decode(bEncodeSource);
         bEncode.encode(bEncodeDestination);
-        REQUIRE(bEncodeDestination.getBuffer() == Bencoding("26:abcdefghijklmnopqrstuvwxyz"));
+        REQUIRE(bEncodeDestination.getBuffer() == "26:abcdefghijklmnopqrstuvwxyz");
     }
 }
 TEST_CASE("Bencode for encode of a table of integer test data", "[Bencode][Encode]")
 {
     Bencode bEncode;
-    auto [expected] = GENERATE(table<Bencoding>({"i277e",
+    auto [expected] = GENERATE(table<std::string>({"i277e",
                                                  "i32767e"}));
     BufferSource bEncodeSource(expected);
     BufferDestination bEncodeDestination;
@@ -64,11 +64,12 @@ TEST_CASE("Bencode for encode of a table of integer test data", "[Bencode][Encod
 TEST_CASE("Bencode for encode of a table of string test data", "[Bencode][Encode]")
 {
     Bencode bEncode;
-    auto [expected] = GENERATE(table<Bencoding>({"13:qwertyuiopasd",
+    auto [expected] = GENERATE(table<std::string>({"13:qwertyuiopasd",
                                                  "6:mnbvcx"}));
     BufferSource bEncodeSource(expected);
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
+    bEncode.encode(bEncodeDestination);
     REQUIRE(bEncodeDestination.getBuffer() == expected);
 }
 TEST_CASE("Bencode for encode of collection types (list, dictionary) ", "[Bencode][Encode]")
@@ -76,7 +77,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ", "[Bencod
     Bencode bEncode;
     SECTION("Encode an List of integers('li266ei6780ei88ee') and check value", "[Bencode][Encode]")
     {
-        Bencoding expected { "li266ei6780ei88ee" };
+        std::string expected { "li266ei6780ei88ee" };
         BufferSource bEncodeSource(expected);
         BufferDestination bEncodeDestination;
         bEncode.decode(bEncodeSource);
@@ -85,7 +86,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ", "[Bencod
     }
     SECTION("Encode an List of strings ('l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze') and check value", "[Bencode][Encode]")
     {
-        Bencoding expected { "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze" };
+        std::string expected { "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze" };
         BufferSource bEncodeSource(expected);
         BufferDestination bEncodeDestination;
         bEncode.decode(bEncodeSource);
@@ -94,7 +95,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ", "[Bencod
     }
     SECTION("Encode an Dictionary of integers and check balue", "[Bencode][Encode]")
     {
-        Bencoding expected { "d3:onei1e5:threei3e3:twoi2ee" };
+        std::string expected { "d3:onei1e5:threei3e3:twoi2ee" };
         BufferSource bEncodeSource(expected);
         BufferDestination bEncodeDestination;
         bEncode.decode(bEncodeSource);
@@ -103,7 +104,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ", "[Bencod
     }
     SECTION("Encode an Dictionary of strings and check balue", "[Bencode][Encode]")
     {
-        Bencoding expected { "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle" };
+        std::string expected { "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle" };
         BufferSource bEncodeSource(expected);
         BufferDestination bEncodeDestination;
         bEncode.decode(bEncodeSource);
