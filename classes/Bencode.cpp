@@ -53,9 +53,9 @@ namespace BencodeLib
     long Bencode::extractPositiveInteger(ISource &source)
     {
         std::string buffer;
-        while (source.more() && std::isdigit(static_cast<char>(source.current())))
+        while (source.more() && std::isdigit(source.current()))
         {
-            buffer += static_cast<char>(source.current());
+            buffer +=source.current();
             source.next();
         }
         return (std::stol(buffer));
@@ -76,7 +76,7 @@ namespace BencodeLib
         std::string buffer;
         while (stringLength-- > 0)
         {
-            buffer += static_cast<char>(source.current());
+            buffer += source.current();
             source.next();
         }
         return (buffer);
@@ -161,7 +161,7 @@ namespace BencodeLib
     /// <returns>Root BNode.</returns>
     BNodePtr Bencode::decodeBNodes(ISource &source)
     {
-        switch (static_cast<char>(source.current()))
+        switch (source.current())
         {
         // Dictionary BNode
         case 'd':
