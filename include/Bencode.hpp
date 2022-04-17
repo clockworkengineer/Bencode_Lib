@@ -57,6 +57,7 @@ namespace BencodeLib
         // PUBLIC METHODS
         // ==============
         void decode(ISource &source);
+        void decode(ISource &&source);
         void encode(IDestination &destination);
         BNode *getRoot();
         // ================

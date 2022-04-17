@@ -239,6 +239,10 @@ namespace BencodeLib
     {
         m_bNodeRoot = decodeBNodes(source);
     }
+    void Bencode::decode(ISource &&source)
+    {
+        m_bNodeRoot = decodeBNodes(source);
+    }
     /// <summary>
     /// Take BNode structure and create an Bencode encoding for it in the destination stream.
     /// </summary>
