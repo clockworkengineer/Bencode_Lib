@@ -130,6 +130,13 @@ namespace BencodeLib
         while (source.more() && source.current() != 'e')
         {
             std::string key = extractString(source);
+            // Check keys in lexical order
+            if (lastKey > key)
+            {
+                throw SyntaxError();
+            }
+            lastKey = key;
+            // Check key not duplicate and insert
             if (!BNodeRef<BNodeDict>(*bNode).containsKey(key))
             {
                 BNodeRef<BNodeDict>(*bNode).addEntry(key, decodeBNodes(source));
@@ -138,10 +145,6 @@ namespace BencodeLib
             {
                 throw SyntaxError();
             }
-            if (lastKey > key ) {
-                throw SyntaxError();
-            }
-            lastKey = key;
         }
         if (source.current() != 'e')
         {
