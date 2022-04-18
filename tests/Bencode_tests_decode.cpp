@@ -231,3 +231,18 @@ TEST_CASE("Decode erronous torrent files using decode", "[Bencode][Decode][Torre
     REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
   }
 }
+
+TEST_CASE("Decode dictionary with errors", "[Bencode][Decode][Torrents]")
+{
+  Bencode bEncode;
+  SECTION("Duplicate dictionary keys", "[Bencode][Decode][Torrents]")
+  {
+    BufferSource bEncodeSource{"d3:one10:01234567893:two6:qwerty3:two9:asdfghjkle"};
+    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+  }
+  SECTION("Keys not in lexical order", "[Bencode][Decode][Torrents]")
+  {
+    BufferSource bEncodeSource{"d5:three10:01234567893:one6:qwerty3:two9:asdfghjkle"};
+    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+  }
+}

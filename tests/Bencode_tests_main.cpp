@@ -288,7 +288,7 @@ TEST_CASE("Check BNode reference functions work.", "[Bencode][BNode][Reference]"
   }
   SECTION("Dictionary reference.", "[Bencode][BNode][Reference]")
   {
-    BufferSource bEncodeSource{"d3:one10:01234567894:four8:123456785:three6:qwerty3:two9:asdfghjkle"};
+    BufferSource bEncodeSource{"d4:four10:01234567893:one8:123456785:three6:qwerty3:two9:asdfghjkle"};
     bEncode.decode(bEncodeSource);
     REQUIRE(BNodeRef<BNodeDict>((*bEncode)).size() == 4);
   }

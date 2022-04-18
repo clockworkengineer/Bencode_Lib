@@ -157,7 +157,7 @@ namespace BencodeLib
     //
     // Index overloads
     //
-    inline BNode &BNode::operator[](const std::string &key) //Dicionary
+    inline BNode &BNode::operator[](const std::string &key) // Dictionary
     {
         if (nodeType == BNodeType::dictionary)
         {

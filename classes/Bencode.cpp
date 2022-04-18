@@ -125,11 +125,23 @@ namespace BencodeLib
     BNodePtr Bencode::decodeDictionary(ISource &source)
     {
         BNodePtr bNode = std::make_unique<BNodeDict>();
+        std::string lastKey{};
         source.next();
         while (source.more() && source.current() != 'e')
         {
             std::string key = extractString(source);
-            BNodeRef<BNodeDict>(*bNode).addEntry(key, decodeBNodes(source));
+            if (!BNodeRef<BNodeDict>(*bNode).containsKey(key))
+            {
+                BNodeRef<BNodeDict>(*bNode).addEntry(key, decodeBNodes(source));
+            }
+            else
+            {
+                throw SyntaxError();
+            }
+            if (lastKey > key ) {
+                throw SyntaxError();
+            }
+            lastKey = key;
         }
         if (source.current() != 'e')
         {
