@@ -41,7 +41,7 @@ TEST_CASE("Bencode for decode of simple types (number, string) ", "[Bencode][Dec
     bEncode.decode(bEncodeSource);
     REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == 1000);
   }
-    SECTION("Decode an integer (0) and check value", "[Bencode][Decode]")
+  SECTION("Decode an integer (0) and check value", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"i0e"};
     bEncode.decode(bEncodeSource);
@@ -65,17 +65,30 @@ TEST_CASE("Bencode for decode of simple types (number, string) ", "[Bencode][Dec
   {
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"ie"}), Bencode::SyntaxError);
   }
-  SECTION("Decode an string ('qwertyuiopas') and check value", "[Bencode][Decode]")
+  SECTION("Decode a string ('qwertyuiopas') and check value", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"12:qwertyuiopas"};
     bEncode.decode(bEncodeSource);
     REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == "qwertyuiopas");
   }
-  SECTION("Decode an string ('abcdefghijklmnopqrstuvwxyz') and check value", "[Bencode][Decode]")
+  SECTION("Decode a string ('abcdefghijklmnopqrstuvwxyz') and check value", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"26:abcdefghijklmnopqrstuvwxyz"};
     bEncode.decode(bEncodeSource);
     REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == "abcdefghijklmnopqrstuvwxyz");
+  }
+  SECTION("Decode a string with zero length", "[Bencode][Decode]")
+  {
+    REQUIRE_NOTHROW(bEncode.decode(BufferSource{"0:"}));
+    REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == "");
+  }
+  SECTION("Decode a string with no length", "[Bencode][Decode]")
+  {
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{":"}), Bencode::SyntaxError);
+  }
+  SECTION("Decode a string with negative length", "[Bencode][Decode]")
+  {
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"-2:ww"}), Bencode::SyntaxError);
   }
 }
 TEST_CASE("Bencode for decode of a table of integer test data", "[Bencode][Decode]")
