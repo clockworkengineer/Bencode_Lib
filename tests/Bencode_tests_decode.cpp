@@ -41,6 +41,12 @@ TEST_CASE("Bencode for decode of simple types (number, string) ", "[Bencode][Dec
     bEncode.decode(bEncodeSource);
     REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == 1000);
   }
+    SECTION("Decode an integer (0) and check value", "[Bencode][Decode]")
+  {
+    BufferSource bEncodeSource{"i0e"};
+    bEncode.decode(bEncodeSource);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == 0);
+  }
   SECTION("Decode an negative integer (-666) and check value", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"i-666e"};
@@ -50,6 +56,14 @@ TEST_CASE("Bencode for decode of simple types (number, string) ", "[Bencode][Dec
   SECTION("Decode an negative zero (-0) is a syntax error", "[Bencode][Decode]")
   {
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"i-0e"}), Bencode::SyntaxError);
+  }
+  SECTION("Decode an integer with leading zeros is a syntax error", "[Bencode][Decode]")
+  {
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"i0012e"}), Bencode::SyntaxError);
+  }
+  SECTION("Decode an empty integer is a syntax error", "[Bencode][Decode]")
+  {
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"ie"}), Bencode::SyntaxError);
   }
   SECTION("Decode an string ('qwertyuiopas') and check value", "[Bencode][Decode]")
   {

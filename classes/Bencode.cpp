@@ -58,6 +58,10 @@ namespace BencodeLib
             buffer += source.current();
             source.next();
         }
+        // Check integer has no leading zero and is not empty ('ie')
+        if ((buffer[0]=='0' && buffer.size() > 1)||(buffer.empty())) {
+            throw SyntaxError();
+        }
         return (std::stol(buffer));
     }
     /// <summary>
