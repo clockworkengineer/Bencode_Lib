@@ -35,7 +35,6 @@ namespace BencodeLib
         // ==========================
         // PUBLIC TYPES AND CONSTANTS
         // ==========================
-         using Integer = int64_t;
         //
         // Bencode syntax error.
         //
@@ -43,7 +42,7 @@ namespace BencodeLib
         {
         public:
             SyntaxError(const std::string &errorMessage = "Bencoding syntax error detected.") : errorMessage(errorMessage) {}
-            virtual const char *what() const throw()
+            virtual const char *what() const throw() override
             {
                 return (errorMessage.c_str());
             }
@@ -78,7 +77,7 @@ namespace BencodeLib
         // ===============
         // PRIVATE METHODS
         // ===============
-        Bencode::Integer extractPositiveInteger(ISource &source);
+        int64_t extractPositiveInteger(ISource &source);
         std::string extractString(ISource &source);
         BNodePtr decodeString(ISource &source);
         BNodePtr decodeInteger(ISource &source);
