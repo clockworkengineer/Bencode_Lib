@@ -109,20 +109,20 @@ namespace BencodeLib
     struct BNodeInteger : BNode
     {
         BNodeInteger() : BNode(BNodeType::integer) {}
-        BNodeInteger(long value) : BNode(BNodeType::integer)
+        BNodeInteger(int64_t value) : BNode(BNodeType::integer)
         {
             m_value = value;
         }
-        long getInteger() const
+        int64_t getInteger() const
         {
             return (m_value);
         }
-        void setInteger(long value)
+        void setInteger(int64_t value)
         {
             m_value = value;
         }
     private:
-        long m_value = 0;
+        int64_t m_value = 0;
     };
     //
     // String BNode.

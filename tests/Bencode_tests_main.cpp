@@ -109,7 +109,7 @@ TEST_CASE("ISource (File interface).", "[Bencode][Decode][ISource]")
   SECTION("Create FileSource with singlefile.torrent move past last character, check it and the bytes moved.", "[Bencode][Decode][ISource]")
   {
     FileSource source{prefixTestDataPath(kSingleFileTorrent)};
-    long length = 0;
+    int64_t length = 0;
     while (source.more())
     {
       source.next();
@@ -147,7 +147,7 @@ TEST_CASE("ISource (Buffer interface). Contains file singlefile.torrent.", "[Ben
   SECTION("Create BufferSource with singlefile.torrent move past last character, check it and the bytes moved.", "[Bencode][Decode][ISource]")
   {
     BufferSource source{bencodedBuffer};
-    long length = 0;
+    int64_t length = 0;
     while (source.more())
     {
       source.next();

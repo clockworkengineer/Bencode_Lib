@@ -94,7 +94,7 @@ TEST_CASE("Bencode for decode of simple types (number, string) ", "[Bencode][Dec
 TEST_CASE("Bencode for decode of a table of integer test data", "[Bencode][Decode]")
 {
   Bencode bEncode;
-  auto [testInput, expected] = GENERATE(table<std::string, long>({{"i277e", 277},
+  auto [testInput, expected] = GENERATE(table<std::string, int64_t>({{"i277e", 277},
                                                                   {"i32767e", 32767}}));
   BufferSource bEncodeSource{testInput};
   bEncode.decode(bEncodeSource);
@@ -142,12 +142,12 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
   {
     BufferSource bEncodeSource{"li266ei6780ei88ee"};
     bEncode.decode(bEncodeSource);
-    std::vector<long> numbers;
+    std::vector<int64_t> numbers;
     for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).getList())
     {
       numbers.push_back(BNodeRef<BNodeInteger>(*bNode).getInteger());
     }
-    REQUIRE(numbers == std::vector<long>{266, 6780, 88});
+    REQUIRE(numbers == std::vector<int64_t>{266, 6780, 88});
   }
   SECTION("Decode an list of strings and check values", "[Bencode][Decode]")
   {
@@ -164,12 +164,12 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
   {
     BufferSource bEncodeSource{"d3:onei1e5:threei3e3:twoi2ee"};
     bEncode.decode(bEncodeSource);
-    std::map<std::string, long> entries;
+    std::map<std::string, int64_t> entries;
     for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode).getDict())
     {
       entries[bNode.first] = BNodeRef<BNodeInteger>(*bNode.second).getInteger();
     }
-    REQUIRE(entries == std::map<std::string, long>{{"one", 1}, {"two", 2}, {"three", 3}});
+    REQUIRE(entries == std::map<std::string, int64_t>{{"one", 1}, {"two", 2}, {"three", 3}});
   }
   SECTION("Decode a Dictionary of strings and check values", "[Bencode][Decode]")
   {

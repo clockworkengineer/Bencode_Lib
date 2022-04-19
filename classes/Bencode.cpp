@@ -50,7 +50,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Positive integers value.</returns>
-    long Bencode::extractPositiveInteger(ISource &source)
+    int64_t Bencode::extractPositiveInteger(ISource &source)
     {
         std::string buffer;
         while (source.more() && std::isdigit(source.current()))
@@ -71,7 +71,7 @@ namespace BencodeLib
     /// <returns>String value decoded.</returns>
     std::string Bencode::extractString(ISource &source)
     {
-        long stringLength = extractPositiveInteger(source);
+        int64_t stringLength = extractPositiveInteger(source);
         if (source.current() != ':')
         {
             throw SyntaxError();
@@ -101,14 +101,14 @@ namespace BencodeLib
     /// <returns>Integer BNode.</returns>
     BNodePtr Bencode::decodeInteger(ISource &source)
     {
-        long sign = 1;
+        int64_t sign = 1;
         source.next();
         if (source.current() == '-')
         {
             source.next();
             sign = -1;
         }
-        long integer = extractPositiveInteger(source);
+        int64_t integer = extractPositiveInteger(source);
         if ((sign == -1) && (integer == 0))
         {
             throw SyntaxError();

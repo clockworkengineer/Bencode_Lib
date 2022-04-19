@@ -26,12 +26,16 @@ namespace BencodeLib
     // ================
     // CLASS DEFINITION
     // ================
+
+    // using Integer = int64_t;
+    
     class Bencode
     {
     public:
         // ==========================
         // PUBLIC TYPES AND CONSTANTS
         // ==========================
+         using Integer = int64_t;
         //
         // Bencode syntax error.
         //
@@ -74,7 +78,7 @@ namespace BencodeLib
         // ===============
         // PRIVATE METHODS
         // ===============
-        long extractPositiveInteger(ISource &source);
+        Bencode::Integer extractPositiveInteger(ISource &source);
         std::string extractString(ISource &source);
         BNodePtr decodeString(ISource &source);
         BNodePtr decodeInteger(ISource &source);
