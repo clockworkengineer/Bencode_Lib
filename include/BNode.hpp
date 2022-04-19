@@ -75,7 +75,7 @@ namespace BencodeLib
         {
             return (m_value);
         }
-    protected:
+    private:
         std::vector<std::pair<std::string, BNodePtr>> m_value;
     };
     //
@@ -100,7 +100,7 @@ namespace BencodeLib
         {
             return (m_value[index].get());
         }
-    protected:
+    private:
         std::vector<BNodePtr> m_value;
     };
     //
@@ -121,7 +121,7 @@ namespace BencodeLib
         {
             m_value = value;
         }
-    protected:
+    private:
         long m_value = 0;
     };
     //
@@ -129,7 +129,6 @@ namespace BencodeLib
     //
     struct BNodeString : BNode
     {
-    public:
         BNodeString() : BNode(BNodeType::string) {}
         BNodeString(const std::string &value) : BNode(BNodeType::string)
         {
@@ -143,7 +142,7 @@ namespace BencodeLib
         {
             m_value = value;
         }
-    protected:
+    private:
         std::string m_value;
     };
     //
