@@ -36,7 +36,7 @@ namespace BencodeLib
         const BNodeType nodeType;
     };
     //
-    // Pointer to BNode 
+    // Pointer to BNode
     //
     using BNodePtr = std::unique_ptr<BNode>;
     //
@@ -47,12 +47,14 @@ namespace BencodeLib
         BNodeDict() : BNode(BNodeType::dictionary) {}
         bool containsKey(const std::string &key) const
         {
-            for (const auto &entry : m_value) {
-                if (entry.first == key) {
-                    return(true);
+            for (const auto &entry : m_value)
+            {
+                if (entry.first == key)
+                {
+                    return (true);
                 }
             }
-            return(false);
+            return (false);
         }
         int size() const
         {
@@ -60,21 +62,24 @@ namespace BencodeLib
         }
         void addEntry(const std::string &key, BNodePtr entry)
         {
-            m_value.push_back(std::make_pair(key,std::move(entry)));
+            m_value.push_back(std::make_pair(key, std::move(entry)));
         }
         BNode *getEntry(const std::string &key)
         {
-            for (const auto &entry : m_value) {
-                if (entry.first == key) {
-                    return(entry.second.get());
+            for (const auto &entry : m_value)
+            {
+                if (entry.first == key)
+                {
+                    return (entry.second.get());
                 }
             }
-            return(nullptr);
+            return (nullptr);
         }
-        std::vector<std::pair<std::string, BNodePtr>>  &getDict() 
+        std::vector<std::pair<std::string, BNodePtr>> &getDict()
         {
             return (m_value);
         }
+
     private:
         std::vector<std::pair<std::string, BNodePtr>> m_value;
     };
@@ -100,6 +105,7 @@ namespace BencodeLib
         {
             return (m_value[index].get());
         }
+
     private:
         std::vector<BNodePtr> m_value;
     };
@@ -121,6 +127,7 @@ namespace BencodeLib
         {
             m_value = value;
         }
+
     private:
         int64_t m_value = 0;
     };
@@ -142,6 +149,7 @@ namespace BencodeLib
         {
             m_value = value;
         }
+
     private:
         std::string m_value;
     };
