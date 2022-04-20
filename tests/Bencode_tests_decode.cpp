@@ -65,6 +65,28 @@ TEST_CASE("Bencode for decode of simple types (number, string) ", "[Bencode][Dec
   {
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"ie"}), Bencode::SyntaxError);
   }
+  SECTION("Decode max 64 bit integer (9223372036854775807) and check value", "[Bencode][Decode]")
+  {
+    BufferSource bEncodeSource{"i9223372036854775807e"};
+    bEncode.decode(bEncodeSource);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == std::numeric_limits<int64_t>::max());
+  }
+  SECTION("Decode out of range postive 64 bit integer (9223372036854775808) and check value", "[Bencode][Decode]")
+  {
+    BufferSource bEncodeSource{"i9223372036854775808e"};
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), std::out_of_range);
+  }
+  SECTION("Decode min 64 bit integer (-9223372036854775808) and check value", "[Bencode][Decode]")
+  {
+    BufferSource bEncodeSource{"i-9223372036854775808e"};
+    bEncode.decode(bEncodeSource);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == std::numeric_limits<int64_t>::min());
+  }
+  SECTION("Decode out of range negative 64 bit integer (-9223372036854775809) and check value", "[Bencode][Decode]")
+  {
+    BufferSource bEncodeSource{"i-9223372036854775809e"};
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), std::out_of_range);
+  }
   SECTION("Decode a string ('qwertyuiopas') and check value", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"12:qwertyuiopas"};
@@ -95,7 +117,7 @@ TEST_CASE("Bencode for decode of a table of integer test data", "[Bencode][Decod
 {
   Bencode bEncode;
   auto [testInput, expected] = GENERATE(table<std::string, int64_t>({{"i277e", 277},
-                                                                  {"i32767e", 32767}}));
+                                                                     {"i32767e", 32767}}));
   BufferSource bEncodeSource{testInput};
   bEncode.decode(bEncodeSource);
   REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == expected);
