@@ -55,14 +55,14 @@ namespace BencodeLib
     int64_t Bencode::extractInteger(ISource &source)
     {
         // Number size of 64 bit int +2 for sign and terminating null
-        std::array<char, std::numeric_limits<int64_t>::digits10 + 2> number;
+        std::array<char, std::numeric_limits<int64_t>::digits10 + 2> number{};
         int digits = 0;
         if (source.current() == '-')
         {
             number[digits++] = source.current();
             source.next();
         }
-        while (source.more() && std::isdigit(source.current()))
+        while (source.more() && (std::isdigit(source.current()) != 0))
         {
             // Number too large to be  in buffer
             if (digits == number.size())

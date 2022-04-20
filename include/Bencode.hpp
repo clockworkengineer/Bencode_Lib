@@ -4,6 +4,7 @@
 //
 #include <string>
 #include <map>
+#include <utility>
 #include <vector>
 #include <memory>
 #include <fstream>
@@ -41,8 +42,8 @@ namespace BencodeLib
         struct SyntaxError : public std::exception
         {
         public:
-            SyntaxError(const std::string &errorMessage = "Bencoding syntax error detected.") : errorMessage(errorMessage) {}
-            virtual const char *what() const throw() override
+            explicit SyntaxError(std::string errorMessage = "Bencoding syntax error detected.") : errorMessage(std::move(errorMessage)) {}
+            [[nodiscard]] const char *what() const noexcept override
             {
                 return (errorMessage.c_str());
             }
@@ -77,7 +78,7 @@ namespace BencodeLib
         // ===============
         // PRIVATE METHODS
         // ===============
-        int64_t extractInteger(ISource &source);
+        static int64_t extractInteger(ISource &source);
         std::string extractString(ISource &source);
         BNodePtr decodeString(ISource &source);
         BNodePtr decodeInteger(ISource &source);

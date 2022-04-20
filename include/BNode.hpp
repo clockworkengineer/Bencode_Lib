@@ -27,10 +27,10 @@ namespace BencodeLib
     //
     struct BNode
     {
-        BNode(BNodeType nodeType = BNodeType::base) : nodeType(nodeType)
+        explicit BNode(BNodeType nodeType = BNodeType::base) : nodeType(nodeType)
         {
         }
-        virtual ~BNode() {}
+        virtual ~BNode() = default;
         BNode &operator[](const std::string &key);
         BNode &operator[](int index);
         const BNodeType nodeType;
@@ -45,7 +45,7 @@ namespace BencodeLib
     struct BNodeDict : BNode
     {
         BNodeDict() : BNode(BNodeType::dictionary) {}
-        bool containsKey(const std::string &key) const
+        [[nodiscard]] bool containsKey(const std::string &key) const
         {
             for (const auto &entry : m_value)
             {
@@ -56,13 +56,13 @@ namespace BencodeLib
             }
             return (false);
         }
-        int size() const
+        [[nodiscard]] int size() const
         {
-            return ((int)m_value.size());
+            return (static_cast<int>(m_value.size()));
         }
         void addEntry(const std::string &key, BNodePtr entry)
         {
-            m_value.push_back(std::make_pair(key, std::move(entry)));
+            m_value.emplace_back(key, std::move(entry));
         }
         BNode *getEntry(const std::string &key)
         {
@@ -89,7 +89,7 @@ namespace BencodeLib
     struct BNodeList : BNode
     {
         BNodeList() : BNode(BNodeType::list) {}
-        int size() const
+        [[nodiscard]] int size() const
         {
             return (static_cast<int>(m_value.size()));
         }
@@ -115,11 +115,11 @@ namespace BencodeLib
     struct BNodeInteger : BNode
     {
         BNodeInteger() : BNode(BNodeType::integer) {}
-        BNodeInteger(int64_t value) : BNode(BNodeType::integer)
+        explicit BNodeInteger(int64_t value) : BNode(BNodeType::integer)
         {
             m_value = value;
         }
-        int64_t getInteger() const
+        [[nodiscard]] int64_t getInteger() const
         {
             return (m_value);
         }
@@ -137,11 +137,11 @@ namespace BencodeLib
     struct BNodeString : BNode
     {
         BNodeString() : BNode(BNodeType::string) {}
-        BNodeString(const std::string &value) : BNode(BNodeType::string)
+        explicit BNodeString(const std::string &value) : BNode(BNodeType::string)
         {
             this->m_value = value;
         }
-        std::string getString() const
+        [[nodiscard]] std::string getString() const
         {
             return (m_value);
         }
