@@ -77,7 +77,7 @@ namespace BencodeLib
         // ===============
         // PRIVATE METHODS
         // ===============
-        int64_t extractPositiveInteger(ISource &source);
+        int64_t extractInteger(ISource &source);
         std::string extractString(ISource &source);
         BNodePtr decodeString(ISource &source);
         BNodePtr decodeInteger(ISource &source);

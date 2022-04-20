@@ -25,6 +25,8 @@
 //
 // C++ STL
 //
+#include <limits>
+#include <array>
 // =========
 // NAMESPACE
 // =========
@@ -46,23 +48,40 @@ namespace BencodeLib
     // PRIVATE METHODS
     // ===============
     /// <summary>
-    /// Extract a positive Integer from the input stream of characters referenced by ISource.
+    /// Extract a Integer from the input stream of characters referenced by ISource.
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Positive integers value.</returns>
-    int64_t Bencode::extractPositiveInteger(ISource &source)
+    int64_t Bencode::extractInteger(ISource &source)
     {
-        std::string buffer;
+        std::array<char, std::numeric_limits<int64_t>::digits10 + 2> number;
+        int digits = 0;
+        if (source.current() == '-')
+        {
+            number[digits++] = source.current();
+            source.next();
+        }
         while (source.more() && std::isdigit(source.current()))
         {
-            buffer += source.current();
+            // Number too large to be  in buffer
+            if (digits == number.size())
+            {
+                throw SyntaxError();
+            }
+            number[digits++] = source.current();
             source.next();
         }
         // Check integer has no leading zero and is not empty ('ie')
-        if ((buffer[0]=='0' && buffer.size() > 1)||(buffer.empty())) {
+        if ((number[0] == '0' && digits > 1) || (digits == 0))
+        {
             throw SyntaxError();
         }
-        return (std::stol(buffer));
+        // Checkfor -0
+        if ((number[0] == '-') && (number[1] == '0') && (digits == 2))
+        {
+            throw SyntaxError();
+        }
+        return (std::stoll(&number[0]));
     }
     /// <summary>
     /// Extract a byte string from the input stream of characters referenced by ISource.
@@ -71,7 +90,7 @@ namespace BencodeLib
     /// <returns>String value decoded.</returns>
     std::string Bencode::extractString(ISource &source)
     {
-        int64_t stringLength = extractPositiveInteger(source);
+        int64_t stringLength = extractInteger(source);
         if (source.current() != ':')
         {
             throw SyntaxError();
@@ -101,19 +120,8 @@ namespace BencodeLib
     /// <returns>Integer BNode.</returns>
     BNodePtr Bencode::decodeInteger(ISource &source)
     {
-        int64_t sign = 1;
         source.next();
-        if (source.current() == '-')
-        {
-            source.next();
-            sign = -1;
-        }
-        int64_t integer = extractPositiveInteger(source);
-        if ((sign == -1) && (integer == 0))
-        {
-            throw SyntaxError();
-        }
-        integer *= sign;
+        int64_t integer = extractInteger(source);
         if (source.current() != 'e')
         {
             throw SyntaxError();
