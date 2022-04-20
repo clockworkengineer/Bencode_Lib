@@ -112,6 +112,10 @@ TEST_CASE("Bencode for decode of simple types (number, string) ", "[Bencode][Dec
   {
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"-2:ww"}), Bencode::SyntaxError);
   }
+    SECTION("Decode a string with max length (buffer overflow attempt)", "[Bencode][Decode]")
+  {
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"9223372036854775807:ww"}), std::runtime_error);
+  }
 }
 TEST_CASE("Bencode for decode of a table of integer test data", "[Bencode][Decode]")
 {
