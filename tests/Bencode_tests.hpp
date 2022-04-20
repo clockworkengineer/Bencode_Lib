@@ -2,7 +2,7 @@
 // ======================
 // Test framework include
 // ======================
-#include "catch2/catch_all.hpp"
+#include "catch2/catch.hpp"
 // =========================
 // Class under test includes
 // =========================
@@ -16,6 +16,7 @@
 #include <fstream>
 #include <iterator>
 #include <string>
+#include <sstream>
 // ===================
 // Unit test constants
 // ===================

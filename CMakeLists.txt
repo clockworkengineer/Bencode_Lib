@@ -12,12 +12,12 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   add_compile_options(-Wall -Werror -pedantic)
 endif()
 
-Include(FetchContent)
+include(FetchContent)
 
 FetchContent_Declare(
-  Catch2
-  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.0.0-preview3
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG        v2.13.4
 )
 
 FetchContent_MakeAvailable(Catch2)

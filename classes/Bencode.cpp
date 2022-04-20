@@ -3,14 +3,14 @@
 //
 // Description: Class to perform Bencode encoding encode/decode to/from
 // a byte buffer or file. It is also  possible to customize this with the
-// ISource and IDestination interfaces if required. Although bencoded
+// ISource and IDestination interfaces if required. Although Bencoded
 // data is treated as std::byte externally this library uses char and
 // std::string internally.Note: At present it will report incorrect Bencode
 // syntax but will not be specific about what error has occurred; this
 // is reasoned to add too much overhead to the process of parsing for the
 // requirements of this library (this might change in future versions).
-// For an indepth desciption of the Bencoding specification refer to its
-// wiki page at https://en.wikipedia.org/wiki/Bencode.
+// For an in-depth description of the Bencode specification refer to its
+// Wiki page at https://en.wikipedia.org/wiki/Bencode.
 //
 // Dependencies:   C17++ - Language standard features used.
 //
@@ -77,7 +77,7 @@ namespace BencodeLib
         {
             throw SyntaxError();
         }
-        // Checkfor -0
+        // Check-for -0
         if ((number[0] == '-') && (number[1] == '0') && (digits == 2))
         {
             throw SyntaxError();
@@ -279,7 +279,7 @@ namespace BencodeLib
     /// <summary>
     /// Take BNode structure and create an Bencode encoding for it in the destination stream.
     /// </summary>
-    /// <param name="bNodeRoot">Bnode structure root.</param>
+    /// <param name="bNodeRoot">BNode structure root.</param>
     /// <param name="desination ">Pointer to interface used to facilitate the output stream.</param>
     void Bencode::encode(IDestination &destination)
     {

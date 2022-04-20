@@ -9,7 +9,6 @@
 #include <memory>
 #include <fstream>
 #include <stdexcept>
-#include <utility>
 //
 // Source/Destination interfaces
 //
@@ -78,7 +77,7 @@ namespace BencodeLib
         // ===============
         // PRIVATE METHODS
         // ===============
-        static int64_t extractInteger(ISource &source);
+        int64_t extractInteger(ISource &source);
         std::string extractString(ISource &source);
         BNodePtr decodeString(ISource &source);
         BNodePtr decodeInteger(ISource &source);
