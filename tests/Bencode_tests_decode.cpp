@@ -215,22 +215,22 @@ TEST_CASE("Decode generated exceptions", "[Bencode][Decode][Exceptions]")
   SECTION("Decode an string without terminating ':' on its length", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"26abcdefghijklmnopqrstuvwxyz"};
-    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode::SyntaxError);
   }
   SECTION("Decode an integer without a terminating end", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"i266"};
-    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode::SyntaxError);
   }
   SECTION("Decode an list without a terminating end", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"li266ei6780ei88e"};
-    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode::SyntaxError);
   }
   SECTION("Decode an diictionary without a terminating end", "[Bencode][Decode]")
   {
     BufferSource bEncodeSource{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkl"};
-    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode::SyntaxError);
   }
   SECTION("Decode an string that terminates prematurely", "[Bencode][Decode]")
   {
@@ -276,12 +276,12 @@ TEST_CASE("Decode erronous torrent files using decode", "[Bencode][Decode][Torre
   SECTION("Decode singlefileerror.torrent", "[Bencode][Decode][Torrents]")
   {
     FileSource bEncodeSource{prefixTestDataPath(kSingleFileWithErrorTorrent)};
-    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode::SyntaxError);
   }
   SECTION("Decode multifileerror.torrent", "[Bencode][Decode][Torrents]")
   {
     FileSource bEncodeSource{prefixTestDataPath(kMultiFileWithErrorTorrent)};
-    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode::SyntaxError);
   }
 }
 
@@ -291,11 +291,11 @@ TEST_CASE("Decode dictionary with errors", "[Bencode][Decode][Torrents]")
   SECTION("Duplicate dictionary keys", "[Bencode][Decode][Torrents]")
   {
     BufferSource bEncodeSource{"d3:one10:01234567893:two6:qwerty3:two9:asdfghjkle"};
-    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode::SyntaxError);
   }
   SECTION("Keys not in lexical order", "[Bencode][Decode][Torrents]")
   {
     BufferSource bEncodeSource{"d5:three10:01234567893:one6:qwerty3:two9:asdfghjkle"};
-    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Bencoding syntax error detected.");
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode::SyntaxError);
   }
 }
