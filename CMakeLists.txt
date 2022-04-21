@@ -37,6 +37,10 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/
 
 add_subdirectory(tests)
 
+# Add examples
+
+add_subdirectory(examples)
+
 # install
 
 install(TARGETS ${BENCODE_LIBRARY_NAME} DESTINATION lib)

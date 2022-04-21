@@ -1,4 +1,12 @@
 #pragma once
+// ============
+// STL includes
+// ============
+#include <filesystem>
+#include <fstream>
+#include <iterator>
+#include <string>
+#include <sstream>
 // ======================
 // Test framework include
 // ======================
@@ -9,14 +17,6 @@
 #include "Bencode.hpp"
 #include "BencodeSources.hpp"
 #include "BencodeDestinations.hpp"
-// ============
-// STL includes
-// ============
-#include <filesystem>
-#include <fstream>
-#include <iterator>
-#include <string>
-#include <sstream>
 // ===================
 // Unit test constants
 // ===================
