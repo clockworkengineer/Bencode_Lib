@@ -229,6 +229,9 @@ namespace BencodeLib
     /// <returns></returns>
     void Bencode::encodeBNodes(BNode *bNode, IDestination &destination)
     {
+        if (bNode==nullptr) {
+            throw std::runtime_error("No Bencoded data to encode.");
+        }
         switch (bNode->nodeType)
         {
         case BNodeType::dictionary:
