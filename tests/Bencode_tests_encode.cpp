@@ -115,17 +115,12 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ", "[Bencod
 TEST_CASE("Encode generated exceptions", "[Bencode][Encode][Exceptions]")
 {
     Bencode bEncode;
-    SECTION("Encode called with no BNode tree to encode", "[Bencode][Encode]")
+    SECTION("Encode called with no BNode tree to encode", "[Bencode][Encode][Exceptions]")
     {
         BufferDestination bEncodeDestination;
         REQUIRE_THROWS_AS(bEncode.encode(bEncodeDestination), std::runtime_error);
         REQUIRE_THROWS_WITH(bEncode.encode(bEncodeDestination), "No Bencoded data to encode.");
     }
-    //     SECTION("Encode passed invalid BNode type", "[Bencode][Decode]")
-    //     {
-    //         REQUIRE_THROWS_AS(bEncode.encodeBuffer(BNodePtr(new BNode())), std::runtime_error);
-    //         REQUIRE_THROWS_WITH(bEncode.encodeBuffer(BNodePtr(new BNode())), "Unknown BNode type encountered during encode." };
-    //     }
 }
 TEST_CASE("Encode torrent files using encodeToFile", "[Bencode][Encode][Torrents]")
 {
