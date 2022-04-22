@@ -35,65 +35,38 @@ void getInfo(BNodeDict &bNodeDict)
     {
         std::cout << "attr [" << BNodeRef<BNodeString>(bNodeDict["attr"]).getString() << "]\n";
     }
-    else
-    {
-        throw std::exception("Missing attr field.");
-    }
     if (bNodeDict.containsKey("length"))
     {
-        std::cout << "length ["  << BNodeRef<BNodeInteger>(bNodeDict["length"]).getInteger() << "]\n";
-    }
-    else
-    {
-        throw std::exception("Missing length field.");
+        std::cout << "length [" << BNodeRef<BNodeInteger>(bNodeDict["length"]).getInteger() << "]\n";
     }
     if (bNodeDict.containsKey("name"))
     {
         std::cout << "name [" << BNodeRef<BNodeString>(bNodeDict["name"]).getString() << "]\n";
     }
-    else
-    {
-        throw std::exception("Missing name field.");
-    }
     if (bNodeDict.containsKey("piece length"))
     {
         std::cout << "piece length [" << BNodeRef<BNodeInteger>(bNodeDict["piece length"]).getInteger() << "]\n";
     }
-    else
-    {
-        throw std::exception("Missing piece length field.");
-    }
     if (bNodeDict.containsKey("pieces"))
     {
-        if (bNodeDict["pieces"].nodeType == BNodeType::list)
+        BNodeString &bNodeString = BNodeRef<BNodeString>(bNodeDict["pieces"]);
+        if (bNodeString.nodeType == BNodeType::string)
         {
             std::cout << "PIECES\n";
-        }
-        else
-        {
-            std::cout << "NO PIECES\n";
         }
     }
     if (bNodeDict.containsKey("private"))
     {
         std::cout << "private [" << BNodeRef<BNodeInteger>(bNodeDict["private"]).getInteger() << "]\n";
     }
-    else
-    {
-        throw std::exception("Missing private field.");
-    }
     if (bNodeDict.containsKey("source"))
     {
         std::cout << "source [" << BNodeRef<BNodeString>(bNodeDict["source"]).getString() << "]\n";
     }
-    else
+    for (const auto &[key, bNodePtr] : bNodeDict.getDict())
     {
-        throw std::exception("Missing source field.");
+        std::cout << key << "\n";
     }
-    // for (const auto &[key, bNodePtr] : bNodeDict.getDict())
-    // {
-    //     std::cout << key << "\n";
-    // }
 }
 void getTorrentInfo(BNode &bNode)
 {
@@ -106,27 +79,19 @@ void getTorrentInfo(BNode &bNode)
         BNodeDict &bNodeDict = BNodeRef<BNodeDict>(bNode);
         if (bNodeDict.containsKey("announce"))
         {
-            std::cout << BNodeRef<BNodeString>(bNodeDict["announce"]).getString() << "\n";
-        }
-        else
-        {
-            throw std::exception("Missing annouce field.");
+            std::cout << "announce [" << BNodeRef<BNodeString>(bNodeDict["announce"]).getString() << "]\n";
         }
         if (bNodeDict.containsKey("comment"))
         {
-            std::cout << BNodeRef<BNodeString>(bNodeDict["comment"]).getString() << "\n";
+            std::cout << "comment [" << BNodeRef<BNodeString>(bNodeDict["comment"]).getString() << "]\n";
         }
-        else
+        if (bNodeDict.containsKey("creation date"))
         {
-            throw std::exception("Missing comment field.");
+            std::cout << "creation date [" << BNodeRef<BNodeInteger>(bNodeDict["creation date"]).getInteger() << "]\n";
         }
         if (bNodeDict.containsKey("created by"))
         {
-            std::cout << BNodeRef<BNodeString>(bNodeDict["created by"]).getString() << "\n";
-        }
-        else
-        {
-            throw std::exception("Missing created by field.");
+            std::cout << "created by [" << BNodeRef<BNodeString>(bNodeDict["created by"]).getString() << "]\n";
         }
         if (bNodeDict.containsKey("info"))
         {
@@ -138,11 +103,11 @@ void getTorrentInfo(BNode &bNode)
         }
         if (bNodeDict.containsKey("url-list"))
         {
-            std::cout << BNodeRef<BNodeString>(bNodeDict["url-list"]).getString() << "\n";
+            std::cout << "url-list [" << BNodeRef<BNodeString>(bNodeDict["url-list"]).getString() << "]\n";
         }
-        else
+        for (const auto &[key, bNodePtr] : bNodeDict.getDict())
         {
-            throw std::exception("Missing url-list field.");
+            std::cout << key << "\n";
         }
     }
     catch (std::exception &ex)
@@ -156,7 +121,8 @@ void getTorrentInfo(BNode &bNode)
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
     Bencode bEncode;
-    bEncode.decode(FileSource{"./testData/singlefile.torrent"});
+    //  bEncode.decode(FileSource{"./testData/singlefile.torrent"});
+    bEncode.decode(FileSource{"./testData/multifile.torrent"});
     getTorrentInfo(*bEncode);
     exit(EXIT_SUCCESS);
 }
