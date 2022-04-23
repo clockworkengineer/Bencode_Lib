@@ -149,9 +149,16 @@ TorrentInfo getTorrentInfo(BNode &bNode)
     }
     if (bNodeTopLevelDict.containsKey("url-list"))
     {
-        for (auto &bNodeURLString : BNodeRef<BNodeList>(bNodeTopLevelDict["url-list"]).getList())
+        if (bNodeTopLevelDict["url-list"].nodeType == BNodeType::string)
         {
-            info.urlList.push_back(BNodeRef<BNodeString>(*bNodeURLString).getString());
+            info.urlList.push_back(BNodeRef<BNodeString>(bNodeTopLevelDict["url-list"]).getString());
+        }
+        else if (bNodeTopLevelDict["url-list"].nodeType == BNodeType::list)
+        {
+            for (auto &bNodeURLString : BNodeRef<BNodeList>(bNodeTopLevelDict["url-list"]).getList())
+            {
+                info.urlList.push_back(BNodeRef<BNodeString>(*bNodeURLString).getString());
+            }
         }
     }
     return (info);
@@ -193,12 +200,18 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
     {
         Bencode bEncode;
         TorrentInfo info;
-        // bEncode.decode(FileSource{"./testData/singlefile.torrent"});
-        // info = getTorrentInfo(*bEncode);
-        // displayTorrentInfo(info);
-        // bEncode.decode(FileSource{"./testData/multifile.torrent"});
-        // info = getTorrentInfo(*bEncode);
-        // displayTorrentInfo(info);
+        bEncode.decode(FileSource{"./testData/singlefile.torrent"});
+        info = getTorrentInfo(*bEncode);
+        displayTorrentInfo(info);
+        bEncode.decode(FileSource{"./testData/multifile.torrent"});
+        info = getTorrentInfo(*bEncode);
+        displayTorrentInfo(info);
+        bEncode.decode(FileSource{"./testData/file1.torrent"});
+        info = getTorrentInfo(*bEncode);
+        displayTorrentInfo(info);
+        bEncode.decode(FileSource{"./testData/file2.torrent"});
+        info = getTorrentInfo(*bEncode);
+        displayTorrentInfo(info);
         bEncode.decode(FileSource{"./testData/file3.torrent"});
         info = getTorrentInfo(*bEncode);
         displayTorrentInfo(info);
