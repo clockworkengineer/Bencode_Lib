@@ -198,9 +198,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
         info = getTorrentInfo(*bEncode);
         displayTorrentInfo(info);
     }
-    catch (std::exception ex)
+    catch (std::exception &ex)
     {
-        std::cout << "Error : " << ex.what() << "\n";
+        std::cout << ex.what() << "\n";
     }
     exit(EXIT_SUCCESS);
 }

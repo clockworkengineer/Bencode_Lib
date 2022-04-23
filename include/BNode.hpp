@@ -28,6 +28,19 @@ namespace BencodeLib
     //
     struct BNode
     {
+        struct Error : public std::exception
+        {
+        public:
+            explicit Error(const std::string &errorMessage) : errorMessage(errorMessage) {}
+            [[nodiscard]] const char *what() const noexcept override
+            {
+                return(errorMessage.c_str());
+            }
+
+        private:
+            std::string errorMessage;
+        };
+
         explicit BNode(BNodeType nodeType = BNodeType::base) : nodeType(nodeType)
         {
         }
@@ -164,28 +177,28 @@ namespace BencodeLib
         {
             if (bNode.nodeType != BNodeType::string)
             {
-                throw std::runtime_error("BNode not a string.");
+                throw BNode::Error("BNode Error: Node not a string.");
             }
         }
         else if constexpr (std::is_same_v<T, BNodeInteger>)
         {
             if (bNode.nodeType != BNodeType::integer)
             {
-                throw std::runtime_error("BNode not an integer.");
+                throw BNode::Error("BNode Error: Node not an integer.");
             }
         }
         else if constexpr (std::is_same_v<T, BNodeList>)
         {
             if (bNode.nodeType != BNodeType::list)
             {
-                throw std::runtime_error("BNode not a list.");
+                throw BNode::Error("BNode Error: Node not a list.");
             }
         }
         else if constexpr (std::is_same_v<T, BNodeDict>)
         {
             if (bNode.nodeType != BNodeType::dictionary)
             {
-                throw std::runtime_error("BNode not a dictionary.");
+                throw BNode::Error("BNode Error: Node not a dictionary.");
             }
         }
         return (static_cast<T &>(bNode));
@@ -201,9 +214,9 @@ namespace BencodeLib
             {
                 return (*((BNodeRef<BNodeDict>(*this).getEntry(key))));
             }
-            throw std::runtime_error("Invalid key used in dictionary.");
+            throw BNode::Error("BNode Error: Invalid key used in dictionary.");
         }
-        throw std::runtime_error("BNode not a dictionary.");
+        throw BNode::Error("BNode Error: Node not a dictionary.");
     }
     inline BNode &BNode::operator[](int index) // List
     {
@@ -213,8 +226,8 @@ namespace BencodeLib
             {
                 return (*((BNodeRef<BNodeList>(*this).getEntry(index))));
             }
-            throw std::runtime_error("Invalid index used in list.");
+            throw BNode::Error("BNode Error: Invalid index used in list.");
         }
-        throw std::runtime_error("BNode not a list.");
+        throw BNode::Error("BNode Error: Node not a list.");
     }
 } // namespace BencodeLib
