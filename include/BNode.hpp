@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 #include <memory>
+#include <stdexcept>
 // =========
 // NAMESPACE
 // =========
@@ -33,7 +34,6 @@ namespace BencodeLib
         virtual ~BNode() = default;
         BNode &operator[](const std::string &key);
         BNode &operator[](int index);
-
         const BNodeType nodeType;
     };
     //
@@ -80,7 +80,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         std::vector<std::pair<std::string, BNodePtr>> m_value;
     };
@@ -106,7 +105,6 @@ namespace BencodeLib
         {
             return (m_value[index].get());
         }
-
     private:
         std::vector<BNodePtr> m_value;
     };
@@ -128,7 +126,6 @@ namespace BencodeLib
         {
             m_value = value;
         }
-
     private:
         int64_t m_value = 0;
     };
@@ -150,7 +147,6 @@ namespace BencodeLib
         {
             m_value = value;
         }
-
     private:
         std::string m_value;
     };
@@ -160,7 +156,50 @@ namespace BencodeLib
     template <typename T>
     T &BNodeRef(BNode &bNode)
     {
-        return (static_cast<T &>(bNode));
+        if constexpr (std::is_same_v<T, BNodeString>)
+        {
+            if (bNode.nodeType == BNodeType::string)
+            {
+                return (static_cast<T &>(bNode));
+            }
+            else
+            {
+                throw std::runtime_error("BNode not a string.");
+            }
+        }
+        else if constexpr (std::is_same_v<T, BNodeInteger>)
+        {
+            if (bNode.nodeType == BNodeType::integer)
+            {
+                return (static_cast<T &>(bNode));
+            }
+            else
+            {
+                throw std::runtime_error("BNode not an integer.");
+            }
+        }
+        else if constexpr (std::is_same_v<T, BNodeList>)
+        {
+            if (bNode.nodeType == BNodeType::list)
+            {
+                return (static_cast<T &>(bNode));
+            }
+            else
+            {
+                throw std::runtime_error("BNode not a list.");
+            }
+        }
+        else if constexpr (std::is_same_v<T, BNodeDict>)
+        {
+            if (bNode.nodeType == BNodeType::dictionary)
+            {
+                return (static_cast<T &>(bNode));
+            }
+            else
+            {
+                throw std::runtime_error("BNode not a dictionary.");
+            }
+        }
     }
     //
     // Index overloads

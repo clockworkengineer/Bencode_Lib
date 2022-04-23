@@ -181,16 +181,26 @@ void displayTorrentInfo(const TorrentInfo &info)
 // ============================
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
-    Bencode bEncode;
-    TorrentInfo info;
+    try
+    {
+        Bencode bEncode;
+        TorrentInfo info;
 
-    bEncode.decode(FileSource{"./testData/singlefile.torrent"});
-    info = getTorrentInfo(*bEncode);
-    displayTorrentInfo(info);
+        // bEncode.decode(FileSource{"./testData/singlefile.torrent"});
+        // info = getTorrentInfo(*bEncode);
+        // displayTorrentInfo(info);
 
-    bEncode.decode(FileSource{"./testData/multifile.torrent"});
-    info = getTorrentInfo(*bEncode);
-    displayTorrentInfo(info);
+        // bEncode.decode(FileSource{"./testData/multifile.torrent"});
+        // info = getTorrentInfo(*bEncode);
+        // displayTorrentInfo(info);
 
+        bEncode.decode(FileSource{"./testData/file3.torrent"});
+        info = getTorrentInfo(*bEncode);
+        displayTorrentInfo(info);
+    }
+    catch (std::exception ex)
+    {
+        std::cout << "Error : " << ex.what() << "\n";
+    }
     exit(EXIT_SUCCESS);
 }
