@@ -80,6 +80,7 @@ namespace BencodeLib
         {
             return (m_value);
         }
+
     private:
         std::vector<std::pair<std::string, BNodePtr>> m_value;
     };
@@ -105,6 +106,7 @@ namespace BencodeLib
         {
             return (m_value[index].get());
         }
+
     private:
         std::vector<BNodePtr> m_value;
     };
@@ -126,6 +128,7 @@ namespace BencodeLib
         {
             m_value = value;
         }
+
     private:
         int64_t m_value = 0;
     };
@@ -147,6 +150,7 @@ namespace BencodeLib
         {
             m_value = value;
         }
+
     private:
         std::string m_value;
     };
@@ -158,48 +162,33 @@ namespace BencodeLib
     {
         if constexpr (std::is_same_v<T, BNodeString>)
         {
-            if (bNode.nodeType == BNodeType::string)
-            {
-                return (static_cast<T &>(bNode));
-            }
-            else
+            if (bNode.nodeType != BNodeType::string)
             {
                 throw std::runtime_error("BNode not a string.");
             }
         }
         else if constexpr (std::is_same_v<T, BNodeInteger>)
         {
-            if (bNode.nodeType == BNodeType::integer)
-            {
-                return (static_cast<T &>(bNode));
-            }
-            else
+            if (bNode.nodeType != BNodeType::integer)
             {
                 throw std::runtime_error("BNode not an integer.");
             }
         }
         else if constexpr (std::is_same_v<T, BNodeList>)
         {
-            if (bNode.nodeType == BNodeType::list)
-            {
-                return (static_cast<T &>(bNode));
-            }
-            else
+            if (bNode.nodeType != BNodeType::list)
             {
                 throw std::runtime_error("BNode not a list.");
             }
         }
         else if constexpr (std::is_same_v<T, BNodeDict>)
         {
-            if (bNode.nodeType == BNodeType::dictionary)
-            {
-                return (static_cast<T &>(bNode));
-            }
-            else
+            if (bNode.nodeType != BNodeType::dictionary)
             {
                 throw std::runtime_error("BNode not a dictionary.");
             }
         }
+        return (static_cast<T &>(bNode));
     }
     //
     // Index overloads
@@ -212,8 +201,9 @@ namespace BencodeLib
             {
                 return (*((BNodeRef<BNodeDict>(*this).getEntry(key))));
             }
+            throw std::runtime_error("Invalid key used in dictionary.");
         }
-        throw std::runtime_error("Invalid key used in dictionary.");
+        throw std::runtime_error("BNode not a dictionary.");
     }
     inline BNode &BNode::operator[](int index) // List
     {
@@ -223,7 +213,8 @@ namespace BencodeLib
             {
                 return (*((BNodeRef<BNodeList>(*this).getEntry(index))));
             }
+            throw std::runtime_error("Invalid index used in list.");
         }
-        throw std::runtime_error("Invalid index used in list.");
+        throw std::runtime_error("BNode not a list.");
     }
 } // namespace BencodeLib
