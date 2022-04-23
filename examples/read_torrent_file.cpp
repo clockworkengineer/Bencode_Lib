@@ -27,6 +27,11 @@ using namespace BencodeLib;
 // LOCAL TYES/DEFINITIONS
 // ======================
 
+struct TorrentFile
+{
+    std::string path;
+    std::uint64_t length;
+};
 struct TorrentInfo
 {
     std::string announce;
@@ -34,6 +39,7 @@ struct TorrentInfo
     std::string comment;
     std::uint64_t createDate;
     std::string createdBy;
+    std::vector<TorrentFile> files;
     std::uint64_t length;
     std::string name;
     std::uint64_t pieceLength;
@@ -80,11 +86,33 @@ TorrentInfo getTorrentInfo(BNode &bNode)
             {
                 info.attr = BNodeRef<BNodeString>(bNodeInfoDict["attr"]).getString();
             }
-            // if (bNodeInfoDict.containsKey("files"))
-            // {
-            //     BNodeList &bNodeFilesList = BNodeRef<BNodeList>(bNodeInfoDict["files"]);
-            //     getFiles(bNodeFilesList);
-            // }
+            if (bNodeInfoDict.containsKey("files"))
+            {
+                BNodeList &bNodeFilesList = BNodeRef<BNodeList>(bNodeInfoDict["files"]);
+                for (auto &file : bNodeFilesList.getList())
+                {
+                    BNodeDict &bNodeFileDict = BNodeRef<BNodeDict>(*file);
+                    for (auto &[key, bNodePtr] : bNodeFileDict.getDict())
+                    {
+                        std::cout << key << " ";
+                        if (key == "length")
+                        {
+                            uint64_t length = BNodeRef<BNodeInteger>(*bNodePtr).getInteger();
+                            std::cout << length << "\n";
+                        }
+                        else if (key == "path")
+                        {
+                            BNodeList &bNodePathList = BNodeRef<BNodeList>(*bNodePtr);
+                            std::string path{};
+                            for (auto &folder : bNodePathList.getList())
+                            {
+                                path += "/"+ BNodeRef<BNodeString>(*folder).getString();
+                            }
+                            std::cout << path << "\n";
+                        }
+                    }
+                }
+            }
             if (bNodeInfoDict.containsKey("length"))
             {
                 info.length = BNodeRef<BNodeInteger>(bNodeInfoDict["length"]).getInteger();
@@ -129,8 +157,8 @@ TorrentInfo getTorrentInfo(BNode &bNode)
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
     Bencode bEncode;
-    bEncode.decode(FileSource{"./testData/singlefile.torrent"});
-    //bEncode.decode(FileSource{"./testData/multifile.torrent"});
+    // bEncode.decode(FileSource{"./testData/singlefile.torrent"});
+    bEncode.decode(FileSource{"./testData/multifile.torrent"});
     TorrentInfo info = getTorrentInfo(*bEncode);
     std::cout << "announce [" << info.announce << "]\n";
     std::cout << "attr [" << info.attr << "]\n";
