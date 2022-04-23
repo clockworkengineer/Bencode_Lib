@@ -13,6 +13,7 @@
 //
 #include <cstdlib>
 #include <iostream>
+#include <filesystem>
 //
 // Bencode includes
 //
@@ -92,25 +93,41 @@ TorrentInfo getTorrentInfo(BNode &bNode)
                 for (auto &file : bNodeFilesList.getList())
                 {
                     BNodeDict &bNodeFileDict = BNodeRef<BNodeDict>(*file);
-                    for (auto &[key, bNodePtr] : bNodeFileDict.getDict())
+                    TorrentFile fileEntry;
+                    if (bNodeFileDict.containsKey("length"))
                     {
-                        std::cout << key << " ";
-                        if (key == "length")
-                        {
-                            uint64_t length = BNodeRef<BNodeInteger>(*bNodePtr).getInteger();
-                            std::cout << length << "\n";
-                        }
-                        else if (key == "path")
-                        {
-                            BNodeList &bNodePathList = BNodeRef<BNodeList>(*bNodePtr);
-                            std::string path{};
-                            for (auto &folder : bNodePathList.getList())
-                            {
-                                path += "/"+ BNodeRef<BNodeString>(*folder).getString();
-                            }
-                            std::cout << path << "\n";
-                        }
+                        fileEntry.length = BNodeRef<BNodeInteger>(bNodeFileDict["length"]).getInteger();
                     }
+                    if (bNodeFileDict.containsKey("path"))
+                    {
+                        BNodeList &bNodePathList = BNodeRef<BNodeList>(bNodeFileDict["path"]);
+                        std::filesystem::path path{};
+                        for (auto &folder : bNodePathList.getList())
+                        {
+                            path += "/" + BNodeRef<BNodeString>(*folder).getString();
+                        }
+                        fileEntry.path = path.string();
+                    }
+                    // for (auto &[key, bNodePtr] : bNodeFileDict.getDict())
+                    // {
+                    //     std::cout << key << " ";
+                    //     if (key == "length")
+                    //     {
+                    //         uint64_t length = BNodeRef<BNodeInteger>(*bNodePtr).getInteger();
+                    //         std::cout << length << "\n";
+                    //     }
+                    //     else if (key == "path")
+                    //     {
+                    //         BNodeList &bNodePathList = BNodeRef<BNodeList>(*bNodePtr);
+                    //         std::string path{};
+                    //         for (auto &folder : bNodePathList.getList())
+                    //         {
+                    //             path += "/"+ BNodeRef<BNodeString>(*folder).getString();
+                    //         }
+                    //         std::cout << path << "\n";
+                    //     }
+                    // }
+                    info.files.push_back(fileEntry);
                 }
             }
             if (bNodeInfoDict.containsKey("length"))
@@ -157,8 +174,8 @@ TorrentInfo getTorrentInfo(BNode &bNode)
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
     Bencode bEncode;
-    // bEncode.decode(FileSource{"./testData/singlefile.torrent"});
-    bEncode.decode(FileSource{"./testData/multifile.torrent"});
+     bEncode.decode(FileSource{"./testData/singlefile.torrent"});
+    //bEncode.decode(FileSource{"./testData/multifile.torrent"});
     TorrentInfo info = getTorrentInfo(*bEncode);
     std::cout << "announce [" << info.announce << "]\n";
     std::cout << "attr [" << info.attr << "]\n";
@@ -172,5 +189,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
     std::cout << "private [" << info.privateBitMask << "]\n";
     std::cout << "source [" << info.source << "]\n";
     std::cout << "url_list [" << info.urlList << "]\n";
+    for (auto file : info.files)
+    {
+        std::cout << "path [ " << file.path << "] length [" << file.length << "]\n";
+    }
     exit(EXIT_SUCCESS);
 }
