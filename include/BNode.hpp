@@ -33,6 +33,7 @@ namespace BencodeLib
         virtual ~BNode() = default;
         BNode &operator[](const std::string &key);
         BNode &operator[](int index);
+
         const BNodeType nodeType;
     };
     //

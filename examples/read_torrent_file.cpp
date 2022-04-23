@@ -26,52 +26,32 @@ using namespace BencodeLib;
 // ======================
 // LOCAL TYES/DEFINITIONS
 // ======================
+
+struct TorrentInfo
+{
+    std::string announce;
+    std::string attr;
+    std::string comment;
+    std::uint64_t createDate;
+    std::string createdBy;
+    std::uint64_t length;
+    std::string name;
+    std::uint64_t pieceLength;
+    std::string pieces;
+    std::uint64_t privateBitMask;
+    std::string source;
+    std::string urlList;
+};
+
 // ===============
 // LOCAL FUNCTIONS
 // ===============
-void getInfo(BNodeDict &bNodeDict)
-{
-    if (bNodeDict.containsKey("attr"))
-    {
-        std::cout << "attr [" << BNodeRef<BNodeString>(bNodeDict["attr"]).getString() << "]\n";
-    }
-    if (bNodeDict.containsKey("length"))
-    {
-        std::cout << "length [" << BNodeRef<BNodeInteger>(bNodeDict["length"]).getInteger() << "]\n";
-    }
-    if (bNodeDict.containsKey("name"))
-    {
-        std::cout << "name [" << BNodeRef<BNodeString>(bNodeDict["name"]).getString() << "]\n";
-    }
-    if (bNodeDict.containsKey("piece length"))
-    {
-        std::cout << "piece length [" << BNodeRef<BNodeInteger>(bNodeDict["piece length"]).getInteger() << "]\n";
-    }
-    if (bNodeDict.containsKey("pieces"))
-    {
-        BNodeString &bNodeString = BNodeRef<BNodeString>(bNodeDict["pieces"]);
-        if (bNodeString.nodeType == BNodeType::string)
-        {
-            std::cout << "PIECES\n";
-        }
-    }
-    if (bNodeDict.containsKey("private"))
-    {
-        std::cout << "private [" << BNodeRef<BNodeInteger>(bNodeDict["private"]).getInteger() << "]\n";
-    }
-    if (bNodeDict.containsKey("source"))
-    {
-        std::cout << "source [" << BNodeRef<BNodeString>(bNodeDict["source"]).getString() << "]\n";
-    }
-    for (const auto &[key, bNodePtr] : bNodeDict.getDict())
-    {
-        std::cout << key << "\n";
-    }
-}
-void getTorrentInfo(BNode &bNode)
+
+TorrentInfo getTorrentInfo(BNode &bNode)
 {
     try
     {
+        TorrentInfo info;
         if (bNode.nodeType != BNodeType::dictionary)
         {
             throw std::exception("Valid torrent file not found.");
@@ -79,36 +59,64 @@ void getTorrentInfo(BNode &bNode)
         BNodeDict &bNodeDict = BNodeRef<BNodeDict>(bNode);
         if (bNodeDict.containsKey("announce"))
         {
-            std::cout << "announce [" << BNodeRef<BNodeString>(bNodeDict["announce"]).getString() << "]\n";
+            info.announce = BNodeRef<BNodeString>(bNodeDict["announce"]).getString();
         }
         if (bNodeDict.containsKey("comment"))
         {
-            std::cout << "comment [" << BNodeRef<BNodeString>(bNodeDict["comment"]).getString() << "]\n";
+            info.comment = BNodeRef<BNodeString>(bNodeDict["comment"]).getString();
         }
         if (bNodeDict.containsKey("creation date"))
         {
-            std::cout << "creation date [" << BNodeRef<BNodeInteger>(bNodeDict["creation date"]).getInteger() << "]\n";
+            info.createDate = BNodeRef<BNodeInteger>(bNodeDict["creation date"]).getInteger();
         }
         if (bNodeDict.containsKey("created by"))
         {
-            std::cout << "created by [" << BNodeRef<BNodeString>(bNodeDict["created by"]).getString() << "]\n";
+            info.createdBy = BNodeRef<BNodeString>(bNodeDict["created by"]).getString();
         }
         if (bNodeDict.containsKey("info"))
         {
-            getInfo(BNodeRef<BNodeDict>(bNodeDict["info"]));
-        }
-        else
-        {
-            throw std::exception("Missing info field.");
+            BNodeDict &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeDict["info"]);
+            if (bNodeInfoDict.containsKey("attr"))
+            {
+                info.attr = BNodeRef<BNodeString>(bNodeInfoDict["attr"]).getString();
+            }
+            // if (bNodeInfoDict.containsKey("files"))
+            // {
+            //     BNodeList &bNodeFilesList = BNodeRef<BNodeList>(bNodeInfoDict["files"]);
+            //     getFiles(bNodeFilesList);
+            // }
+            if (bNodeInfoDict.containsKey("length"))
+            {
+                info.length = BNodeRef<BNodeInteger>(bNodeInfoDict["length"]).getInteger();
+            }
+            if (bNodeInfoDict.containsKey("name"))
+            {
+                info.name = BNodeRef<BNodeString>(bNodeInfoDict["name"]).getString();
+            }
+            if (bNodeInfoDict.containsKey("piece length"))
+            {
+                info.pieceLength = BNodeRef<BNodeInteger>(bNodeInfoDict["piece length"]).getInteger();
+            }
+            if (bNodeInfoDict.containsKey("pieces"))
+            {
+                BNodeString &bNodeString = BNodeRef<BNodeString>(bNodeInfoDict["pieces"]);
+                info.pieces = bNodeString.getString();
+            }
+            if (bNodeInfoDict.containsKey("private"))
+            {
+                info.privateBitMask = BNodeRef<BNodeInteger>(bNodeInfoDict["private"]).getInteger();
+            }
+            if (bNodeInfoDict.containsKey("source"))
+            {
+                info.source = BNodeRef<BNodeString>(bNodeInfoDict["source"]).getString();
+            }
         }
         if (bNodeDict.containsKey("url-list"))
         {
-            std::cout << "url-list [" << BNodeRef<BNodeString>(bNodeDict["url-list"]).getString() << "]\n";
+            info.urlList = BNodeRef<BNodeString>(bNodeDict["url-list"]).getString();
         }
-        for (const auto &[key, bNodePtr] : bNodeDict.getDict())
-        {
-            std::cout << key << "\n";
-        }
+
+        return (info);
     }
     catch (std::exception &ex)
     {
@@ -121,8 +129,20 @@ void getTorrentInfo(BNode &bNode)
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
     Bencode bEncode;
-    //  bEncode.decode(FileSource{"./testData/singlefile.torrent"});
-    bEncode.decode(FileSource{"./testData/multifile.torrent"});
-    getTorrentInfo(*bEncode);
+    bEncode.decode(FileSource{"./testData/singlefile.torrent"});
+    //bEncode.decode(FileSource{"./testData/multifile.torrent"});
+    TorrentInfo info = getTorrentInfo(*bEncode);
+    std::cout << "announce [" << info.announce << "]\n";
+    std::cout << "attr [" << info.attr << "]\n";
+    std::cout << "comment [" << info.comment << "]\n";
+    std::cout << "creation_date [" << info.createDate << "]\n";
+    std::cout << "created_by [" << info.createdBy << "]\n";
+    std::cout << "length [" << info.length << "]\n";
+    std::cout << "name [" << info.name << "]\n";
+    std::cout << "piece length [" << info.pieceLength << "]\n";
+    // std::cout << "pieces [" << info.pieces << "]\n";
+    std::cout << "private [" << info.privateBitMask << "]\n";
+    std::cout << "source [" << info.source << "]\n";
+    std::cout << "url_list [" << info.urlList << "]\n";
     exit(EXIT_SUCCESS);
 }
