@@ -2,6 +2,8 @@
 // Program: read_torrent_files
 //
 // Description: Use BencodeLib to read in torrent file details.
+// Details on the torrent file format can be found at the wiki page
+// https://en.wikipedia.org/wiki/Torrent_file.
 //
 // Dependencies: C20++, BencodeLib.
 //
@@ -40,7 +42,7 @@ void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &s
 }
 void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t &integer)
 {
-    if (bNodeDict.containsKey(field)) 
+    if (bNodeDict.containsKey(field))
     {
         integer = BNodeRef<BNodeInteger>(bNodeDict[field]).getInteger();
     }
@@ -62,31 +64,45 @@ void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
         }
     }
 }
+void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
+{
+    if (bNodeDict.containsKey("path"))
+    {
+        std::filesystem::path path{};
+        for (auto &folder : BNodeRef<BNodeList>(bNodeDict["path"]).getList())
+        {
+            path /= BNodeRef<BNodeString>(*folder).getString();
+        }
+        filePath = path.string();
+    }
+}
 void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &files)
 {
-
     if (bNodeInfoDict.containsKey("files"))
     {
-        BNodeList &bNodeFilesList = BNodeRef<BNodeList>(bNodeInfoDict["files"]);
-        for (auto &file : bNodeFilesList.getList())
+        for (auto &file :  BNodeRef<BNodeList>(bNodeInfoDict["files"]).getList())
         {
-            BNodeDict &bNodeFileDict = BNodeRef<BNodeDict>(*file);
             TorrentFileDetails fileEntry;
-            if (bNodeFileDict.containsKey("length"))
-            {
-                fileEntry.length = BNodeRef<BNodeInteger>(bNodeFileDict["length"]).getInteger();
-            }
-            if (bNodeFileDict.containsKey("path"))
-            {
-                BNodeList &bNodePathList = BNodeRef<BNodeList>(bNodeFileDict["path"]);
-                std::filesystem::path path{};
-                for (auto &folder : bNodePathList.getList())
-                {
-                    path += "/" + BNodeRef<BNodeString>(*folder).getString();
-                }
-                fileEntry.path = path.string();
-            }
+            getDictionaryInteger(BNodeRef<BNodeDict>(*file), "length", fileEntry.length);
+            getFilePath(BNodeRef<BNodeDict>(*file),fileEntry.path);
             files.push_back(fileEntry);
+        }
+    }
+}
+void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
+{
+    if (bNodeDict.containsKey("url-list"))
+    {
+        if (bNodeDict["url-list"].nodeType == BNodeType::string)
+        {
+            urlList.push_back(BNodeRef<BNodeString>(bNodeDict["url-list"]).getString());
+        }
+        else if (bNodeDict["url-list"].nodeType == BNodeType::list)
+        {
+            for (auto &bNodeURLString : BNodeRef<BNodeList>(bNodeDict["url-list"]).getList())
+            {
+                urlList.push_back(BNodeRef<BNodeString>(*bNodeURLString).getString());
+            }
         }
     }
 }
@@ -96,19 +112,16 @@ void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &fil
 TorrentMetaInfo getTorrentInfo(BNode &bNode)
 {
     TorrentMetaInfo info;
-
     if (bNode.nodeType != BNodeType::dictionary)
     {
         throw std::exception("Valid torrent file not found.");
     }
-
     BNodeDict &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
     getDictionaryString(bNodeTopLevelDict, "announce", info.announce);
     getAnnouceList(bNodeTopLevelDict, info.annouceList);
     getDictionaryString(bNodeTopLevelDict, "comment", info.comment);
     getDictionaryInteger(bNodeTopLevelDict, "creation date", info.creationDate);
     getDictionaryString(bNodeTopLevelDict, "created by", info.createdBy);
-
     if (bNodeTopLevelDict.containsKey("info"))
     {
         BNodeDict &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
@@ -121,20 +134,7 @@ TorrentMetaInfo getTorrentInfo(BNode &bNode)
         getDictionaryString(bNodeInfoDict, "source", info.source);
         getFilesList(bNodeInfoDict, info.files);
     }
-    if (bNodeTopLevelDict.containsKey("url-list"))
-    {
-        if (bNodeTopLevelDict["url-list"].nodeType == BNodeType::string)
-        {
-            info.urlList.push_back(BNodeRef<BNodeString>(bNodeTopLevelDict["url-list"]).getString());
-        }
-        else if (bNodeTopLevelDict["url-list"].nodeType == BNodeType::list)
-        {
-            for (auto &bNodeURLString : BNodeRef<BNodeList>(bNodeTopLevelDict["url-list"]).getList())
-            {
-                info.urlList.push_back(BNodeRef<BNodeString>(*bNodeURLString).getString());
-            }
-        }
-    }
+    getURLList(bNodeTopLevelDict, info.urlList);
     return (info);
 }
 void displayTorrentInfo(const TorrentMetaInfo &info)
