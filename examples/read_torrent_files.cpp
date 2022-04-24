@@ -33,6 +33,15 @@ using namespace BencodeLib;
 // ======================
 // LOCAL TYES/DEFINITIONS
 // ======================
+
+/// ********************************************************************************
+/// <summary>
+///
+/// </summary>
+/// <param name="bNodeDict"></param>
+/// <param name="field"></param>
+/// <param name="str"></param>
+/// ********************************************************************************
 void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &str)
 {
     if (bNodeDict.containsKey(field))
@@ -40,6 +49,14 @@ void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &s
         str = BNodeRef<BNodeString>(bNodeDict[field]).getString();
     }
 }
+/// ********************************************************************************
+/// <summary>
+///
+/// </summary>
+/// <param name="bNodeDict"></param>
+/// <param name="field"></param>
+/// <param name="integer"></param>
+/// ********************************************************************************
 void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t &integer)
 {
     if (bNodeDict.containsKey(field))
@@ -47,6 +64,13 @@ void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t
         integer = BNodeRef<BNodeInteger>(bNodeDict[field]).getInteger();
     }
 }
+/// ********************************************************************************
+/// <summary>
+///
+/// </summary>
+/// <param name="bNodeDict"></param>
+/// <param name="strings"></param>
+/// ********************************************************************************
 void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
 {
     // This is meant to be a simple list of strings but for some reason each string
@@ -64,6 +88,13 @@ void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
         }
     }
 }
+/// ********************************************************************************
+/// <summary>
+///
+/// </summary>
+/// <param name="bNodeDict"></param>
+/// <param name="filePath"></param>
+/// ********************************************************************************
 void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
 {
     if (bNodeDict.containsKey("path"))
@@ -76,19 +107,33 @@ void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
         filePath = path.string();
     }
 }
+/// ********************************************************************************
+/// <summary>
+///
+/// </summary>
+/// <param name="bNodeInfoDict"></param>
+/// <param name="files"></param>
+/// ********************************************************************************
 void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &files)
 {
     if (bNodeInfoDict.containsKey("files"))
     {
-        for (auto &file :  BNodeRef<BNodeList>(bNodeInfoDict["files"]).getList())
+        for (auto &file : BNodeRef<BNodeList>(bNodeInfoDict["files"]).getList())
         {
             TorrentFileDetails fileEntry;
             getDictionaryInteger(BNodeRef<BNodeDict>(*file), "length", fileEntry.length);
-            getFilePath(BNodeRef<BNodeDict>(*file),fileEntry.path);
+            getFilePath(BNodeRef<BNodeDict>(*file), fileEntry.path);
             files.push_back(fileEntry);
         }
     }
 }
+/// ********************************************************************************
+/// <summary>
+///
+/// </summary>
+/// <param name="bNodeDict"></param>
+/// <param name="urlList"></param>
+/// ********************************************************************************
 void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
 {
     if (bNodeDict.containsKey("url-list"))
@@ -109,6 +154,14 @@ void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
 // ===============
 // LOCAL FUNCTIONS
 // ===============
+
+/// ********************************************************************************
+/// <summary>
+///
+/// </summary>
+/// <param name="bNode"></param>
+/// <returns></returns>
+/// ********************************************************************************
 TorrentMetaInfo getTorrentInfo(BNode &bNode)
 {
     TorrentMetaInfo info;
@@ -137,9 +190,10 @@ TorrentMetaInfo getTorrentInfo(BNode &bNode)
     getURLList(bNodeTopLevelDict, info.urlList);
     return (info);
 }
-void displayTorrentInfo(const TorrentMetaInfo &info)
+void displayTorrentInfo(const std::string &fileName, const TorrentMetaInfo &info)
 {
     std::cout << "------------------------------------------------------------\n";
+    std::cout << "file [ " << fileName << " ]\n";
     std::cout << "announce [" << info.announce << "]\n";
     std::cout << "attr [" << info.attr << "]\n";
     std::cout << "comment [" << info.comment << "]\n";
@@ -148,10 +202,10 @@ void displayTorrentInfo(const TorrentMetaInfo &info)
     std::cout << "length [" << info.length << "]\n";
     std::cout << "name [" << info.name << "]\n";
     std::cout << "piece length [" << info.pieceLength << "]\n";
-    // std::cout << "pieces [" << info.pieces << "]\n";
+     std::cout << "pieces [" << info.pieces << "]\n";
     std::cout << "private [" << info.privateBitMask << "]\n";
     std::cout << "source [" << info.source << "]\n";
-    for (const auto& file : info.files)
+    for (const auto &file : info.files)
     {
         std::cout << "path [ " << file.path << "] length [" << file.length << "]\n";
     }
@@ -161,7 +215,7 @@ void displayTorrentInfo(const TorrentMetaInfo &info)
     }
     for (const auto &url : info.urlList)
     {
-        std::cout << "url [ " << url << "]\n";
+        std::cout << "url [ " << url << "]\n"; 
     }
 }
 // ============================
@@ -171,23 +225,21 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
     try
     {
+        std::vector<std::string> fileList{"./testData/file01.torrent",
+                                          "./testData/file02.torrent",
+                                          "./testData/file03.torrent",
+                                          "./testData/file04.torrent",
+                                          "./testData/file05.torrent"};
         Bencode bEncode;
         TorrentMetaInfo info;
-        bEncode.decode(FileSource{"./testData/file01.torrent"});
-        info = getTorrentInfo(*bEncode);
-        displayTorrentInfo(info);
-        bEncode.decode(FileSource{"./testData/file02.torrent"});
-        info = getTorrentInfo(*bEncode);
-        displayTorrentInfo(info);
-        bEncode.decode(FileSource{"./testData/file03.torrent"});
-        info = getTorrentInfo(*bEncode);
-        displayTorrentInfo(info);
-        bEncode.decode(FileSource{"./testData/file04.torrent"});
-        info = getTorrentInfo(*bEncode);
-        displayTorrentInfo(info);
-        bEncode.decode(FileSource{"./testData/file05.torrent"});
-        info = getTorrentInfo(*bEncode);
-        displayTorrentInfo(info);
+
+        for (auto &fileName : fileList)
+        {
+            bEncode.decode(FileSource{fileName});
+            info = getTorrentInfo(*bEncode);
+            displayTorrentInfo(fileName, info);
+        }
+
     }
     catch (std::exception &ex)
     {
