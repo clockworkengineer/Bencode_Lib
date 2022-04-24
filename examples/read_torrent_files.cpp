@@ -190,10 +190,18 @@ TorrentMetaInfo getTorrentInfo(BNode &bNode)
     getURLList(bNodeTopLevelDict, info.urlList);
     return (info);
 }
+/// ********************************************************************************
+/// <summary>
+/// 
+/// </summary>
+/// <param name="fileName"></param>
+/// <param name="info"></param>
+/// ********************************************************************************
 void displayTorrentInfo(const std::string &fileName, const TorrentMetaInfo &info)
 {
     std::cout << "------------------------------------------------------------\n";
-    std::cout << "file [ " << fileName << " ]\n";
+    std::cout << "FILE [ " << fileName << " ]\n";
+    std::cout << "------------------------------------------------------------\n";
     std::cout << "announce [" << info.announce << "]\n";
     std::cout << "attr [" << info.attr << "]\n";
     std::cout << "comment [" << info.comment << "]\n";
@@ -202,7 +210,7 @@ void displayTorrentInfo(const std::string &fileName, const TorrentMetaInfo &info
     std::cout << "length [" << info.length << "]\n";
     std::cout << "name [" << info.name << "]\n";
     std::cout << "piece length [" << info.pieceLength << "]\n";
-     std::cout << "pieces [" << info.pieces << "]\n";
+    // std::cout << "pieces [" << info.pieces << "]\n";
     std::cout << "private [" << info.privateBitMask << "]\n";
     std::cout << "source [" << info.source << "]\n";
     for (const auto &file : info.files)
@@ -215,7 +223,7 @@ void displayTorrentInfo(const std::string &fileName, const TorrentMetaInfo &info
     }
     for (const auto &url : info.urlList)
     {
-        std::cout << "url [ " << url << "]\n"; 
+        std::cout << "url [ " << url << "]\n";
     }
 }
 // ============================
@@ -239,7 +247,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
             info = getTorrentInfo(*bEncode);
             displayTorrentInfo(fileName, info);
         }
-
     }
     catch (std::exception &ex)
     {
