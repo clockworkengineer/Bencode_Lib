@@ -24,5 +24,3 @@ foreach( EXAMPLE_PROGRAM ${EXAMPLE_SOURCES} )
     target_link_libraries( ${EXAMPLE_TARGET} BencodeLib )
     install(TARGETS ${EXAMPLE_TARGET} DESTINATION bin)
 endforeach( EXAMPLE_PROGRAM ${EXAMPLE_SOURCES} )
-
-message(${CMAKE_CURRENT_BINARY_DIR}"/"$<CONFIG>/)

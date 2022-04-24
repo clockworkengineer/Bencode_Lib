@@ -20,6 +20,10 @@
 #include "Bencode.hpp"
 #include "BencodeSources.hpp"
 #include "BencodeDestinations.hpp"
+//
+// Torrent includes
+//
+#include "TorrentInfo.hpp"
 // =======================
 // Bencode class namespace
 // =======================
@@ -27,125 +31,95 @@ using namespace BencodeLib;
 // ======================
 // LOCAL TYES/DEFINITIONS
 // ======================
-struct TorrentFile
+void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &str)
 {
-    std::string path;
-    std::uint64_t length;
-};
-struct TorrentInfo
-{
-    std::string announce;
-    std::vector<std::string> annouceList;
-    std::string attr;
-    std::string comment;
-    std::uint64_t creationDate;
-    std::string createdBy;
-    std::vector<TorrentFile> files;
-    std::uint64_t length;
-    std::string name;
-    std::uint64_t pieceLength;
-    std::string pieces;
-    std::uint64_t privateBitMask;
-    std::string source;
-    std::vector<std::string> urlList;
-};
-void getListString(BNodeList &nodeList, std::vector<std::string> &strings)
-{
-    for (auto &bNode : nodeList.getList())
+    if (bNodeDict.containsKey(field))
     {
-        BNodeList &bNodeInnerList = BNodeRef<BNodeList>(*bNode);
-        for (auto &bNodeString : bNodeInnerList.getList())
+        str = BNodeRef<BNodeString>(bNodeDict[field]).getString();
+    }
+}
+void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t &integer)
+{
+    if (bNodeDict.containsKey(field))
+    {
+        integer = BNodeRef<BNodeInteger>(bNodeDict[field]).getInteger();
+    }
+}
+void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
+{
+    // This is meant to be a simple list of strings but for some reason each string
+    // is encased in its own list for an extra level (bug ?).
+    if (bNodeDict.containsKey("announce-list"))
+    {
+        BNodeList &bNodeList = BNodeRef<BNodeList>(bNodeDict["announce-list"]);
+        for (auto &bNode : bNodeList.getList())
         {
-            strings.push_back(BNodeRef<BNodeString>(*bNodeString).getString());
+            BNodeList &bNodeInnerList = BNodeRef<BNodeList>(*bNode);
+            for (auto &bNodeString : bNodeInnerList.getList())
+            {
+                strings.push_back(BNodeRef<BNodeString>(*bNodeString).getString());
+            }
+        }
+    }
+}
+void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &files)
+{
+
+    if (bNodeInfoDict.containsKey("files"))
+    {
+        BNodeList &bNodeFilesList = BNodeRef<BNodeList>(bNodeInfoDict["files"]);
+        for (auto &file : bNodeFilesList.getList())
+        {
+            BNodeDict &bNodeFileDict = BNodeRef<BNodeDict>(*file);
+            TorrentFileDetails fileEntry;
+            if (bNodeFileDict.containsKey("length"))
+            {
+                fileEntry.length = BNodeRef<BNodeInteger>(bNodeFileDict["length"]).getInteger();
+            }
+            if (bNodeFileDict.containsKey("path"))
+            {
+                BNodeList &bNodePathList = BNodeRef<BNodeList>(bNodeFileDict["path"]);
+                std::filesystem::path path{};
+                for (auto &folder : bNodePathList.getList())
+                {
+                    path += "/" + BNodeRef<BNodeString>(*folder).getString();
+                }
+                fileEntry.path = path.string();
+            }
+            files.push_back(fileEntry);
         }
     }
 }
 // ===============
 // LOCAL FUNCTIONS
 // ===============
-TorrentInfo getTorrentInfo(BNode &bNode)
+TorrentMetaInfo getTorrentInfo(BNode &bNode)
 {
-    TorrentInfo info;
+    TorrentMetaInfo info;
+
     if (bNode.nodeType != BNodeType::dictionary)
     {
         throw std::exception("Valid torrent file not found.");
     }
+
     BNodeDict &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
-    if (bNodeTopLevelDict.containsKey("announce"))
-    {
-        info.announce = BNodeRef<BNodeString>(bNodeTopLevelDict["announce"]).getString();
-    }
-    if (bNodeTopLevelDict.containsKey("announce-list"))
-    {
-        getListString(BNodeRef<BNodeList>(bNodeTopLevelDict["announce-list"]), info.annouceList);
-    }
-    if (bNodeTopLevelDict.containsKey("comment"))
-    {
-        info.comment = BNodeRef<BNodeString>(bNodeTopLevelDict["comment"]).getString();
-    }
-    if (bNodeTopLevelDict.containsKey("creation date"))
-    {
-        info.creationDate = BNodeRef<BNodeInteger>(bNodeTopLevelDict["creation date"]).getInteger();
-    }
-    if (bNodeTopLevelDict.containsKey("created by"))
-    {
-        info.createdBy = BNodeRef<BNodeString>(bNodeTopLevelDict["created by"]).getString();
-    }
+    getDictionaryString(bNodeTopLevelDict, "announce", info.announce);
+    getAnnouceList(bNodeTopLevelDict, info.annouceList);
+    getDictionaryString(bNodeTopLevelDict, "comment", info.comment);
+    getDictionaryInteger(bNodeTopLevelDict, "creation date", info.creationDate);
+    getDictionaryString(bNodeTopLevelDict, "created by", info.createdBy);
+
     if (bNodeTopLevelDict.containsKey("info"))
     {
         BNodeDict &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
-        if (bNodeInfoDict.containsKey("attr"))
-        {
-            info.attr = BNodeRef<BNodeString>(bNodeInfoDict["attr"]).getString();
-        }
-        if (bNodeInfoDict.containsKey("files"))
-        {
-            BNodeList &bNodeFilesList = BNodeRef<BNodeList>(bNodeInfoDict["files"]);
-            for (auto &file : bNodeFilesList.getList())
-            {
-                BNodeDict &bNodeFileDict = BNodeRef<BNodeDict>(*file);
-                TorrentFile fileEntry;
-                if (bNodeFileDict.containsKey("length"))
-                {
-                    fileEntry.length = BNodeRef<BNodeInteger>(bNodeFileDict["length"]).getInteger();
-                }
-                if (bNodeFileDict.containsKey("path"))
-                {
-                    BNodeList &bNodePathList = BNodeRef<BNodeList>(bNodeFileDict["path"]);
-                    std::filesystem::path path{};
-                    for (auto &folder : bNodePathList.getList())
-                    {
-                        path += "/" + BNodeRef<BNodeString>(*folder).getString();
-                    }
-                    fileEntry.path = path.string();
-                }
-                info.files.push_back(fileEntry);
-            }
-        }
-        if (bNodeInfoDict.containsKey("length"))
-        {
-            info.length = BNodeRef<BNodeInteger>(bNodeInfoDict["length"]).getInteger();
-        }
-        if (bNodeInfoDict.containsKey("name"))
-        {
-            info.name = BNodeRef<BNodeString>(bNodeInfoDict["name"]).getString();
-        }
-        if (bNodeInfoDict.containsKey("piece length"))
-        {
-            info.pieceLength = BNodeRef<BNodeInteger>(bNodeInfoDict["piece length"]).getInteger();
-        }
-        if (bNodeInfoDict.containsKey("pieces"))
-        {
-            info.pieces = BNodeRef<BNodeString>(bNodeInfoDict["pieces"]).getString();
-        }
-        if (bNodeInfoDict.containsKey("private"))
-        {
-            info.privateBitMask = BNodeRef<BNodeInteger>(bNodeInfoDict["private"]).getInteger();
-        }
-        if (bNodeInfoDict.containsKey("source"))
-        {
-            info.source = BNodeRef<BNodeString>(bNodeInfoDict["source"]).getString();
-        }
+        getDictionaryString(bNodeInfoDict, "attr", info.attr);
+        getDictionaryInteger(bNodeInfoDict, "length", info.length);
+        getDictionaryString(bNodeInfoDict, "name", info.name);
+        getDictionaryInteger(bNodeInfoDict, "piece length", info.pieceLength);
+        getDictionaryString(bNodeInfoDict, "pieces", info.pieces);
+        getDictionaryInteger(bNodeInfoDict, "private", info.privateBitMask);
+        getDictionaryString(bNodeInfoDict, "source", info.source);
+        getFilesList(bNodeInfoDict, info.files);
     }
     if (bNodeTopLevelDict.containsKey("url-list"))
     {
@@ -163,7 +137,7 @@ TorrentInfo getTorrentInfo(BNode &bNode)
     }
     return (info);
 }
-void displayTorrentInfo(const TorrentInfo &info)
+void displayTorrentInfo(const TorrentMetaInfo &info)
 {
     std::cout << "------------------------------------------------------------\n";
     std::cout << "announce [" << info.announce << "]\n";
@@ -185,7 +159,6 @@ void displayTorrentInfo(const TorrentInfo &info)
     {
         std::cout << "announce url [ " << announceURL << "]\n";
     }
-
     for (auto &url : info.urlList)
     {
         std::cout << "url [ " << url << "]\n";
@@ -199,20 +172,20 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
     try
     {
         Bencode bEncode;
-        TorrentInfo info;
-        bEncode.decode(FileSource{"./testData/singlefile.torrent"});
-        info = getTorrentInfo(*bEncode);
-        displayTorrentInfo(info);
-        bEncode.decode(FileSource{"./testData/multifile.torrent"});
-        info = getTorrentInfo(*bEncode);
-        displayTorrentInfo(info);
-        bEncode.decode(FileSource{"./testData/file1.torrent"});
-        info = getTorrentInfo(*bEncode);
-        displayTorrentInfo(info);
-        bEncode.decode(FileSource{"./testData/file2.torrent"});
-        info = getTorrentInfo(*bEncode);
-        displayTorrentInfo(info);
-        bEncode.decode(FileSource{"./testData/file3.torrent"});
+        TorrentMetaInfo info;
+        // bEncode.decode(FileSource{"./testData/file01.torrent"});
+        // info = getTorrentInfo(*bEncode);
+        // displayTorrentInfo(info);
+        // bEncode.decode(FileSource{"./testData/file02.torrent"});
+        // info = getTorrentInfo(*bEncode);
+        // displayTorrentInfo(info);
+        // bEncode.decode(FileSource{"./testData/file03.torrent"});
+        // info = getTorrentInfo(*bEncode);
+        // displayTorrentInfo(info);
+        // bEncode.decode(FileSource{"./testData/file04.torrent"});
+        // info = getTorrentInfo(*bEncode);
+        // displayTorrentInfo(info);
+        bEncode.decode(FileSource{"./testData/file05.torrent"});
         info = getTorrentInfo(*bEncode);
         displayTorrentInfo(info);
     }
