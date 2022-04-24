@@ -53,10 +53,10 @@ void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
     // is encased in its own list for an extra level (bug ?).
     if (bNodeDict.containsKey("announce-list"))
     {
-        BNodeList &bNodeList = BNodeRef<BNodeList>(bNodeDict["announce-list"]);
+        auto &bNodeList = BNodeRef<BNodeList>(bNodeDict["announce-list"]);
         for (auto &bNode : bNodeList.getList())
         {
-            BNodeList &bNodeInnerList = BNodeRef<BNodeList>(*bNode);
+            auto &bNodeInnerList = BNodeRef<BNodeList>(*bNode);
             for (auto &bNodeString : bNodeInnerList.getList())
             {
                 strings.push_back(BNodeRef<BNodeString>(*bNodeString).getString());
@@ -116,7 +116,7 @@ TorrentMetaInfo getTorrentInfo(BNode &bNode)
     {
         throw std::exception("Valid torrent file not found.");
     }
-    BNodeDict &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
+    auto &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
     getDictionaryString(bNodeTopLevelDict, "announce", info.announce);
     getAnnouceList(bNodeTopLevelDict, info.annouceList);
     getDictionaryString(bNodeTopLevelDict, "comment", info.comment);
@@ -124,7 +124,7 @@ TorrentMetaInfo getTorrentInfo(BNode &bNode)
     getDictionaryString(bNodeTopLevelDict, "created by", info.createdBy);
     if (bNodeTopLevelDict.containsKey("info"))
     {
-        BNodeDict &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
+        auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
         getDictionaryString(bNodeInfoDict, "attr", info.attr);
         getDictionaryInteger(bNodeInfoDict, "length", info.length);
         getDictionaryString(bNodeInfoDict, "name", info.name);
@@ -151,15 +151,15 @@ void displayTorrentInfo(const TorrentMetaInfo &info)
     // std::cout << "pieces [" << info.pieces << "]\n";
     std::cout << "private [" << info.privateBitMask << "]\n";
     std::cout << "source [" << info.source << "]\n";
-    for (auto file : info.files)
+    for (const auto& file : info.files)
     {
         std::cout << "path [ " << file.path << "] length [" << file.length << "]\n";
     }
-    for (auto &announceURL : info.annouceList)
+    for (const auto &announceURL : info.annouceList)
     {
         std::cout << "announce url [ " << announceURL << "]\n";
     }
-    for (auto &url : info.urlList)
+    for (const auto &url : info.urlList)
     {
         std::cout << "url [ " << url << "]\n";
     }

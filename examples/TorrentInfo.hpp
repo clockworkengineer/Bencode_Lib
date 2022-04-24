@@ -8,7 +8,7 @@
 struct TorrentFileDetails
 {
     std::string path;
-    std::uint64_t length;
+    std::uint64_t length{};
 };
 struct TorrentMetaInfo
 {
@@ -16,14 +16,14 @@ struct TorrentMetaInfo
     std::vector<std::string> annouceList;
     std::string attr;
     std::string comment;
-    std::uint64_t creationDate;
+    std::uint64_t creationDate{};
     std::string createdBy;
     std::vector<TorrentFileDetails> files;
-    std::uint64_t length;
+    std::uint64_t length{};
     std::string name;
-    std::uint64_t pieceLength;
+    std::uint64_t pieceLength{};
     std::string pieces;
-    std::uint64_t privateBitMask;
+    std::uint64_t privateBitMask{};
     std::string source;
     std::vector<std::string> urlList;
 };

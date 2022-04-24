@@ -15,9 +15,7 @@ namespace BencodeLib
     class BufferDestination : public IDestination
     {
     public:
-        BufferDestination()
-        {
-        }
+        BufferDestination() = default;
         void add(const std::string &sourceBuffer) override
         {
             for (auto ch : sourceBuffer)
@@ -36,7 +34,7 @@ namespace BencodeLib
     class FileDestination : public IDestination
     {
     public:
-        FileDestination(const std::string &desinationFileName)
+        explicit FileDestination(const std::string &desinationFileName)
         {
             m_destination.open(desinationFileName.c_str(), std::ios_base::binary);
             if (!m_destination.is_open())

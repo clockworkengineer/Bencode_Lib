@@ -16,7 +16,7 @@ namespace BencodeLib
     class BufferSource : public ISource
     {
     public:
-        BufferSource(const std::string &sourceBuffer)
+        explicit BufferSource(const std::string &sourceBuffer)
         {
             if (sourceBuffer.empty())
             {
@@ -27,16 +27,16 @@ namespace BencodeLib
                 m_decodeBuffer.push_back(static_cast<std::byte>(ch));
             }
         }
-        char current() const override
+        [[nodiscard]] char current() const override
         {
             if (more())
             {
                 return (static_cast<char>(m_decodeBuffer[static_cast<int>(m_bufferPosition)]));
             }
-            else
-            {
+            
+            
                 return (static_cast<char>(EOF));
-            }
+           
         }
         void next() override
         {
@@ -46,7 +46,7 @@ namespace BencodeLib
             }
             m_bufferPosition++;
         }
-        bool more() const override
+        [[nodiscard]] bool more() const override
         {
             return (m_bufferPosition < m_decodeBuffer.size());
         }
@@ -62,7 +62,7 @@ namespace BencodeLib
     class FileSource : public ISource
     {
     public:
-        FileSource(const std::string &sourceFileName)
+        explicit FileSource(const std::string &sourceFileName)
         {
             m_source.open(sourceFileName.c_str(), std::ios_base::binary);
             if (!m_source.is_open())
@@ -76,7 +76,7 @@ namespace BencodeLib
         }
         void next() override
         {
-            char c;
+            char c = 0;
             m_source.get(c);
         }
         bool more() const override

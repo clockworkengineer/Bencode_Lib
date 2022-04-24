@@ -31,7 +31,7 @@ namespace BencodeLib
         struct Error : public std::exception
         {
         public:
-            explicit Error(const std::string &errorMessage) : errorMessage(errorMessage) {}
+            explicit Error(std::string errorMessage) : errorMessage(std::move(errorMessage)) {}
             [[nodiscard]] const char *what() const noexcept override
             {
                 return(errorMessage.c_str());
