@@ -1,5 +1,5 @@
 //
-// Program: read_torrent_file
+// Program: read_torrent_files
 //
 // Description: Use BencodeLib to read in torrent file details.
 //
@@ -40,7 +40,7 @@ void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &s
 }
 void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t &integer)
 {
-    if (bNodeDict.containsKey(field))
+    if (bNodeDict.containsKey(field)) 
     {
         integer = BNodeRef<BNodeInteger>(bNodeDict[field]).getInteger();
     }
@@ -173,18 +173,18 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
     {
         Bencode bEncode;
         TorrentMetaInfo info;
-        // bEncode.decode(FileSource{"./testData/file01.torrent"});
-        // info = getTorrentInfo(*bEncode);
-        // displayTorrentInfo(info);
-        // bEncode.decode(FileSource{"./testData/file02.torrent"});
-        // info = getTorrentInfo(*bEncode);
-        // displayTorrentInfo(info);
-        // bEncode.decode(FileSource{"./testData/file03.torrent"});
-        // info = getTorrentInfo(*bEncode);
-        // displayTorrentInfo(info);
-        // bEncode.decode(FileSource{"./testData/file04.torrent"});
-        // info = getTorrentInfo(*bEncode);
-        // displayTorrentInfo(info);
+        bEncode.decode(FileSource{"./testData/file01.torrent"});
+        info = getTorrentInfo(*bEncode);
+        displayTorrentInfo(info);
+        bEncode.decode(FileSource{"./testData/file02.torrent"});
+        info = getTorrentInfo(*bEncode);
+        displayTorrentInfo(info);
+        bEncode.decode(FileSource{"./testData/file03.torrent"});
+        info = getTorrentInfo(*bEncode);
+        displayTorrentInfo(info);
+        bEncode.decode(FileSource{"./testData/file04.torrent"});
+        info = getTorrentInfo(*bEncode);
+        displayTorrentInfo(info);
         bEncode.decode(FileSource{"./testData/file05.torrent"});
         info = getTorrentInfo(*bEncode);
         displayTorrentInfo(info);
