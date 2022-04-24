@@ -34,7 +34,7 @@ namespace BencodeLib
             explicit Error(std::string errorMessage) : errorMessage(std::move(errorMessage)) {}
             [[nodiscard]] const char *what() const noexcept override
             {
-                return(errorMessage.c_str());
+                return (errorMessage.c_str());
             }
 
         private:
@@ -129,21 +129,16 @@ namespace BencodeLib
     struct BNodeInteger : BNode
     {
         BNodeInteger() : BNode(BNodeType::integer) {}
-        explicit BNodeInteger(int64_t value) : BNode(BNodeType::integer)
+        explicit BNodeInteger(int64_t value) : BNode(BNodeType::integer), m_value(value)
         {
-            m_value = value;
         }
         [[nodiscard]] int64_t getInteger() const
         {
             return (m_value);
         }
-        void setInteger(int64_t value)
-        {
-            m_value = value;
-        }
 
     private:
-        int64_t m_value = 0;
+        const int64_t m_value = 0;
     };
     //
     // String BNode.
@@ -151,21 +146,16 @@ namespace BencodeLib
     struct BNodeString : BNode
     {
         BNodeString() : BNode(BNodeType::string) {}
-        explicit BNodeString(const std::string &value) : BNode(BNodeType::string)
+        explicit BNodeString(const std::string &value) : BNode(BNodeType::string), m_value(value)
         {
-            this->m_value = value;
         }
         [[nodiscard]] std::string getString() const
         {
             return (m_value);
         }
-        void setString(const std::string &value)
-        {
-            m_value = value;
-        }
 
     private:
-        std::string m_value;
+        const std::string m_value;
     };
     //
     // Convert base BNode reference
