@@ -186,18 +186,19 @@ namespace BencodeLib
     /// ********************************************************************************
     BNodePtr Bencode::decodeList(ISource &source)
     {
-        BNodePtr bNode = std::make_unique<BNodeList>();
+        //BNodePtr bNode = std::make_unique<BNodeList>();
+        std::vector<BNodePtr> list;
         source.next();
         while (source.more() && source.current() != 'e')
         {
-            BNodeRef<BNodeList>(*bNode).addEntry(decodeBNodes(source));
+            list.emplace_back(decodeBNodes(source));
         }
         if (source.current() != 'e')
         {
             throw SyntaxError();
         }
         source.next();
-        return (bNode);
+        return (std::make_unique<BNodeList>(list));
     }
     /// ********************************************************************************
     /// <summary>

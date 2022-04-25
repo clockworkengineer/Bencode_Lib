@@ -59,7 +59,9 @@ namespace BencodeLib
     {
         using Entry = std::pair<std::string, BNodePtr>;
         explicit BNodeDict(std::vector<BNodeDict::Entry> &value) : BNode(BNodeType::dictionary),
-                                                                   m_value(std::move(value)) {}
+                                                                   m_value(std::move(value))
+        {
+        }
         [[nodiscard]] bool containsKey(const std::string &key) const
         {
             return (std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
@@ -93,34 +95,33 @@ namespace BencodeLib
     //
     struct BNodeList : BNode
     {
-        BNodeList() : BNode(BNodeType::list) {}
+        explicit BNodeList(std::vector<BNodePtr> &value) : BNode(BNodeType::list),
+                                                           m_value(std::move(value))
+        {
+        }
         [[nodiscard]] int size() const
         {
             return (static_cast<int>(m_value.size()));
         }
-        void addEntry(BNodePtr bNode)
-        {
-            m_value.push_back(std::move(bNode));
-        }
-        std::vector<BNodePtr> &getList()
+        const std::vector<BNodePtr> &getList() const
         {
             return (m_value);
         }
-        BNode *getEntry(int index)
+        BNode *getEntry(int index) const
         {
             return (m_value[index].get());
         }
 
     private:
-        std::vector<BNodePtr> m_value;
+        const std::vector<BNodePtr> m_value;
     };
     //
     // Integer BNode.
     //
     struct BNodeInteger : BNode
     {
-        //BNodeInteger() : BNode(BNodeType::integer) {}
-        explicit BNodeInteger(int64_t value) : BNode(BNodeType::integer), m_value(value)
+        explicit BNodeInteger(int64_t value) : BNode(BNodeType::integer),
+                                               m_value(value)
         {
         }
         [[nodiscard]] int64_t getInteger() const
@@ -136,8 +137,8 @@ namespace BencodeLib
     //
     struct BNodeString : BNode
     {
-       // BNodeString() : BNode(BNodeType::string) {}
-        explicit BNodeString(const std::string &value) : BNode(BNodeType::string), m_value(value)
+        explicit BNodeString(const std::string &value) : BNode(BNodeType::string),
+                                                         m_value(value)
         {
         }
         [[nodiscard]] std::string getString() const
