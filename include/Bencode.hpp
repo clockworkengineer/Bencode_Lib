@@ -41,14 +41,14 @@ namespace BencodeLib
         struct SyntaxError : public std::exception
         {
         public:
-            explicit SyntaxError(std::string errorMessage = "Bencoding syntax error detected.") : errorMessage(std::move(errorMessage)) {}
+            explicit SyntaxError(const std::string &errorMessage = "Bencode Error : Syntax error detected.") : errorMessage(errorMessage) {}
             [[nodiscard]] const char *what() const noexcept override
             {
                 return (errorMessage.c_str());
             }
 
         private:
-            std::string errorMessage;
+            const std::string  errorMessage;
         };
         // ============
         // CONSTRUCTORS

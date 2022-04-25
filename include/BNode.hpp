@@ -31,14 +31,14 @@ namespace BencodeLib
         struct Error : public std::exception
         {
         public:
-            explicit Error(std::string errorMessage) : errorMessage(std::move(errorMessage)) {}
+            explicit Error(const std::string &errorMessage) : errorMessage(errorMessage) {}
             [[nodiscard]] const char *what() const noexcept override
             {
                 return (errorMessage.c_str());
             }
 
         private:
-            std::string errorMessage;
+            const std::string errorMessage;
         };
         explicit BNode(BNodeType nodeType = BNodeType::base) : nodeType(nodeType)
         {
