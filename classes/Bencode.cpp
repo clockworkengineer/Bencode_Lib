@@ -270,11 +270,11 @@ namespace BencodeLib
             destination.add("e");
             break;
         case BNodeType::integer:
-            destination.add("i" + std::to_string(BNodeRef<BNodeInteger>(*bNode).getInteger()) + "e");
+            destination.add("i" + std::to_string(BNodeRef<BNodeInteger>(*bNode).integer()) + "e");
             break;
         case BNodeType::string:
         {
-            std::string stringToEncode = BNodeRef<BNodeString>(*bNode).getString();
+            std::string stringToEncode = BNodeRef<BNodeString>(*bNode).string();
             destination.add(std::to_string(static_cast<int>(stringToEncode.length())) + ":" + stringToEncode);
             break;
         }

@@ -45,7 +45,7 @@ void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &s
 {
     if (bNodeDict.contains(field))
     {
-        str = BNodeRef<BNodeString>(bNodeDict[field]).getString();
+        str = BNodeRef<BNodeString>(bNodeDict[field]).string();
     }
 }
 /// ********************************************************************************
@@ -60,7 +60,7 @@ void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t
 {
     if (bNodeDict.contains(field))
     {
-        integer = BNodeRef<BNodeInteger>(bNodeDict[field]).getInteger();
+        integer = BNodeRef<BNodeInteger>(bNodeDict[field]).integer();
     }
 }
 /// ********************************************************************************
@@ -76,13 +76,11 @@ void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
     // is encased in its own list for an extra level (bug ?).
     if (bNodeDict.contains("announce-list"))
     {
-        auto &bNodeList = BNodeRef<BNodeList>(bNodeDict["announce-list"]);
-        for (auto &bNode : bNodeList.list())
+        for (auto &bNode : BNodeRef<BNodeList>(bNodeDict["announce-list"]).list())
         {
-            auto &bNodeInnerList = BNodeRef<BNodeList>(*bNode);
-            for (auto &bNodeString : bNodeInnerList.list())
+            for (auto &bNodeString : BNodeRef<BNodeList>(*bNode).list())
             {
-                strings.push_back(BNodeRef<BNodeString>(*bNodeString).getString());
+                strings.push_back(BNodeRef<BNodeString>(*bNodeString).string());
             }
         }
     }
@@ -101,7 +99,7 @@ void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
         std::filesystem::path path{};
         for (auto &folder : BNodeRef<BNodeList>(bNodeDict["path"]).list())
         {
-            path /= BNodeRef<BNodeString>(*folder).getString();
+            path /= BNodeRef<BNodeString>(*folder).string();
         }
         filePath = path.string();
     }
@@ -140,13 +138,13 @@ void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
         // The url can be multiple list or a single string so need to determine
         if (bNodeDict["url-list"].nodeType == BNodeType::string)
         {
-            urlList.push_back(BNodeRef<BNodeString>(bNodeDict["url-list"]).getString());
+            urlList.push_back(BNodeRef<BNodeString>(bNodeDict["url-list"]).string());
         }
         else if (bNodeDict["url-list"].nodeType == BNodeType::list)
         {
             for (auto &bNodeURLString : BNodeRef<BNodeList>(bNodeDict["url-list"]).list())
             {
-                urlList.push_back(BNodeRef<BNodeString>(*bNodeURLString).getString());
+                urlList.push_back(BNodeRef<BNodeString>(*bNodeURLString).string());
             }
         }
     }

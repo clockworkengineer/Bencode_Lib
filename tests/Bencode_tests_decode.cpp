@@ -27,25 +27,25 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ", "[Bencode][De
   {
     BufferSource bEncodeSource{"i266e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == 266);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).integer() == 266);
   }
   SECTION("Decode an integer (1000) and check value", "[Bencode][Decode][Integer]")
   {
     BufferSource bEncodeSource{"i1000e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == 1000);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).integer() == 1000);
   }
   SECTION("Decode an integer (0) and check value", "[Bencode][Decode][Integer]")
   {
     BufferSource bEncodeSource{"i0e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == 0);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).integer() == 0);
   }
   SECTION("Decode an negative integer (-666) and check value", "[Bencode][Decode][Integer]")
   {
     BufferSource bEncodeSource{"i-666e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == -666);
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).integer() == -666);
   }
   SECTION("Decode an negative zero (-0) is a syntax error", "[Bencode][Decode][Integer]")
   {
@@ -63,7 +63,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ", "[Bencode][De
   {
     BufferSource bEncodeSource{"i9223372036854775807e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == std::numeric_limits<int64_t>::max());
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).integer() == std::numeric_limits<int64_t>::max());
   }
   SECTION("Decode out of range postive 64 bit integer (9223372036854775808) and check value", "[Bencode][Decode][Integer]")
   {
@@ -74,7 +74,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ", "[Bencode][De
   {
     BufferSource bEncodeSource{"i-9223372036854775808e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == std::numeric_limits<int64_t>::min());
+    REQUIRE(BNodeRef<BNodeInteger>(*bEncode).integer() == std::numeric_limits<int64_t>::min());
   }
   SECTION("Decode out of range negative 64 bit integer (-9223372036854775809) and check value", "[Bencode][Decode][Integer]")
   {
@@ -91,18 +91,18 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ", "[Bencode][De
   {
     BufferSource bEncodeSource{"12:qwertyuiopas"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == "qwertyuiopas");
+    REQUIRE(BNodeRef<BNodeString>(*bEncode).string() == "qwertyuiopas");
   }
   SECTION("Decode a string ('abcdefghijklmnopqrstuvwxyz') and check value", "[Bencode][Decode][String]")
   {
     BufferSource bEncodeSource{"26:abcdefghijklmnopqrstuvwxyz"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == "abcdefghijklmnopqrstuvwxyz");
+    REQUIRE(BNodeRef<BNodeString>(*bEncode).string() == "abcdefghijklmnopqrstuvwxyz");
   }
   SECTION("Decode a string with zero length", "[Bencode][Decode][String]")
   {
     REQUIRE_NOTHROW(bEncode.decode(BufferSource{"0:"}));
-    REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == "");
+    REQUIRE(BNodeRef<BNodeString>(*bEncode).string() == "");
   }
   SECTION("Decode a string with no length", "[Bencode][Decode][String]")
   {
@@ -124,7 +124,7 @@ TEST_CASE("Bencode for decode of a table of integer test data", "[Bencode][Decod
                                                                      {"i32767e", 32767}}));
   BufferSource bEncodeSource{testInput};
   bEncode.decode(bEncodeSource);
-  REQUIRE(BNodeRef<BNodeInteger>(*bEncode).getInteger() == expected);
+  REQUIRE(BNodeRef<BNodeInteger>(*bEncode).integer() == expected);
 }
 TEST_CASE("Bencode for decode of a table of string test data", "[Bencode][Decode][String]")
 {
@@ -133,7 +133,7 @@ TEST_CASE("Bencode for decode of a table of string test data", "[Bencode][Decode
                                                                          {"6:mnbvcx", "mnbvcx"}}));
   BufferSource bEncodeSource{testInput};
   bEncode.decode(bEncodeSource);
-  REQUIRE(BNodeRef<BNodeString>(*bEncode).getString() == expected);
+  REQUIRE(BNodeRef<BNodeString>(*bEncode).string() == expected);
 }
 TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencode][Decode][List]")
 {
@@ -147,10 +147,10 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     REQUIRE((*bEncode)[1].nodeType == BNodeType::integer);
     REQUIRE((*bEncode)[2].nodeType == BNodeType::integer);
     REQUIRE((*bEncode)[3].nodeType == BNodeType::string);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)[0]).getInteger() == 266);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)[1]).getInteger() == 6780);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)[2]).getInteger() == 88);
-    REQUIRE(BNodeRef<BNodeString>((*bEncode)[3]).getString() == "three");
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)[0]).integer() == 266);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)[1]).integer() == 6780);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)[2]).integer() == 88);
+    REQUIRE(BNodeRef<BNodeString>((*bEncode)[3]).string() == "three");
   }
   SECTION("Decode an list of integers and check values", "[Bencode][Decode][List]")
   {
@@ -159,7 +159,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     std::vector<int64_t> numbers;
     for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).list())
     {
-      numbers.push_back(BNodeRef<BNodeInteger>(*bNode).getInteger());
+      numbers.push_back(BNodeRef<BNodeInteger>(*bNode).integer());
     }
     REQUIRE(numbers == std::vector<int64_t>{266, 6780, 88});
   }
@@ -170,7 +170,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     std::vector<std::string> strings;
     for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).list())
     {
-      strings.push_back(BNodeRef<BNodeString>(*bNode).getString());
+      strings.push_back(BNodeRef<BNodeString>(*bNode).string());
     }
     REQUIRE(strings == std::vector<std::string>{"sillyy", "poiuytrewqas", "abcdefghijklmnopqrstuvwxyz"});
   }
@@ -182,9 +182,9 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     REQUIRE((*bEncode)["one"].nodeType == BNodeType::integer);
     REQUIRE((*bEncode)["two"].nodeType == BNodeType::integer);
     REQUIRE((*bEncode)["three"].nodeType == BNodeType::integer);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)["one"]).getInteger() == 1);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)["two"]).getInteger() == 2);
-    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)["three"]).getInteger() == 3);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)["one"]).integer() == 1);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)["two"]).integer() == 2);
+    REQUIRE(BNodeRef<BNodeInteger>((*bEncode)["three"]).integer() == 3);
   }
   SECTION("Decode an Dictionary of ints and check values", "[Bencode][Decode][Dictionary]")
   {
@@ -193,7 +193,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     std::map<std::string, int64_t> entries;
     for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode).dictionary())
     {
-      entries[bNode.first] = BNodeRef<BNodeInteger>(*bNode.second).getInteger();
+      entries[bNode.first] = BNodeRef<BNodeInteger>(*bNode.second).integer();
     }
     REQUIRE(entries == std::map<std::string, int64_t>{{"one", 1}, {"two", 2}, {"three", 3}});
   }
@@ -204,7 +204,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     std::map<std::string, std::string> entries;
     for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode).dictionary())
     {
-      entries[bNode.first] = BNodeRef<BNodeString>(*bNode.second).getString();
+      entries[bNode.first] = BNodeRef<BNodeString>(*bNode.second).string();
     }
     REQUIRE(entries == std::map<std::string, std::string>{{"one", "0123456789"}, {"two", "asdfghjkl"}, {"three", "qwerty"}});
   }
