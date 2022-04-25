@@ -186,7 +186,6 @@ namespace BencodeLib
     /// ********************************************************************************
     BNodePtr Bencode::decodeList(ISource &source)
     {
-        //BNodePtr bNode = std::make_unique<BNodeList>();
         std::vector<BNodePtr> list;
         source.next();
         while (source.more() && source.current() != 'e')
@@ -255,7 +254,7 @@ namespace BencodeLib
         {
         case BNodeType::dictionary:
             destination.add("d");
-            for (auto &bNodeEntry : BNodeRef<BNodeDict>(*bNode).getDict())
+            for (const auto &bNodeEntry : BNodeRef<BNodeDict>(*bNode).getDict())
             {
                 destination.add(std::to_string(bNodeEntry.first.length()) + ":" + bNodeEntry.first);
                 encodeBNodes(bNodeEntry.second.get(), destination);
@@ -264,7 +263,7 @@ namespace BencodeLib
             break;
         case BNodeType::list:
             destination.add("l");
-            for (auto &bNodeEntry : BNodeRef<BNodeList>(*bNode).getList())
+            for (const auto &bNodeEntry : BNodeRef<BNodeList>(*bNode).getList())
             {
                 encodeBNodes(bNodeEntry.get(), destination);
             }
