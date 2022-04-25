@@ -122,7 +122,7 @@ namespace BencodeLib
                                                m_value(value)
         {
         }
-        [[nodiscard]] int64_t getInteger() const
+        [[nodiscard]] int64_t integer() const
         {
             return (m_value);
         }
@@ -139,7 +139,7 @@ namespace BencodeLib
                                                   m_value(std::move(value))
         {
         }
-        [[nodiscard]] std::string getString() const
+        [[nodiscard]] std::string string() const
         {
             return (m_value);
         }
@@ -151,7 +151,7 @@ namespace BencodeLib
     // Convert base BNode reference
     //
     template <typename T>
-    T &BNodeRef(BNode &bNode)
+    auto &BNodeRef(BNode &bNode)
     {
         if constexpr (std::is_same_v<T, BNodeString>)
         {
@@ -190,9 +190,9 @@ namespace BencodeLib
     {
         if (nodeType == BNodeType::dictionary)
         {
-            if (BNodeRef<BNodeDict>(*this).contains(key))
+            if (auto bNode = (BNodeRef<BNodeDict>(*this).get(key)); bNode != nullptr)
             {
-                return (*((BNodeRef<BNodeDict>(*this).get(key))));
+                return (*bNode);
             }
             throw BNode::Error("BNode Error: Invalid key used in dictionary.");
         }
