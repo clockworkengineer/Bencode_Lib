@@ -31,7 +31,7 @@
 // =======================
 using namespace BencodeLib;
 // ======================
-// LOCAL TYES/DEFINITIONS
+// LOCAL TYPES/DEFINITIONS
 // ======================
 /// ********************************************************************************
 /// <summary>
@@ -109,7 +109,7 @@ void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
 /// Extract and return a vector of file details from a dictionary.
 /// </summary>
 /// <param name="bNodeInfoDict">Dictionary</param>
-/// <param name="files">Constructed ector of file details</param>
+/// <param name="files">Constructed vector of file details</param>
 /// ********************************************************************************
 void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &files)
 {
@@ -126,7 +126,7 @@ void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &fil
 }
 /// ********************************************************************************
 /// <summary>
-/// Extraxt vector of urls from a dictioanry.
+/// Extract vector of urls from a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="urlList">URL list</param>

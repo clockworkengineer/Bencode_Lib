@@ -3,7 +3,7 @@
 namespace BencodeLib
 {
     //
-    // Interface for reading source stream during Bencode deocoding.
+    // Interface for reading source stream during Bencode decoding.
     //
     class ISource
     {

@@ -34,9 +34,9 @@ namespace BencodeLib
     class FileDestination : public IDestination
     {
     public:
-        explicit FileDestination(const std::string &desinationFileName)
+        explicit FileDestination(const std::string &destinationFileName)
         {
-            m_destination.open(desinationFileName.c_str(), std::ios_base::binary);
+            m_destination.open(destinationFileName.c_str(), std::ios_base::binary);
             if (!m_destination.is_open())
             {
                 throw std::runtime_error("Bencode file output stream failed to open or could not be created.");

@@ -241,7 +241,7 @@ namespace BencodeLib
     /// the output stream referenced through the IDestination interface.
     /// </summary>
     /// <param name="bNode">Pointer to root of current BNode structure.</param>
-    /// <param name="desination ">Pointer to interface used to facilitate the output stream.</param>
+    /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     /// <returns></returns>
     /// ********************************************************************************
     void Bencode::encodeBNodes(BNode *bNode, IDestination &destination)
@@ -305,7 +305,7 @@ namespace BencodeLib
     /// Take BNode structure and create an Bencode encoding for it in the destination stream.
     /// </summary>
     /// <param name="bNodeRoot">BNode structure root.</param>
-    /// <param name="desination ">Pointer to interface used to facilitate the output stream.</param>
+    /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     /// <returns></returns>
     /// ********************************************************************************
     void Bencode::encode(IDestination &destination)

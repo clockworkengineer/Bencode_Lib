@@ -28,7 +28,7 @@ namespace BencodeLib
     // ================
 
     // using Integer = int64_t;
-    
+
     class Bencode
     {
     public:
@@ -48,7 +48,7 @@ namespace BencodeLib
             }
 
         private:
-            const std::string  errorMessage;
+            const std::string errorMessage;
         };
         // ============
         // CONSTRUCTORS
