@@ -58,6 +58,7 @@ namespace BencodeLib
     //
     struct BNodeDict : BNode
     {
+        using Entry = std::pair<std::string, BNodePtr>;
         BNodeDict() : BNode(BNodeType::dictionary) {}
         [[nodiscard]] bool containsKey(const std::string &key) const
         {
@@ -89,13 +90,13 @@ namespace BencodeLib
             }
             return (nullptr);
         }
-        std::vector<std::pair<std::string, BNodePtr>> &getDict()
+        std::vector<Entry> &getDict()
         {
             return (m_value);
         }
 
     private:
-        std::vector<std::pair<std::string, BNodePtr>> m_value;
+        std::vector<Entry> m_value;
     };
     //
     // List BNode.
