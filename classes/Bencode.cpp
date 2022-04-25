@@ -147,7 +147,7 @@ namespace BencodeLib
     /// ********************************************************************************
     BNodePtr Bencode::decodeDictionary(ISource &source)
     {
-        BNodePtr bNode = std::make_unique<BNodeDict>();
+        std::vector<BNodeDict::Entry> dictionary;
         std::string lastKey{};
         source.next();
         while (source.more() && source.current() != 'e')
@@ -160,9 +160,10 @@ namespace BencodeLib
             }
             lastKey = key;
             // Check key not duplicate and insert
-            if (!BNodeRef<BNodeDict>(*bNode).containsKey(key))
+            if (std::find_if(dictionary.begin(), dictionary.end(), [&key](const BNodeDict::Entry &entry) -> bool
+                                 { return (entry.first == key); }) == dictionary.end())
             {
-                BNodeRef<BNodeDict>(*bNode).addEntry(key, decodeBNodes(source));
+                dictionary.emplace_back(key, decodeBNodes(source));
             }
             else
             {
@@ -174,7 +175,7 @@ namespace BencodeLib
             throw SyntaxError();
         }
         source.next();
-        return (bNode);
+        return (std::make_unique<BNodeDict>(dictionary));
     }
     /// ********************************************************************************
     /// <summary>
