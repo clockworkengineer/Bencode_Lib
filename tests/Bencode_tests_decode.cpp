@@ -157,7 +157,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     BufferSource bEncodeSource{"li266ei6780ei88ee"};
     bEncode.decode(bEncodeSource);
     std::vector<int64_t> numbers;
-    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).getList())
+    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).list())
     {
       numbers.push_back(BNodeRef<BNodeInteger>(*bNode).getInteger());
     }
@@ -168,7 +168,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     BufferSource bEncodeSource{"l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
     std::vector<std::string> strings;
-    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).getList())
+    for (const auto &bNode : BNodeRef<BNodeList>(*bEncode).list())
     {
       strings.push_back(BNodeRef<BNodeString>(*bNode).getString());
     }
@@ -191,7 +191,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     BufferSource bEncodeSource{"d3:onei1e5:threei3e3:twoi2ee"};
     bEncode.decode(bEncodeSource);
     std::map<std::string, int64_t> entries;
-    for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode).getDict())
+    for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode).dictionary())
     {
       entries[bNode.first] = BNodeRef<BNodeInteger>(*bNode.second).getInteger();
     }
@@ -202,7 +202,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ", "[Bencod
     BufferSource bEncodeSource{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     bEncode.decode(bEncodeSource);
     std::map<std::string, std::string> entries;
-    for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode).getDict())
+    for (const auto &bNode : BNodeRef<BNodeDict>(*bEncode).dictionary())
     {
       entries[bNode.first] = BNodeRef<BNodeString>(*bNode.second).getString();
     }

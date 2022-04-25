@@ -62,27 +62,25 @@ namespace BencodeLib
                                                                    m_value(std::move(value))
         {
         }
-        [[nodiscard]] bool containsKey(const std::string &key) const
+        [[nodiscard]] bool contains(const std::string &key) const
         {
-            return (std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
-                                 { return (entry.first == key); }) != m_value.end());
+            return (get(key) != nullptr);
         }
         [[nodiscard]] int size() const
         {
             return (static_cast<int>(m_value.size()));
         }
-        [[nodiscard]] BNode *getEntry(const std::string &key) const
+        [[nodiscard]] BNode *get(const std::string &key) const
         {
-            for (const auto &entry : m_value)
+            if (auto it = std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
+                                       { return (entry.first == key); });
+                it != m_value.end())
             {
-                if (entry.first == key)
-                {
-                    return (entry.second.get());
-                }
+                return (it->second.get());
             }
             return (nullptr);
         }
-        [[nodiscard]] const std::vector<Entry> &getDict() const
+        [[nodiscard]] const std::vector<Entry> &dictionary() const
         {
             return (m_value);
         }
@@ -103,11 +101,11 @@ namespace BencodeLib
         {
             return (static_cast<int>(m_value.size()));
         }
-        [[nodiscard]] const std::vector<BNodePtr> &getList() const
+        [[nodiscard]] const std::vector<BNodePtr> &list() const
         {
             return (m_value);
         }
-        [[nodiscard]] BNode *getEntry(int index) const
+        [[nodiscard]] BNode *get(int index) const
         {
             return (m_value[index].get());
         }
@@ -138,7 +136,7 @@ namespace BencodeLib
     struct BNodeString : BNode
     {
         explicit BNodeString(std::string value) : BNode(BNodeType::string),
-                                                         m_value(std::move(value))
+                                                  m_value(std::move(value))
         {
         }
         [[nodiscard]] std::string getString() const
@@ -192,9 +190,9 @@ namespace BencodeLib
     {
         if (nodeType == BNodeType::dictionary)
         {
-            if (BNodeRef<BNodeDict>(*this).containsKey(key))
+            if (BNodeRef<BNodeDict>(*this).contains(key))
             {
-                return (*((BNodeRef<BNodeDict>(*this).getEntry(key))));
+                return (*((BNodeRef<BNodeDict>(*this).get(key))));
             }
             throw BNode::Error("BNode Error: Invalid key used in dictionary.");
         }
@@ -206,7 +204,7 @@ namespace BencodeLib
         {
             if ((index >= 0) && (index < (static_cast<int>(BNodeRef<BNodeList>(*this).size()))))
             {
-                return (*((BNodeRef<BNodeList>(*this).getEntry(index))));
+                return (*((BNodeRef<BNodeList>(*this).get(index))));
             }
             throw BNode::Error("BNode Error: Invalid index used in list.");
         }

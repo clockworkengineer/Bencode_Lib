@@ -43,7 +43,7 @@ using namespace BencodeLib;
 /// ********************************************************************************
 void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &str)
 {
-    if (bNodeDict.containsKey(field))
+    if (bNodeDict.contains(field))
     {
         str = BNodeRef<BNodeString>(bNodeDict[field]).getString();
     }
@@ -58,7 +58,7 @@ void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &s
 /// ********************************************************************************
 void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t &integer)
 {
-    if (bNodeDict.containsKey(field))
+    if (bNodeDict.contains(field))
     {
         integer = BNodeRef<BNodeInteger>(bNodeDict[field]).getInteger();
     }
@@ -74,13 +74,13 @@ void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
 {
     // This is meant to be a simple list of strings but for some reason each string
     // is encased in its own list for an extra level (bug ?).
-    if (bNodeDict.containsKey("announce-list"))
+    if (bNodeDict.contains("announce-list"))
     {
         auto &bNodeList = BNodeRef<BNodeList>(bNodeDict["announce-list"]);
-        for (auto &bNode : bNodeList.getList())
+        for (auto &bNode : bNodeList.list())
         {
             auto &bNodeInnerList = BNodeRef<BNodeList>(*bNode);
-            for (auto &bNodeString : bNodeInnerList.getList())
+            for (auto &bNodeString : bNodeInnerList.list())
             {
                 strings.push_back(BNodeRef<BNodeString>(*bNodeString).getString());
             }
@@ -96,10 +96,10 @@ void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
 /// ********************************************************************************
 void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
 {
-    if (bNodeDict.containsKey("path"))
+    if (bNodeDict.contains("path"))
     {
         std::filesystem::path path{};
-        for (auto &folder : BNodeRef<BNodeList>(bNodeDict["path"]).getList())
+        for (auto &folder : BNodeRef<BNodeList>(bNodeDict["path"]).list())
         {
             path /= BNodeRef<BNodeString>(*folder).getString();
         }
@@ -115,9 +115,9 @@ void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
 /// ********************************************************************************
 void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &files)
 {
-    if (bNodeInfoDict.containsKey("files"))
+    if (bNodeInfoDict.contains("files"))
     {
-        for (auto &file : BNodeRef<BNodeList>(bNodeInfoDict["files"]).getList())
+        for (auto &file : BNodeRef<BNodeList>(bNodeInfoDict["files"]).list())
         {
             TorrentFileDetails fileEntry;
             getDictionaryInteger(BNodeRef<BNodeDict>(*file), "length", fileEntry.length);
@@ -135,7 +135,7 @@ void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &fil
 /// ********************************************************************************
 void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
 {
-    if (bNodeDict.containsKey("url-list"))
+    if (bNodeDict.contains("url-list"))
     {
         // The url can be multiple list or a single string so need to determine
         if (bNodeDict["url-list"].nodeType == BNodeType::string)
@@ -144,7 +144,7 @@ void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
         }
         else if (bNodeDict["url-list"].nodeType == BNodeType::list)
         {
-            for (auto &bNodeURLString : BNodeRef<BNodeList>(bNodeDict["url-list"]).getList())
+            for (auto &bNodeURLString : BNodeRef<BNodeList>(bNodeDict["url-list"]).list())
             {
                 urlList.push_back(BNodeRef<BNodeString>(*bNodeURLString).getString());
             }
@@ -174,7 +174,7 @@ TorrentMetaInfo getTorrentInfo(BNode &bNode)
     getDictionaryString(bNodeTopLevelDict, "comment", info.comment);
     getDictionaryInteger(bNodeTopLevelDict, "creation date", info.creationDate);
     getDictionaryString(bNodeTopLevelDict, "created by", info.createdBy);
-    if (bNodeTopLevelDict.containsKey("info"))
+    if (bNodeTopLevelDict.contains("info"))
     {
         auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
         getDictionaryString(bNodeInfoDict, "attr", info.attr);

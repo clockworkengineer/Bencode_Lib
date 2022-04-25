@@ -254,7 +254,7 @@ namespace BencodeLib
         {
         case BNodeType::dictionary:
             destination.add("d");
-            for (const auto &bNodeEntry : BNodeRef<BNodeDict>(*bNode).getDict())
+            for (const auto &bNodeEntry : BNodeRef<BNodeDict>(*bNode).dictionary())
             {
                 destination.add(std::to_string(bNodeEntry.first.length()) + ":" + bNodeEntry.first);
                 encodeBNodes(bNodeEntry.second.get(), destination);
@@ -263,7 +263,7 @@ namespace BencodeLib
             break;
         case BNodeType::list:
             destination.add("l");
-            for (const auto &bNodeEntry : BNodeRef<BNodeList>(*bNode).getList())
+            for (const auto &bNodeEntry : BNodeRef<BNodeList>(*bNode).list())
             {
                 encodeBNodes(bNodeEntry.get(), destination);
             }
