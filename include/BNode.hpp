@@ -36,11 +36,9 @@ namespace BencodeLib
             {
                 return (errorMessage.c_str());
             }
-
         private:
             std::string errorMessage;
         };
-
         explicit BNode(BNodeType nodeType = BNodeType::base) : nodeType(nodeType)
         {
         }
@@ -62,14 +60,8 @@ namespace BencodeLib
         BNodeDict() : BNode(BNodeType::dictionary) {}
         [[nodiscard]] bool containsKey(const std::string &key) const
         {
-            for (const auto &entry : m_value)
-            {
-                if (entry.first == key)
-                {
-                    return (true);
-                }
-            }
-            return (false);
+            return (std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
+                                 { return (entry.first == key); }) != m_value.end());
         }
         [[nodiscard]] int size() const
         {
@@ -94,7 +86,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         std::vector<Entry> m_value;
     };
@@ -120,7 +111,6 @@ namespace BencodeLib
         {
             return (m_value[index].get());
         }
-
     private:
         std::vector<BNodePtr> m_value;
     };
@@ -137,7 +127,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         const int64_t m_value = 0;
     };
@@ -154,7 +143,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         const std::string m_value;
     };
