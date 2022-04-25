@@ -41,7 +41,7 @@ namespace BencodeLib
         struct SyntaxError : public std::exception
         {
         public:
-            explicit SyntaxError(const std::string &errorMessage = "Bencode Error : Syntax error detected.") : errorMessage(errorMessage) {}
+            explicit SyntaxError(std::string errorMessage = "Bencode Error : Syntax error detected.") : errorMessage(std::move(errorMessage)) {}
             [[nodiscard]] const char *what() const noexcept override
             {
                 return (errorMessage.c_str());
@@ -77,7 +77,7 @@ namespace BencodeLib
         // ===============
         // PRIVATE METHODS
         // ===============
-        int64_t extractInteger(ISource &source);
+        static int64_t extractInteger(ISource &source);
         std::string extractString(ISource &source);
         BNodePtr decodeString(ISource &source);
         BNodePtr decodeInteger(ISource &source);

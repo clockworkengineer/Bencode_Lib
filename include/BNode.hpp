@@ -31,7 +31,7 @@ namespace BencodeLib
         struct Error : public std::exception
         {
         public:
-            explicit Error(const std::string &errorMessage) : errorMessage(errorMessage) {}
+            explicit Error(std::string errorMessage) : errorMessage(std::move(errorMessage)) {}
             [[nodiscard]] const char *what() const noexcept override
             {
                 return (errorMessage.c_str());
@@ -71,7 +71,7 @@ namespace BencodeLib
         {
             return (static_cast<int>(m_value.size()));
         }
-        BNode *getEntry(const std::string &key) const
+        [[nodiscard]] BNode *getEntry(const std::string &key) const
         {
             for (const auto &entry : m_value)
             {
@@ -82,7 +82,7 @@ namespace BencodeLib
             }
             return (nullptr);
         }
-        const std::vector<Entry> &getDict() const
+        [[nodiscard]] const std::vector<Entry> &getDict() const
         {
             return (m_value);
         }
@@ -103,11 +103,11 @@ namespace BencodeLib
         {
             return (static_cast<int>(m_value.size()));
         }
-        const std::vector<BNodePtr> &getList() const
+        [[nodiscard]] const std::vector<BNodePtr> &getList() const
         {
             return (m_value);
         }
-        BNode *getEntry(int index) const
+        [[nodiscard]] BNode *getEntry(int index) const
         {
             return (m_value[index].get());
         }
@@ -137,8 +137,8 @@ namespace BencodeLib
     //
     struct BNodeString : BNode
     {
-        explicit BNodeString(const std::string &value) : BNode(BNodeType::string),
-                                                         m_value(value)
+        explicit BNodeString(std::string value) : BNode(BNodeType::string),
+                                                         m_value(std::move(value))
         {
         }
         [[nodiscard]] std::string getString() const
