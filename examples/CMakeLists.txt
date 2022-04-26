@@ -22,6 +22,7 @@ foreach( EXAMPLE_PROGRAM ${EXAMPLE_SOURCES} )
     string( REPLACE ".cpp" "" EXAMPLE_TARGET ${EXAMPLE_PROGRAM} )
     add_executable( ${EXAMPLE_TARGET} ${EXAMPLE_PROGRAM} )
     target_link_libraries( ${EXAMPLE_TARGET} BencodeLib )
-    add_custom_command(TARGET ${EXAMPLE_TARGET} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/testData $<CONFIG>/testData)
     install(TARGETS ${EXAMPLE_TARGET} DESTINATION bin)
 endforeach( EXAMPLE_PROGRAM ${EXAMPLE_SOURCES} )
+
+add_custom_command(TARGET read_torrent_files POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/testData $<CONFIG>/testData)

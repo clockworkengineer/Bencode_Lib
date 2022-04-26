@@ -105,13 +105,18 @@ namespace BencodeLib
         {
             return (m_value);
         }
-        [[nodiscard]] BNode *get(int index) const
+        BNode &operator[](int index) const
         {
-            return (m_value[index].get());
+            if ((index >= 0) && (index < (static_cast<int>(m_value.size()))))
+            {
+                return (*m_value[index].get());
+            }
+            throw BNode::Error("BNode Error: Invalid index used in list.");
         }
 
     private:
-        const std::vector<BNodePtr> m_value;
+        const std::vector<BNodePtr>
+            m_value;
     };
     //
     // Integer BNode.
@@ -202,11 +207,7 @@ namespace BencodeLib
     {
         if (nodeType == BNodeType::list)
         {
-            if ((index >= 0) && (index < (static_cast<int>(BNodeRef<BNodeList>(*this).size()))))
-            {
-                return (*((BNodeRef<BNodeList>(*this).get(index))));
-            }
-            throw BNode::Error("BNode Error: Invalid index used in list.");
+            return(BNodeRef<BNodeList>(*this)[index]);
         }
         throw BNode::Error("BNode Error: Node not a list.");
     }
