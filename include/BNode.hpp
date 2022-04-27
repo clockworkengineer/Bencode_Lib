@@ -64,21 +64,27 @@ namespace BencodeLib
         }
         [[nodiscard]] bool contains(const std::string &key) const
         {
-            return (get(key) != nullptr);
+            if (auto it = std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
+                                       { return (entry.first == key); });
+                it != m_value.end())
+            {
+                return (true);
+            }
+            return (false);
         }
         [[nodiscard]] int size() const
         {
             return (static_cast<int>(m_value.size()));
         }
-        [[nodiscard]] BNode *get(const std::string &key) const
+        BNode &operator[](const std::string &key) const
         {
             if (auto it = std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
                                        { return (entry.first == key); });
                 it != m_value.end())
             {
-                return (it->second.get());
+                return (*it->second.get());
             }
-            return (nullptr);
+            throw BNode::Error("BNode Error: Invalid key used in dictionary.");
         }
         [[nodiscard]] const std::vector<Entry> &dictionary() const
         {
@@ -115,8 +121,7 @@ namespace BencodeLib
         }
 
     private:
-        const std::vector<BNodePtr>
-            m_value;
+        const std::vector<BNodePtr> m_value;
     };
     //
     // Integer BNode.
@@ -195,11 +200,7 @@ namespace BencodeLib
     {
         if (nodeType == BNodeType::dictionary)
         {
-            if (auto bNode = (BNodeRef<BNodeDict>(*this).get(key)); bNode != nullptr)
-            {
-                return (*bNode);
-            }
-            throw BNode::Error("BNode Error: Invalid key used in dictionary.");
+            return (BNodeRef<BNodeDict>(*this)[key]);
         }
         throw BNode::Error("BNode Error: Node not a dictionary.");
     }
@@ -207,7 +208,7 @@ namespace BencodeLib
     {
         if (nodeType == BNodeType::list)
         {
-            return(BNodeRef<BNodeList>(*this)[index]);
+            return (BNodeRef<BNodeList>(*this)[index]);
         }
         throw BNode::Error("BNode Error: Node not a list.");
     }

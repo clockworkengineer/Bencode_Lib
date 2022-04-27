@@ -27,8 +27,6 @@ namespace BencodeLib
     // CLASS DEFINITION
     // ================
 
-    // using Integer = int64_t;
-
     class Bencode
     {
     public:
@@ -77,7 +75,7 @@ namespace BencodeLib
         // ===============
         // PRIVATE METHODS
         // ===============
-        static int64_t extractInteger(ISource &source);
+        int64_t extractInteger(ISource &source);
         std::string extractString(ISource &source);
         BNodePtr decodeString(ISource &source);
         BNodePtr decodeInteger(ISource &source);
