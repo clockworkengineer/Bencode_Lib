@@ -82,7 +82,7 @@ namespace BencodeLib
                                        { return (entry.first == key); });
                 it != m_value.end())
             {
-                return (*it->second.get());
+                return (*it->second);
             }
             throw BNode::Error("BNode Error: Invalid key used in dictionary.");
         }
@@ -115,7 +115,7 @@ namespace BencodeLib
         {
             if ((index >= 0) && (index < (static_cast<int>(m_value.size()))))
             {
-                return (*m_value[index].get());
+                return (*m_value[index]);
             }
             throw BNode::Error("BNode Error: Invalid index used in list.");
         }
