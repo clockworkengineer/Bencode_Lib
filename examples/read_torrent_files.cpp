@@ -33,14 +33,12 @@ using namespace BencodeLib;
 // ======================
 // LOCAL TYPES/DEFINITIONS
 // ======================
-/// ********************************************************************************
 /// <summary>
 /// Get string value with named field from a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="field">Field name of string value</param>
 /// <param name="str">Destination for string.</param>
-/// ********************************************************************************
 void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &str)
 {
     if (bNodeDict.contains(field))
@@ -48,14 +46,12 @@ void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &s
         str = BNodeRef<BNodeString>(bNodeDict[field]).string();
     }
 }
-/// ********************************************************************************
 /// <summary>
 /// Get integer value with named field from a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="field">Field name of integer value</param>
 /// <param name="str">Destination for integer</param>
-/// ********************************************************************************
 void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t &integer)
 {
     if (bNodeDict.contains(field))
@@ -63,13 +59,11 @@ void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t
         integer = BNodeRef<BNodeInteger>(bNodeDict[field]).integer();
     }
 }
-/// ********************************************************************************
 /// <summary>
 ///  Get vector of annouce servers from a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="strings">Vector of server names (string)</param>
-/// ********************************************************************************
 void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
 {
     // This is meant to be a simple list of strings but for some reason each string
@@ -85,13 +79,11 @@ void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
         }
     }
 }
-/// ********************************************************************************
 /// <summary>
 /// Construct a file path from a list of strings contained in a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="filePath">Constructed file path</param>
-/// ********************************************************************************
 void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
 {
     if (bNodeDict.contains("path"))
@@ -104,13 +96,11 @@ void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
         filePath = path.string();
     }
 }
-/// ********************************************************************************
 /// <summary>
 /// Extract and return a vector of file details from a dictionary.
 /// </summary>
 /// <param name="bNodeInfoDict">Dictionary</param>
 /// <param name="files">Constructed vector of file details</param>
-/// ********************************************************************************
 void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &files)
 {
     if (bNodeInfoDict.contains("files"))
@@ -124,13 +114,11 @@ void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &fil
         }
     }
 }
-/// ********************************************************************************
 /// <summary>
 /// Extract vector of urls from a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="urlList">URL list</param>
-/// ********************************************************************************
 void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
 {
     if (bNodeDict.contains("url-list"))
@@ -152,13 +140,11 @@ void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
 // ===============
 // LOCAL FUNCTIONS
 // ===============
-/// ********************************************************************************
 /// <summary>
 /// Load torrent file meta information into a structure for processing.
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
 /// <returns>Torrent file meta information structure</returns>
-/// ********************************************************************************
 TorrentMetaInfo getTorrentInfo(BNode &bNode)
 {
     TorrentMetaInfo info;
@@ -187,13 +173,11 @@ TorrentMetaInfo getTorrentInfo(BNode &bNode)
     getURLList(bNodeTopLevelDict, info.urlList);
     return (info);
 }
-/// ********************************************************************************
 /// <summary>
 /// Display to stdout meta information for torrent file.
 /// </summary>
 /// <param name="fileName">Torrent file name</param>
 /// <param name="info">Meta information</param>
-/// ********************************************************************************
 void displayTorrentInfo(const std::string &fileName, const TorrentMetaInfo &info)
 {
     std::cout << "------------------------------------------------------------\n";
