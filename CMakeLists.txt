@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.16.0)
+cmake_minimum_required(VERSION 3.23.1)
 
-project("BencodeLib" VERSION 0.1.0 DESCRIPTION "Bencode C++ Static Library" LANGUAGES CXX)
+project("BencodeLib" VERSION 0.1.0 DESCRIPTION "Bencode C++ Library" LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -30,7 +30,7 @@ set (BENCODE_INCLUDES
 
 # Bencode library
 
-add_library(${BENCODE_LIBRARY_NAME} STATIC ${BENCODE_SOURCES})
+add_library(${BENCODE_LIBRARY_NAME} ${BENCODE_SOURCES})
 target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_BINARY_DIR})
 
 # Add tests
