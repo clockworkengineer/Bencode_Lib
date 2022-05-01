@@ -23,6 +23,10 @@ namespace BencodeLib
                 m_encodeBuffer.push_back(static_cast<std::byte>(ch));
             }
         }
+        void add(const char ch) override
+        {
+            m_encodeBuffer.push_back(static_cast<std::byte>(ch));
+        }
         std::vector<std::byte> &getBuffer()
         {
             return (m_encodeBuffer);
@@ -45,6 +49,12 @@ namespace BencodeLib
         void add(const std::string &bytes) override
         {
             m_destination.write(bytes.c_str(), bytes.length());
+            m_destination.flush();
+        }
+
+        void add(const char ch) override
+        {
+            m_destination.put(ch);
             m_destination.flush();
         }
 

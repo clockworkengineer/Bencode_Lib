@@ -237,24 +237,26 @@ namespace BencodeLib
         switch (bNode->nodeType)
         {
         case BNodeType::dictionary:
-            destination.add("d");
+            destination.add('d');
             for (const auto &bNodeEntry : BNodeRef<BNodeDict>(*bNode).dictionary())
             {
                 destination.add(std::to_string(bNodeEntry.first.length()) + ":" + bNodeEntry.first);
                 encodeBNodes(bNodeEntry.second.get(), destination);
             }
-            destination.add("e");
+            destination.add('e');
             break;
         case BNodeType::list:
-            destination.add("l");
+            destination.add('l');
             for (const auto &bNodeEntry : BNodeRef<BNodeList>(*bNode).list())
             {
                 encodeBNodes(bNodeEntry.get(), destination);
             }
-            destination.add("e");
+            destination.add('e');
             break;
         case BNodeType::integer:
-            destination.add("i" + std::to_string(BNodeRef<BNodeInteger>(*bNode).integer()) + "e");
+            destination.add('i');
+            destination.add(std::to_string(BNodeRef<BNodeInteger>(*bNode).integer()));
+            destination.add('e');
             break;
         case BNodeType::string:
         {
