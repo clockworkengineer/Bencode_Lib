@@ -36,7 +36,6 @@ namespace BencodeLib
             {
                 return (errorMessage.c_str());
             }
-
         private:
             const std::string errorMessage;
         };
@@ -90,7 +89,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         const std::vector<BNodeDict::Entry> m_value;
     };
@@ -119,7 +117,6 @@ namespace BencodeLib
             }
             throw BNode::Error("BNode Error: Invalid index used in list.");
         }
-
     private:
         const std::vector<BNodePtr> m_value;
     };
@@ -136,7 +133,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         const int64_t m_value = 0;
     };
@@ -153,7 +149,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         const std::string m_value;
     };
@@ -198,18 +193,10 @@ namespace BencodeLib
     //
     inline BNode &BNode::operator[](const std::string &key) // Dictionary
     {
-        if (nodeType == BNodeType::dictionary)
-        {
-            return (BNodeRef<BNodeDict>(*this)[key]);
-        }
-        throw BNode::Error("BNode Error: Node not a dictionary.");
+        return (BNodeRef<BNodeDict>(*this)[key]);
     }
     inline BNode &BNode::operator[](int index) // List
     {
-        if (nodeType == BNodeType::list)
-        {
-            return (BNodeRef<BNodeList>(*this)[index]);
-        }
-        throw BNode::Error("BNode Error: Node not a list.");
+        return (BNodeRef<BNodeList>(*this)[index]);
     }
 } // namespace BencodeLib
