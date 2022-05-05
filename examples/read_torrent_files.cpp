@@ -227,7 +227,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
         for (auto &fileName : fileList)
         {
             bEncode.decode(FileSource{fileName});
-            info = getTorrentInfo(*bEncode);
+            info = getTorrentInfo(bEncode.root());
             displayTorrentInfo(fileName, info);
         }
     }

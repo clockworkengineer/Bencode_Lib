@@ -61,7 +61,7 @@ namespace BencodeLib
         void decode(ISource &&source);
         void encode(IDestination &destination);
         void encode(IDestination &&destination);
-        BNode &operator*() { return (*m_bNodeRoot); }
+        BNode &root() { return (*m_bNodeRoot); }
         // ================
         // PUBLIC VARIABLES
         // ================
