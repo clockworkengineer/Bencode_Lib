@@ -228,39 +228,35 @@ namespace BencodeLib
     /// <param name="bNode">Pointer to root of current BNode structure.</param>
     /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     /// <returns></returns>
-    void Bencode::encodeBNodes(BNode *bNode, IDestination &destination)
+    void Bencode::encodeBNodes(BNode &bNode, IDestination &destination)
     {
-        if (bNode == nullptr)
-        {
-            throw std::runtime_error("No Bencoded data to encode.");
-        }
-        switch (bNode->nodeType)
+        switch (bNode.nodeType)
         {
         case BNodeType::dictionary:
             destination.add('d');
-            for (const auto &bNodeEntry : BNodeRef<BNodeDict>(*bNode).dictionary())
+            for (const auto &bNodeEntry : BNodeRef<BNodeDict>(bNode).dictionary())
             {
                 destination.add(std::to_string(bNodeEntry.first.length()) + ":" + bNodeEntry.first);
-                encodeBNodes(bNodeEntry.second.get(), destination);
+                encodeBNodes(BNodeRef<BNode>(*bNodeEntry.second), destination);
             }
             destination.add('e');
             break;
         case BNodeType::list:
             destination.add('l');
-            for (const auto &bNodeEntry : BNodeRef<BNodeList>(*bNode).list())
+            for (const auto &bNodeEntry : BNodeRef<BNodeList>(bNode).list())
             {
-                encodeBNodes(bNodeEntry.get(), destination);
+                encodeBNodes(BNodeRef<BNode>(*bNodeEntry), destination);
             }
             destination.add('e');
             break;
         case BNodeType::integer:
             destination.add('i');
-            destination.add(std::to_string(BNodeRef<BNodeInteger>(*bNode).integer()));
+            destination.add(std::to_string(BNodeRef<BNodeInteger>(bNode).integer()));
             destination.add('e');
             break;
         case BNodeType::string:
         {
-            std::string stringToEncode = BNodeRef<BNodeString>(*bNode).string();
+            std::string stringToEncode = BNodeRef<BNodeString>(bNode).string();
             destination.add(std::to_string(static_cast<int>(stringToEncode.length())) + ":" + stringToEncode);
             break;
         }
@@ -292,10 +288,18 @@ namespace BencodeLib
     /// <returns></returns>
     void Bencode::encode(IDestination &destination)
     {
-        encodeBNodes(m_bNodeRoot.get(), destination);
+        if (m_bNodeRoot.get() == nullptr)
+        {
+            throw std::runtime_error("No Bencoded data to encode.");
+        }
+        encodeBNodes(BNodeRef<BNode>(*m_bNodeRoot), destination);
     }
     void Bencode::encode(IDestination &&destination)
     {
-        encodeBNodes(m_bNodeRoot.get(), destination);
+        if (m_bNodeRoot.get() == nullptr)
+        {
+            throw std::runtime_error("No Bencoded data to encode.");
+        }
+        encodeBNodes(BNodeRef<BNode>(*m_bNodeRoot), destination);
     }
 } // namespace BencodeLib
