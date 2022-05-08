@@ -7,6 +7,7 @@
 #include <iterator>
 #include <string>
 #include <sstream>
+#include <map>
 // ======================
 // Test framework include
 // ======================

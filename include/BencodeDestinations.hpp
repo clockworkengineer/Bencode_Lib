@@ -4,6 +4,11 @@
 //
 #include <fstream>
 #include <string>
+#include <vector>
+//
+// IDestination interface
+//
+#include "IDestination.hpp"
 // =========
 // NAMESPACE
 // =========

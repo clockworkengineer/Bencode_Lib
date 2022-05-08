@@ -19,6 +19,11 @@
 // =================
 #include "BencodeConfig.hpp"
 #include "Bencode.hpp"
+//
+// Source/Destination interfaces
+//
+#include "ISource.hpp"
+#include "IDestination.hpp"
 // ====================
 // CLASS IMPLEMENTATION
 // ====================

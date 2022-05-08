@@ -3,17 +3,7 @@
 // C++ STL
 //
 #include <string>
-#include <map>
-#include <utility>
-#include <vector>
-#include <memory>
-#include <fstream>
 #include <stdexcept>
-//
-// Source/Destination interfaces
-//
-#include "ISource.hpp"
-#include "IDestination.hpp"
 //
 // BNode types
 //
@@ -23,12 +13,21 @@
 // =========
 namespace BencodeLib
 {
+
+    // ===================================
+    // Forward declarations for interfaces
+    // ===================================
+
+    class ISource;
+    class IDestination;
+
     // ================
     // CLASS DEFINITION
     // ================
 
     class Bencode
     {
+
     public:
         // ==========================
         // PUBLIC TYPES AND CONSTANTS
