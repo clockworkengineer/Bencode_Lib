@@ -4,7 +4,6 @@
 //
 #include <string>
 #include <stdexcept>
-#include <memory>
 //
 // BNode types
 //
@@ -22,54 +21,29 @@ namespace BencodeLib
     class ISource;
     class IDestination;
 
-    // ======================================
-    // Forward declaration for implementation
-    // ======================================
-
-    class BencodeImplementation;
-
     // ================
     // CLASS DEFINITION
     // ================
 
-    class Bencode
+    class BencodeImplementation
     {
 
     public:
         // ==========================
         // PUBLIC TYPES AND CONSTANTS
         // ==========================
-        //
-        // Bencode syntax error.
-        //
-        struct SyntaxError : public std::exception
-        {
-        public:
-            explicit SyntaxError(std::string errorMessage = "Bencode Error : Syntax error detected.") : errorMessage(std::move(errorMessage)) {}
-            [[nodiscard]] const char *what() const noexcept override
-            {
-                return (errorMessage.c_str());
-            }
-
-        private:
-            const std::string errorMessage;
-        };
         // ============
         // CONSTRUCTORS
         // ============
-        Bencode();
         // ==========
         // DESTRUCTOR
         // ==========
-        ~Bencode();
         // ==============
         // PUBLIC METHODS
         // ==============
         void decode(ISource &source);
-        void decode(ISource &&source);
         void encode(IDestination &destination);
-        void encode(IDestination &&destination);
-        BNode &root();
+        BNode &root() { return (*m_bNodeRoot); }
         // ================
         // PUBLIC VARIABLES
         // ================
@@ -83,9 +57,17 @@ namespace BencodeLib
         // ===============
         // PRIVATE METHODS
         // ===============
+        int64_t extractInteger(ISource &source);
+        std::string extractString(ISource &source);
+        BNodePtr decodeString(ISource &source);
+        BNodePtr decodeInteger(ISource &source);
+        BNodePtr decodeDictionary(ISource &source);
+        BNodePtr decodeList(ISource &source);
+        BNodePtr decodeBNodes(ISource &source);
+        void encodeBNodes(BNode &bNode, IDestination &destination);
         // =================
         // PRIVATE VARIABLES
         // =================
-        std::unique_ptr<BencodeImplementation> m_imp;
+        BNodePtr m_bNodeRoot;
     };
 } // namespace BencodeLib
