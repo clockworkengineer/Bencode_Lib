@@ -15,11 +15,6 @@
 // CLASS IMPLEMENTATION
 // ====================
 //
-// Source/Destination interfaces
-//
-#include "ISource.hpp"
-#include "IDestination.hpp"
-//
 // C++ STL
 //
 #include <limits>

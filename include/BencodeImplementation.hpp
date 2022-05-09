@@ -6,6 +6,12 @@
 #include <stdexcept>
 
 //
+// Source/Destination interfaces
+//
+#include "ISource.hpp"
+#include "IDestination.hpp"
+
+//
 // BNode types
 //
 #include "BNode.hpp"
@@ -15,14 +21,6 @@
 // =========
 namespace BencodeLib
 {
-
-    // ===================================
-    // Forward declarations for interfaces
-    // ===================================
-
-    class ISource;
-    class IDestination;
-
     // ================
     // CLASS DEFINITION
     // ================
