@@ -20,14 +20,14 @@
 #include "BencodeConfig.hpp"
 #include "Bencode.hpp"
 #include "BencodeImplementation.hpp"
+// ====================
+// CLASS IMPLEMENTATION
+// ====================
 //
 // Source/Destination interfaces
 //
 #include "ISource.hpp"
 #include "IDestination.hpp"
-// ====================
-// CLASS IMPLEMENTATION
-// ====================
 //
 // C++ STL
 //

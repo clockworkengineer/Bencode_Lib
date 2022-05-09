@@ -20,11 +20,6 @@
 #include "BencodeConfig.hpp"
 #include "Bencode.hpp"
 #include "BencodeImplementation.hpp"
-//
-// Source/Destination interfaces
-//
-// #include "ISource.hpp"
-// #include "IDestination.hpp"
 // ====================
 // CLASS IMPLEMENTATION
 // ====================
@@ -58,7 +53,7 @@ namespace BencodeLib
     // ==============
     Bencode::Bencode()
     {
-        m_imp = std::make_unique<BencodeImplementation>();
+        m_implementation = std::make_unique<BencodeImplementation>();
     }
 
     Bencode::~Bencode()
@@ -71,11 +66,11 @@ namespace BencodeLib
     /// <returns></returns>
     void Bencode::decode(ISource &source)
     {
-        m_imp->decode(source);
+        m_implementation->decode(source);
     }
     void Bencode::decode(ISource &&source)
     {
-        m_imp->decode(source);
+        m_implementation->decode(source);
     }
     /// <summary>
     /// Take BNode structure and create an Bencode encoding for it in the destination stream.
@@ -85,14 +80,14 @@ namespace BencodeLib
     /// <returns></returns>
     void Bencode::encode(IDestination &destination)
     {
-        m_imp->encode(destination);
+        m_implementation->encode(destination);
     }
     void Bencode::encode(IDestination &&destination)
     {
-        m_imp->encode(destination);
+        m_implementation->encode(destination);
     }
     BNode &Bencode::root()
     {
-        return (m_imp->root());
+        return (m_implementation->root());
     }
 } // namespace BencodeLib

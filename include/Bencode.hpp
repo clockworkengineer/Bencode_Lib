@@ -5,28 +5,21 @@
 #include <string>
 #include <stdexcept>
 #include <memory>
-//
-// BNode types
-//
-#include "BNode.hpp"
+
 // =========
 // NAMESPACE
 // =========
 namespace BencodeLib
 {
 
-    // ===================================
-    // Forward declarations for interfaces
-    // ===================================
+    // ====================
+    // Forward declarations
+    // ====================
 
     class ISource;
     class IDestination;
-
-    // ======================================
-    // Forward declaration for implementation
-    // ======================================
-
     class BencodeImplementation;
+    struct BNode;
 
     // ================
     // CLASS DEFINITION
@@ -86,6 +79,6 @@ namespace BencodeLib
         // =================
         // PRIVATE VARIABLES
         // =================
-        std::unique_ptr<BencodeImplementation> m_imp;
+        std::unique_ptr<BencodeImplementation> m_implementation;
     };
 } // namespace BencodeLib

@@ -20,6 +20,7 @@
 // Bencode includes
 //
 #include "Bencode.hpp"
+#include "BNode.hpp"
 #include "BencodeSources.hpp"
 #include "BencodeDestinations.hpp"
 //

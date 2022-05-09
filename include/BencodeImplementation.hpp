@@ -4,10 +4,12 @@
 //
 #include <string>
 #include <stdexcept>
+
 //
 // BNode types
 //
 #include "BNode.hpp"
+
 // =========
 // NAMESPACE
 // =========
