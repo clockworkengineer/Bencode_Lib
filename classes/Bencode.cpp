@@ -51,19 +51,25 @@ namespace BencodeLib
     // ==============
     // PUBLIC METHODS
     // ==============
+    /// <summary>
+    /// Constructor for Bencode object.
+    /// </summary>
     Bencode::Bencode()
     {
         m_implementation = std::make_unique<BencodeImplementation>();
     }
-
+    /// <summary>
+    /// Destructor for Bencode object.
+    /// </summary>
     Bencode::~Bencode()
     {
-    };
+        // Needed because unique_ptr has access to BencodeImplementation size here and can
+        // correctly dispose of it.
+    }
     /// <summary>
     /// Decode Bencoded byte string pointed to by source stream into BNode(s).
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
-    /// <returns></returns>
     void Bencode::decode(ISource &source)
     {
         m_implementation->decode(source);
@@ -77,7 +83,6 @@ namespace BencodeLib
     /// </summary>
     /// <param name="bNodeRoot">BNode structure root.</param>
     /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
-    /// <returns></returns>
     void Bencode::encode(IDestination &destination)
     {
         m_implementation->encode(destination);

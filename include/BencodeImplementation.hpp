@@ -29,7 +29,6 @@ namespace BencodeLib
 
     class BencodeImplementation
     {
-
     public:
         // ==========================
         // PUBLIC TYPES AND CONSTANTS

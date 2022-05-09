@@ -1,16 +1,7 @@
 //
-// Class: Bencode
+// Class: BencodeImplementation
 //
-// Description: Class to perform Bencode encoding encode/decode to/from
-// a byte buffer or file. It is also  possible to customize this with the
-// ISource and IDestination interfaces if required. Although Bencoded
-// data is treated as std::byte externally this library uses char and
-// std::string internally.Note: At present it will report incorrect Bencode
-// syntax but will not be specific about what error has occurred; this
-// is reasoned to add too much overhead to the process of parsing for the
-// requirements of this library (this might change in future versions).
-// For an in-depth description of the Bencode specification refer to its
-// Wiki page at https://en.wikipedia.org/wiki/Bencode.
+// Description: Bencode class implementation layer.
 //
 // Dependencies:   C20++ - Language standard features used.
 //
@@ -73,7 +64,7 @@ namespace BencodeLib
             // Number too large to be  in buffer
             if (digits == number.size())
             {
-                throw Bencode::SyntaxError();
+                throw BencodeLib::SyntaxError();
             }
             number[digits++] = source.current();
             source.next();
@@ -81,12 +72,12 @@ namespace BencodeLib
         // Check integer has no leading zero and is not empty ('ie')
         if ((number[0] == '0' && digits > 1) || (digits == 0))
         {
-            throw Bencode::SyntaxError();
+            throw BencodeLib::SyntaxError();
         }
         // Check-for -0
         if ((number[0] == '-') && (number[1] == '0') && (digits == 2))
         {
-            throw Bencode::SyntaxError();
+            throw BencodeLib::SyntaxError();
         }
         return (std::stoll(&number[0]));
     }
@@ -100,7 +91,7 @@ namespace BencodeLib
         int64_t stringLength = extractInteger(source);
         if (source.current() != ':')
         {
-            throw Bencode::SyntaxError();
+            throw BencodeLib::SyntaxError();
         }
         source.next();
         std::string buffer;
@@ -131,7 +122,7 @@ namespace BencodeLib
         int64_t integer = extractInteger(source);
         if (source.current() != 'e')
         {
-            throw Bencode::SyntaxError();
+            throw BencodeLib::SyntaxError();
         }
         source.next();
         return (std::make_unique<BNodeInteger>(integer));
@@ -152,7 +143,7 @@ namespace BencodeLib
             // Check keys in lexical order
             if (lastKey > key)
             {
-                throw Bencode::SyntaxError();
+                throw BencodeLib::SyntaxError();
             }
             lastKey = key;
             // Check key not duplicate and insert
@@ -163,12 +154,12 @@ namespace BencodeLib
             }
             else
             {
-                throw Bencode::SyntaxError();
+                throw BencodeLib::SyntaxError();
             }
         }
         if (source.current() != 'e')
         {
-            throw Bencode::SyntaxError();
+            throw BencodeLib::SyntaxError();
         }
         source.next();
         return (std::make_unique<BNodeDict>(dictionary));
@@ -188,7 +179,7 @@ namespace BencodeLib
         }
         if (source.current() != 'e')
         {
-            throw Bencode::SyntaxError();
+            throw BencodeLib::SyntaxError();
         }
         source.next();
         return (std::make_unique<BNodeList>(list));
@@ -225,7 +216,7 @@ namespace BencodeLib
         case '9':
             return (decodeString(source));
         }
-        throw Bencode::SyntaxError();
+        throw BencodeLib::SyntaxError();
     }
     /// <summary>
     /// Recursively traverse a BNode structure and produce an Bencode encoding of it on
