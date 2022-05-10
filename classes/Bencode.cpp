@@ -17,7 +17,6 @@
 // =================
 // CLASS DEFINITIONS
 // =================
-#include "BencodeConfig.hpp"
 #include "Bencode.hpp"
 #include "BencodeImplementation.hpp"
 // ====================

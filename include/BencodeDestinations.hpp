@@ -5,12 +5,10 @@
 #include <fstream>
 #include <string>
 #include <vector>
-
 //
 // IDestination interface
 //
 #include "IDestination.hpp"
-
 // =========
 // NAMESPACE
 // =========
@@ -38,7 +36,6 @@ namespace BencodeLib
         {
             return (m_encodeBuffer);
         }
-
     private:
         std::vector<std::byte> m_encodeBuffer;
     };
@@ -58,13 +55,11 @@ namespace BencodeLib
             m_destination.write(bytes.c_str(), bytes.length());
             m_destination.flush();
         }
-
         void add(const char ch) override
         {
             m_destination.put(ch);
             m_destination.flush();
         }
-
     private:
         std::ofstream m_destination;
     };

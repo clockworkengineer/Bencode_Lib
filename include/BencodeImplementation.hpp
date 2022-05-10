@@ -4,18 +4,15 @@
 //
 #include <string>
 #include <stdexcept>
-
 //
 // Source/Destination interfaces
 //
 #include "ISource.hpp"
 #include "IDestination.hpp"
-
 //
 // BNode types
 //
 #include "BNode.hpp"
-
 // =========
 // NAMESPACE
 // =========
@@ -24,7 +21,6 @@ namespace BencodeLib
     // ================
     // CLASS DEFINITION
     // ================
-
     class BencodeImplementation
     {
     public:

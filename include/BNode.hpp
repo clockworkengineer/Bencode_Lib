@@ -6,7 +6,6 @@
 #include <vector>
 #include <memory>
 #include <stdexcept>
-
 // =========
 // NAMESPACE
 // =========

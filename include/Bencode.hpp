@@ -5,17 +5,18 @@
 #include <string>
 #include <stdexcept>
 #include <memory>
-
+//
+// Bencode version
+//
+#include "BencodeConfig.hpp"
 // =========
 // NAMESPACE
 // =========
 namespace BencodeLib
 {
-
     // ====================
     // Bencode syntax error
     // ====================
-
     struct SyntaxError : public std::exception
     {
     public:
@@ -24,27 +25,21 @@ namespace BencodeLib
         {
             return ((std::string("Bencode Error:")+errorMessage).c_str());
         }
-
     private:
         const std::string errorMessage;
     };
-
     // ====================
     // Forward declarations
     // ====================
-
     class ISource;
     class IDestination;
     class BencodeImplementation;
     struct BNode;
-
     // ================
     // CLASS DEFINITION
     // ================
-
     class Bencode
     {
-
     public:
         // ==========================
         // PUBLIC TYPES AND CONSTANTS

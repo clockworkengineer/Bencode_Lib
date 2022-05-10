@@ -3,6 +3,9 @@
 // C++ STL
 //
 #include <string>
+// =========
+// NAMESPACE
+// =========
 namespace BencodeLib
 {
     //
