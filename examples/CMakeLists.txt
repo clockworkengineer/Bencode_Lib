@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.0)
+cmake_minimum_required(VERSION 3.23.1)
 
 project("Bencode Examples" VERSION 0.1.0 DESCRIPTION "BencodeLib example programs")
 
