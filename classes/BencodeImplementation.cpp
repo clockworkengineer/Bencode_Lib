@@ -13,12 +13,6 @@
 // ====================
 // CLASS IMPLEMENTATION
 // ====================
-//
-// C++ STL
-//
-#include <limits>
-#include <array>
-// =========
 // NAMESPACE
 // =========
 namespace BencodeLib

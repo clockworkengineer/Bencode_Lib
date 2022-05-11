@@ -4,6 +4,8 @@
 //
 #include <string>
 #include <stdexcept>
+#include <limits>
+#include <array>
 //
 // Source/Destination interfaces
 //
