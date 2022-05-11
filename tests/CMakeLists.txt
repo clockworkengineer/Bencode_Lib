@@ -24,7 +24,7 @@ set(TEST_SOURCES
     Bencode_tests_main.cpp
     Bencode_tests_decode.cpp
     Bencode_tests_encode.cpp
-)
+    Bencode_tests_helper.cpp)
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
