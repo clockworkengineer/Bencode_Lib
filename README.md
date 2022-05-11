@@ -11,5 +11,5 @@ specific about what error has occurred.This is reasoned to add too
 much overhead to the process of parsing for the requirements of this 
 library.
 
-For an indepth desciption of the Bencoding specification refer 
+For an in-depth description of the Bencode specification refer 
 to its wiki page at https://en.wikipedia.org/wiki/Bencode.
