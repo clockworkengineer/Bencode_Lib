@@ -21,10 +21,10 @@ enable_testing()
 set(TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Unit_Tests)
 
 set(TEST_SOURCES
-    BencodeLib_tests_main.cpp
-    BencodeLib_tests_decode.cpp
-    BencodeLib_tests_encode.cpp
-    BencodeLib_tests_helper.cpp)
+    BencodeLib_Tests_Main.cpp
+    BencodeLib_Tests_Decode.cpp
+    BencodeLib_Tests_Encode.cpp
+    BencodeLib_Tests_Helper.cpp)
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
