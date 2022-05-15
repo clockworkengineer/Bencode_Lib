@@ -18,7 +18,7 @@
 // CLASS DEFINITIONS
 // =================
 #include "Bencode.hpp"
-#include "BencodeImplementation.hpp"
+#include "Bencode_Impl.hpp"
 // ====================
 // CLASS IMPLEMENTATION
 // ====================
@@ -50,14 +50,14 @@ namespace BencodeLib
     /// </summary>
     Bencode::Bencode()
     {
-        m_implementation = std::make_unique<BencodeImplementation>();
+        m_implementation = std::make_unique<Bencode_Impl>();
     }
     /// <summary>
     /// Destructor for Bencode object.
     /// </summary>
     Bencode::~Bencode()
     {
-        // Needed because unique_ptr has access to BencodeImplementation size here and can
+        // Needed because unique_ptr has access to Bencode_Impl size here and can
         // correctly dispose of it.
     }
     /// <summary>

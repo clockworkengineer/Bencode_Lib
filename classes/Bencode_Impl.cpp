@@ -1,5 +1,5 @@
 //
-// Class: BencodeImplementation
+// Class: Bencode_Impl
 //
 // Description: Bencode class implementation layer.
 //
@@ -9,7 +9,7 @@
 // CLASS DEFINITIONS
 // =================
 #include "Bencode.hpp"
-#include "BencodeImplementation.hpp"
+#include "Bencode_Impl.hpp"
 // ====================
 // CLASS IMPLEMENTATION
 // ====================
@@ -37,7 +37,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Positive integers value.</returns>
-    int64_t BencodeImplementation::extractInteger(ISource &source)
+    int64_t Bencode_Impl::extractInteger(ISource &source)
     {
         // Number size of 64 bit int +2 for sign and terminating null
         std::array<char, std::numeric_limits<int64_t>::digits10 + 2> number{};
@@ -74,7 +74,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>String value decoded.</returns>
-    std::string BencodeImplementation::extractString(ISource &source)
+    std::string Bencode_Impl::extractString(ISource &source)
     {
         int64_t stringLength = extractInteger(source);
         if (source.current() != ':')
@@ -95,7 +95,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>String BNode.</returns>
-    BNodePtr BencodeImplementation::decodeString(ISource &source)
+    BNodePtr Bencode_Impl::decodeString(ISource &source)
     {
         return (std::make_unique<BNodeString>(extractString(source)));
     }
@@ -104,7 +104,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Integer BNode.</returns>
-    BNodePtr BencodeImplementation::decodeInteger(ISource &source)
+    BNodePtr Bencode_Impl::decodeInteger(ISource &source)
     {
         source.next();
         int64_t integer = extractInteger(source);
@@ -120,7 +120,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Dictionary BNode.</returns>
-    BNodePtr BencodeImplementation::decodeDictionary(ISource &source)
+    BNodePtr Bencode_Impl::decodeDictionary(ISource &source)
     {
         std::vector<BNodeDict::Entry> dictionary;
         std::string lastKey{};
@@ -157,7 +157,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>List BNode.</returns>
-    BNodePtr BencodeImplementation::decodeList(ISource &source)
+    BNodePtr Bencode_Impl::decodeList(ISource &source)
     {
         std::vector<BNodePtr> list;
         source.next();
@@ -178,7 +178,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Root BNode.</returns>
-    BNodePtr BencodeImplementation::decodeBNodes(ISource &source)
+    BNodePtr Bencode_Impl::decodeBNodes(ISource &source)
     {
         switch (source.current())
         {
@@ -213,7 +213,7 @@ namespace BencodeLib
     /// <param name="bNode">Pointer to root of current BNode structure.</param>
     /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     /// <returns></returns>
-    void BencodeImplementation::encodeBNodes(BNode &bNode, IDestination &destination)
+    void Bencode_Impl::encodeBNodes(BNode &bNode, IDestination &destination)
     {
         switch (bNode.nodeType)
         {
@@ -257,7 +257,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns></returns>
-    void BencodeImplementation::decode(ISource &source)
+    void Bencode_Impl::decode(ISource &source)
     {
         m_bNodeRoot = decodeBNodes(source);
     }
@@ -267,7 +267,7 @@ namespace BencodeLib
     /// <param name="bNodeRoot">BNode structure root.</param>
     /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     /// <returns></returns>
-    void BencodeImplementation::encode(IDestination &destination)
+    void Bencode_Impl::encode(IDestination &destination)
     {
         if (m_bNodeRoot.get() == nullptr)
         {

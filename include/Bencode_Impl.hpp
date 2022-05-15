@@ -23,7 +23,7 @@ namespace BencodeLib
     // ================
     // CLASS DEFINITION
     // ================
-    class BencodeImplementation
+    class Bencode_Impl
     {
     public:
         // ==========================

@@ -6,7 +6,7 @@
 // ================
 // Test definitions
 // ================
-#include "Bencode_tests.hpp"
+#include "BencodeLib_tests.hpp"
 // =======================
 // Bencode class namespace
 // =======================

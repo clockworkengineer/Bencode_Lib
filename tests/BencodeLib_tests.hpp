@@ -17,8 +17,8 @@
 // =========================
 #include "Bencode.hpp"
 #include "BNode.hpp"
-#include "BencodeSources.hpp"
-#include "BencodeDestinations.hpp"
+#include "Bencode_Sources.hpp"
+#include "Bencode_Destinations.hpp"
 // ===================
 // Unit test constants
 // ===================

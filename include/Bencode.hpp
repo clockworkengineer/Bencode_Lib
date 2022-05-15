@@ -33,7 +33,7 @@ namespace BencodeLib
     // ====================
     class ISource;
     class IDestination;
-    class BencodeImplementation;
+    class Bencode_Impl;
     struct BNode;
     // ================
     // CLASS DEFINITION
@@ -76,6 +76,6 @@ namespace BencodeLib
         // =================
         // PRIVATE VARIABLES
         // =================
-        std::unique_ptr<BencodeImplementation> m_implementation;
+        std::unique_ptr<Bencode_Impl> m_implementation;
     };
 } // namespace BencodeLib

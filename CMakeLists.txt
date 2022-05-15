@@ -18,16 +18,15 @@ set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
  
 set (BENCODE_SOURCES
     ./classes/Bencode.cpp
-    ./classes/BencodeImplementation.cpp
+    ./classes/Bencode_Impl.cpp
 )
 
 set (BENCODE_INCLUDES
     ./include/Bencode.hpp
-    ./include/BencodeImplementation.hpp
+    ./include/Bencode_Impl.hpp
     ./include/BNode.hpp
-    ./include/Bencoding.hpp
-    ./include/BencodeSources.hpp
-    ./include/BencodeDestinations.hpp
+    ./include/Bencode_Sources.hpp
+    ./include/Bencode_Desintations.hpp
     ./include/interface/ISource.hpp
     ./include/interface/IDestination.hpp
 )
