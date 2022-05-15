@@ -8,7 +8,7 @@
 //
 // Bencode version
 //
-#include "BencodeConfig.hpp"
+#include "Bencode_Config.hpp"
 // =========
 // NAMESPACE
 // =========

@@ -14,7 +14,7 @@
 //
 // BNode types
 //
-#include "BNode.hpp"
+#include "Bencode_Nodes.hpp"
 // =========
 // NAMESPACE
 // =========

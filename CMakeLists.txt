@@ -12,7 +12,7 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   add_compile_options(-Wall -Werror -pedantic)
 endif()
 
-configure_file(BencodeConfig.h.in BencodeConfig.hpp)
+configure_file(Bencode_Config.h.in Bencode_Config.hpp)
 
 set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
  
@@ -24,7 +24,7 @@ set (BENCODE_SOURCES
 set (BENCODE_INCLUDES
     ./include/Bencode.hpp
     ./include/Bencode_Impl.hpp
-    ./include/BNode.hpp
+    ./include/Bencode_Nodes.hpp
     ./include/Bencode_Sources.hpp
     ./include/Bencode_Desintations.hpp
     ./include/interface/ISource.hpp
