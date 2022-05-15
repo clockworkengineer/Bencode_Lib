@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23.1)
+cmake_minimum_required(VERSION 3.16.3)
 
 project("BencodeLib Examples" VERSION 0.1.0 DESCRIPTION "BencodeLib example programs")
 
@@ -25,4 +25,4 @@ foreach( EXAMPLE_PROGRAM ${EXAMPLE_SOURCES} )
     install(TARGETS ${EXAMPLE_TARGET} DESTINATION bin)
 endforeach( EXAMPLE_PROGRAM ${EXAMPLE_SOURCES} )
 
-add_custom_command(TARGET read_torrent_files POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/testData $<CONFIG>/testData)
+add_custom_command(TARGET Read_Torrent_Files POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/testData $<CONFIG>/testData)

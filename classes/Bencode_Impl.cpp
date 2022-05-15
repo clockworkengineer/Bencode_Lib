@@ -41,7 +41,7 @@ namespace BencodeLib
     {
         // Number size of 64 bit int +2 for sign and terminating null
         std::array<char, std::numeric_limits<int64_t>::digits10 + 2> number{};
-        int digits = 0;
+        std::size_t digits = 0;
         if (source.current() == '-')
         {
             number[digits++] = source.current();

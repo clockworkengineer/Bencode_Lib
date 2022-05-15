@@ -1,5 +1,5 @@
 //
-// Program: read_torrent_files
+// Program: Read_Torrent_Files
 //
 // Description: Use BencodeLib to read in torrent file details.
 // Details on the torrent file format can be found at the wiki page
@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <filesystem>
+#include <stdexcept>
 //
 // Bencode includes
 //
@@ -151,7 +152,7 @@ TorrentMetaInfo getTorrentInfo(BNode &bNode)
     TorrentMetaInfo info;
     if (bNode.nodeType != BNodeType::dictionary)
     {
-        throw std::exception("Valid torrent file not found.");
+        throw std::runtime_error("Valid torrent file not found.");
     }
     auto &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
     getDictionaryString(bNodeTopLevelDict, "announce", info.announce);
