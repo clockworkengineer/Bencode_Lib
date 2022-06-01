@@ -165,7 +165,7 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
     info.announceList = getAnnounceList(bNodeTopLevelDict);
     info.comment = getDictionaryString(bNodeTopLevelDict, "comment");
     info.creationDate = getDictionaryInteger(bNodeTopLevelDict, "creation date");
-    info.createdBy = (bNodeTopLevelDict, "created by");
+    info.createdBy = getDictionaryString(bNodeTopLevelDict, "created by");
     if (bNodeTopLevelDict.contains("info"))
     {
         const auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
@@ -173,7 +173,7 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
         info.length = getDictionaryInteger(bNodeInfoDict, "length");
         info.name = getDictionaryString(bNodeInfoDict, "name");
         info.pieceLength = getDictionaryInteger(bNodeInfoDict, "piece length");
-        info.pieces = (bNodeInfoDict, "pieces");
+        info.pieces = getDictionaryString(bNodeInfoDict, "pieces");
         info.privateBitMask = getDictionaryInteger(bNodeInfoDict, "private");
         info.source = getDictionaryString(bNodeInfoDict, "source");
         info.files = getFilesList(bNodeInfoDict);
