@@ -27,6 +27,7 @@ namespace BencodeLib
     //
     struct BNode
     {
+        using Ptr = std::unique_ptr<BNode>;
         struct Error : public std::exception
         {
         public:
@@ -35,6 +36,7 @@ namespace BencodeLib
             {
                 return (errorMessage.c_str());
             }
+
         private:
             const std::string errorMessage;
         };
@@ -47,15 +49,11 @@ namespace BencodeLib
         const BNodeType nodeType;
     };
     //
-    // Pointer to BNode
-    //
-    using BNodePtr = std::unique_ptr<BNode>;
-    //
     // Dictionary BNode.
     //
     struct BNodeDict : BNode
     {
-        using Entry = std::pair<std::string, BNodePtr>;
+        using Entry = std::pair<std::string, BNode::Ptr>;
         explicit BNodeDict(std::vector<BNodeDict::Entry> &value) : BNode(BNodeType::dictionary),
                                                                    m_value(std::move(value))
         {
@@ -88,6 +86,7 @@ namespace BencodeLib
         {
             return (m_value);
         }
+
     private:
         const std::vector<BNodeDict::Entry> m_value;
     };
@@ -96,15 +95,15 @@ namespace BencodeLib
     //
     struct BNodeList : BNode
     {
-        explicit BNodeList(std::vector<BNodePtr> &value) : BNode(BNodeType::list),
-                                                           m_value(std::move(value))
+        explicit BNodeList(std::vector<BNode::Ptr> &value) : BNode(BNodeType::list),
+                                                             m_value(std::move(value))
         {
         }
         [[nodiscard]] int size() const
         {
             return (static_cast<int>(m_value.size()));
         }
-        [[nodiscard]] const std::vector<BNodePtr> &list() const
+        [[nodiscard]] const std::vector<BNode::Ptr> &list() const
         {
             return (m_value);
         }
@@ -116,8 +115,9 @@ namespace BencodeLib
             }
             throw BNode::Error("BNode Error: Invalid index used in list.");
         }
+
     private:
-        const std::vector<BNodePtr> m_value;
+        const std::vector<BNode::Ptr> m_value;
     };
     //
     // Integer BNode.
@@ -132,6 +132,7 @@ namespace BencodeLib
         {
             return (m_value);
         }
+
     private:
         const int64_t m_value = 0;
     };
@@ -148,6 +149,7 @@ namespace BencodeLib
         {
             return (m_value);
         }
+
     private:
         const std::string m_value;
     };

@@ -56,15 +56,15 @@ namespace BencodeLib
         // ===============
         int64_t extractInteger(ISource &source);
         std::string extractString(ISource &source);
-        BNodePtr decodeString(ISource &source);
-        BNodePtr decodeInteger(ISource &source);
-        BNodePtr decodeDictionary(ISource &source);
-        BNodePtr decodeList(ISource &source);
-        BNodePtr decodeBNodes(ISource &source);
+        BNode::Ptr decodeString(ISource &source);
+        BNode::Ptr decodeInteger(ISource &source);
+        BNode::Ptr decodeDictionary(ISource &source);
+        BNode::Ptr decodeList(ISource &source);
+        BNode::Ptr decodeBNodes(ISource &source);
         void encodeBNodes(BNode &bNode, IDestination &destination);
         // =================
         // PRIVATE VARIABLES
         // =================
-        BNodePtr m_bNodeRoot;
+        BNode::Ptr m_bNodeRoot;
     };
 } // namespace BencodeLib

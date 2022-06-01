@@ -95,7 +95,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>String BNode.</returns>
-    BNodePtr Bencode_Impl::decodeString(ISource &source)
+    BNode::Ptr Bencode_Impl::decodeString(ISource &source)
     {
         return (std::make_unique<BNodeString>(extractString(source)));
     }
@@ -104,7 +104,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Integer BNode.</returns>
-    BNodePtr Bencode_Impl::decodeInteger(ISource &source)
+    BNode::Ptr Bencode_Impl::decodeInteger(ISource &source)
     {
         source.next();
         int64_t integer = extractInteger(source);
@@ -120,7 +120,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Dictionary BNode.</returns>
-    BNodePtr Bencode_Impl::decodeDictionary(ISource &source)
+    BNode::Ptr Bencode_Impl::decodeDictionary(ISource &source)
     {
         std::vector<BNodeDict::Entry> dictionary;
         std::string lastKey{};
@@ -157,9 +157,9 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>List BNode.</returns>
-    BNodePtr Bencode_Impl::decodeList(ISource &source)
+    BNode::Ptr Bencode_Impl::decodeList(ISource &source)
     {
-        std::vector<BNodePtr> list;
+        std::vector<BNode::Ptr> list;
         source.next();
         while (source.more() && source.current() != 'e')
         {
@@ -178,7 +178,7 @@ namespace BencodeLib
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns>Root BNode.</returns>
-    BNodePtr Bencode_Impl::decodeBNodes(ISource &source)
+    BNode::Ptr Bencode_Impl::decodeBNodes(ISource &source)
     {
         switch (source.current())
         {
