@@ -155,7 +155,7 @@ std::vector<std::string> getURLList(const BNodeDict &bNodeDict)
 /// Load torrent file meta information into a structure for processing.
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
-/// <returns>Torrent file meta information structure</returns>
+/// <returns>Torrent file meta information structure.</returns>
 TorrentMetaInfo getTorrentInfo(const BNode &bNode)
 {
     TorrentMetaInfo info;
@@ -163,7 +163,7 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
     {
         throw std::runtime_error("Valid torrent file not found.");
     }
-    const auto &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
+    auto &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
     info.announce = getDictionaryString(bNodeTopLevelDict, "announce");
     info.announceList = getAnnounceList(bNodeTopLevelDict);
     info.comment = getDictionaryString(bNodeTopLevelDict, "comment");
@@ -172,7 +172,7 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
     info.urlList = getURLList(bNodeTopLevelDict);
     if (bNodeTopLevelDict.contains("info"))
     {
-        const auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
+        auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
         info.attr = (bNodeInfoDict, "attr");
         info.length = getDictionaryInteger(bNodeInfoDict, "length");
         info.name = getDictionaryString(bNodeInfoDict, "name");
