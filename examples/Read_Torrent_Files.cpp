@@ -118,19 +118,20 @@ std::vector<TorrentFileDetails> getFilesList(const BNodeDict &bNodeInfoDict)
         {
             files.emplace_back(getFilePath(BNodeRef<BNodeDict>(*file)), getDictionaryInteger(BNodeRef<BNodeDict>(*file), "length"));
         }
-        return(files);
+        return (files);
     }
-        throw std::runtime_error("Missing field 'files'.");
+    throw std::runtime_error("Missing field 'files'.");
 }
 /// <summary>
 /// Extract vector of urls from a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
-/// <param name="urlList">URL list</param>
-void getURLList(const BNodeDict &bNodeDict, std::vector<std::string> &urlList)
+/// <returns>Vector of URLs.</returns>
+std::vector<std::string> getURLList(const BNodeDict &bNodeDict)
 {
     if (bNodeDict.contains("url-list"))
     {
+        std::vector<std::string> urlList;
         // The url can be multiple list or a single string so need to determine
         if (bNodeDict["url-list"].nodeType == BNodeType::string)
         {
@@ -143,7 +144,9 @@ void getURLList(const BNodeDict &bNodeDict, std::vector<std::string> &urlList)
                 urlList.push_back(BNodeRef<BNodeString>(*bNodeURLString).string());
             }
         }
+        return (urlList);
     }
+    throw std::runtime_error("Missing field 'url-list'.");
 }
 // ===============
 // LOCAL FUNCTIONS
@@ -166,6 +169,7 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
     info.comment = getDictionaryString(bNodeTopLevelDict, "comment");
     info.creationDate = getDictionaryInteger(bNodeTopLevelDict, "creation date");
     info.createdBy = getDictionaryString(bNodeTopLevelDict, "created by");
+    info.urlList = getURLList(bNodeTopLevelDict);
     if (bNodeTopLevelDict.contains("info"))
     {
         const auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
@@ -178,7 +182,7 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
         info.source = getDictionaryString(bNodeInfoDict, "source");
         info.files = getFilesList(bNodeInfoDict);
     }
-    getURLList(bNodeTopLevelDict, info.urlList);
+
     return (info);
 }
 /// <summary>
@@ -222,26 +226,24 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
     try
     {
-        std::vector<std::string> fileList{"./testData/file01.torrent",
-                                          "./testData/file02.torrent",
-                                          "./testData/file03.torrent",
-                                          "./testData/file04.torrent",
-                                          "./testData/file05.torrent"};
+        const std::vector<std::string> fileList{"./testData/file01.torrent",
+                                                "./testData/file02.torrent",
+                                                "./testData/file03.torrent",
+                                                "./testData/file04.torrent",
+                                                "./testData/file05.torrent"};
         Bencode bEncode;
-        TorrentMetaInfo info;
         //
         // For each torrent file extract its information and display
         //
-        for (auto &fileName : fileList)
+        for (const auto &fileName : fileList)
         {
             bEncode.decode(FileSource{fileName});
-            info = getTorrentInfo(bEncode.root());
-            displayTorrentInfo(fileName, info);
+            displayTorrentInfo(fileName, getTorrentInfo(bEncode.root()));
         }
     }
-    catch (std::exception &ex)
+    catch (const std::exception &ex)
     {
-        std::cout << ex.what() << "\n";
+        std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
     }
     exit(EXIT_SUCCESS);
 }
