@@ -40,53 +40,58 @@ using namespace BencodeLib;
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="field">Field name of string value</param>
-/// <param name="str">Destination for string.</param>
-void getDictionaryString(BNodeDict &bNodeDict, const char *field, std::string &str)
+/// <returns>String value of field.</returns>
+std::string getDictionaryString(const BNodeDict &bNodeDict, const char *field)
 {
     if (bNodeDict.contains(field))
     {
-        str = BNodeRef<BNodeString>(bNodeDict[field]).string();
+        return (BNodeRef<BNodeString>(bNodeDict[field]).string());
     }
+    throw std::runtime_error("Missing field '" + std::string(field) + "'.");
 }
 /// <summary>
 /// Get integer value with named field from a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="field">Field name of integer value</param>
-/// <param name="str">Destination for integer</param>
-void getDictionaryInteger(BNodeDict &bNodeDict, const char *field, std::uint64_t &integer)
+/// <returns>Integer value of field.</returns>
+std::uint64_t getDictionaryInteger(const BNodeDict &bNodeDict, const char *field)
 {
     if (bNodeDict.contains(field))
     {
-        integer = BNodeRef<BNodeInteger>(bNodeDict[field]).integer();
+        return (BNodeRef<BNodeInteger>(bNodeDict[field]).integer());
     }
+    throw std::runtime_error("Missing field '" + std::string(field) + "'.");
 }
 /// <summary>
-///  Get vector of annouce servers from a dictionary.
+///  Get vector of announce servers from a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
-/// <param name="strings">Vector of server names (string)</param>
-void getAnnouceList(BNodeDict &bNodeDict, std::vector<std::string> &strings)
+/// <returns>Vector of announce server names.</returns>
+std::vector<std::string> getAnnounceList(const BNodeDict &bNodeDict)
 {
     // This is meant to be a simple list of strings but for some reason each string
     // is encased in its own list for an extra level (bug ?).
     if (bNodeDict.contains("announce-list"))
     {
+        std::vector<std::string> servers;
         for (auto &bNode : BNodeRef<BNodeList>(bNodeDict["announce-list"]).list())
         {
             for (auto &bNodeString : BNodeRef<BNodeList>(*bNode).list())
             {
-                strings.push_back(BNodeRef<BNodeString>(*bNodeString).string());
+                servers.push_back(BNodeRef<BNodeString>(*bNodeString).string());
             }
         }
+        return (servers);
     }
+    throw std::runtime_error("Missing field 'announce-list'.");
 }
 /// <summary>
 /// Construct a file path from a list of strings contained in a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
-/// <param name="filePath">Constructed file path</param>
-void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
+/// <returns>Full file path name.</returns>
+std::string getFilePath(const BNodeDict &bNodeDict)
 {
     if (bNodeDict.contains("path"))
     {
@@ -95,33 +100,34 @@ void getFilePath(BNodeDict &bNodeDict, std::string &filePath)
         {
             path /= BNodeRef<BNodeString>(*folder).string();
         }
-        filePath = path.string();
+        return (path.string());
     }
+    throw std::runtime_error("Missing field 'path'.");
 }
 /// <summary>
 /// Extract and return a vector of file details from a dictionary.
 /// </summary>
 /// <param name="bNodeInfoDict">Dictionary</param>
-/// <param name="files">Constructed vector of file details</param>
-void getFilesList(BNodeDict &bNodeInfoDict, std::vector<TorrentFileDetails> &files)
+/// <returns>Vector of torrent file details.</returns>
+std::vector<TorrentFileDetails> getFilesList(const BNodeDict &bNodeInfoDict)
 {
     if (bNodeInfoDict.contains("files"))
     {
+        std::vector<TorrentFileDetails> files;
         for (auto &file : BNodeRef<BNodeList>(bNodeInfoDict["files"]).list())
         {
-            TorrentFileDetails fileEntry;
-            getDictionaryInteger(BNodeRef<BNodeDict>(*file), "length", fileEntry.length);
-            getFilePath(BNodeRef<BNodeDict>(*file), fileEntry.path);
-            files.push_back(fileEntry);
+            files.emplace_back(getFilePath(BNodeRef<BNodeDict>(*file)), getDictionaryInteger(BNodeRef<BNodeDict>(*file), "length"));
         }
+        return(files);
     }
+        throw std::runtime_error("Missing field 'files'.");
 }
 /// <summary>
 /// Extract vector of urls from a dictionary.
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="urlList">URL list</param>
-void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
+void getURLList(const BNodeDict &bNodeDict, std::vector<std::string> &urlList)
 {
     if (bNodeDict.contains("url-list"))
     {
@@ -147,30 +153,30 @@ void getURLList(BNodeDict &bNodeDict, std::vector<std::string> &urlList)
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
 /// <returns>Torrent file meta information structure</returns>
-TorrentMetaInfo getTorrentInfo(BNode &bNode)
+TorrentMetaInfo getTorrentInfo(const BNode &bNode)
 {
     TorrentMetaInfo info;
     if (bNode.nodeType != BNodeType::dictionary)
     {
         throw std::runtime_error("Valid torrent file not found.");
     }
-    auto &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
-    getDictionaryString(bNodeTopLevelDict, "announce", info.announce);
-    getAnnouceList(bNodeTopLevelDict, info.annouceList);
-    getDictionaryString(bNodeTopLevelDict, "comment", info.comment);
-    getDictionaryInteger(bNodeTopLevelDict, "creation date", info.creationDate);
-    getDictionaryString(bNodeTopLevelDict, "created by", info.createdBy);
+    const auto &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
+    info.announce = getDictionaryString(bNodeTopLevelDict, "announce");
+    info.announceList = getAnnounceList(bNodeTopLevelDict);
+    info.comment = getDictionaryString(bNodeTopLevelDict, "comment");
+    info.creationDate = getDictionaryInteger(bNodeTopLevelDict, "creation date");
+    info.createdBy = (bNodeTopLevelDict, "created by");
     if (bNodeTopLevelDict.contains("info"))
     {
-        auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
-        getDictionaryString(bNodeInfoDict, "attr", info.attr);
-        getDictionaryInteger(bNodeInfoDict, "length", info.length);
-        getDictionaryString(bNodeInfoDict, "name", info.name);
-        getDictionaryInteger(bNodeInfoDict, "piece length", info.pieceLength);
-        getDictionaryString(bNodeInfoDict, "pieces", info.pieces);
-        getDictionaryInteger(bNodeInfoDict, "private", info.privateBitMask);
-        getDictionaryString(bNodeInfoDict, "source", info.source);
-        getFilesList(bNodeInfoDict, info.files);
+        const auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
+        info.attr = (bNodeInfoDict, "attr");
+        info.length = getDictionaryInteger(bNodeInfoDict, "length");
+        info.name = getDictionaryString(bNodeInfoDict, "name");
+        info.pieceLength = getDictionaryInteger(bNodeInfoDict, "piece length");
+        info.pieces = (bNodeInfoDict, "pieces");
+        info.privateBitMask = getDictionaryInteger(bNodeInfoDict, "private");
+        info.source = getDictionaryString(bNodeInfoDict, "source");
+        info.files = getFilesList(bNodeInfoDict);
     }
     getURLList(bNodeTopLevelDict, info.urlList);
     return (info);
@@ -200,7 +206,7 @@ void displayTorrentInfo(const std::string &fileName, const TorrentMetaInfo &info
     {
         std::cout << "path [ " << file.path << "] length [" << file.length << "]\n";
     }
-    for (const auto &announceURL : info.annouceList)
+    for (const auto &announceURL : info.announceList)
     {
         std::cout << "announce url [ " << announceURL << "]\n";
     }

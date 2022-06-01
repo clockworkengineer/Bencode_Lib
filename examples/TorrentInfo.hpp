@@ -13,7 +13,7 @@ struct TorrentFileDetails
 struct TorrentMetaInfo
 {
     std::string announce;
-    std::vector<std::string> annouceList;
+    std::vector<std::string> announceList;
     std::string attr;
     std::string comment;
     std::uint64_t creationDate{};
