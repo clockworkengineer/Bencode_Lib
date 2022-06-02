@@ -182,7 +182,6 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
         info.source = getDictionaryString(bNodeInfoDict, "source");
         info.files = getFilesList(bNodeInfoDict);
     }
-
     return (info);
 }
 /// <summary>
@@ -203,7 +202,6 @@ void displayTorrentInfo(const std::string &fileName, const TorrentMetaInfo &info
     std::cout << "length [" << info.length << "]\n";
     std::cout << "name [" << info.name << "]\n";
     std::cout << "piece length [" << info.pieceLength << "]\n";
-    // std::cout << "pieces [" << info.pieces << "]\n";
     std::cout << "private [" << info.privateBitMask << "]\n";
     std::cout << "source [" << info.source << "]\n";
     for (const auto &file : info.files)
