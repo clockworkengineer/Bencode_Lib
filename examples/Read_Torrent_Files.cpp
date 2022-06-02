@@ -47,7 +47,7 @@ std::string getDictionaryString(const BNodeDict &bNodeDict, const char *field)
     {
         return (BNodeRef<BNodeString>(bNodeDict[field]).string());
     }
-    throw std::runtime_error("Missing field '" + std::string(field) + "'.");
+    return ("");
 }
 /// <summary>
 /// Get integer value with named field from a dictionary.
@@ -61,7 +61,7 @@ std::uint64_t getDictionaryInteger(const BNodeDict &bNodeDict, const char *field
     {
         return (BNodeRef<BNodeInteger>(bNodeDict[field]).integer());
     }
-    throw std::runtime_error("Missing field '" + std::string(field) + "'.");
+    return (0);
 }
 /// <summary>
 ///  Get vector of announce servers from a dictionary.
@@ -84,7 +84,7 @@ std::vector<std::string> getAnnounceList(const BNodeDict &bNodeDict)
         }
         return (servers);
     }
-    throw std::runtime_error("Missing field 'announce-list'.");
+    return(std::vector<std::string>{});
 }
 /// <summary>
 /// Construct a file path from a list of strings contained in a dictionary.
@@ -102,7 +102,7 @@ std::string getFilePath(const BNodeDict &bNodeDict)
         }
         return (path.string());
     }
-    throw std::runtime_error("Missing field 'path'.");
+    return("");
 }
 /// <summary>
 /// Extract and return a vector of file details from a dictionary.
@@ -120,33 +120,7 @@ std::vector<TorrentFileDetails> getFilesList(const BNodeDict &bNodeInfoDict)
         }
         return (files);
     }
-    throw std::runtime_error("Missing field 'files'.");
-}
-/// <summary>
-/// Extract vector of urls from a dictionary.
-/// </summary>
-/// <param name="bNodeDict">Dictionary</param>
-/// <returns>Vector of URLs.</returns>
-std::vector<std::string> getURLList(const BNodeDict &bNodeDict)
-{
-    if (bNodeDict.contains("url-list"))
-    {
-        std::vector<std::string> urlList;
-        // The url can be multiple list or a single string so need to determine
-        if (bNodeDict["url-list"].nodeType == BNodeType::string)
-        {
-            urlList.push_back(BNodeRef<BNodeString>(bNodeDict["url-list"]).string());
-        }
-        else if (bNodeDict["url-list"].nodeType == BNodeType::list)
-        {
-            for (auto &bNodeURLString : BNodeRef<BNodeList>(bNodeDict["url-list"]).list())
-            {
-                urlList.push_back(BNodeRef<BNodeString>(*bNodeURLString).string());
-            }
-        }
-        return (urlList);
-    }
-    throw std::runtime_error("Missing field 'url-list'.");
+    return(std::vector<TorrentFileDetails>{});
 }
 // ===============
 // LOCAL FUNCTIONS
@@ -166,14 +140,14 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
     auto &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
     info.announce = getDictionaryString(bNodeTopLevelDict, "announce");
     info.announceList = getAnnounceList(bNodeTopLevelDict);
+    info.encoding = getDictionaryString(bNodeTopLevelDict, "encoding");
     info.comment = getDictionaryString(bNodeTopLevelDict, "comment");
     info.creationDate = getDictionaryInteger(bNodeTopLevelDict, "creation date");
     info.createdBy = getDictionaryString(bNodeTopLevelDict, "created by");
-    info.urlList = getURLList(bNodeTopLevelDict);
     if (bNodeTopLevelDict.contains("info"))
     {
         auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
-        info.attr = (bNodeInfoDict, "attr");
+        info.attribute = (bNodeInfoDict, "attr");
         info.length = getDictionaryInteger(bNodeInfoDict, "length");
         info.name = getDictionaryString(bNodeInfoDict, "name");
         info.pieceLength = getDictionaryInteger(bNodeInfoDict, "piece length");
@@ -195,7 +169,8 @@ void displayTorrentInfo(const std::string &fileName, const TorrentMetaInfo &info
     std::cout << "FILE [ " << fileName << " ]\n";
     std::cout << "------------------------------------------------------------\n";
     std::cout << "announce [" << info.announce << "]\n";
-    std::cout << "attr [" << info.attr << "]\n";
+    std::cout << "attribute [" << info.attribute << "]\n";
+    std::cout << "encoding [" << info.encoding << "]\n";
     std::cout << "comment [" << info.comment << "]\n";
     std::cout << "creation_date [" << info.creationDate << "]\n";
     std::cout << "created_by [" << info.createdBy << "]\n";
@@ -211,10 +186,6 @@ void displayTorrentInfo(const std::string &fileName, const TorrentMetaInfo &info
     for (const auto &announceURL : info.announceList)
     {
         std::cout << "announce url [ " << announceURL << "]\n";
-    }
-    for (const auto &url : info.urlList)
-    {
-        std::cout << "url [ " << url << "]\n";
     }
 }
 // ============================

@@ -65,7 +65,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ", "[Bencode][De
     bEncode.decode(bEncodeSource);
     REQUIRE(BNodeRef<BNodeInteger>(bEncode.root()).integer() == std::numeric_limits<int64_t>::max());
   }
-  SECTION("Decode out of range postive 64 bit integer (9223372036854775808) and check value", "[Bencode][Decode][Integer]")
+  SECTION("Decode out of range positive 64 bit integer (9223372036854775808) and check value", "[Bencode][Decode][Integer]")
   {
     BufferSource bEncodeSource{"i9223372036854775808e"};
     REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), std::out_of_range);
@@ -227,7 +227,7 @@ TEST_CASE("Decode generated exceptions", "[Bencode][Decode][Exceptions]")
     BufferSource bEncodeSource{"li266ei6780ei88e"};
     REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), BencodeLib::SyntaxError);
   }
-  SECTION("Decode an diictionary without a terminating end", "[Bencode][Decode][Exceptions]")
+  SECTION("Decode an dictionary without a terminating end", "[Bencode][Decode][Exceptions]")
   {
     BufferSource bEncodeSource{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkl"};
     REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), BencodeLib::SyntaxError);
@@ -280,7 +280,7 @@ TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]")
     REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == readBencodedBytesFromFile(prefixTestDataPath(kMultiFileTorrent)));
   }
 }
-TEST_CASE("Decode erronous torrent files", "[Bencode][Decode][Torrents][Error]")
+TEST_CASE("Decode erroneous torrent files", "[Bencode][Decode][Torrents][Error]")
 {
   Bencode bEncode;
   SECTION("Decode singlefileerror.torrent", "[Bencode][Decode][Torrents][Error]")

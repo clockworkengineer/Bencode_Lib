@@ -93,7 +93,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ", "[Bencod
         bEncode.encode(bEncodeDestination);
         REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
     }
-    SECTION("Encode an Dictionary of integers and check balue", "[Bencode][Encode][Dictionary]")
+    SECTION("Encode an Dictionary of integers and check value", "[Bencode][Encode][Dictionary]")
     {
         std::string expected{"d3:onei1e5:threei3e3:twoi2ee"};
         BufferSource bEncodeSource(expected);
@@ -102,7 +102,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ", "[Bencod
         bEncode.encode(bEncodeDestination);
         REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
     }
-    SECTION("Encode an Dictionary of strings and check balue", "[Bencode][Encode][Dictionary]")
+    SECTION("Encode an Dictionary of strings and check value", "[Bencode][Encode][Dictionary]")
     {
         std::string expected{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
         BufferSource bEncodeSource(expected);
