@@ -36,7 +36,6 @@ namespace BencodeLib
             {
                 return (errorMessage.c_str());
             }
-
         private:
             std::string errorMessage;
         };
@@ -86,7 +85,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         std::vector<BNodeDict::Entry> m_value;
     };
@@ -115,7 +113,6 @@ namespace BencodeLib
             }
             throw BNode::Error("BNode Error: Invalid index used in list.");
         }
-
     private:
         std::vector<BNode::Ptr> m_value;
     };
@@ -132,7 +129,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         int64_t m_value = 0;
     };
@@ -149,7 +145,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         std::string m_value;
     };
