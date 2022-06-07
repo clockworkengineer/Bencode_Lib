@@ -38,15 +38,15 @@ namespace BencodeLib
             }
 
         private:
-            const std::string errorMessage;
+            std::string errorMessage;
         };
         explicit BNode(BNodeType nodeType = BNodeType::base) : nodeType(nodeType)
         {
         }
         virtual ~BNode() = default;
-        const BNode &operator[](const std::string &key) const;
-        const BNode &operator[](int index) const;
-        const BNodeType nodeType;
+        BNode &operator[](const std::string &key);
+        BNode &operator[](int index);
+        BNodeType nodeType;
     };
     //
     // Dictionary BNode.
@@ -72,7 +72,7 @@ namespace BencodeLib
         {
             return (static_cast<int>(m_value.size()));
         }
-        const BNode &operator[](const std::string &key) const
+        BNode &operator[](const std::string &key) const
         {
             if (auto it = std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
                                        { return (entry.first == key); });
@@ -88,7 +88,7 @@ namespace BencodeLib
         }
 
     private:
-        const std::vector<BNodeDict::Entry> m_value;
+        std::vector<BNodeDict::Entry> m_value;
     };
     //
     // List BNode.
@@ -103,11 +103,11 @@ namespace BencodeLib
         {
             return (static_cast<int>(m_value.size()));
         }
-        [[nodiscard]] const std::vector<BNode::Ptr> &list() const
+        [[nodiscard]] std::vector<BNode::Ptr> &list()
         {
             return (m_value);
         }
-        const BNode &operator[](int index) const
+        BNode &operator[](int index) const
         {
             if ((index >= 0) && (index < (static_cast<int>(m_value.size()))))
             {
@@ -117,7 +117,7 @@ namespace BencodeLib
         }
 
     private:
-        const std::vector<BNode::Ptr> m_value;
+        std::vector<BNode::Ptr> m_value;
     };
     //
     // Integer BNode.
@@ -134,7 +134,7 @@ namespace BencodeLib
         }
 
     private:
-        const int64_t m_value = 0;
+        int64_t m_value = 0;
     };
     //
     // String BNode.
@@ -151,7 +151,7 @@ namespace BencodeLib
         }
 
     private:
-        const std::string m_value;
+        std::string m_value;
     };
     //
     // Convert base BNode reference
@@ -189,51 +189,16 @@ namespace BencodeLib
         }
         return (static_cast<T &>(bNode));
     }
-    //
-    // Convert base BNode reference
-    //
-    template <typename T>
-    const T &BNodeRef(const BNode &bNode)
-    {
-        if constexpr (std::is_same_v<T, BNodeString>)
-        {
-            if (bNode.nodeType != BNodeType::string)
-            {
-                throw BNode::Error("BNode Error: Node not a string.");
-            }
-        }
-        else if constexpr (std::is_same_v<T, BNodeInteger>)
-        {
-            if (bNode.nodeType != BNodeType::integer)
-            {
-                throw BNode::Error("BNode Error: Node not an integer.");
-            }
-        }
-        else if constexpr (std::is_same_v<T, BNodeList>)
-        {
-            if (bNode.nodeType != BNodeType::list)
-            {
-                throw BNode::Error("BNode Error: Node not a list.");
-            }
-        }
-        else if constexpr (std::is_same_v<T, BNodeDict>)
-        {
-            if (bNode.nodeType != BNodeType::dictionary)
-            {
-                throw BNode::Error("BNode Error: Node not a dictionary.");
-            }
-        }
-        return (static_cast<const T &>(bNode));
-    }
+
     //
     // Index overloads
     //
-    inline const BNode &BNode::operator[](const std::string &key) const // Dictionary
+    inline BNode &BNode::operator[](const std::string &key) // Dictionary
     {
-        return (BNodeRef<const BNodeDict>(*this)[key]);
+        return (BNodeRef<BNodeDict>(*this)[key]);
     }
-    inline const BNode &BNode::operator[](int index) const // List
+    inline BNode &BNode::operator[](int index) // List
     {
-        return (BNodeRef<const BNodeList>(*this)[index]);
+        return (BNodeRef<BNodeList>(*this)[index]);
     }
 } // namespace BencodeLib
