@@ -103,7 +103,7 @@ namespace BencodeLib
         {
             return (static_cast<int>(m_value.size()));
         }
-        [[nodiscard]] std::vector<BNode::Ptr> &list()
+        [[nodiscard]] const std::vector<BNode::Ptr> &list() const
         {
             return (m_value);
         }
