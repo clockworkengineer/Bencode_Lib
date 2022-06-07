@@ -130,7 +130,7 @@ std::vector<TorrentFileDetails> getFilesList(const BNodeDict &bNodeInfoDict)
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
 /// <returns>Torrent file meta information structure.</returns>
-TorrentMetaInfo getTorrentInfo(BNode &bNode)
+TorrentMetaInfo getTorrentInfo(const BNode &bNode)
 {
     TorrentMetaInfo info;
     if (bNode.nodeType != BNodeType::dictionary)

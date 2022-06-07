@@ -189,7 +189,42 @@ namespace BencodeLib
         }
         return (static_cast<T &>(bNode));
     }
-
+    //
+    // Convert base BNode reference
+    //
+    template <typename T>
+    const T &BNodeRef(const BNode &bNode)
+    {
+        if constexpr (std::is_same_v<T, BNodeString>)
+        {
+            if (bNode.nodeType != BNodeType::string)
+            {
+                throw BNode::Error("BNode Error: Node not a string.");
+            }
+        }
+        else if constexpr (std::is_same_v<T, BNodeInteger>)
+        {
+            if (bNode.nodeType != BNodeType::integer)
+            {
+                throw BNode::Error("BNode Error: Node not an integer.");
+            }
+        }
+        else if constexpr (std::is_same_v<T, BNodeList>)
+        {
+            if (bNode.nodeType != BNodeType::list)
+            {
+                throw BNode::Error("BNode Error: Node not a list.");
+            }
+        }
+        else if constexpr (std::is_same_v<T, BNodeDict>)
+        {
+            if (bNode.nodeType != BNodeType::dictionary)
+            {
+                throw BNode::Error("BNode Error: Node not a dictionary.");
+            }
+        }
+        return (static_cast<const T &>(bNode));
+    }
     //
     // Index overloads
     //
