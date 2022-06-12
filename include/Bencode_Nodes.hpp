@@ -11,9 +11,9 @@
 // =========
 namespace BencodeLib
 {
-    //
-    // BNode types.
-    //
+    // ==================
+    // Bencode Node Types
+    // ==================
     enum class BNodeType
     {
         base = 0,
@@ -22,22 +22,23 @@ namespace BencodeLib
         integer,
         string
     };
-    //
-    // Base BNode
-    //
+    // ====
+    // Base
+    // ====
     struct BNode
     {
         using Ptr = std::unique_ptr<BNode>;
         struct Error : public std::exception
         {
         public:
-            explicit Error(std::string errorMessage) : errorMessage(std::move(errorMessage)) {}
+            explicit Error(const std::string &message) : errorMessage(std::string("BNode Error: ") + message) {}
             [[nodiscard]] const char *what() const noexcept override
             {
                 return (errorMessage.c_str());
             }
+
         private:
-            std::string errorMessage;
+            const std::string errorMessage;
         };
         explicit BNode(BNodeType nodeType = BNodeType::base) : nodeType(nodeType)
         {
@@ -47,9 +48,9 @@ namespace BencodeLib
         BNode &operator[](int index);
         BNodeType nodeType;
     };
-    //
-    // Dictionary BNode.
-    //
+    // ==========
+    // Dictionary
+    // ==========
     struct BNodeDict : BNode
     {
         using Entry = std::pair<std::string, BNode::Ptr>;
@@ -79,18 +80,19 @@ namespace BencodeLib
             {
                 return (*it->second);
             }
-            throw BNode::Error("BNode Error: Invalid key used in dictionary.");
+            throw BNode::Error("Invalid key used in dictionary.");
         }
         [[nodiscard]] const std::vector<Entry> &dictionary() const
         {
             return (m_value);
         }
+
     private:
         std::vector<BNodeDict::Entry> m_value;
     };
-    //
-    // List BNode.
-    //
+    // ====
+    // List
+    // ====
     struct BNodeList : BNode
     {
         explicit BNodeList(std::vector<BNode::Ptr> &value) : BNode(BNodeType::list),
@@ -111,14 +113,15 @@ namespace BencodeLib
             {
                 return (*m_value[index]);
             }
-            throw BNode::Error("BNode Error: Invalid index used in list.");
+            throw BNode::Error("Invalid index used in list.");
         }
+
     private:
         std::vector<BNode::Ptr> m_value;
     };
-    //
-    // Integer BNode.
-    //
+    // =======
+    // Integer
+    // =======
     struct BNodeInteger : BNode
     {
         explicit BNodeInteger(int64_t value) : BNode(BNodeType::integer),
@@ -129,12 +132,13 @@ namespace BencodeLib
         {
             return (m_value);
         }
+
     private:
         int64_t m_value = 0;
     };
-    //
-    // String BNode.
-    //
+    // ======
+    // String
+    // ======
     struct BNodeString : BNode
     {
         explicit BNodeString(std::string value) : BNode(BNodeType::string),
@@ -145,84 +149,60 @@ namespace BencodeLib
         {
             return (m_value);
         }
+
     private:
         std::string m_value;
     };
-    //
-    // Convert base BNode reference
-    //
+    // ==============================
+    // BNode base reference converter
+    // ==============================
+    template <typename T>
+    void CheckBNodeType(auto bNode)
+    {
+        if constexpr (std::is_same_v<T, BNodeString>)
+        {
+            if (bNode.nodeType != BNodeType::string)
+            {
+                throw BNode::Error("Node not a string.");
+            }
+        }
+        else if constexpr (std::is_same_v<T, BNodeInteger>)
+        {
+            if (bNode.nodeType != BNodeType::integer)
+            {
+                throw BNode::Error("Node not an integer.");
+            }
+        }
+        else if constexpr (std::is_same_v<T, BNodeList>)
+        {
+            if (bNode.nodeType != BNodeType::list)
+            {
+                throw BNode::Error("Node not a list.");
+            }
+        }
+        else if constexpr (std::is_same_v<T, BNodeDict>)
+        {
+            if (bNode.nodeType != BNodeType::dictionary)
+            {
+                throw BNode::Error("Node not a dictionary.");
+            }
+        }
+    }
     template <typename T>
     T &BNodeRef(BNode &bNode)
     {
-        if constexpr (std::is_same_v<T, BNodeString>)
-        {
-            if (bNode.nodeType != BNodeType::string)
-            {
-                throw BNode::Error("BNode Error: Node not a string.");
-            }
-        }
-        else if constexpr (std::is_same_v<T, BNodeInteger>)
-        {
-            if (bNode.nodeType != BNodeType::integer)
-            {
-                throw BNode::Error("BNode Error: Node not an integer.");
-            }
-        }
-        else if constexpr (std::is_same_v<T, BNodeList>)
-        {
-            if (bNode.nodeType != BNodeType::list)
-            {
-                throw BNode::Error("BNode Error: Node not a list.");
-            }
-        }
-        else if constexpr (std::is_same_v<T, BNodeDict>)
-        {
-            if (bNode.nodeType != BNodeType::dictionary)
-            {
-                throw BNode::Error("BNode Error: Node not a dictionary.");
-            }
-        }
+        CheckBNodeType<T>(bNode);
         return (static_cast<T &>(bNode));
     }
-    //
-    // Convert base BNode reference
-    //
     template <typename T>
     const T &BNodeRef(const BNode &bNode)
     {
-        if constexpr (std::is_same_v<T, BNodeString>)
-        {
-            if (bNode.nodeType != BNodeType::string)
-            {
-                throw BNode::Error("BNode Error: Node not a string.");
-            }
-        }
-        else if constexpr (std::is_same_v<T, BNodeInteger>)
-        {
-            if (bNode.nodeType != BNodeType::integer)
-            {
-                throw BNode::Error("BNode Error: Node not an integer.");
-            }
-        }
-        else if constexpr (std::is_same_v<T, BNodeList>)
-        {
-            if (bNode.nodeType != BNodeType::list)
-            {
-                throw BNode::Error("BNode Error: Node not a list.");
-            }
-        }
-        else if constexpr (std::is_same_v<T, BNodeDict>)
-        {
-            if (bNode.nodeType != BNodeType::dictionary)
-            {
-                throw BNode::Error("BNode Error: Node not a dictionary.");
-            }
-        }
+        CheckBNodeType<T>(bNode);
         return (static_cast<const T &>(bNode));
     }
-    //
+    // ===============
     // Index overloads
-    //
+    // ===============
     inline BNode &BNode::operator[](const std::string &key) // Dictionary
     {
         return (BNodeRef<BNodeDict>(*this)[key]);

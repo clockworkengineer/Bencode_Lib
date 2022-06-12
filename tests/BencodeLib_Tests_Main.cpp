@@ -225,6 +225,13 @@ TEST_CASE("Check BNode reference functions work.", "[Bencode][BNode][Reference]"
     bEncode.decode(bEncodeSource);
     REQUIRE(BNodeRef<BNodeDict>((bEncode.root())).size() == 4);
   }
+  SECTION("BNodeRef check node type correct.", "[Bencode][BNode][Reference]")
+  {
+    BufferSource bEncodeSource{"i45500e"};
+    bEncode.decode(bEncodeSource);
+    REQUIRE_THROWS_AS(BNodeRef<BNodeDict>(bEncode.root()), BNode::Error);
+    REQUIRE_THROWS_WITH(BNodeRef<BNodeDict>(bEncode.root()), "BNode Error: Node not a dictionary.");
+  }
 }
 TEST_CASE("Check R-Value reference encode/decode.", "[Bencode][BNode][Reference]")
 {
