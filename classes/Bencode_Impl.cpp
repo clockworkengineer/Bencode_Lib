@@ -52,7 +52,7 @@ namespace BencodeLib
             // Number too large to be  in buffer
             if (digits == number.size())
             {
-                throw BencodeLib::SyntaxError();
+                throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
             }
             number[digits++] = source.current();
             source.next();
@@ -60,12 +60,12 @@ namespace BencodeLib
         // Check integer has no leading zero and is not empty ('ie')
         if ((number[0] == '0' && digits > 1) || (digits == 0))
         {
-            throw BencodeLib::SyntaxError();
+            throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
         }
         // Check-for -0
         if ((number[0] == '-') && (number[1] == '0') && (digits == 2))
         {
-            throw BencodeLib::SyntaxError();
+            throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
         }
         return (std::stoll(&number[0]));
     }
@@ -79,7 +79,7 @@ namespace BencodeLib
         int64_t stringLength = extractInteger(source);
         if (source.current() != ':')
         {
-            throw BencodeLib::SyntaxError();
+            throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
         }
         source.next();
         std::string buffer;
@@ -110,7 +110,7 @@ namespace BencodeLib
         int64_t integer = extractInteger(source);
         if (source.current() != 'e')
         {
-            throw BencodeLib::SyntaxError();
+            throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
         }
         source.next();
         return (std::make_unique<BNodeInteger>(integer));
@@ -131,7 +131,7 @@ namespace BencodeLib
             // Check keys in lexical order
             if (lastKey > key)
             {
-                throw BencodeLib::SyntaxError();
+                throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
             }
             lastKey = key;
             // Check key not duplicate and insert
@@ -142,12 +142,12 @@ namespace BencodeLib
             }
             else
             {
-                throw BencodeLib::SyntaxError();
+                throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
             }
         }
         if (source.current() != 'e')
         {
-            throw BencodeLib::SyntaxError();
+            throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
         }
         source.next();
         return (std::make_unique<BNodeDict>(dictionary));
@@ -167,7 +167,7 @@ namespace BencodeLib
         }
         if (source.current() != 'e')
         {
-            throw BencodeLib::SyntaxError();
+            throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
         }
         source.next();
         return (std::make_unique<BNodeList>(list));
@@ -204,7 +204,7 @@ namespace BencodeLib
         case '9':
             return (decodeString(source));
         }
-        throw BencodeLib::SyntaxError();
+        throw BencodeLib::Error("Bencode Error: Syntax Error detected.");
     }
     /// <summary>
     /// Recursively traverse a BNode structure and produce an Bencode encoding of it on

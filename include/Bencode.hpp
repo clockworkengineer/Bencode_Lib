@@ -17,14 +17,26 @@ namespace BencodeLib
     // ====================
     // Bencode syntax error
     // ====================
-    struct SyntaxError : public std::exception
+    // struct SyntaxError : public std::exception
+    // {
+    // public:
+    //     explicit SyntaxError(std::string errorMessage = "Syntax error detected.") : errorMessage(std::move(errorMessage)) {}
+    //     [[nodiscard]] const char *what() const noexcept override
+    //     {
+    //         return ((std::string("Bencode Error:")+errorMessage).c_str());
+    //     }
+    // private:
+    //     const std::string errorMessage;
+    // };
+    struct Error : public std::exception
     {
     public:
-        explicit SyntaxError(std::string errorMessage = "Syntax error detected.") : errorMessage(std::move(errorMessage)) {}
+        explicit Error(std::string message) : errorMessage(std::string("Bencode Error: ") + message) {}
         [[nodiscard]] const char *what() const noexcept override
         {
-            return ((std::string("Bencode Error:")+errorMessage).c_str());
+            return (errorMessage.c_str());
         }
+
     private:
         const std::string errorMessage;
     };
