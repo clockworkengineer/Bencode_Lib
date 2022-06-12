@@ -59,7 +59,7 @@ TEST_CASE("ISource (File interface).", "[Bencode][ISource]")
   {
     REQUIRE_NOTHROW(FileSource(prefixTestDataPath(kSingleFileTorrent)));
   }
-  SECTION("Create FileSource with non existants file.", "[Bencode][ISource]")
+  SECTION("Create FileSource with non existant file.", "[Bencode][ISource]")
   {
     REQUIRE_THROWS_AS(FileSource(prefixTestDataPath(kNonExistantTorrent)), std::runtime_error);
     REQUIRE_THROWS_WITH(FileSource(prefixTestDataPath(kNonExistantTorrent)), "Bencode file input stream failed to open or does not exist.");
@@ -92,7 +92,7 @@ TEST_CASE("ISource (File interface).", "[Bencode][ISource]")
 }
 TEST_CASE("IDestination (Buffer interface).", "[Bencode][IDestination]")
 {
-  SECTION("Create BufferDesination.", "[Bencode][IDestination]")
+  SECTION("Create BufferDestinations.", "[Bencode][IDestination]")
   {
     REQUIRE_NOTHROW(BufferDestination());
   }
@@ -173,7 +173,7 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]")
     REQUIRE(BNodeRef<BNodeString>((bEncode.root())[1]).string() == "poiuytrewqas");
     REQUIRE(BNodeRef<BNodeString>((bEncode.root())[2]).string() == "abcdefghijklmnopqrstuvwxyz");
   }
-  SECTION("Decode list with embedded dictioanry and check its components using indexing", "[Bencode][BNode][Index]")
+  SECTION("Decode list with embedded dictionary and check its components using indexing", "[Bencode][BNode][Index]")
   {
     BufferSource bEncodeSource{"l6:sillyyd3:one10:01234567895:three6:qwerty3:two9:asdfghjkle26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);

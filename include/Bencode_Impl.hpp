@@ -61,7 +61,7 @@ namespace BencodeLib
         BNode::Ptr decodeDictionary(ISource &source);
         BNode::Ptr decodeList(ISource &source);
         BNode::Ptr decodeBNodes(ISource &source);
-        void encodeBNodes(BNode &bNode, IDestination &destination);
+        void encodeBNodes(const BNode &bNode, IDestination &destination);
         // =================
         // PRIVATE VARIABLES
         // =================

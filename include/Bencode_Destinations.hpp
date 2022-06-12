@@ -14,8 +14,11 @@
 // =========
 namespace BencodeLib
 {
+    // ================================
+    // Destination classes for encoders
+    // ================================
     //
-    // Destination classes for encoders.
+    // Buffered character destination
     //
     class BufferDestination : public IDestination
     {
@@ -36,9 +39,13 @@ namespace BencodeLib
         {
             return (m_encodeBuffer);
         }
+
     private:
         std::vector<std::byte> m_encodeBuffer;
     };
+    //
+    // File character destination
+    //
     class FileDestination : public IDestination
     {
     public:
@@ -60,6 +67,7 @@ namespace BencodeLib
             m_destination.put(ch);
             m_destination.flush();
         }
+
     private:
         std::ofstream m_destination;
     };

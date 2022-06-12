@@ -14,9 +14,9 @@
 // =========
 namespace BencodeLib
 {
-    // =================================
-    // Source classes for Bencode parser
-    // =================================
+    // ==================================
+    // Source classes for Bencode decoder
+    // ==================================
     //
     // Buffered character source
     //

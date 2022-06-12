@@ -213,7 +213,7 @@ namespace BencodeLib
     /// <param name="bNode">Pointer to root of current BNode structure.</param>
     /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     /// <returns></returns>
-    void Bencode_Impl::encodeBNodes(BNode &bNode, IDestination &destination)
+    void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination)
     {
         switch (bNode.nodeType)
         {
