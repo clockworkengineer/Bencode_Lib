@@ -16,6 +16,6 @@ namespace BencodeLib
     public:
         virtual ~IDestination() = default;
         virtual void add(const std::string &bytes) = 0;
-        virtual void add (const char ch)= 0;
+        virtual void add (char ch)= 0;
     };
 } // namespace BencodeLib

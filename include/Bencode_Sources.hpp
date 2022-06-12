@@ -14,8 +14,11 @@
 // =========
 namespace BencodeLib
 {
+    // =================================
+    // Source classes for Bencode parser
+    // =================================
     //
-    // Source classes for decoders.
+    // Buffered character source
     //
     class BufferSource : public ISource
     {
@@ -37,7 +40,7 @@ namespace BencodeLib
             {
                 return (static_cast<char>(m_decodeBuffer[static_cast<int>(m_bufferPosition)]));
             }
-                return (static_cast<char>(EOF));
+            return (static_cast<char>(EOF));
         }
         void next() override
         {
@@ -55,10 +58,14 @@ namespace BencodeLib
         {
             m_bufferPosition = 0;
         }
+
     private:
         std::size_t m_bufferPosition = 0;
         std::vector<std::byte> m_decodeBuffer;
     };
+    //
+    // Buffered character source
+    //
     class FileSource : public ISource
     {
     public:
@@ -88,6 +95,7 @@ namespace BencodeLib
             m_source.clear();
             m_source.seekg(0, std::ios_base::beg);
         }
+
     private:
         mutable std::ifstream m_source;
     };

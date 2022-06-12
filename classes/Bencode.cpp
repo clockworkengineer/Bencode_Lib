@@ -1,8 +1,8 @@
 //
 // Class: Bencode
 //
-// Description: Class to perform Bencode encoding encode/decode to/from
-// a byte buffer or file. It is also  possible to customize this with the
+// Description: Perform Bencode encoding encode/decode to/from a byte
+// buffer or file. It is also  possible to customize this with the
 // ISource and IDestination interfaces if required. Although Bencoded
 // data is treated as std::byte externally this library uses char and
 // std::string internally.Note: At present it will report incorrect Bencode
@@ -48,9 +48,8 @@ namespace BencodeLib
     /// <summary>
     /// Constructor for Bencode object.
     /// </summary>
-    Bencode::Bencode()
+    Bencode::Bencode() : m_implementation(std::make_unique<Bencode_Impl>())
     {
-        m_implementation = std::make_unique<Bencode_Impl>();
     }
     /// <summary>
     /// Destructor for Bencode object.
