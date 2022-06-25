@@ -11,6 +11,10 @@
 //
 #include "ISource.hpp"
 #include "IDestination.hpp"
+// ===============
+// Bencode version
+// ===============
+#include "Bencode_Config.hpp"
 //
 // BNode types
 //
@@ -41,6 +45,7 @@ namespace BencodeLib
         void decode(ISource &source);
         void encode(IDestination &destination);
         BNode &root() { return (*m_bNodeRoot); }
+        const BNode &root() const { return (*m_bNodeRoot); }
         // ================
         // PUBLIC VARIABLES
         // ================

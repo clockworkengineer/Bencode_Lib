@@ -235,7 +235,7 @@ TEST_CASE("Decode generated exceptions", "[Bencode][Decode][Exceptions]")
   SECTION("Decode an string that terminates prematurely", "[Bencode][Decode][Exceptions]")
   {
     BufferSource bEncodeSource{"26:abcdefghijklmno"};
-    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "Decode buffer empty before decode complete.");
+    REQUIRE_THROWS_WITH(bEncode.decode(bEncodeSource), "ISource Error: Decode buffer empty before decode complete.");
   }
     SECTION("Duplicate dictionary keys", "[Bencode][Decode][Dictionary][Exceptions]")
   {

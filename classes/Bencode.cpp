@@ -84,6 +84,13 @@ namespace BencodeLib
     {
         m_implementation->encode(destination);
     }
+    /// <summary>
+    /// Return root of Bencode object tree.
+    /// </summary>
+    const BNode &Bencode::root() const
+    {
+        return (m_implementation->root());
+    }
     BNode &Bencode::root()
     {
         return (m_implementation->root());

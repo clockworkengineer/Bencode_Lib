@@ -27,7 +27,7 @@ namespace BencodeLib
         {
             if (sourceBuffer.empty())
             {
-                throw std::invalid_argument("Empty source buffer passed to be decoded.");
+                throw Error("Empty source buffer passed to be decoded.");
             }
             for (auto ch : sourceBuffer)
             {
@@ -46,7 +46,7 @@ namespace BencodeLib
         {
             if (!more())
             {
-                throw std::runtime_error("Decode buffer empty before decode complete.");
+                throw Error("Decode buffer empty before decode complete.");
             }
             m_bufferPosition++;
         }
@@ -74,7 +74,7 @@ namespace BencodeLib
             m_source.open(sourceFileName.c_str(), std::ios_base::binary);
             if (!m_source.is_open())
             {
-                throw std::runtime_error("Bencode file input stream failed to open or does not exist.");
+                throw Error("Bencode file input stream failed to open or does not exist.");
             }
         }
         char current() const override

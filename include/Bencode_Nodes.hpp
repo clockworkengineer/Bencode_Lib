@@ -36,7 +36,6 @@ namespace BencodeLib
             {
                 return (errorMessage.c_str());
             }
-
         private:
             const std::string errorMessage;
         };
@@ -46,6 +45,8 @@ namespace BencodeLib
         virtual ~BNode() = default;
         BNode &operator[](const std::string &key);
         BNode &operator[](int index);
+        const BNode &operator[](const std::string &key) const;
+        const BNode &operator[](int index) const;
         BNodeType nodeType;
     };
     // ==========
@@ -72,7 +73,17 @@ namespace BencodeLib
         {
             return (static_cast<int>(m_value.size()));
         }
-        BNode &operator[](const std::string &key) const
+        BNode &operator[](const std::string &key)
+        {
+            if (auto it = std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
+                                       { return (entry.first == key); });
+                it != m_value.end())
+            {
+                return (*it->second);
+            }
+            throw BNode::Error("Invalid key used in dictionary.");
+        }
+        const BNode &operator[](const std::string &key) const
         {
             if (auto it = std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
                                        { return (entry.first == key); });
@@ -86,7 +97,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         std::vector<BNodeDict::Entry> m_value;
     };
@@ -107,7 +117,7 @@ namespace BencodeLib
         {
             return (m_value);
         }
-        BNode &operator[](int index) const
+        BNode &operator[](int index)
         {
             if ((index >= 0) && (index < (static_cast<int>(m_value.size()))))
             {
@@ -115,7 +125,14 @@ namespace BencodeLib
             }
             throw BNode::Error("Invalid index used in list.");
         }
-
+        const BNode &operator[](int index) const
+        {
+            if ((index >= 0) && (index < (static_cast<int>(m_value.size()))))
+            {
+                return (*m_value[index]);
+            }
+            throw BNode::Error("Invalid index used in list.");
+        }
     private:
         std::vector<BNode::Ptr> m_value;
     };
@@ -132,7 +149,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         int64_t m_value = 0;
     };
@@ -149,7 +165,6 @@ namespace BencodeLib
         {
             return (m_value);
         }
-
     private:
         std::string m_value;
     };
@@ -210,5 +225,13 @@ namespace BencodeLib
     inline BNode &BNode::operator[](int index) // List
     {
         return (BNodeRef<BNodeList>(*this)[index]);
+    }
+    inline const BNode &BNode::operator[](const std::string &key) const // Dictionary
+    {
+        return (BNodeRef<const BNodeDict>(*this)[key]);
+    }
+    inline const BNode &BNode::operator[](int index) const // List
+    {
+        return (BNodeRef<const BNodeList>(*this)[index]);
     }
 } // namespace BencodeLib

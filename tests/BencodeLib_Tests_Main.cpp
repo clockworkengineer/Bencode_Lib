@@ -24,8 +24,8 @@ TEST_CASE("ISource (Buffer interface). Contains file singlefile.torrent.", "[Ben
   }
   SECTION("Create BufferSource with empty buffer.", "[Bencode][ISource]")
   {
-    REQUIRE_THROWS_AS(BufferSource(""), std::invalid_argument);
-    REQUIRE_THROWS_WITH(BufferSource(""), "Empty source buffer passed to be decoded.");
+    REQUIRE_THROWS_AS(BufferSource(""), ISource::Error);
+    REQUIRE_THROWS_WITH(BufferSource(""), "ISource Error: Empty source buffer passed to be decoded.");
   }
   SECTION("Create BufferSource with singlefile.torrent and that it is positioned on the correct first character", "[Bencode][ISource]")
   {
@@ -61,8 +61,8 @@ TEST_CASE("ISource (File interface).", "[Bencode][ISource]")
   }
   SECTION("Create FileSource with non existant file.", "[Bencode][ISource]")
   {
-    REQUIRE_THROWS_AS(FileSource(prefixTestDataPath(kNonExistantTorrent)), std::runtime_error);
-    REQUIRE_THROWS_WITH(FileSource(prefixTestDataPath(kNonExistantTorrent)), "Bencode file input stream failed to open or does not exist.");
+    REQUIRE_THROWS_AS(FileSource(prefixTestDataPath(kNonExistantTorrent)), ISource::Error);
+    REQUIRE_THROWS_WITH(FileSource(prefixTestDataPath(kNonExistantTorrent)), "ISource Error: Bencode file input stream failed to open or does not exist.");
   }
   SECTION("Create FileSource with singlefile.torrent. and positioned on the correct first character", "[Bencode][ISource]")
   {

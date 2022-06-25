@@ -1,26 +1,22 @@
 #pragma once
-//
+// =======
 // C++ STL
-//
+// =======
 #include <string>
 #include <stdexcept>
 #include <memory>
-//
-// Bencode version
-//
-#include "Bencode_Config.hpp"
 // =========
 // NAMESPACE
 // =========
 namespace BencodeLib
 {
-    // ====================
-    // Bencode syntax error
-    // ====================
+    // =============
+    // Bencode Error
+    // =============
     struct Error : public std::exception
     {
     public:
-        explicit Error(const std::string& message) : errorMessage(std::string("Bencode Error: ") + message) {}
+        explicit Error(const std::string &message) : errorMessage(std::string("Bencode Error: ") + message) {}
         [[nodiscard]] const char *what() const noexcept override
         {
             return (errorMessage.c_str());
@@ -47,10 +43,14 @@ namespace BencodeLib
         // ============
         // CONSTRUCTORS
         // ============
+        // ======================
+        // CONSTRUCTOR/DESTRUCTOR
+        // ======================
         Bencode();
-        // ==========
-        // DESTRUCTOR
-        // ==========
+        Bencode(const Bencode &other) = delete;
+        Bencode &operator=(const Bencode &other) = delete;
+        Bencode(Bencode &&other) = delete;
+        Bencode &operator=(Bencode &&other) = delete;
         ~Bencode();
         // ==============
         // PUBLIC METHODS
@@ -60,6 +60,7 @@ namespace BencodeLib
         void encode(IDestination &destination);
         void encode(IDestination &&destination);
         BNode &root();
+        const BNode &root() const;
         // ================
         // PUBLIC VARIABLES
         // ================

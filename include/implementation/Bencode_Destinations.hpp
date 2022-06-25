@@ -39,7 +39,10 @@ namespace BencodeLib
         {
             return (m_encodeBuffer);
         }
-
+        const std::vector<std::byte> &getBuffer() const
+        {
+            return (m_encodeBuffer);
+        }
     private:
         std::vector<std::byte> m_encodeBuffer;
     };
@@ -54,7 +57,7 @@ namespace BencodeLib
             m_destination.open(destinationFileName.c_str(), std::ios_base::binary);
             if (!m_destination.is_open())
             {
-                throw std::runtime_error("Bencode file output stream failed to open or could not be created.");
+                throw Error("Bencode file output stream failed to open or could not be created.");
             }
         }
         void add(const std::string &bytes) override
