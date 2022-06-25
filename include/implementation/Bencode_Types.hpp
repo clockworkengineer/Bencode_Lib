@@ -28,24 +28,19 @@ namespace BencodeLib
     struct BNode
     {
         using Ptr = std::unique_ptr<BNode>;
-        struct Error : public std::exception
+        struct Error : public std::runtime_error
         {
-        public:
-            explicit Error(const std::string &message) : errorMessage(std::string("BNode Error: ") + message) {}
-            [[nodiscard]] const char *what() const noexcept override
+            Error(std::string const &message) : std::runtime_error("BNode Error: " + message)
             {
-                return (errorMessage.c_str());
             }
-        private:
-            const std::string errorMessage;
         };
         explicit BNode(BNodeType nodeType = BNodeType::base) : nodeType(nodeType)
         {
         }
         virtual ~BNode() = default;
         BNode &operator[](const std::string &key);
-        BNode &operator[](int index);
         const BNode &operator[](const std::string &key) const;
+        BNode &operator[](int index);
         const BNode &operator[](int index) const;
         BNodeType nodeType;
     };
@@ -93,10 +88,15 @@ namespace BencodeLib
             }
             throw BNode::Error("Invalid key used in dictionary.");
         }
+        [[nodiscard]] std::vector<Entry> &dictionary()
+        {
+            return (m_value);
+        }
         [[nodiscard]] const std::vector<Entry> &dictionary() const
         {
             return (m_value);
         }
+
     private:
         std::vector<BNodeDict::Entry> m_value;
     };
@@ -112,6 +112,10 @@ namespace BencodeLib
         [[nodiscard]] int size() const
         {
             return (static_cast<int>(m_value.size()));
+        }
+        [[nodiscard]] std::vector<BNode::Ptr> &list()
+        {
+            return (m_value);
         }
         [[nodiscard]] const std::vector<BNode::Ptr> &list() const
         {
@@ -133,6 +137,7 @@ namespace BencodeLib
             }
             throw BNode::Error("Invalid index used in list.");
         }
+
     private:
         std::vector<BNode::Ptr> m_value;
     };
@@ -149,6 +154,7 @@ namespace BencodeLib
         {
             return (m_value);
         }
+
     private:
         int64_t m_value = 0;
     };
@@ -161,10 +167,15 @@ namespace BencodeLib
                                                   m_value(std::move(value))
         {
         }
-        [[nodiscard]] std::string string() const
+        [[nodiscard]] std::string &string()
         {
             return (m_value);
         }
+        [[nodiscard]] const std::string &string() const
+        {
+            return (m_value);
+        }
+
     private:
         std::string m_value;
     };

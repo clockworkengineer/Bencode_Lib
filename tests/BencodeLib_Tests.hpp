@@ -16,7 +16,7 @@
 // Class under test includes
 // =========================
 #include "Bencode.hpp"
-#include "Bencode_Nodes.hpp"
+#include "Bencode_Types.hpp"
 #include "Bencode_Sources.hpp"
 #include "Bencode_Destinations.hpp"
 // ===================

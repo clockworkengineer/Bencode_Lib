@@ -23,9 +23,9 @@ set (BENCODE_SOURCES
 
 set (BENCODE_INCLUDES
     ./include/Bencode.hpp
-    ./include/Bencode_Nodes.hpp
     ./include/interface/ISource.hpp
     ./include/interface/IDestination.hpp
+    ./include/implementation/Bencode_Types.hpp
     ./include/implementation/Bencode_Impl.hpp
     ./include/implementation/Bencode_Sources.hpp
     ./include/implementation/Bencode_Desintations.hpp

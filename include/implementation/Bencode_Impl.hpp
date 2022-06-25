@@ -18,7 +18,7 @@
 //
 // BNode types
 //
-#include "Bencode_Nodes.hpp"
+#include "Bencode_Types.hpp"
 // =========
 // NAMESPACE
 // =========
@@ -33,12 +33,15 @@ namespace BencodeLib
         // ==========================
         // PUBLIC TYPES AND CONSTANTS
         // ==========================
-        // ============
-        // CONSTRUCTORS
-        // ============
-        // ==========
-        // DESTRUCTOR
-        // ==========
+        // ======================
+        // CONSTRUCTOR/DESTRUCTOR
+        // ======================
+        Bencode_Impl() = default;
+        Bencode_Impl(const Bencode_Impl &other) = delete;
+        Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
+        Bencode_Impl(Bencode_Impl &&other) = delete;
+        Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
+        ~Bencode_Impl() = default;
         // ==============
         // PUBLIC METHODS
         // ==============
