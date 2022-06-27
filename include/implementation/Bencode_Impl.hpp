@@ -44,7 +44,7 @@ namespace BencodeLib
         // PUBLIC METHODS
         // ==============
         static BNode::Ptr decode(ISource &source);
-        static void encode(BNode &bNodeRoot, IDestination &destination);
+        static void encode(const BNode &bNodeRoot, IDestination &destination);
         static std::string version();
         // ================
         // PUBLIC VARIABLES

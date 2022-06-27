@@ -274,7 +274,7 @@ namespace BencodeLib
     /// <param name="bNodeRoot">BNode structure root.</param>
     /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     /// <returns></returns>
-    void Bencode_Impl::encode(BNode &bNodeRoot, IDestination &destination)
+    void Bencode_Impl::encode(const BNode &bNodeRoot, IDestination &destination)
     {
         encodeBNodes(bNodeRoot, destination);
     }
