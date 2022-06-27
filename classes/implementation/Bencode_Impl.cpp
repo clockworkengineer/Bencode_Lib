@@ -215,7 +215,7 @@ namespace BencodeLib
     /// <returns></returns>
     void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination)
     {
-        switch (bNode.nodeType)
+        switch (bNode.getNodeType())
         {
         case BNodeType::dictionary:
             destination.add('d');

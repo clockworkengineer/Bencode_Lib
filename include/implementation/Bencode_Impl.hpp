@@ -12,13 +12,10 @@
 //
 #include "ISource.hpp"
 #include "IDestination.hpp"
-// ===============
-// Bencode version
-// ===============
+// =======
+// Bencode
+// =======
 #include "Bencode_Config.hpp"
-//
-// BNode types
-//
 #include "Bencode_Types.hpp"
 // =========
 // NAMESPACE

@@ -26,9 +26,6 @@ namespace BencodeLib
         // ==========================
         // PUBLIC TYPES AND CONSTANTS
         // ==========================
-        // ============
-        // CONSTRUCTORS
-        // ============
         // ======================
         // CONSTRUCTOR/DESTRUCTOR
         // ======================

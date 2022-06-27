@@ -43,7 +43,7 @@ namespace BencodeLib
             {
             }
         };
-        explicit BNode(BNodeType nodeType = BNodeType::base) : nodeType(nodeType)
+        explicit BNode(BNodeType nodeType = BNodeType::base) : m_nodeType(nodeType)
         {
         }
         virtual ~BNode() = default;
@@ -51,7 +51,13 @@ namespace BencodeLib
         const BNode &operator[](const std::string &key) const;
         BNode &operator[](int index);
         const BNode &operator[](int index) const;
-        BNodeType nodeType;
+        BNodeType getNodeType() const
+        {
+            return (m_nodeType);
+        }
+
+    private:
+        BNodeType m_nodeType;
     };
     // ==========
     // Dictionary
@@ -59,15 +65,15 @@ namespace BencodeLib
     struct BNodeDict : BNode
     {
         using Entry = std::pair<std::string, BNode::Ptr>;
-        explicit BNodeDict(std::vector<BNodeDict::Entry> &value) : BNode(BNodeType::dictionary),
-                                                                   m_value(std::move(value))
+        explicit BNodeDict(std::vector<BNodeDict::Entry> &dictionary) : BNode(BNodeType::dictionary),
+                                                                        m_dictionary(std::move(dictionary))
         {
         }
         [[nodiscard]] bool contains(const std::string &key) const
         {
-            if (auto it = std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
+            if (auto it = std::find_if(m_dictionary.begin(), m_dictionary.end(), [&key](const Entry &entry) -> bool
                                        { return (entry.first == key); });
-                it != m_value.end())
+                it != m_dictionary.end())
             {
                 return (true);
             }
@@ -75,13 +81,13 @@ namespace BencodeLib
         }
         [[nodiscard]] int size() const
         {
-            return (static_cast<int>(m_value.size()));
+            return (static_cast<int>(m_dictionary.size()));
         }
         BNode &operator[](const std::string &key)
         {
-            if (auto it = std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
+            if (auto it = std::find_if(m_dictionary.begin(), m_dictionary.end(), [&key](const Entry &entry) -> bool
                                        { return (entry.first == key); });
-                it != m_value.end())
+                it != m_dictionary.end())
             {
                 return (*it->second);
             }
@@ -89,9 +95,9 @@ namespace BencodeLib
         }
         const BNode &operator[](const std::string &key) const
         {
-            if (auto it = std::find_if(m_value.begin(), m_value.end(), [&key](const Entry &entry) -> bool
+            if (auto it = std::find_if(m_dictionary.begin(), m_dictionary.end(), [&key](const Entry &entry) -> bool
                                        { return (entry.first == key); });
-                it != m_value.end())
+                it != m_dictionary.end())
             {
                 return (*it->second);
             }
@@ -99,64 +105,64 @@ namespace BencodeLib
         }
         [[nodiscard]] std::vector<Entry> &dictionary()
         {
-            return (m_value);
+            return (m_dictionary);
         }
         [[nodiscard]] const std::vector<Entry> &dictionary() const
         {
-            return (m_value);
+            return (m_dictionary);
         }
 
     private:
-        std::vector<BNodeDict::Entry> m_value;
+        std::vector<BNodeDict::Entry> m_dictionary;
     };
     // ====
     // List
     // ====
     struct BNodeList : BNode
     {
-        explicit BNodeList(std::vector<BNode::Ptr> &value) : BNode(BNodeType::list),
-                                                             m_value(std::move(value))
+        explicit BNodeList(std::vector<BNode::Ptr> &list) : BNode(BNodeType::list),
+                                                            m_list(std::move(list))
         {
         }
         [[nodiscard]] int size() const
         {
-            return (static_cast<int>(m_value.size()));
+            return (static_cast<int>(m_list.size()));
         }
         [[nodiscard]] std::vector<BNode::Ptr> &list()
         {
-            return (m_value);
+            return (m_list);
         }
         [[nodiscard]] const std::vector<BNode::Ptr> &list() const
         {
-            return (m_value);
+            return (m_list);
         }
         BNode &operator[](int index)
         {
-            if ((index >= 0) && (index < (static_cast<int>(m_value.size()))))
+            if ((index >= 0) && (index < (static_cast<int>(m_list.size()))))
             {
-                return (*m_value[index]);
+                return (*m_list[index]);
             }
             throw BNode::Error("Invalid index used in list.");
         }
         const BNode &operator[](int index) const
         {
-            if ((index >= 0) && (index < (static_cast<int>(m_value.size()))))
+            if ((index >= 0) && (index < (static_cast<int>(m_list.size()))))
             {
-                return (*m_value[index]);
+                return (*m_list[index]);
             }
             throw BNode::Error("Invalid index used in list.");
         }
 
     private:
-        std::vector<BNode::Ptr> m_value;
+        std::vector<BNode::Ptr> m_list;
     };
     // =======
     // Integer
     // =======
     struct BNodeInteger : BNode
     {
-        explicit BNodeInteger(int64_t value) : BNode(BNodeType::integer),
-                                               m_value(value)
+        explicit BNodeInteger(int64_t integer) : BNode(BNodeType::integer),
+                                                 m_value(integer)
         {
         }
         [[nodiscard]] int64_t integer() const
@@ -172,21 +178,21 @@ namespace BencodeLib
     // ======
     struct BNodeString : BNode
     {
-        explicit BNodeString(std::string value) : BNode(BNodeType::string),
-                                                  m_value(std::move(value))
+        explicit BNodeString(std::string stringValue) : BNode(BNodeType::string),
+                                                        m_string(std::move(stringValue))
         {
         }
         [[nodiscard]] std::string &string()
         {
-            return (m_value);
+            return (m_string);
         }
         [[nodiscard]] const std::string &string() const
         {
-            return (m_value);
+            return (m_string);
         }
 
     private:
-        std::string m_value;
+        std::string m_string;
     };
     // ==============================
     // BNode base reference converter
@@ -196,28 +202,28 @@ namespace BencodeLib
     {
         if constexpr (std::is_same_v<T, BNodeString>)
         {
-            if (bNode.nodeType != BNodeType::string)
+            if (bNode.getNodeType() != BNodeType::string)
             {
                 throw BNode::Error("Node not a string.");
             }
         }
         else if constexpr (std::is_same_v<T, BNodeInteger>)
         {
-            if (bNode.nodeType != BNodeType::integer)
+            if (bNode.getNodeType() != BNodeType::integer)
             {
                 throw BNode::Error("Node not an integer.");
             }
         }
         else if constexpr (std::is_same_v<T, BNodeList>)
         {
-            if (bNode.nodeType != BNodeType::list)
+            if (bNode.getNodeType() != BNodeType::list)
             {
                 throw BNode::Error("Node not a list.");
             }
         }
         else if constexpr (std::is_same_v<T, BNodeDict>)
         {
-            if (bNode.nodeType != BNodeType::dictionary)
+            if (bNode.getNodeType() != BNodeType::dictionary)
             {
                 throw BNode::Error("Node not a dictionary.");
             }

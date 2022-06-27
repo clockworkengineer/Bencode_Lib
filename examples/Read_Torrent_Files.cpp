@@ -10,16 +10,16 @@
 // =============
 // INCLUDE FILES
 // =============
-//
+// =======
 // C++ STL
-//
+// =======
 #include <cstdlib>
 #include <iostream>
 #include <filesystem>
 #include <stdexcept>
-//
-// Bencode includes
-//
+// =======
+// Bencode
+// =======
 #include "Bencode.hpp"
 #include "Bencode_Types.hpp"
 #include "Bencode_Sources.hpp"
@@ -133,7 +133,7 @@ std::vector<TorrentFileDetails> getFilesList(const BNodeDict &bNodeInfoDict)
 TorrentMetaInfo getTorrentInfo(const BNode &bNode)
 {
     TorrentMetaInfo info;
-    if (bNode.nodeType != BNodeType::dictionary)
+    if (bNode.getNodeType() != BNodeType::dictionary)
     {
         throw std::runtime_error("Valid torrent file not found.");
     }

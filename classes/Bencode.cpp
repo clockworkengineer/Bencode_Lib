@@ -60,6 +60,13 @@ namespace BencodeLib
         // correctly dispose of it.
     }
     /// <summary>
+    /// Get BencodeLib version
+    /// </summary>
+    std::string Bencode::version() const
+    {
+        return (m_implementation->version());
+    }
+    /// <summary>
     /// Decode Bencoded byte string pointed to by source stream into BNode(s).
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
@@ -94,12 +101,5 @@ namespace BencodeLib
     BNode &Bencode::root()
     {
         return (m_implementation->root());
-    }
-    /// <summary>
-    /// Get BencodeLib version
-    /// </summary>
-    std::string Bencode::version() const
-    {
-        return (m_implementation->version());
     }
 } // namespace BencodeLib
