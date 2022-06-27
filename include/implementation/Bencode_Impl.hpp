@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <limits>
 #include <array>
+#include <format>
 //
 // Source/Destination interfaces
 //
@@ -45,6 +46,7 @@ namespace BencodeLib
         // ==============
         // PUBLIC METHODS
         // ==============
+        std::string version() const;
         void decode(ISource &source);
         void encode(IDestination &destination);
         BNode &root() { return (*m_bNodeRoot); }
@@ -56,9 +58,6 @@ namespace BencodeLib
         // ===========================
         // PRIVATE TYPES AND CONSTANTS
         // ===========================
-        // ===========================================
-        // DISABLED CONSTRUCTORS/DESTRUCTORS/OPERATORS
-        // ===========================================
         // ===============
         // PRIVATE METHODS
         // ===============

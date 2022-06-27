@@ -95,4 +95,11 @@ namespace BencodeLib
     {
         return (m_implementation->root());
     }
+    /// <summary>
+    /// Get BencodeLib version
+    /// </summary>
+    std::string Bencode::version() const
+    {
+        return (m_implementation->version());
+    }
 } // namespace BencodeLib

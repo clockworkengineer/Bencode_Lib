@@ -275,4 +275,11 @@ namespace BencodeLib
         }
         encodeBNodes(BNodeRef<BNode>(*m_bNodeRoot), destination);
     }
+    /// <summary>
+    ///  Get JSONLib version.
+    /// </summary>
+    std::string Bencode_Impl::version() const
+    {
+        return (std::format("JSONLib Version {}.{}.{}", BENCODE_VERSION_MAJOR, BENCODE_VERSION_MINOR, BENCODE_VERSION_PATCH));
+    }
 } // namespace BencodeLib

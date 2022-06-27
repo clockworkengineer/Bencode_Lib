@@ -11,6 +11,15 @@
 // =========
 namespace BencodeLib
 {
+    // =============
+    // Bencode Error
+    // =============
+    struct Error : public std::runtime_error
+    {
+        Error(std::string const &message) : std::runtime_error("Bencode Error: " + message)
+        {
+        }
+    };
     // ==================
     // Bencode Node Types
     // ==================

@@ -10,20 +10,6 @@
 // =========
 namespace BencodeLib
 {
-    // =============
-    // Bencode Error
-    // =============
-    struct Error : public std::exception
-    {
-    public:
-        explicit Error(const std::string &message) : errorMessage(std::string("Bencode Error: ") + message) {}
-        [[nodiscard]] const char *what() const noexcept override
-        {
-            return (errorMessage.c_str());
-        }
-    private:
-        const std::string errorMessage;
-    };
     // ====================
     // Forward declarations
     // ====================
@@ -59,6 +45,7 @@ namespace BencodeLib
         void decode(ISource &&source);
         void encode(IDestination &destination);
         void encode(IDestination &&destination);
+        std::string version() const;
         BNode &root();
         const BNode &root() const;
         // ================
@@ -68,9 +55,6 @@ namespace BencodeLib
         // ===========================
         // PRIVATE TYPES AND CONSTANTS
         // ===========================
-        // ===========================================
-        // DISABLED CONSTRUCTORS/DESTRUCTORS/OPERATORS
-        // ===========================================
         // ===============
         // PRIVATE METHODS
         // ===============
