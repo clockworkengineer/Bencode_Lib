@@ -1,15 +1,15 @@
 #pragma once
-//
+// =======
 // C++ STL
-//
+// =======
 #include <string>
 #include <stdexcept>
 #include <limits>
 #include <array>
 #include <format>
-//
+// =============================
 // Source/Destination interfaces
-//
+// =============================
 #include "ISource.hpp"
 #include "IDestination.hpp"
 // =======
@@ -43,11 +43,9 @@ namespace BencodeLib
         // ==============
         // PUBLIC METHODS
         // ==============
-        std::string version() const;
-        void decode(ISource &source);
-        void encode(IDestination &destination);
-        BNode &root() { return (*m_bNodeRoot); }
-        const BNode &root() const { return (*m_bNodeRoot); }
+        static BNode::Ptr decode(ISource &source);
+        static void encode(BNode &bNodeRoot, IDestination &destination);
+        static std::string version();
         // ================
         // PUBLIC VARIABLES
         // ================
@@ -58,17 +56,16 @@ namespace BencodeLib
         // ===============
         // PRIVATE METHODS
         // ===============
-        int64_t extractInteger(ISource &source);
-        std::string extractString(ISource &source);
-        BNode::Ptr decodeString(ISource &source);
-        BNode::Ptr decodeInteger(ISource &source);
-        BNode::Ptr decodeDictionary(ISource &source);
-        BNode::Ptr decodeList(ISource &source);
-        BNode::Ptr decodeBNodes(ISource &source);
-        void encodeBNodes(const BNode &bNode, IDestination &destination);
+        static int64_t extractInteger(ISource &source);
+        static std::string extractString(ISource &source);
+        static BNode::Ptr decodeString(ISource &source);
+        static BNode::Ptr decodeInteger(ISource &source);
+        static BNode::Ptr decodeDictionary(ISource &source);
+        static BNode::Ptr decodeList(ISource &source);
+        static BNode::Ptr decodeBNodes(ISource &source);
+        static void encodeBNodes(const BNode &bNode, IDestination &destination);
         // =================
         // PRIVATE VARIABLES
         // =================
-        BNode::Ptr m_bNodeRoot;
     };
 } // namespace BencodeLib

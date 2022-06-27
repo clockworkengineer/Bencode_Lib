@@ -36,6 +36,7 @@ namespace BencodeLib
     // ========================
     // PRIVATE STATIC VARIABLES
     // ========================
+    const std::unique_ptr<Bencode_Impl> Bencode::m_implementation{std::make_unique<Bencode_Impl>()};
     // =======================
     // PUBLIC STATIC VARIABLES
     // =======================
@@ -45,20 +46,6 @@ namespace BencodeLib
     // ==============
     // PUBLIC METHODS
     // ==============
-    /// <summary>
-    /// Constructor for Bencode object.
-    /// </summary>
-    Bencode::Bencode() : m_implementation(std::make_unique<Bencode_Impl>())
-    {
-    }
-    /// <summary>
-    /// Destructor for Bencode object.
-    /// </summary>
-    Bencode::~Bencode()
-    {
-        // Needed because unique_ptr has access to Bencode_Impl size here and can
-        // correctly dispose of it.
-    }
     /// <summary>
     /// Get BencodeLib version
     /// </summary>
@@ -72,34 +59,30 @@ namespace BencodeLib
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     void Bencode::decode(ISource &source)
     {
-        m_implementation->decode(source);
+        m_bNodeRoot = m_implementation->decode(source);
     }
     void Bencode::decode(ISource &&source)
     {
-        m_implementation->decode(source);
+        m_bNodeRoot = m_implementation->decode(source);
     }
     /// <summary>
     /// Take BNode structure and create an Bencode encoding for it in the destination stream.
     /// </summary>
-    /// <param name="bNodeRoot">BNode structure root.</param>
     /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     void Bencode::encode(IDestination &destination)
     {
-        m_implementation->encode(destination);
+        if (m_bNodeRoot.get() == nullptr)
+        {
+            throw std::runtime_error("No Bencoded data to encode.");
+        }
+         m_implementation->encode(BNodeRef<BNode>(*m_bNodeRoot), destination);
     }
     void Bencode::encode(IDestination &&destination)
     {
-        m_implementation->encode(destination);
-    }
-    /// <summary>
-    /// Return root of Bencode object tree.
-    /// </summary>
-    const BNode &Bencode::root() const
-    {
-        return (m_implementation->root());
-    }
-    BNode &Bencode::root()
-    {
-        return (m_implementation->root());
+        if (m_bNodeRoot.get() == nullptr)
+        {
+            throw std::runtime_error("No Bencoded data to encode.");
+        }
+         m_implementation->encode(BNodeRef<BNode>(*m_bNodeRoot), destination);
     }
 } // namespace BencodeLib

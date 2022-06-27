@@ -253,13 +253,20 @@ namespace BencodeLib
     // PUBLIC METHODS
     // ==============
     /// <summary>
+    ///  Get JSONLib version.
+    /// </summary>
+    std::string Bencode_Impl::version()
+    {
+        return (std::format("JSONLib Version {}.{}.{}", BENCODE_VERSION_MAJOR, BENCODE_VERSION_MINOR, BENCODE_VERSION_PATCH));
+    }
+    /// <summary>
     /// Decode Bencoded byte string pointed to by source stream into BNode(s).
     /// </summary>
     /// <param name="source">Pointer to input interface used to decode Bencoded stream.</param>
     /// <returns></returns>
-    void Bencode_Impl::decode(ISource &source)
+    BNode::Ptr Bencode_Impl::decode(ISource &source)
     {
-        m_bNodeRoot = decodeBNodes(source);
+        return(decodeBNodes(source));
     }
     /// <summary>
     /// Take BNode structure and create an Bencode encoding for it in the destination stream.
@@ -267,19 +274,8 @@ namespace BencodeLib
     /// <param name="bNodeRoot">BNode structure root.</param>
     /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     /// <returns></returns>
-    void Bencode_Impl::encode(IDestination &destination)
+    void Bencode_Impl::encode(BNode &bNodeRoot, IDestination &destination)
     {
-        if (m_bNodeRoot.get() == nullptr)
-        {
-            throw std::runtime_error("No Bencoded data to encode.");
-        }
-        encodeBNodes(BNodeRef<BNode>(*m_bNodeRoot), destination);
-    }
-    /// <summary>
-    ///  Get JSONLib version.
-    /// </summary>
-    std::string Bencode_Impl::version() const
-    {
-        return (std::format("JSONLib Version {}.{}.{}", BENCODE_VERSION_MAJOR, BENCODE_VERSION_MINOR, BENCODE_VERSION_PATCH));
+        encodeBNodes(bNodeRoot, destination);
     }
 } // namespace BencodeLib
