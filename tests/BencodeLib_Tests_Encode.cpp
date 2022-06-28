@@ -118,8 +118,8 @@ TEST_CASE("Encode generated exceptions", "[Bencode][Encode][Exceptions]")
     SECTION("Encode called with no BNode tree to encode", "[Bencode][Encode][Exceptions]")
     {
         BufferDestination bEncodeDestination;
-        REQUIRE_THROWS_AS(bEncode.encode(bEncodeDestination), std::runtime_error);
-        REQUIRE_THROWS_WITH(bEncode.encode(bEncodeDestination), "No Bencoded data to encode.");
+        REQUIRE_THROWS_AS(bEncode.encode(bEncodeDestination), BencodeLib::Error);
+        REQUIRE_THROWS_WITH(bEncode.encode(bEncodeDestination), "Bencode Error: No Bencoded data to encode.");
     }
 }
 TEST_CASE("Encode torrent files using encodeToFile", "[Bencode][Encode][Torrents]")

@@ -135,7 +135,7 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
     TorrentMetaInfo info;
     if (bNode.getNodeType() != BNodeType::dictionary)
     {
-        throw std::runtime_error("Valid torrent file not found.");
+        throw BencodeLib::Error("Valid torrent file not found.");
     }
     auto &bNodeTopLevelDict = BNodeRef<BNodeDict>(bNode);
     info.announce = getDictionaryString(bNodeTopLevelDict, "announce");

@@ -73,7 +73,7 @@ namespace BencodeLib
     {
         if (m_bNodeRoot.get() == nullptr)
         {
-            throw std::runtime_error("No Bencoded data to encode.");
+            throw Error("No Bencoded data to encode.");
         }
          m_implementation->encode(BNodeRef<BNode>(*m_bNodeRoot), destination);
     }
@@ -81,7 +81,7 @@ namespace BencodeLib
     {
         if (m_bNodeRoot.get() == nullptr)
         {
-            throw std::runtime_error("No Bencoded data to encode.");
+            throw Error("No Bencoded data to encode.");
         }
          m_implementation->encode(BNodeRef<BNode>(*m_bNodeRoot), destination);
     }
