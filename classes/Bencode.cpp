@@ -36,7 +36,6 @@ namespace BencodeLib
     // ========================
     // PRIVATE STATIC VARIABLES
     // ========================
-    const std::unique_ptr<Bencode_Impl> Bencode::m_implementation{std::make_unique<Bencode_Impl>()};
     // =======================
     // PUBLIC STATIC VARIABLES
     // =======================
@@ -46,6 +45,18 @@ namespace BencodeLib
     // ==============
     // PUBLIC METHODS
     // ==============
+    /// <summary>
+    /// JSON constructor.
+    /// </summary>
+    Bencode::Bencode() : m_implementation(std::make_unique<Bencode_Impl>())
+    {
+    }
+    /// <summary>
+    /// JSON destructor.
+    /// </summary>
+    Bencode::~Bencode()
+    {
+    }
     /// <summary>
     /// Get BencodeLib version
     /// </summary>
@@ -71,18 +82,18 @@ namespace BencodeLib
     /// <param name="destination ">Pointer to interface used to facilitate the output stream.</param>
     void Bencode::encode(IDestination &destination)
     {
-        if (m_bNodeRoot.get() == nullptr)
+        if (m_bNodeRoot == nullptr)
         {
             throw Error("No Bencoded data to encode.");
         }
-         m_implementation->encode(BNodeRef<BNode>(*m_bNodeRoot), destination);
+        m_implementation->encode(BNodeRef<BNode>(*m_bNodeRoot), destination);
     }
     void Bencode::encode(IDestination &&destination)
     {
-        if (m_bNodeRoot.get() == nullptr)
+        if (m_bNodeRoot == nullptr)
         {
             throw Error("No Bencoded data to encode.");
         }
-         m_implementation->encode(BNodeRef<BNode>(*m_bNodeRoot), destination);
+        m_implementation->encode(BNodeRef<BNode>(*m_bNodeRoot), destination);
     }
 } // namespace BencodeLib

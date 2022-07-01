@@ -29,12 +29,12 @@ namespace BencodeLib
         // ======================
         // CONSTRUCTOR/DESTRUCTOR
         // ======================
-        Bencode() = default;
+        Bencode();
         Bencode(const Bencode &other) = delete;
         Bencode &operator=(const Bencode &other) = delete;
         Bencode(Bencode &&other) = delete;
         Bencode &operator=(Bencode &&other) = delete;
-        ~Bencode() = default;
+        ~Bencode();
         // ==============
         // PUBLIC METHODS
         // ==============
@@ -42,9 +42,9 @@ namespace BencodeLib
         void decode(ISource &&source);
         void encode(IDestination &destination);
         void encode(IDestination &&destination);
-        std::string version() const;
+        [[nodiscard]] std::string version() const;
         BNode &root() { return (*m_bNodeRoot); }
-        const BNode &root() const { return (*m_bNodeRoot); }
+        [[nodiscard]] const BNode &root() const { return (*m_bNodeRoot); }
         // ================
         // PUBLIC VARIABLES
         // ================
@@ -61,6 +61,6 @@ namespace BencodeLib
         // Root of BNode Tree
         std::unique_ptr<BNode> m_bNodeRoot;
         // Bencode implementation
-        static const std::unique_ptr<Bencode_Impl> m_implementation;
+        const std::unique_ptr<Bencode_Impl> m_implementation;
     };
 } // namespace BencodeLib

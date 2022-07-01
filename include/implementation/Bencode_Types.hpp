@@ -16,7 +16,7 @@ namespace BencodeLib
     // =============
     struct Error : public std::runtime_error
     {
-        Error(std::string const &message) : std::runtime_error("Bencode Error: " + message)
+        explicit Error(const std::string &message) : std::runtime_error("Bencode Error: " + message)
         {
         }
     };
@@ -39,19 +39,21 @@ namespace BencodeLib
         using Ptr = std::unique_ptr<BNode>;
         struct Error : public std::runtime_error
         {
-            Error(std::string const &message) : std::runtime_error("BNode Error: " + message)
+            explicit Error(const std::string &message) : std::runtime_error("BNode Error: " + message)
             {
             }
         };
         explicit BNode(BNodeType nodeType = BNodeType::base) : m_nodeType(nodeType)
         {
         }
-        virtual ~BNode() = default;
+        // No BNode is deleted through its base class so omit and save space
+        // from virtual function table.
+        // virtual ~BNode() = default;
         BNode &operator[](const std::string &key);
         const BNode &operator[](const std::string &key) const;
         BNode &operator[](int index);
         const BNode &operator[](int index) const;
-        BNodeType getNodeType() const
+        [[nodiscard]] BNodeType getNodeType() const
         {
             return (m_nodeType);
         }
