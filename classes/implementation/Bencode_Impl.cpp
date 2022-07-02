@@ -257,7 +257,8 @@ namespace BencodeLib
     /// </summary>
     std::string Bencode_Impl::version()
     {
-        return (std::format("BencodeLib Version {}.{}.{}", BENCODE_VERSION_MAJOR, BENCODE_VERSION_MINOR, BENCODE_VERSION_PATCH));
+        //return (std::format("BencodeLib Version {}.{}.{}", BENCODE_VERSION_MAJOR, BENCODE_VERSION_MINOR, BENCODE_VERSION_PATCH));
+        return("");
     }
     /// <summary>
     /// Decode Bencoded byte string pointed to by source stream into BNode(s).

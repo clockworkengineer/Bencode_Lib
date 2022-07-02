@@ -200,7 +200,7 @@ namespace BencodeLib
     // BNode base reference converter
     // ==============================
     template <typename T>
-    void CheckBNodeType(auto bNode)
+    void CheckBNodeType(const BNode &bNode)
     {
         if constexpr (std::is_same_v<T, BNodeString>)
         {

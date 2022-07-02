@@ -5,11 +5,15 @@
 #include <cstdlib>
 #include <iostream>
 #include <filesystem>
+#include <string>
 //
 // Torrent file details
 //
 struct TorrentFileDetails
 {
+    TorrentFileDetails(const std::string &path, std::uint64_t length) : path(path), length(length) 
+    {
+    }
     std::string path;           // Full file path name
     std::uint64_t length{};     // File length in bytes
 };

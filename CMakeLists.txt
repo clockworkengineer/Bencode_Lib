@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23.1)
+cmake_minimum_required(VERSION 3.16.3)
 
 project("BencodeLib" VERSION 0.1.0 DESCRIPTION "Bencode C++ Library" LANGUAGES CXX)
 
