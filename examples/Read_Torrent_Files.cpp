@@ -147,7 +147,7 @@ TorrentMetaInfo getTorrentInfo(const BNode &bNode)
     if (bNodeTopLevelDict.contains("info"))
     {
         auto &bNodeInfoDict = BNodeRef<BNodeDict>(bNodeTopLevelDict["info"]);
-        info.attribute = getDictionaryInteger(bNodeInfoDict, "attr");
+        info.attribute = getDictionaryString(bNodeInfoDict, "attr");
         info.length = getDictionaryInteger(bNodeInfoDict, "length");
         info.name = getDictionaryString(bNodeInfoDict, "name");
         info.pieceLength = getDictionaryInteger(bNodeInfoDict, "piece length");
