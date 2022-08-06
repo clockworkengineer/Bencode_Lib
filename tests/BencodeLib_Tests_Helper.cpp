@@ -19,9 +19,9 @@ using namespace BencodeLib;
 /// </summary>
 /// <param name="name">Test data file name</param>
 /// <returns>Full path to test data file</returns>
-std::string prefixTestDataPath(const std::string &file)
-{
-  std::filesystem::path currentPath = std::filesystem::current_path() / "files" / file;
+std::string prefixTestDataPath(const std::string &file) {
+  std::filesystem::path currentPath =
+      std::filesystem::current_path() / "files" / file;
   return (currentPath.string());
 }
 /// <summary>
@@ -30,16 +30,13 @@ std::string prefixTestDataPath(const std::string &file)
 /// <param name="fileName1">Bencoded file 1</param>
 /// <param name="fileName2">Bencoded file 2</param>
 /// <returns>true if files the same, false otherwise</returns>
-bool compareFiles(const std::string &fileName1, const std::string &fileName2)
-{
+bool compareFiles(const std::string &fileName1, const std::string &fileName2) {
   std::ifstream file1(fileName1, std::ifstream::binary | std::ifstream::ate);
   std::ifstream file2(fileName2, std::ifstream::binary | std::ifstream::ate);
-  if (file1.fail() || file2.fail())
-  {
+  if (file1.fail() || file2.fail()) {
     return false; // file problem
   }
-  if (file1.tellg() != file2.tellg())
-  {
+  if (file1.tellg() != file2.tellg()) {
     return false; // size mismatch
   }
   // seek back to beginning and use std::equal to compare contents
@@ -55,8 +52,7 @@ bool compareFiles(const std::string &fileName1, const std::string &fileName2)
 /// </summary>
 /// <param name="bencodedFileName">Bencoded file name</param>
 /// <returns></returns>
-std::string readBencodedBytesFromFile(const std::string &bencodedFileName)
-{
+std::string readBencodedBytesFromFile(const std::string &bencodedFileName) {
   std::ifstream bencodedFile;
   bencodedFile.open(bencodedFileName, std::ifstream::binary);
   std::ostringstream bencodedFileBuffer;
@@ -70,11 +66,10 @@ std::string readBencodedBytesFromFile(const std::string &bencodedFileName)
 /// </summary>
 /// <param name="buffer">Bencoded byte buffer.</param>
 /// <returns></returns>
-std::string bufferToString(const std::vector<std::byte> &buffer)
-{
-    std::string destination;
-    for (auto ch : buffer) {
-        destination.push_back(static_cast<char>(ch));
-    }
-    return( destination);
+std::string bufferToString(const std::vector<std::byte> &buffer) {
+  std::string destination;
+  for (auto ch : buffer) {
+    destination.push_back(static_cast<char>(ch));
+  }
+  return (destination);
 }

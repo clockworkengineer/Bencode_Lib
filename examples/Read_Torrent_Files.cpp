@@ -164,25 +164,25 @@ TorrentMetaInfo getTorrentInfo(const ben::BNode &bNode) {
 /// <param name="info">Meta information</param>
 void displayTorrentInfo(const std::string &fileName,
                         const TorrentMetaInfo &info) {
-  PLOG_INFO <<  "------------------------------------------------------------";
-  PLOG_INFO <<  "FILE [ " << fileName << " ]";
-  PLOG_INFO <<  "------------------------------------------------------------";
-  PLOG_INFO <<  "announce [" << info.announce << "]";
-  PLOG_INFO <<  "attribute [" << info.attribute << "]";
-  PLOG_INFO <<  "encoding [" << info.encoding << "]";
-  PLOG_INFO <<  "comment [" << info.comment << "]";
-  PLOG_INFO <<  "creation_date [" << info.creationDate << "]";
-  PLOG_INFO <<  "created_by [" << info.createdBy << "]";
-  PLOG_INFO <<  "length [" << info.length << "]";
-  PLOG_INFO <<  "name [" << info.name << "]";
-  PLOG_INFO <<  "piece length [" << info.pieceLength << "]";
-  PLOG_INFO <<  "private [" << info.privateBitMask << "]";
-  PLOG_INFO <<  "source [" << info.source << "]";
+  PLOG_INFO << "------------------------------------------------------------";
+  PLOG_INFO << "FILE [ " << fileName << " ]";
+  PLOG_INFO << "------------------------------------------------------------";
+  PLOG_INFO << "announce [" << info.announce << "]";
+  PLOG_INFO << "attribute [" << info.attribute << "]";
+  PLOG_INFO << "encoding [" << info.encoding << "]";
+  PLOG_INFO << "comment [" << info.comment << "]";
+  PLOG_INFO << "creation_date [" << info.creationDate << "]";
+  PLOG_INFO << "created_by [" << info.createdBy << "]";
+  PLOG_INFO << "length [" << info.length << "]";
+  PLOG_INFO << "name [" << info.name << "]";
+  PLOG_INFO << "piece length [" << info.pieceLength << "]";
+  PLOG_INFO << "private [" << info.privateBitMask << "]";
+  PLOG_INFO << "source [" << info.source << "]";
   for (const auto &file : info.files) {
-    PLOG_INFO <<  "path [ " << file.path << "] length [" << file.length << "]";
+    PLOG_INFO << "path [ " << file.path << "] length [" << file.length << "]";
   }
   for (const auto &announceURL : info.announceList) {
-    PLOG_INFO <<  "announce url [ " << announceURL << "]";
+    PLOG_INFO << "announce url [ " << announceURL << "]";
   }
 }
 /// <summary>
@@ -215,6 +215,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     // Initialise logging.
     plog::init(plog::debug, "Read_Torrent_Files.log");
     PLOG_INFO << "Read_Torrent_File started ...";
+    PLOG_INFO << ben::Bencode().version();
     //
     // For each torrent file extract its information and display
     //
@@ -223,7 +224,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
       displayTorrentInfo(fileName, getTorrentInfo(bEncode.root()));
     }
   } catch (const std::exception &ex) {
-    std::cout <<  "Error Processing Torrent File: [" << ex.what() << "]\n";
+    std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
   }
   PLOG_INFO << "Read_Torrent_Files exited.";
   exit(EXIT_SUCCESS);

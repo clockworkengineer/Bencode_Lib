@@ -11,7 +11,7 @@
 // ======================
 // Test framework include
 // ======================
-#include "catch2/catch.hpp" 
+#include "catch2/catch.hpp"
 // =========================
 // Class under test includes
 // =========================
@@ -24,10 +24,10 @@
 // ===================
 #define kSingleFileTorrent "singlefile.torrent"
 #define kMultiFileTorrent "multifile.torrent"
-#define kSingleFileWithErrorTorrent  "singlefileerror.torrent"
-#define kMultiFileWithErrorTorrent  "multifileerror.torrent"
-#define kNonExistantTorrent  "doesntexist.torrent"
-#define kGeneratedTorrentFile  "generated.torrent"
+#define kSingleFileWithErrorTorrent "singlefileerror.torrent"
+#define kMultiFileWithErrorTorrent "multifileerror.torrent"
+#define kNonExistantTorrent "doesntexist.torrent"
+#define kGeneratedTorrentFile "generated.torrent"
 // ==========================
 // Unit test helper functions
 // ==========================

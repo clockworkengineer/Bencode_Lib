@@ -81,6 +81,6 @@ void Bencode::encode(IDestination &&destination) {
 /// Return root of Bencoding tree.
 /// </summary>
 /// <returns>Root of Bencoding tree.</returns>
-BNode & Bencode::root() { return (m_implementation->root()); }
-[[nodiscard]] const BNode & Bencode::root() const { return (m_implementation->root()); }
+BNode &Bencode::root() { return (m_implementation->root()); }
+const BNode &Bencode::root() const { return (m_implementation->root()); }
 } // namespace BencodeLib
