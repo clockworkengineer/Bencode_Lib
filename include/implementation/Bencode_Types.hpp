@@ -48,7 +48,8 @@ private:
 // ==========
 struct BNodeDict : BNode {
   using Entry = std::pair<std::string, BNode::Ptr>;
-  explicit BNodeDict(std::vector<BNodeDict::Entry> &dictionary)
+  using EntryList = std::vector<Entry>;
+  explicit BNodeDict(BNodeDict::EntryList &dictionary)
       : BNode(BNodeType::dictionary), m_dictionary(std::move(dictionary)) {}
   [[nodiscard]] bool contains(const std::string &key) const {
     if (auto it = std::find_if(m_dictionary.begin(), m_dictionary.end(),
@@ -89,17 +90,19 @@ struct BNodeDict : BNode {
   }
 
 private:
-  std::vector<BNodeDict::Entry> m_dictionary;
+  BNodeDict::EntryList m_dictionary;
 };
 // ====
 // List
 // ====
 struct BNodeList : BNode {
-  explicit BNodeList(std::vector<BNode::Ptr> &list)
+  using Entry = BNode::Ptr;
+  using EntryList = std::vector<Entry>;
+  explicit BNodeList(EntryList &list)
       : BNode(BNodeType::list), m_list(std::move(list)) {}
   [[nodiscard]] int size() const { return (static_cast<int>(m_list.size())); }
-  [[nodiscard]] std::vector<BNode::Ptr> &list() { return (m_list); }
-  [[nodiscard]] const std::vector<BNode::Ptr> &list() const { return (m_list); }
+  [[nodiscard]] EntryList &list() { return (m_list); }
+  [[nodiscard]] const EntryList &list() const { return (m_list); }
   BNode &operator[](int index) {
     if ((index >= 0) && (index < (static_cast<int>(m_list.size())))) {
       return (*m_list[index]);
@@ -114,7 +117,7 @@ struct BNodeList : BNode {
   }
 
 private:
-  std::vector<BNode::Ptr> m_list;
+  EntryList m_list;
 };
 // =======
 // Integer
@@ -188,5 +191,20 @@ BNode::operator[](const std::string &key) const // Dictionary
 inline const BNode &BNode::operator[](int index) const // List
 {
   return (BNodeRef<const BNodeList>(*this)[index]);
+}
+// =============
+// Node Creation
+// =============
+inline BNode::Ptr makeBNodeDict(BNodeDict::EntryList &dictionary) {
+  return (std::make_unique<BNodeDict>(dictionary));
+}
+inline BNode::Ptr makeBNodeList(BNodeList::EntryList &list) {
+  return (std::make_unique<BNodeList>(list));
+}
+inline BNode::Ptr makeBNodeString(std::string stringValue) {
+  return (std::make_unique<BNodeString>(stringValue));
+}
+inline BNode::Ptr makeBNodeInteger(int64_t integer) {
+  return (std::make_unique<BNodeInteger>(integer));
 }
 } // namespace BencodeLib
