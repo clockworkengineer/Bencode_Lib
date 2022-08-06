@@ -20,52 +20,54 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib
-{
-    // ================
-    // CLASS DEFINITION
-    // ================
-    class Bencode_Impl
-    {
-    public:
-        // ==========================
-        // PUBLIC TYPES AND CONSTANTS
-        // ==========================
-        // ======================
-        // CONSTRUCTOR/DESTRUCTOR
-        // ======================
-        Bencode_Impl() = default;
-        Bencode_Impl(const Bencode_Impl &other) = delete;
-        Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
-        Bencode_Impl(Bencode_Impl &&other) = delete;
-        Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
-        ~Bencode_Impl() = default;
-        // ==============
-        // PUBLIC METHODS
-        // ==============
-        BNode::Ptr decode(ISource &source);
-        void encode(const BNode &bNodeRoot, IDestination &destination);
-        std::string version();
-        // ================
-        // PUBLIC VARIABLES
-        // ================
-    private:
-        // ===========================
-        // PRIVATE TYPES AND CONSTANTS
-        // ===========================
-        // ===============
-        // PRIVATE METHODS
-        // ===============
-        static int64_t extractInteger(ISource &source);
-        static std::string extractString(ISource &source);
-        static BNode::Ptr decodeString(ISource &source);
-        static BNode::Ptr decodeInteger(ISource &source);
-        static BNode::Ptr decodeDictionary(ISource &source);
-        static BNode::Ptr decodeList(ISource &source);
-        static BNode::Ptr decodeBNodes(ISource &source);
-        static void encodeBNodes(const BNode &bNode, IDestination &destination);
-        // =================
-        // PRIVATE VARIABLES
-        // =================
-    };
+namespace BencodeLib {
+// ================
+// CLASS DEFINITION
+// ================
+class Bencode_Impl {
+public:
+  // ==========================
+  // PUBLIC TYPES AND CONSTANTS
+  // ==========================
+  // ======================
+  // CONSTRUCTOR/DESTRUCTOR
+  // ======================
+  Bencode_Impl() = default;
+  Bencode_Impl(const Bencode_Impl &other) = delete;
+  Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
+  Bencode_Impl(Bencode_Impl &&other) = delete;
+  Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
+  ~Bencode_Impl() = default;
+  // ==============
+  // PUBLIC METHODS
+  // ==============
+  void decode(ISource &source);
+  void encode(IDestination &destination);
+  std::string version();
+  BNode &root() { return (*m_bNodeRoot); }
+  [[nodiscard]] const BNode &root() const { return (*m_bNodeRoot); }
+  // ================
+  // PUBLIC VARIABLES
+  // ================
+private:
+  // ===========================
+  // PRIVATE TYPES AND CONSTANTS
+  // ===========================
+  // ===============
+  // PRIVATE METHODS
+  // ===============
+  static int64_t extractInteger(ISource &source);
+  static std::string extractString(ISource &source);
+  static BNode::Ptr decodeString(ISource &source);
+  static BNode::Ptr decodeInteger(ISource &source);
+  static BNode::Ptr decodeDictionary(ISource &source);
+  static BNode::Ptr decodeList(ISource &source);
+  static BNode::Ptr decodeBNodes(ISource &source);
+  static void encodeBNodes(const BNode &bNode, IDestination &destination);
+  // =================
+  // PRIVATE VARIABLES
+  // =================
+  // Root of BNoding Tree
+  std::unique_ptr<BNode> m_bNodeRoot;
+};
 } // namespace BencodeLib
