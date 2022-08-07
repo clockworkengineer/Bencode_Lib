@@ -46,11 +46,11 @@ private:
 // ==========
 // Dictionary
 // ==========
-struct BNodeDict : BNode {
+struct Dictionary : BNode {
   using Entry = std::pair<std::string, BNode::Ptr>;
   using EntryList = std::vector<Entry>;
-  explicit BNodeDict(BNodeDict::EntryList &dictionary)
-      : BNode(BNodeType::dictionary), m_dictionary(std::move(dictionary)) {}
+  explicit Dictionary(Dictionary::EntryList &entryList)
+      : BNode(BNodeType::dictionary), m_dictionary(std::move(entryList)) {}
   [[nodiscard]] bool contains(const std::string &key) const {
     if (auto it = std::find_if(m_dictionary.begin(), m_dictionary.end(),
                                [&key](const Entry &entry) -> bool {
@@ -84,22 +84,20 @@ struct BNodeDict : BNode {
     }
     throw BNode::Error("Invalid key used in dictionary.");
   }
-  [[nodiscard]] std::vector<Entry> &dictionary() { return (m_dictionary); }
-  [[nodiscard]] const std::vector<Entry> &dictionary() const {
-    return (m_dictionary);
-  }
+  [[nodiscard]] EntryList &dictionary() { return (m_dictionary); }
+  [[nodiscard]] const EntryList &dictionary() const { return (m_dictionary); }
 
 private:
-  BNodeDict::EntryList m_dictionary;
+  Dictionary::EntryList m_dictionary;
 };
 // ====
 // List
 // ====
-struct BNodeList : BNode {
+struct List : BNode {
   using Entry = BNode::Ptr;
   using EntryList = std::vector<Entry>;
-  explicit BNodeList(EntryList &list)
-      : BNode(BNodeType::list), m_list(std::move(list)) {}
+  explicit List(EntryList &entryList)
+      : BNode(BNodeType::list), m_list(std::move(entryList)) {}
   [[nodiscard]] int size() const { return (static_cast<int>(m_list.size())); }
   [[nodiscard]] EntryList &list() { return (m_list); }
   [[nodiscard]] const EntryList &list() const { return (m_list); }
@@ -122,8 +120,8 @@ private:
 // =======
 // Integer
 // =======
-struct BNodeInteger : BNode {
-  explicit BNodeInteger(int64_t integer)
+struct Integer : BNode {
+  explicit Integer(int64_t integer)
       : BNode(BNodeType::integer), m_value(integer) {}
   [[nodiscard]] int64_t integer() const { return (m_value); }
 
@@ -133,8 +131,8 @@ private:
 // ======
 // String
 // ======
-struct BNodeString : BNode {
-  explicit BNodeString(std::string stringValue)
+struct String : BNode {
+  explicit String(std::string stringValue)
       : BNode(BNodeType::string), m_string(std::move(stringValue)) {}
   [[nodiscard]] std::string &string() { return (m_string); }
   [[nodiscard]] const std::string &string() const { return (m_string); }
@@ -146,29 +144,29 @@ private:
 // BNode base reference converter
 // ==============================
 template <typename T> void CheckBNodeType(const BNode &bNode) {
-  if constexpr (std::is_same_v<T, BNodeString>) {
+  if constexpr (std::is_same_v<T, String>) {
     if (bNode.getNodeType() != BNodeType::string) {
       throw BNode::Error("Node not a string.");
     }
-  } else if constexpr (std::is_same_v<T, BNodeInteger>) {
+  } else if constexpr (std::is_same_v<T, Integer>) {
     if (bNode.getNodeType() != BNodeType::integer) {
       throw BNode::Error("Node not an integer.");
     }
-  } else if constexpr (std::is_same_v<T, BNodeList>) {
+  } else if constexpr (std::is_same_v<T, List>) {
     if (bNode.getNodeType() != BNodeType::list) {
       throw BNode::Error("Node not a list.");
     }
-  } else if constexpr (std::is_same_v<T, BNodeDict>) {
+  } else if constexpr (std::is_same_v<T, Dictionary>) {
     if (bNode.getNodeType() != BNodeType::dictionary) {
       throw BNode::Error("Node not a dictionary.");
     }
   }
 }
-template <typename T> T &BNodeRef(BNode &bNode) {
+template <typename T> T &BRef(BNode &bNode) {
   CheckBNodeType<T>(bNode);
   return (static_cast<T &>(bNode));
 }
-template <typename T> const T &BNodeRef(const BNode &bNode) {
+template <typename T> const T &BRef(const BNode &bNode) {
   CheckBNodeType<T>(bNode);
   return (static_cast<const T &>(bNode));
 }
@@ -177,34 +175,34 @@ template <typename T> const T &BNodeRef(const BNode &bNode) {
 // ===============
 inline BNode &BNode::operator[](const std::string &key) // Dictionary
 {
-  return (BNodeRef<BNodeDict>(*this)[key]);
+  return (BRef<Dictionary>(*this)[key]);
 }
 inline BNode &BNode::operator[](int index) // List
 {
-  return (BNodeRef<BNodeList>(*this)[index]);
+  return (BRef<List>(*this)[index]);
 }
 inline const BNode &
 BNode::operator[](const std::string &key) const // Dictionary
 {
-  return (BNodeRef<const BNodeDict>(*this)[key]);
+  return (BRef<const Dictionary>(*this)[key]);
 }
 inline const BNode &BNode::operator[](int index) const // List
 {
-  return (BNodeRef<const BNodeList>(*this)[index]);
+  return (BRef<const List>(*this)[index]);
 }
 // =============
 // Node Creation
 // =============
-inline BNode::Ptr makeBNodeDict(BNodeDict::EntryList &dictionary) {
-  return (std::make_unique<BNodeDict>(dictionary));
+inline BNode::Ptr makeDictionary(Dictionary::EntryList &dictionary) {
+  return (std::make_unique<Dictionary>(dictionary));
 }
-inline BNode::Ptr makeBNodeList(BNodeList::EntryList &list) {
-  return (std::make_unique<BNodeList>(list));
+inline BNode::Ptr makeList(List::EntryList &list) {
+  return (std::make_unique<List>(list));
 }
-inline BNode::Ptr makeBNodeString(std::string stringValue) {
-  return (std::make_unique<BNodeString>(stringValue));
+inline BNode::Ptr makeString(std::string stringValue) {
+  return (std::make_unique<String>(stringValue));
 }
-inline BNode::Ptr makeBNodeInteger(int64_t integer) {
-  return (std::make_unique<BNodeInteger>(integer));
+inline BNode::Ptr makeInteger(int64_t integer) {
+  return (std::make_unique<Integer>(integer));
 }
 } // namespace BencodeLib

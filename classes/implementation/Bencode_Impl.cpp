@@ -88,7 +88,7 @@ std::string Bencode_Impl::extractString(ISource &source) {
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param> <returns>String BNode.</returns>
 BNode::Ptr Bencode_Impl::decodeString(ISource &source) {
-  return (makeBNodeString(extractString(source)));
+  return (makeString(extractString(source)));
 }
 /// <summary>
 /// Decode an integer from the input stream of characters referenced by ISource.
@@ -102,7 +102,7 @@ BNode::Ptr Bencode_Impl::decodeInteger(ISource &source) {
     throw Error("Syntax Error detected.");
   }
   source.next();
-  return (makeBNodeInteger(integer));
+  return (makeInteger(integer));
 }
 /// <summary>
 /// Decode a dictionary from the input stream of characters referenced by
@@ -111,7 +111,7 @@ BNode::Ptr Bencode_Impl::decodeInteger(ISource &source) {
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param> <returns>Dictionary BNode.</returns>
 BNode::Ptr Bencode_Impl::decodeDictionary(ISource &source) {
-  BNodeDict::EntryList dictionary;
+  Dictionary::EntryList dictionary;
   std::string lastKey{};
   source.next();
   while (source.more() && source.current() != 'e') {
@@ -123,7 +123,7 @@ BNode::Ptr Bencode_Impl::decodeDictionary(ISource &source) {
     lastKey = key;
     // Check key not duplicate and insert
     if (std::find_if(dictionary.begin(), dictionary.end(),
-                     [&key](const BNodeDict::Entry &entry) -> bool {
+                     [&key](const Dictionary::Entry &entry) -> bool {
                        return (entry.first == key);
                      }) == dictionary.end()) {
       dictionary.emplace_back(key, decodeBNodes(source));
@@ -135,7 +135,7 @@ BNode::Ptr Bencode_Impl::decodeDictionary(ISource &source) {
     throw Error("Syntax Error detected.");
   }
   source.next();
-  return (makeBNodeDict(dictionary));
+  return (makeDictionary(dictionary));
 }
 /// <summary>
 /// Decode a list from the input stream of characters referenced by ISource.
@@ -152,7 +152,7 @@ BNode::Ptr Bencode_Impl::decodeList(ISource &source) {
     throw Error("Syntax Error detected.");
   }
   source.next();
-  return (makeBNodeList(list));
+  return (makeList(list));
 }
 /// <summary>
 /// Decode a BNode from the input stream of characters referenced by ISource.In
@@ -199,27 +199,27 @@ void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
   switch (bNode.getNodeType()) {
   case BNodeType::dictionary:
     destination.add('d');
-    for (const auto &bNodeEntry : BNodeRef<BNodeDict>(bNode).dictionary()) {
+    for (const auto &bNodeEntry : BRef<Dictionary>(bNode).dictionary()) {
       destination.add(std::to_string(bNodeEntry.first.length()) + ":" +
                       bNodeEntry.first);
-      encodeBNodes(BNodeRef<BNode>(*bNodeEntry.second), destination);
+      encodeBNodes(BRef<BNode>(*bNodeEntry.second), destination);
     }
     destination.add('e');
     break;
   case BNodeType::list:
     destination.add('l');
-    for (const auto &bNodeEntry : BNodeRef<BNodeList>(bNode).list()) {
-      encodeBNodes(BNodeRef<BNode>(*bNodeEntry), destination);
+    for (const auto &bNodeEntry : BRef<List>(bNode).list()) {
+      encodeBNodes(BRef<BNode>(*bNodeEntry), destination);
     }
     destination.add('e');
     break;
   case BNodeType::integer:
     destination.add('i');
-    destination.add(std::to_string(BNodeRef<BNodeInteger>(bNode).integer()));
+    destination.add(std::to_string(BRef<Integer>(bNode).integer()));
     destination.add('e');
     break;
   case BNodeType::string: {
-    std::string stringToEncode = BNodeRef<BNodeString>(bNode).string();
+    std::string stringToEncode = BRef<String>(bNode).string();
     destination.add(std::to_string(static_cast<int>(stringToEncode.length())) +
                     ":" + stringToEncode);
     break;

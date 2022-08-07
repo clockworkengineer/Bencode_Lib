@@ -47,10 +47,10 @@ namespace fs = std::filesystem;
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="field">Field name of string value</param>
 /// <returns>String value of field.</returns>
-std::string getDictionaryString(const ben::BNodeDict &bNodeDict,
+std::string getDictionaryString(const ben::Dictionary &bNodeDict,
                                 const char *field) {
   if (bNodeDict.contains(field)) {
-    return (ben::BNodeRef<ben::BNodeString>(bNodeDict[field]).string());
+    return (ben::BRef<ben::String>(bNodeDict[field]).string());
   }
   return ("");
 }
@@ -60,10 +60,10 @@ std::string getDictionaryString(const ben::BNodeDict &bNodeDict,
 /// <param name="bNodeDict">Dictionary</param>
 /// <param name="field">Field name of integer value</param>
 /// <returns>Integer value of field.</returns>
-std::uint64_t getDictionaryInteger(const ben::BNodeDict &bNodeDict,
+std::uint64_t getDictionaryInteger(const ben::Dictionary &bNodeDict,
                                    const char *field) {
   if (bNodeDict.contains(field)) {
-    return (ben::BNodeRef<ben::BNodeInteger>(bNodeDict[field]).integer());
+    return (ben::BRef<ben::Integer>(bNodeDict[field]).integer());
   }
   return (0);
 }
@@ -72,16 +72,16 @@ std::uint64_t getDictionaryInteger(const ben::BNodeDict &bNodeDict,
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <returns>Vector of announce server names.</returns>
-std::vector<std::string> getAnnounceList(const ben::BNodeDict &bNodeDict) {
+std::vector<std::string> getAnnounceList(const ben::Dictionary &bNodeDict) {
   // This is meant to be a simple list of strings but for some reason each
   // string is encased in its own list for an extra level (bug ?).
   if (bNodeDict.contains("announce-list")) {
     std::vector<std::string> servers;
     for (auto &bNode :
-         ben::BNodeRef<ben::BNodeList>(bNodeDict["announce-list"]).list()) {
-      for (auto &bNodeString : ben::BNodeRef<ben::BNodeList>(*bNode).list()) {
+         ben::BRef<ben::List>(bNodeDict["announce-list"]).list()) {
+      for (auto &bNodeString : ben::BRef<ben::List>(*bNode).list()) {
         servers.push_back(
-            ben::BNodeRef<ben::BNodeString>(*bNodeString).string());
+            ben::BRef<ben::String>(*bNodeString).string());
       }
     }
     return (servers);
@@ -93,12 +93,12 @@ std::vector<std::string> getAnnounceList(const ben::BNodeDict &bNodeDict) {
 /// </summary>
 /// <param name="bNodeDict">Dictionary</param>
 /// <returns>Full file path name.</returns>
-std::string getFilePath(const ben::BNodeDict &bNodeDict) {
+std::string getFilePath(const ben::Dictionary &bNodeDict) {
   if (bNodeDict.contains("path")) {
     std::filesystem::path path{};
     for (auto &folder :
-         ben::BNodeRef<ben::BNodeList>(bNodeDict["path"]).list()) {
-      path /= ben::BNodeRef<ben::BNodeString>(*folder).string();
+         ben::BRef<ben::List>(bNodeDict["path"]).list()) {
+      path /= ben::BRef<ben::String>(*folder).string();
     }
     return (path.string());
   }
@@ -110,14 +110,14 @@ std::string getFilePath(const ben::BNodeDict &bNodeDict) {
 /// <param name="bNodeInfoDict">Dictionary</param>
 /// <returns>Vector of torrent file details.</returns>
 std::vector<TorrentFileDetails>
-getFilesList(const ben::BNodeDict &bNodeInfoDict) {
+getFilesList(const ben::Dictionary &bNodeInfoDict) {
   if (bNodeInfoDict.contains("files")) {
     std::vector<TorrentFileDetails> files;
     for (auto &file :
-         ben::BNodeRef<ben::BNodeList>(bNodeInfoDict["files"]).list()) {
+         ben::BRef<ben::List>(bNodeInfoDict["files"]).list()) {
       files.emplace_back(
-          getFilePath(ben::BNodeRef<ben::BNodeDict>(*file)),
-          getDictionaryInteger(ben::BNodeRef<ben::BNodeDict>(*file), "length"));
+          getFilePath(ben::BRef<ben::Dictionary>(*file)),
+          getDictionaryInteger(ben::BRef<ben::Dictionary>(*file), "length"));
     }
     return (files);
   }
@@ -136,7 +136,7 @@ TorrentMetaInfo getTorrentInfo(const ben::BNode &bNode) {
   if (bNode.getNodeType() != ben::BNodeType::dictionary) {
     throw BencodeLib::Error("Valid torrent file not found.");
   }
-  auto &bNodeTopLevelDict = ben::BNodeRef<ben::BNodeDict>(bNode);
+  auto &bNodeTopLevelDict = ben::BRef<ben::Dictionary>(bNode);
   info.announce = getDictionaryString(bNodeTopLevelDict, "announce");
   info.announceList = getAnnounceList(bNodeTopLevelDict);
   info.encoding = getDictionaryString(bNodeTopLevelDict, "encoding");
@@ -145,7 +145,7 @@ TorrentMetaInfo getTorrentInfo(const ben::BNode &bNode) {
   info.createdBy = getDictionaryString(bNodeTopLevelDict, "created by");
   if (bNodeTopLevelDict.contains("info")) {
     auto &bNodeInfoDict =
-        ben::BNodeRef<ben::BNodeDict>(bNodeTopLevelDict["info"]);
+        ben::BRef<ben::Dictionary>(bNodeTopLevelDict["info"]);
     info.attribute = getDictionaryString(bNodeInfoDict, "attr");
     info.length = getDictionaryInteger(bNodeInfoDict, "length");
     info.name = getDictionaryString(bNodeInfoDict, "name");
