@@ -17,7 +17,7 @@ using namespace BencodeLib;
 // ==========
 TEST_CASE("Bencode for encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Encode an integer (266) and check value",
           "[Bencode][Encode][Integer]") {
     BufferSource bEncodeSource{"i266e"};
@@ -55,7 +55,7 @@ TEST_CASE("Bencode for encode of simple types (integer, string) ",
 }
 TEST_CASE("Bencode for encode of a table of integer test data",
           "[Bencode][Encode][Integer]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   auto [expected] = GENERATE(table<std::string>({"i277e", "i32767e"}));
   BufferSource bEncodeSource(expected);
   BufferDestination bEncodeDestination;
@@ -65,7 +65,7 @@ TEST_CASE("Bencode for encode of a table of integer test data",
 }
 TEST_CASE("Bencode for encode of a table of string test data",
           "[Bencode][Encode][String]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   auto [expected] =
       GENERATE(table<std::string>({"13:qwertyuiopasd", "6:mnbvcx"}));
   BufferSource bEncodeSource(expected);
@@ -76,7 +76,7 @@ TEST_CASE("Bencode for encode of a table of string test data",
 }
 TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
           "[Bencode][Encode]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Encode an List of integers('li266ei6780ei88ee') and check value",
           "[Bencode][Encode][List]") {
     std::string expected{"li266ei6780ei88ee"};
@@ -118,7 +118,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
   }
 }
 TEST_CASE("Encode generated exceptions", "[Bencode][Encode][Exceptions]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Encode called with no BNode tree to encode",
           "[Bencode][Encode][Exceptions]") {
     BufferDestination bEncodeDestination;
@@ -129,7 +129,7 @@ TEST_CASE("Encode generated exceptions", "[Bencode][Encode][Exceptions]") {
 }
 TEST_CASE("Encode torrent files using encodeToFile",
           "[Bencode][Encode][Torrents]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Encode singlefile.torrent and check value",
           "[Bencode][Encode][Torrents]") {
     std::filesystem::remove(prefixTestDataPath(kGeneratedTorrentFile));

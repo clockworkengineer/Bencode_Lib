@@ -42,8 +42,8 @@ public:
   // PUBLIC METHODS
   // ==============
   void decode(ISource &source);
-  void encode(IDestination &destination);
-  std::string version();
+  void encode(IDestination &destination)const ;
+  std::string version() const ;
   BNode &root() { return (m_bNodeRoot); }
   [[nodiscard]] const BNode &root() const { return (m_bNodeRoot); }
   // ================

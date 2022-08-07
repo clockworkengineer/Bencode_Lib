@@ -1,7 +1,9 @@
 //
 // Class: Bencode_Impl
 //
-// Description: Bencode class implementation layer.
+// Description: Bencode class implementation layer that uses recursion to produce a
+// Bencoding tree (decode) and also reconstitute the tree back into raw Bencoding text
+// (encode).
 //
 // Dependencies:   C20++ - Language standard features used.
 //
@@ -143,7 +145,7 @@ BNode Bencode_Impl::decodeDictionary(ISource &source) {
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param> <returns>List BNode.</returns>
 BNode Bencode_Impl::decodeList(ISource &source) {
-  std::vector<BNode> list;
+  List::EntryList list;
   source.next();
   while (source.more() && source.current() != 'e') {
     list.emplace_back(decodeBNodes(source));
@@ -234,7 +236,7 @@ void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
 /// <summary>
 ///  Get JSONLib version.
 /// </summary>
-std::string Bencode_Impl::version() {
+std::string Bencode_Impl::version() const {
   std::stringstream versionString;
   versionString << "BencodeLib Version " << BENCODE_VERSION_MAJOR << "."
                 << BENCODE_VERSION_MINOR << "." << BENCODE_VERSION_PATCH;
@@ -254,7 +256,7 @@ void Bencode_Impl::decode(ISource &source) {
 /// </summary>
 /// <param name="destination ">Pointer to interface used to facilitate the
 /// output stream.</param> <returns></returns>
-void Bencode_Impl::encode(IDestination &destination) {
+void Bencode_Impl::encode(IDestination &destination) const {
   if (m_bNodeRoot.getVariant() == nullptr) {
     throw Error("No Bencoded data to encode.");
   }

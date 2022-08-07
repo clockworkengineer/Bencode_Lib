@@ -61,19 +61,19 @@ std::string Bencode::version() const { return (m_implementation->version()); }
 /// </summary>
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param>
-void Bencode::decode(ISource &source) { m_implementation->decode(source); }
-void Bencode::decode(ISource &&source) { m_implementation->decode(source); }
+void Bencode::decode(ISource &source) const { m_implementation->decode(source); }
+void Bencode::decode(ISource &&source) const { m_implementation->decode(source); }
 /// <summary>
 /// Take BNode structure and create an Bencode encoding for it in the
 /// destination stream.
 /// </summary>
 /// <param name="destination ">Pointer to interface used to facilitate the
 /// output stream.</param>
-void Bencode::encode(IDestination &destination) {
+void Bencode::encode(IDestination &destination) const {
 
   m_implementation->encode(destination);
 }
-void Bencode::encode(IDestination &&destination) {
+void Bencode::encode(IDestination &&destination) const {
 
   m_implementation->encode(destination);
 }

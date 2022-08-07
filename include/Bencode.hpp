@@ -36,10 +36,10 @@ public:
   // ==============
   // PUBLIC METHODS
   // ==============
-  void decode(ISource &source);
-  void decode(ISource &&source);
-  void encode(IDestination &destination);
-  void encode(IDestination &&destination);
+  void decode(ISource &source) const;
+  void decode(ISource &&source) const;
+  void encode(IDestination &destination) const;
+  void encode(IDestination &&destination) const ;
   [[nodiscard]] std::string version() const;
   [[nodiscard]] BNode &root();
   [[nodiscard]] const BNode &root() const;

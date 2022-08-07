@@ -159,7 +159,7 @@ TEST_CASE("IDestination (File interface).", "[Bencode][IDestination]") {
   }
 }
 TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Decode dictionary and check its components using indexing",
           "[Bencode][BNode][Index]") {
     BufferSource bEncodeSource{
@@ -224,7 +224,7 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
 }
 TEST_CASE("Check BNode reference functions work.",
           "[Bencode][BNode][Reference]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Integer reference.", "[Bencode][BNode][Reference]") {
     BufferSource bEncodeSource{"i45500e"};
     bEncode.decode(bEncodeSource);
@@ -257,7 +257,7 @@ TEST_CASE("Check BNode reference functions work.",
 }
 TEST_CASE("Check R-Value reference encode/decode.",
           "[Bencode][BNode][Reference]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Encode/Decode with R-Value reference (Buffer).",
           "[Bencode][BNode][R-Value Reference]") {
     bEncode.decode(BufferSource{"i45500e"});

@@ -17,7 +17,7 @@ using namespace BencodeLib;
 // ==========
 TEST_CASE("Bencode for decode of simple types (integer, string) ",
           "[Bencode][Decode]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Decode an integer", "[Bencode][Decode][Integer]") {
     BufferSource bEncodeSource{"i266e"};
     bEncode.decode(bEncodeSource);
@@ -122,7 +122,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
 }
 TEST_CASE("Bencode for decode of a table of integer test data",
           "[Bencode][Decode][Integer]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   auto [testInput, expected] = GENERATE(
       table<std::string, int64_t>({{"i277e", 277}, {"i32767e", 32767}}));
   BufferSource bEncodeSource{testInput};
@@ -131,7 +131,7 @@ TEST_CASE("Bencode for decode of a table of integer test data",
 }
 TEST_CASE("Bencode for decode of a table of string test data",
           "[Bencode][Decode][String]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   auto [testInput, expected] = GENERATE(table<std::string, std::string>(
       {{"13:qwertyuiopasd", "qwertyuiopasd"}, {"6:mnbvcx", "mnbvcx"}}));
   BufferSource bEncodeSource{testInput};
@@ -140,7 +140,7 @@ TEST_CASE("Bencode for decode of a table of string test data",
 }
 TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
           "[Bencode][Decode][List]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Decode an List", "[Bencode][Decode]") {
     BufferSource bEncodeSource{"li266ei6780ei88e5:threee"};
     bEncode.decode(bEncodeSource);
@@ -213,7 +213,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
   }
 }
 TEST_CASE("Decode generated exceptions", "[Bencode][Decode][Exceptions]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Decode an string without terminating ':' on its length",
           "[Bencode][Decode][Exceptions]") {
     BufferSource bEncodeSource{"26abcdefghijklmnopqrstuvwxyz"};
@@ -256,7 +256,7 @@ TEST_CASE("Decode generated exceptions", "[Bencode][Decode][Exceptions]") {
   }
 }
 TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Decode singlefile.torrent", "[Bencode][Decode][Torrents]") {
     FileSource bEncodeSource{prefixTestDataPath(kSingleFileTorrent)};
     bEncode.decode(bEncodeSource);
@@ -288,7 +288,7 @@ TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
 }
 TEST_CASE("Decode erroneous torrent files",
           "[Bencode][Decode][Torrents][Error]") {
-  Bencode bEncode;
+  const Bencode bEncode;
   SECTION("Decode singlefileerror.torrent",
           "[Bencode][Decode][Torrents][Error]") {
     FileSource bEncodeSource{prefixTestDataPath(kSingleFileWithErrorTorrent)};

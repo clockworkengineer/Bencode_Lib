@@ -44,44 +44,43 @@ namespace fs = std::filesystem;
 /// <summary>
 /// Get string value with named field from a dictionary.
 /// </summary>
-/// <param name="bNodeDict">Dictionary</param>
+/// <param name="bNodeDictionary">Dictionary</param>
 /// <param name="field">Field name of string value</param>
 /// <returns>String value of field.</returns>
-std::string getDictionaryString(const ben::Dictionary &bNodeDict,
+std::string getDictionaryString(const ben::Dictionary &bNodeDictionary,
                                 const char *field) {
-  if (bNodeDict.contains(field)) {
-    return (ben::BRef<ben::String>(bNodeDict[field]).string());
+  if (bNodeDictionary.contains(field)) {
+    return (ben::BRef<ben::String>(bNodeDictionary[field]).string());
   }
   return ("");
 }
 /// <summary>
 /// Get integer value with named field from a dictionary.
 /// </summary>
-/// <param name="bNodeDict">Dictionary</param>
+/// <param name="bNodeDictionary">Dictionary</param>
 /// <param name="field">Field name of integer value</param>
 /// <returns>Integer value of field.</returns>
-std::uint64_t getDictionaryInteger(const ben::Dictionary &bNodeDict,
+std::uint64_t getDictionaryInteger(const ben::Dictionary &bNodeDictionary,
                                    const char *field) {
-  if (bNodeDict.contains(field)) {
-    return (ben::BRef<ben::Integer>(bNodeDict[field]).integer());
+  if (bNodeDictionary.contains(field)) {
+    return (ben::BRef<ben::Integer>(bNodeDictionary[field]).integer());
   }
   return (0);
 }
 /// <summary>
 ///  Get vector of announce servers from a dictionary.
 /// </summary>
-/// <param name="bNodeDict">Dictionary</param>
+/// <param name="bNodeDictionary">Dictionary</param>
 /// <returns>Vector of announce server names.</returns>
-std::vector<std::string> getAnnounceList(const ben::Dictionary &bNodeDict) {
+std::vector<std::string> getAnnounceList(const ben::Dictionary &bNodeDictionary) {
   // This is meant to be a simple list of strings but for some reason each
   // string is encased in its own list for an extra level (bug ?).
-  if (bNodeDict.contains("announce-list")) {
+  if (bNodeDictionary.contains("announce-list")) {
     std::vector<std::string> servers;
     for (auto &bNode :
-         ben::BRef<ben::List>(bNodeDict["announce-list"]).list()) {
+         ben::BRef<ben::List>(bNodeDictionary["announce-list"]).list()) {
       for (auto &bNodeString : ben::BRef<ben::List>(bNode).list()) {
-        servers.push_back(
-            ben::BRef<ben::String>(bNodeString).string());
+        servers.push_back(ben::BRef<ben::String>(bNodeString).string());
       }
     }
     return (servers);
@@ -91,13 +90,12 @@ std::vector<std::string> getAnnounceList(const ben::Dictionary &bNodeDict) {
 /// <summary>
 /// Construct a file path from a list of strings contained in a dictionary.
 /// </summary>
-/// <param name="bNodeDict">Dictionary</param>
+/// <param name="bNodeDictionary">Dictionary</param>
 /// <returns>Full file path name.</returns>
-std::string getFilePath(const ben::Dictionary &bNodeDict) {
-  if (bNodeDict.contains("path")) {
+std::string getFilePath(const ben::Dictionary &bNodeDictionary) {
+  if (bNodeDictionary.contains("path")) {
     std::filesystem::path path{};
-    for (auto &folder :
-         ben::BRef<ben::List>(bNodeDict["path"]).list()) {
+    for (auto &folder : ben::BRef<ben::List>(bNodeDictionary["path"]).list()) {
       path /= ben::BRef<ben::String>(folder).string();
     }
     return (path.string());
@@ -107,14 +105,13 @@ std::string getFilePath(const ben::Dictionary &bNodeDict) {
 /// <summary>
 /// Extract and return a vector of file details from a dictionary.
 /// </summary>
-/// <param name="bNodeInfoDict">Dictionary</param>
+/// <param name="bNodeInfoDictionary">Dictionary</param>
 /// <returns>Vector of torrent file details.</returns>
 std::vector<TorrentFileDetails>
-getFilesList(const ben::Dictionary &bNodeInfoDict) {
-  if (bNodeInfoDict.contains("files")) {
+getFilesList(const ben::Dictionary &bNodeInfoDictionary) {
+  if (bNodeInfoDictionary.contains("files")) {
     std::vector<TorrentFileDetails> files;
-    for (auto &file :
-         ben::BRef<ben::List>(bNodeInfoDict["files"]).list()) {
+    for (auto &file : ben::BRef<ben::List>(bNodeInfoDictionary["files"]).list()) {
       files.emplace_back(
           getFilePath(ben::BRef<ben::Dictionary>(file)),
           getDictionaryInteger(ben::BRef<ben::Dictionary>(file), "length"));
@@ -136,24 +133,23 @@ TorrentMetaInfo getTorrentInfo(const ben::BNode &bNode) {
   if (bNode.getNodeType() != ben::BNode::Type::dictionary) {
     throw BencodeLib::Error("Valid torrent file not found.");
   }
-  auto &bNodeTopLevelDict = ben::BRef<ben::Dictionary>(bNode);
-  info.announce = getDictionaryString(bNodeTopLevelDict, "announce");
-  info.announceList = getAnnounceList(bNodeTopLevelDict);
-  info.encoding = getDictionaryString(bNodeTopLevelDict, "encoding");
-  info.comment = getDictionaryString(bNodeTopLevelDict, "comment");
-  info.creationDate = getDictionaryInteger(bNodeTopLevelDict, "creation date");
-  info.createdBy = getDictionaryString(bNodeTopLevelDict, "created by");
-  if (bNodeTopLevelDict.contains("info")) {
-    auto &bNodeInfoDict =
-        ben::BRef<ben::Dictionary>(bNodeTopLevelDict["info"]);
-    info.attribute = getDictionaryString(bNodeInfoDict, "attr");
-    info.length = getDictionaryInteger(bNodeInfoDict, "length");
-    info.name = getDictionaryString(bNodeInfoDict, "name");
-    info.pieceLength = getDictionaryInteger(bNodeInfoDict, "piece length");
-    info.pieces = getDictionaryString(bNodeInfoDict, "pieces");
-    info.privateBitMask = getDictionaryInteger(bNodeInfoDict, "private");
-    info.source = getDictionaryString(bNodeInfoDict, "source");
-    info.files = getFilesList(bNodeInfoDict);
+  auto &bNodeTopLevelDictionary = ben::BRef<ben::Dictionary>(bNode);
+  info.announce = getDictionaryString(bNodeTopLevelDictionary, "announce");
+  info.announceList = getAnnounceList(bNodeTopLevelDictionary);
+  info.encoding = getDictionaryString(bNodeTopLevelDictionary, "encoding");
+  info.comment = getDictionaryString(bNodeTopLevelDictionary, "comment");
+  info.creationDate = getDictionaryInteger(bNodeTopLevelDictionary, "creation date");
+  info.createdBy = getDictionaryString(bNodeTopLevelDictionary, "created by");
+  if (bNodeTopLevelDictionary.contains("info")) {
+    auto &bNodeInfoDictionary = ben::BRef<ben::Dictionary>(bNodeTopLevelDictionary["info"]);
+    info.attribute = getDictionaryString(bNodeInfoDictionary, "attr");
+    info.length = getDictionaryInteger(bNodeInfoDictionary, "length");
+    info.name = getDictionaryString(bNodeInfoDictionary, "name");
+    info.pieceLength = getDictionaryInteger(bNodeInfoDictionary, "piece length");
+    info.pieces = getDictionaryString(bNodeInfoDictionary, "pieces");
+    info.privateBitMask = getDictionaryInteger(bNodeInfoDictionary, "private");
+    info.source = getDictionaryString(bNodeInfoDictionary, "source");
+    info.files = getFilesList(bNodeInfoDictionary);
   }
   return (info);
 }
@@ -211,7 +207,7 @@ std::vector<std::string> readTorrentFileList() {
 // ============================
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    ben::Bencode bEncode;
+    const ben::Bencode bEncode;
     // Initialise logging.
     plog::init(plog::debug, "Read_Torrent_Files.log");
     PLOG_INFO << "Read_Torrent_File started ...";
