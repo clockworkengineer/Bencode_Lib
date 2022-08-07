@@ -194,26 +194,6 @@ template <typename T> const T &BRef(const BNode &bNode) {
   CheckBNodeType<T>(*bNode.getVariant());
   return (static_cast<const T &>(*bNode.getVariant()));
 }
-// ===============
-// Index overloads
-// ===============
-inline BNode &BNode::operator[](const std::string &key) // Dictionary
-{
-  return (BRef<Dictionary>(*this)[key]);
-}
-inline BNode &BNode::operator[](int index) // List
-{
-  return (BRef<List>(*this)[index]);
-}
-inline const BNode &
-BNode::operator[](const std::string &key) const // Dictionary
-{
-  return (BRef<const Dictionary>(*this)[key]);
-}
-inline const BNode &BNode::operator[](int index) const // List
-{
-  return (BRef<const List>(*this)[index]);
-}
 // =============
 // Node Creation
 // =============

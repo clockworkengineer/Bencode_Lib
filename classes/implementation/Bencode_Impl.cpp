@@ -260,10 +260,4 @@ void Bencode_Impl::encode(IDestination &destination) {
   }
   encodeBNodes(*m_bNodeRoot, destination);
 }
-
-std::unique_ptr<Variant> &BNode::getVariant() { return (m_bNodeVariant); }
-const std::unique_ptr<Variant> &BNode::getVariant() const {
-  return (m_bNodeVariant);
-};
-BNodeType BNode::getNodeType() const { return (m_bNodeVariant->getNodeType()); }
 } // namespace BencodeLib
