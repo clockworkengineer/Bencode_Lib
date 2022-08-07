@@ -42,146 +42,6 @@ namespace fs = std::filesystem;
 // LOCAL TYPES/DEFINITIONS
 // ======================
 /// <summary>
-/// Get string value with named field from a dictionary.
-/// </summary>
-/// <param name="bNodeDictionary">Dictionary</param>
-/// <param name="field">Field name of string value</param>
-/// <returns>String value of field.</returns>
-std::string getDictionaryString(const ben::Dictionary &bNodeDictionary,
-                                const char *field) {
-  if (bNodeDictionary.contains(field)) {
-    return (ben::BRef<ben::String>(bNodeDictionary[field]).string());
-  }
-  return ("");
-}
-/// <summary>
-/// Get integer value with named field from a dictionary.
-/// </summary>
-/// <param name="bNodeDictionary">Dictionary</param>
-/// <param name="field">Field name of integer value</param>
-/// <returns>Integer value of field.</returns>
-std::uint64_t getDictionaryInteger(const ben::Dictionary &bNodeDictionary,
-                                   const char *field) {
-  if (bNodeDictionary.contains(field)) {
-    return (ben::BRef<ben::Integer>(bNodeDictionary[field]).integer());
-  }
-  return (0);
-}
-/// <summary>
-///  Get vector of announce servers from a dictionary.
-/// </summary>
-/// <param name="bNodeDictionary">Dictionary</param>
-/// <returns>Vector of announce server names.</returns>
-std::vector<std::string> getAnnounceList(const ben::Dictionary &bNodeDictionary) {
-  // This is meant to be a simple list of strings but for some reason each
-  // string is encased in its own list for an extra level (bug ?).
-  if (bNodeDictionary.contains("announce-list")) {
-    std::vector<std::string> servers;
-    for (auto &bNode :
-         ben::BRef<ben::List>(bNodeDictionary["announce-list"]).list()) {
-      for (auto &bNodeString : ben::BRef<ben::List>(bNode).list()) {
-        servers.push_back(ben::BRef<ben::String>(bNodeString).string());
-      }
-    }
-    return (servers);
-  }
-  return (std::vector<std::string>{});
-}
-/// <summary>
-/// Construct a file path from a list of strings contained in a dictionary.
-/// </summary>
-/// <param name="bNodeDictionary">Dictionary</param>
-/// <returns>Full file path name.</returns>
-std::string getFilePath(const ben::Dictionary &bNodeDictionary) {
-  if (bNodeDictionary.contains("path")) {
-    std::filesystem::path path{};
-    for (auto &folder : ben::BRef<ben::List>(bNodeDictionary["path"]).list()) {
-      path /= ben::BRef<ben::String>(folder).string();
-    }
-    return (path.string());
-  }
-  return ("");
-}
-/// <summary>
-/// Extract and return a vector of file details from a dictionary.
-/// </summary>
-/// <param name="bNodeInfoDictionary">Dictionary</param>
-/// <returns>Vector of torrent file details.</returns>
-std::vector<TorrentFileDetails>
-getFilesList(const ben::Dictionary &bNodeInfoDictionary) {
-  if (bNodeInfoDictionary.contains("files")) {
-    std::vector<TorrentFileDetails> files;
-    for (auto &file : ben::BRef<ben::List>(bNodeInfoDictionary["files"]).list()) {
-      files.emplace_back(
-          getFilePath(ben::BRef<ben::Dictionary>(file)),
-          getDictionaryInteger(ben::BRef<ben::Dictionary>(file), "length"));
-    }
-    return (files);
-  }
-  return (std::vector<TorrentFileDetails>{});
-}
-// ===============
-// LOCAL FUNCTIONS
-// ===============
-/// <summary>
-/// Load torrent file meta information into a structure for processing.
-/// </summary>
-/// <param name="bNode">Root BNode of decoded torrent file.</param>
-/// <returns>Torrent file meta information structure.</returns>
-TorrentMetaInfo getTorrentInfo(const ben::BNode &bNode) {
-  TorrentMetaInfo info;
-  if (bNode.getNodeType() != ben::BNode::Type::dictionary) {
-    throw BencodeLib::Error("Valid torrent file not found.");
-  }
-  auto &bNodeTopLevelDictionary = ben::BRef<ben::Dictionary>(bNode);
-  info.announce = getDictionaryString(bNodeTopLevelDictionary, "announce");
-  info.announceList = getAnnounceList(bNodeTopLevelDictionary);
-  info.encoding = getDictionaryString(bNodeTopLevelDictionary, "encoding");
-  info.comment = getDictionaryString(bNodeTopLevelDictionary, "comment");
-  info.creationDate = getDictionaryInteger(bNodeTopLevelDictionary, "creation date");
-  info.createdBy = getDictionaryString(bNodeTopLevelDictionary, "created by");
-  if (bNodeTopLevelDictionary.contains("info")) {
-    auto &bNodeInfoDictionary = ben::BRef<ben::Dictionary>(bNodeTopLevelDictionary["info"]);
-    info.attribute = getDictionaryString(bNodeInfoDictionary, "attr");
-    info.length = getDictionaryInteger(bNodeInfoDictionary, "length");
-    info.name = getDictionaryString(bNodeInfoDictionary, "name");
-    info.pieceLength = getDictionaryInteger(bNodeInfoDictionary, "piece length");
-    info.pieces = getDictionaryString(bNodeInfoDictionary, "pieces");
-    info.privateBitMask = getDictionaryInteger(bNodeInfoDictionary, "private");
-    info.source = getDictionaryString(bNodeInfoDictionary, "source");
-    info.files = getFilesList(bNodeInfoDictionary);
-  }
-  return (info);
-}
-/// <summary>
-/// Display to stdout meta information for torrent file.
-/// </summary>
-/// <param name="fileName">Torrent file name</param>
-/// <param name="info">Meta information</param>
-void displayTorrentInfo(const std::string &fileName,
-                        const TorrentMetaInfo &info) {
-  PLOG_INFO << "------------------------------------------------------------";
-  PLOG_INFO << "FILE [ " << fileName << " ]";
-  PLOG_INFO << "------------------------------------------------------------";
-  PLOG_INFO << "announce [" << info.announce << "]";
-  PLOG_INFO << "attribute [" << info.attribute << "]";
-  PLOG_INFO << "encoding [" << info.encoding << "]";
-  PLOG_INFO << "comment [" << info.comment << "]";
-  PLOG_INFO << "creation_date [" << info.creationDate << "]";
-  PLOG_INFO << "created_by [" << info.createdBy << "]";
-  PLOG_INFO << "length [" << info.length << "]";
-  PLOG_INFO << "name [" << info.name << "]";
-  PLOG_INFO << "piece length [" << info.pieceLength << "]";
-  PLOG_INFO << "private [" << info.privateBitMask << "]";
-  PLOG_INFO << "source [" << info.source << "]";
-  for (const auto &file : info.files) {
-    PLOG_INFO << "path [ " << file.path << "] length [" << file.length << "]";
-  }
-  for (const auto &announceURL : info.announceList) {
-    PLOG_INFO << "announce url [ " << announceURL << "]";
-  }
-}
-/// <summary>
 /// Return directory name containing torrent files.
 /// </summary>
 /// <returns>Torrent file directory</returns>
@@ -216,8 +76,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     // For each torrent file extract its information and display
     //
     for (const auto &fileName : readTorrentFileList()) {
+      TorrentInfo torrentFile;
       bEncode.decode(ben::FileSource{fileName});
-      displayTorrentInfo(fileName, getTorrentInfo(bEncode.root()));
+      torrentFile.get(bEncode.root());
+      PLOG_INFO << torrentFile.dump(fileName);
     }
   } catch (const std::exception &ex) {
     std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
