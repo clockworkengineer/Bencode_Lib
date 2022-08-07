@@ -202,14 +202,14 @@ void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
     for (const auto &bNodeEntry : BRef<Dictionary>(bNode).dictionary()) {
       destination.add(std::to_string(bNodeEntry.first.length()) + ":" +
                       bNodeEntry.first);
-      encodeBNodes(BRef<BNode>(*bNodeEntry.second), destination);
+      encodeBNodes(*bNodeEntry.second, destination);
     }
     destination.add('e');
     break;
   case BNodeType::list:
     destination.add('l');
     for (const auto &bNodeEntry : BRef<List>(bNode).list()) {
-      encodeBNodes(BRef<BNode>(*bNodeEntry), destination);
+      encodeBNodes(*bNodeEntry, destination);
     }
     destination.add('e');
     break;
@@ -260,4 +260,10 @@ void Bencode_Impl::encode(IDestination &destination) {
   }
   encodeBNodes(*m_bNodeRoot, destination);
 }
+
+std::unique_ptr<Variant> &BNode::getVariant() { return (m_bNodeVariant); }
+const std::unique_ptr<Variant> &BNode::getVariant() const {
+  return (m_bNodeVariant);
+};
+BNodeType BNode::getNodeType() const { return (m_bNodeVariant->getNodeType()); }
 } // namespace BencodeLib
