@@ -65,7 +65,7 @@ const BNode &BNode::operator[](int index) const // List
 // ==============
 // Get BNode type
 // ==============
-BNodeType BNode::getNodeType() const { return (m_bNodeVariant->getNodeType()); }
+BNode::Type BNode::getNodeType() const { return (m_bNodeVariant->getNodeType()); }
 // ==============================
 // Get reference to BNode variant
 // ==============================

@@ -87,7 +87,7 @@ std::string Bencode_Impl::extractString(ISource &source) {
 /// </summary>
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param> <returns>String BNode.</returns>
-BNode::Ptr Bencode_Impl::decodeString(ISource &source) {
+BNode Bencode_Impl::decodeString(ISource &source) {
   return (makeString(extractString(source)));
 }
 /// <summary>
@@ -95,7 +95,7 @@ BNode::Ptr Bencode_Impl::decodeString(ISource &source) {
 /// </summary>
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param> <returns>Integer BNode.</returns>
-BNode::Ptr Bencode_Impl::decodeInteger(ISource &source) {
+BNode Bencode_Impl::decodeInteger(ISource &source) {
   source.next();
   int64_t integer = extractInteger(source);
   if (source.current() != 'e') {
@@ -110,7 +110,7 @@ BNode::Ptr Bencode_Impl::decodeInteger(ISource &source) {
 /// </summary>
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param> <returns>Dictionary BNode.</returns>
-BNode::Ptr Bencode_Impl::decodeDictionary(ISource &source) {
+BNode Bencode_Impl::decodeDictionary(ISource &source) {
   Dictionary::EntryList dictionary;
   std::string lastKey{};
   source.next();
@@ -142,8 +142,8 @@ BNode::Ptr Bencode_Impl::decodeDictionary(ISource &source) {
 /// </summary>
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param> <returns>List BNode.</returns>
-BNode::Ptr Bencode_Impl::decodeList(ISource &source) {
-  std::vector<BNode::Ptr> list;
+BNode Bencode_Impl::decodeList(ISource &source) {
+  std::vector<BNode> list;
   source.next();
   while (source.more() && source.current() != 'e') {
     list.emplace_back(decodeBNodes(source));
@@ -162,7 +162,7 @@ BNode::Ptr Bencode_Impl::decodeList(ISource &source) {
 /// </summary>
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode::Ptr Bencode_Impl::decodeBNodes(ISource &source) {
+BNode Bencode_Impl::decodeBNodes(ISource &source) {
   switch (source.current()) {
   // Dictionary BNode
   case 'd':
@@ -197,28 +197,28 @@ BNode::Ptr Bencode_Impl::decodeBNodes(ISource &source) {
 /// output stream.</param> <returns></returns>
 void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
   switch (bNode.getNodeType()) {
-  case BNodeType::dictionary:
+  case BNode::Type::dictionary:
     destination.add('d');
     for (const auto &bNodeEntry : BRef<Dictionary>(bNode).dictionary()) {
       destination.add(std::to_string(bNodeEntry.first.length()) + ":" +
                       bNodeEntry.first);
-      encodeBNodes(*bNodeEntry.second, destination);
+      encodeBNodes(bNodeEntry.second, destination);
     }
     destination.add('e');
     break;
-  case BNodeType::list:
+  case BNode::Type::list:
     destination.add('l');
     for (const auto &bNodeEntry : BRef<List>(bNode).list()) {
-      encodeBNodes(*bNodeEntry, destination);
+      encodeBNodes(bNodeEntry, destination);
     }
     destination.add('e');
     break;
-  case BNodeType::integer:
+  case BNode::Type::integer:
     destination.add('i');
     destination.add(std::to_string(BRef<Integer>(bNode).integer()));
     destination.add('e');
     break;
-  case BNodeType::string: {
+  case BNode::Type::string: {
     std::string stringToEncode = BRef<String>(bNode).string();
     destination.add(std::to_string(static_cast<int>(stringToEncode.length())) +
                     ":" + stringToEncode);
@@ -255,9 +255,9 @@ void Bencode_Impl::decode(ISource &source) {
 /// <param name="destination ">Pointer to interface used to facilitate the
 /// output stream.</param> <returns></returns>
 void Bencode_Impl::encode(IDestination &destination) {
-  if (m_bNodeRoot == nullptr) {
+  if (m_bNodeRoot.getVariant() == nullptr) {
     throw Error("No Bencoded data to encode.");
   }
-  encodeBNodes(*m_bNodeRoot, destination);
+  encodeBNodes(m_bNodeRoot, destination);
 }
 } // namespace BencodeLib

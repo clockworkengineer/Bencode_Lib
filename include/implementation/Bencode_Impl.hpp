@@ -44,8 +44,8 @@ public:
   void decode(ISource &source);
   void encode(IDestination &destination);
   std::string version();
-  BNode &root() { return (*m_bNodeRoot); }
-  [[nodiscard]] const BNode &root() const { return (*m_bNodeRoot); }
+  BNode &root() { return (m_bNodeRoot); }
+  [[nodiscard]] const BNode &root() const { return (m_bNodeRoot); }
   // ================
   // PUBLIC VARIABLES
   // ================
@@ -58,16 +58,16 @@ private:
   // ===============
   static int64_t extractInteger(ISource &source);
   static std::string extractString(ISource &source);
-  static BNode::Ptr decodeString(ISource &source);
-  static BNode::Ptr decodeInteger(ISource &source);
-  static BNode::Ptr decodeDictionary(ISource &source);
-  static BNode::Ptr decodeList(ISource &source);
-  static BNode::Ptr decodeBNodes(ISource &source);
+  static BNode decodeString(ISource &source);
+  static BNode decodeInteger(ISource &source);
+  static BNode decodeDictionary(ISource &source);
+  static BNode decodeList(ISource &source);
+  static BNode decodeBNodes(ISource &source);
   static void encodeBNodes(const BNode &bNode, IDestination &destination);
   // =================
   // PRIVATE VARIABLES
   // =================
   // Root of BNoding Tree
-  std::unique_ptr<BNode> m_bNodeRoot;
+  BNode m_bNodeRoot;
 };
 } // namespace BencodeLib
