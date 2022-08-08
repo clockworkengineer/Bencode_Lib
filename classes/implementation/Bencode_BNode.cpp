@@ -50,7 +50,6 @@ BNode &BNode::operator[](int index) { return (BRef<List>(*this)[index]); }
 // ==========
 // Dictionary
 // ==========
-
 const BNode &BNode::operator[](const std::string &key) const // Dictionary
 {
   return (BRef<const Dictionary>(*this)[key]);

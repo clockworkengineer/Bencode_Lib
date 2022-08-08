@@ -41,7 +41,7 @@ struct TorrentInfo {
   // Load torrent file
   void load(const std::string &fileName);
   // Populate torrent info structure from bencoded data
-  void get();
+  void populate();
   // Return string of torrent info details
   std::string dump();
 
@@ -134,7 +134,7 @@ private:
 /// Load torrent file meta information into a structure for processing.
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
-inline void TorrentInfo::get() {
+inline void TorrentInfo::populate() {
   if (m_bEncode.root().getNodeType() != BencodeLib::BNode::Type::dictionary) {
     throw BencodeLib::Error("Valid torrent file not found.");
   }

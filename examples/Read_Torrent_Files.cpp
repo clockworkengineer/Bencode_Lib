@@ -67,7 +67,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     // For each torrent file extract its information and display
     for (const auto &fileName : readTorrentFileList()) {
       TorrentInfo torrentFile { fileName};
-      torrentFile.get();
+      torrentFile.populate();
       PLOG_INFO << torrentFile.dump();
     }
   } catch (const std::exception &ex) {
