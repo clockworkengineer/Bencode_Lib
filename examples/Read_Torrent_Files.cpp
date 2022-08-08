@@ -18,15 +18,8 @@
 #include <filesystem>
 #include <stdexcept>
 // =======
-// Bencode
+// Torrent
 // =======
-#include "Bencode.hpp"
-#include "Bencode_Types.hpp"
-#include "Bencode_Sources.hpp"
-#include "Bencode_Destinations.hpp"
-//
-// Torrent includes
-//
 #include "TorrentInfo.hpp"
 // =======
 // Logging
@@ -36,7 +29,7 @@
 // ==========
 // NAMESPACES
 // ==========
-namespace ben = BencodeLib;
+// namespace ben = BencodeLib;
 namespace fs = std::filesystem;
 // ======================
 // LOCAL TYPES/DEFINITIONS
@@ -67,19 +60,15 @@ std::vector<std::string> readTorrentFileList() {
 // ============================
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    const ben::Bencode bEncode;
     // Initialise logging.
     plog::init(plog::debug, "Read_Torrent_Files.log");
     PLOG_INFO << "Read_Torrent_File started ...";
-    PLOG_INFO << ben::Bencode().version();
-    //
+    PLOG_INFO << BencodeLib::Bencode().version();
     // For each torrent file extract its information and display
-    //
     for (const auto &fileName : readTorrentFileList()) {
-      TorrentInfo torrentFile;
-      bEncode.decode(ben::FileSource{fileName});
-      torrentFile.get(bEncode.root());
-      PLOG_INFO << torrentFile.dump(fileName);
+      TorrentInfo torrentFile { fileName};
+      torrentFile.get();
+      PLOG_INFO << torrentFile.dump();
     }
   } catch (const std::exception &ex) {
     std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";

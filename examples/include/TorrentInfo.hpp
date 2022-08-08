@@ -11,38 +11,36 @@
 // Bencode
 // =======
 #include "Bencode.hpp"
+#include "Bencode_Types.hpp"
+#include "Bencode_Sources.hpp"
+//
 // =============================
 // Torrent file meta information
 // =============================
 struct TorrentInfo {
+  // BencodeLib short cuts
   using Dictionary = BencodeLib::Dictionary;
   using List = BencodeLib::List;
   using String = BencodeLib::String;
   using Integer = BencodeLib::Integer;
-
-  template <typename T> T &BRef(BencodeLib::BNode &bNode) {
-    return (BencodeLib::BRef<T>(bNode));
-  }
-  template <typename T> const T &BRef(const BencodeLib::BNode &bNode) {
-    return (BencodeLib::BRef<T>(bNode));
-  }
-
+  // File details
   struct FileDetails {
     FileDetails(const std::string &path, std::uint64_t length)
         : path(path), length(length) {}
     std::string path;       // Full file path name
     std::uint64_t length{}; // File length in bytes
   };
-
+  // Constructors/destructors
   TorrentInfo() = default;
+  TorrentInfo(const std::string &fileName) { load(fileName); }
   TorrentInfo(const TorrentInfo &other) = delete;
   TorrentInfo &operator=(const TorrentInfo &other) = delete;
   TorrentInfo(TorrentInfo &&other) = delete;
   TorrentInfo &operator=(TorrentInfo &&other) = delete;
   ~TorrentInfo() = default;
-
-  void get(const BencodeLib::BNode &bNode);
-  std::string dump(const std::string &fileName);
+  void get();
+  std::string dump();
+  void load(const std::string &fileName);
 
 private:
   std::string getString(const Dictionary &bNode, const char *field) {
@@ -92,7 +90,6 @@ private:
     }
     return (std::vector<FileDetails>{});
   }
-
   // Main tracker server
   std::string m_announce;
   // Backup tracker server list
@@ -122,6 +119,10 @@ private:
   std::uint64_t m_privateBitMask{};
   // Source of torrent
   std::string m_source;
+  // Bencode encoding for torrent file
+  const BencodeLib::Bencode m_bEncode;
+  // Torrent file name
+  std::string m_fileName;
 };
 // ==============
 // PUBLIC METHODS
@@ -130,12 +131,11 @@ private:
 /// Load torrent file meta information into a structure for processing.
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
-/// <returns>Torrent file meta information structure.</returns>
-inline void TorrentInfo::get(const BencodeLib::BNode &bNode) {
-  if (bNode.getNodeType() != BencodeLib::BNode::Type::dictionary) {
+inline void TorrentInfo::get() {
+  if (m_bEncode.root().getNodeType() != BencodeLib::BNode::Type::dictionary) {
     throw BencodeLib::Error("Valid torrent file not found.");
   }
-  auto &bNodeTop = BRef<Dictionary>(bNode);
+  auto &bNodeTop = BRef<Dictionary>(m_bEncode.root());
   m_announce = getString(bNodeTop, "announce");
   m_announceList = getAnnounceList(bNodeTop);
   m_encoding = getString(bNodeTop, "encoding");
@@ -159,10 +159,10 @@ inline void TorrentInfo::get(const BencodeLib::BNode &bNode) {
 /// </summary>
 /// <param name="fileName">Torrent file name</param>
 /// <param name="info">Meta information</param>
-inline std::string TorrentInfo::dump(const std::string &fileName) {
+inline std::string TorrentInfo::dump() {
   std::stringstream os;
   os << "\n------------------------------------------------------------\n";
-  os << "FILE [ " << fileName << " ]\n";
+  os << "FILE [ " << m_fileName << " ]\n";
   os << "------------------------------------------------------------\n";
   os << "announce [" << m_announce << "]\n";
   os << "attribute [" << m_attribute << "]\n";
@@ -183,4 +183,12 @@ inline std::string TorrentInfo::dump(const std::string &fileName) {
   }
   os << "------------------------------------------------------------";
   return (os.str());
+}
+/// <summary>
+/// Load torrent file into a BNode tree.
+/// </summary>
+/// <param name="fileName">Torrent file name</param>
+inline void TorrentInfo::load(const std::string &fileName) {
+  m_fileName = fileName;
+  m_bEncode.decode(BencodeLib::FileSource{fileName});
 }
