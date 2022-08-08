@@ -38,9 +38,12 @@ struct TorrentInfo {
   TorrentInfo(TorrentInfo &&other) = delete;
   TorrentInfo &operator=(TorrentInfo &&other) = delete;
   ~TorrentInfo() = default;
-  void get();
-  std::string dump();
+  // Load torrent file
   void load(const std::string &fileName);
+  // Populate torrent info structure from bencoded data
+  void get();
+  // Return string of torrent info details
+  std::string dump();
 
 private:
   std::string getString(const Dictionary &bNode, const char *field) {
