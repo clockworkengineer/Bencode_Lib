@@ -1,11 +1,11 @@
 //
 // Program: Read_Torrent_Files
 //
-// Description: Use BencodeLib to read in torrent file details.
+// Description: Use Bencode_Lib to read in torrent file details.
 // Details on the torrent file format can be found at the wiki page
 // https://en.wikipedia.org/wiki/Torrent_file.
 //
-// Dependencies: C20++, BencodeLib.
+// Dependencies: C20++, Bencode_Lib.
 //
 // =============
 // INCLUDE FILES
@@ -29,7 +29,7 @@
 // ==========
 // NAMESPACES
 // ==========
-// namespace ben = BencodeLib;
+// namespace ben = Bencode_Lib;
 namespace fs = std::filesystem;
 // ======================
 // LOCAL TYPES/DEFINITIONS
@@ -63,7 +63,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     // Initialise logging.
     plog::init(plog::debug, "Read_Torrent_Files.log");
     PLOG_INFO << "Read_Torrent_File started ...";
-    PLOG_INFO << BencodeLib::Bencode().version();
+    PLOG_INFO << Bencode_Lib::Bencode().version();
     // For each torrent file extract its information and display
     for (const auto &fileName : readTorrentFileList()) {
       TorrentInfo torrentFile { fileName};

@@ -8,7 +8,7 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // ====================
 // Forward declarations
 // ====================
@@ -59,4 +59,4 @@ private:
   // Bencode implementation
   const std::unique_ptr<Bencode_Impl> m_implementation;
 };
-} // namespace BencodeLib
+} // namespace Bencode_Lib

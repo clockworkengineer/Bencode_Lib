@@ -7,11 +7,11 @@
 // ================
 // Test definitions
 // ================
-#include "BencodeLib_Tests.hpp"
+#include "Bencode_Lib_Tests.hpp"
 // =======================
 // Bencode class namespace
 // =======================
-using namespace BencodeLib;
+using namespace Bencode_Lib;
 // ==========
 // Test cases
 // ==========
@@ -122,7 +122,7 @@ TEST_CASE("Encode generated exceptions", "[Bencode][Encode][Exceptions]") {
   SECTION("Encode called with no BNode tree to encode",
           "[Bencode][Encode][Exceptions]") {
     BufferDestination bEncodeDestination;
-    REQUIRE_THROWS_AS(bEncode.encode(bEncodeDestination), BencodeLib::Error);
+    REQUIRE_THROWS_AS(bEncode.encode(bEncodeDestination), Bencode_Lib::Error);
     REQUIRE_THROWS_WITH(bEncode.encode(bEncodeDestination),
                         "Bencode Error: No Bencoded data to encode.");
   }

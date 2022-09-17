@@ -1,4 +1,4 @@
-# BencodeLib
+# Bencode_Lib
 
 A library to perform Bencode encoding encode/decode to/from
 a byte buffer, file or a custom source/destination with the

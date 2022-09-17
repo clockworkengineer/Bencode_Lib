@@ -18,11 +18,11 @@
 // Torrent file meta information
 // =============================
 struct TorrentInfo {
-  // BencodeLib short cuts
-  using Dictionary = BencodeLib::Dictionary;
-  using List = BencodeLib::List;
-  using String = BencodeLib::String;
-  using Integer = BencodeLib::Integer;
+  // Bencode_Lib short cuts
+  using Dictionary = Bencode_Lib::Dictionary;
+  using List = Bencode_Lib::List;
+  using String = Bencode_Lib::String;
+  using Integer = Bencode_Lib::Integer;
   // File details
   struct FileDetails {
     FileDetails(const std::string &path, std::uint64_t length)
@@ -123,7 +123,7 @@ private:
   // Source of torrent
   std::string m_source;
   // Bencode encoding for torrent file
-  const BencodeLib::Bencode m_bEncode;
+  const Bencode_Lib::Bencode m_bEncode;
   // Torrent file name
   std::string m_fileName;
 };
@@ -135,8 +135,8 @@ private:
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
 inline void TorrentInfo::populate() {
-  if (m_bEncode.root().getNodeType() != BencodeLib::BNode::Type::dictionary) {
-    throw BencodeLib::Error("Valid torrent file not found.");
+  if (m_bEncode.root().getNodeType() != Bencode_Lib::BNode::Type::dictionary) {
+    throw Bencode_Lib::Error("Valid torrent file not found.");
   }
   auto &bNodeTop = BRef<Dictionary>(m_bEncode.root());
   m_announce = getString(bNodeTop, "announce");
@@ -193,5 +193,5 @@ inline std::string TorrentInfo::dump() {
 /// <param name="fileName">Torrent file name</param>
 inline void TorrentInfo::load(const std::string &fileName) {
   m_fileName = fileName;
-  m_bEncode.decode(BencodeLib::FileSource{fileName});
+  m_bEncode.decode(Bencode_Lib::FileSource{fileName});
 }

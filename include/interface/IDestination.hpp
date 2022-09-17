@@ -7,7 +7,7 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // ================================================================
 // Interface for writing destination stream during Bencode encoding
 // ================================================================
@@ -38,4 +38,4 @@ public:
   // ============================
   virtual void add(char ch) = 0;
 };
-} // namespace BencodeLib
+} // namespace Bencode_Lib

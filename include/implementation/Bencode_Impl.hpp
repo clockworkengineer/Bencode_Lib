@@ -20,7 +20,7 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // ================
 // CLASS DEFINITION
 // ================
@@ -70,4 +70,4 @@ private:
   // Root of BNoding Tree
   BNode m_bNodeRoot;
 };
-} // namespace BencodeLib
+} // namespace Bencode_Lib

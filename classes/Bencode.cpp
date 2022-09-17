@@ -25,7 +25,7 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // ===========================
 // PRIVATE TYPES AND CONSTANTS
 // ===========================
@@ -53,7 +53,7 @@ Bencode::Bencode() : m_implementation(std::make_unique<Bencode_Impl>()) {}
 /// </summary>
 Bencode::~Bencode() {}
 /// <summary>
-/// Get BencodeLib version
+/// Get Bencode_Lib version
 /// </summary>
 std::string Bencode::version() const { return (m_implementation->version()); }
 /// <summary>
@@ -83,4 +83,4 @@ void Bencode::encode(IDestination &&destination) const {
 /// <returns>Root of Bencoding tree.</returns>
 BNode &Bencode::root() { return (m_implementation->root()); }
 const BNode &Bencode::root() const { return (m_implementation->root()); }
-} // namespace BencodeLib
+} // namespace Bencode_Lib

@@ -12,7 +12,7 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // ================================
 // Destination classes for encoders
 // ================================
@@ -60,4 +60,4 @@ public:
 private:
   std::ofstream m_destination;
 };
-} // namespace BencodeLib
+} // namespace Bencode_Lib

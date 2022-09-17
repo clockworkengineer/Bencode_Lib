@@ -18,7 +18,7 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // ===========================
 // PRIVATE TYPES AND CONSTANTS
 // ===========================
@@ -71,4 +71,4 @@ std::unique_ptr<Variant> &BNode::getVariant() { return (m_bNodeVariant); }
 const std::unique_ptr<Variant> &BNode::getVariant() const {
   return (m_bNodeVariant);
 };
-} // namespace BencodeLib
+} // namespace Bencode_Lib

@@ -7,7 +7,7 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // ===========================================================
 // Interface for reading source stream during Bencode decoding
 // ===========================================================
@@ -46,4 +46,4 @@ public:
   // ===================================
   virtual void reset() = 0;
 };
-} // namespace BencodeLib
+} // namespace Bencode_Lib

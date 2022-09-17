@@ -12,7 +12,7 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // ==================================
 // Source classes for Bencode decoder
 // ==================================
@@ -77,4 +77,4 @@ public:
 private:
   mutable std::ifstream m_source;
 };
-} // namespace BencodeLib
+} // namespace Bencode_Lib

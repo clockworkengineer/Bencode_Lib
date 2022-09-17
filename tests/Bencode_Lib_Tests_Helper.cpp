@@ -6,11 +6,11 @@
 // ================
 // Test definitions
 // ================
-#include "BencodeLib_Tests.hpp"
+#include "Bencode_Lib_Tests.hpp"
 // =======================
 // Bencode class namespace
 // =======================
-using namespace BencodeLib;
+using namespace Bencode_Lib;
 // ==========================
 // Unit test helper functions
 // ==========================

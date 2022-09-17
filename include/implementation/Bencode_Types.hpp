@@ -9,7 +9,7 @@
 // =========
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // =============
 // Bencode Error
 // =============
@@ -205,4 +205,4 @@ inline BNode makeString(std::string stringValue) {
 inline BNode makeInteger(int64_t integer) {
   return (BNode{std::make_unique<Integer>(integer)});
 }
-} // namespace BencodeLib
+} // namespace Bencode_Lib

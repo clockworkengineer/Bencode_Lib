@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.23.1)
 
-project("BencodeLib Examples" VERSION 0.1.0 DESCRIPTION "BencodeLib example programs")
+project("Bencode_Lib Examples" VERSION 0.1.0 DESCRIPTION "Bencode_Lib example programs")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -22,7 +22,7 @@ foreach( EXAMPLE_PROGRAM ${EXAMPLE_SOURCES} )
     string( REPLACE ".cpp" "" EXAMPLE_TARGET ${EXAMPLE_PROGRAM} )
     add_executable( ${EXAMPLE_TARGET} ${EXAMPLE_PROGRAM} )
     target_include_directories(${EXAMPLE_TARGET} PUBLIC ${PROJECT_SOURCE_DIR}/include)
-    target_link_libraries( ${EXAMPLE_TARGET} BencodeLib )
+    target_link_libraries( ${EXAMPLE_TARGET} Bencode_Lib )
     install(TARGETS ${EXAMPLE_TARGET} DESTINATION bin)
 endforeach( EXAMPLE_PROGRAM ${EXAMPLE_SOURCES} )
 

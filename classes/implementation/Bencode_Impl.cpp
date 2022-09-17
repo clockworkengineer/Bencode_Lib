@@ -17,7 +17,7 @@
 // ====================
 // NAMESPACE
 // =========
-namespace BencodeLib {
+namespace Bencode_Lib {
 // ===========================
 // PRIVATE TYPES AND CONSTANTS
 // ===========================
@@ -238,7 +238,7 @@ void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
 /// </summary>
 std::string Bencode_Impl::version() const {
   std::stringstream versionString;
-  versionString << "BencodeLib Version " << BENCODE_VERSION_MAJOR << "."
+  versionString << "Bencode_Lib Version " << BENCODE_VERSION_MAJOR << "."
                 << BENCODE_VERSION_MINOR << "." << BENCODE_VERSION_PATCH;
   return (versionString.str());
 }
@@ -262,4 +262,4 @@ void Bencode_Impl::encode(IDestination &destination) const {
   }
   encodeBNodes(m_bNodeRoot, destination);
 }
-} // namespace BencodeLib
+} // namespace Bencode_Lib
