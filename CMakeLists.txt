@@ -27,13 +27,17 @@ set (BENCODE_INCLUDES
     ./include/interface/IDestination.hpp
     ./include/implementation/Bencode_Types.hpp
     ./include/implementation/Bencode_Impl.hpp
-    ./include/implementation/Bencode_Sources.hpp
-    ./include/implementation/Bencode_Destinations.hpp)
+    ./include/implementation/io/Bencode_Sources.hpp
+    ./include/implementation/io/Bencode_BufferSource.hpp
+    ./include/implementation/io/Bencode_FileSource.hpp
+    ./include/implementation/io/Bencode_Destinations.hpp
+    ./include/implementation/io/Bencode_BufferDestination.hpp
+    ./include/implementation/io/Bencode_FileDestination.hpp)
 
 # Bencode library
 
 add_library(${BENCODE_LIBRARY_NAME} ${BENCODE_SOURCES} ${BENCODE_INCLUDES})
-target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/interface ${PROJECT_SOURCE_DIR}/include/implementation ${PROJECT_SOURCE_DIR}/include/external ${PROJECT_BINARY_DIR})
+target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/interface ${PROJECT_SOURCE_DIR}/include/implementation ${PROJECT_SOURCE_DIR}/include/implementation/io ${PROJECT_SOURCE_DIR}/include/external ${PROJECT_BINARY_DIR})
 
 # Add tests
 
