@@ -5,9 +5,9 @@
 #include <string>
 #include <stdexcept>
 #include <memory>
-// =========
-// NAMESPACE
-// =========
+// =================
+// LIBRARY NAMESPACE
+// =================
 namespace Bencode_Lib {
 // ====================
 // Forward declarations
@@ -39,7 +39,7 @@ public:
   void decode(ISource &source) const;
   void decode(ISource &&source) const;
   void encode(IDestination &destination) const;
-  void encode(IDestination &&destination) const ;
+  void encode(IDestination &&destination) const;
   [[nodiscard]] std::string version() const;
   [[nodiscard]] BNode &root();
   [[nodiscard]] const BNode &root() const;

@@ -2,13 +2,10 @@
 //
 // C++ STL
 //
-#include <string>
-#include <vector>
-#include <memory>
-#include <stdexcept>
-// =========
-// NAMESPACE
-// =========
+#include <type_traits>
+// =================
+// LIBRARY NAMESPACE
+// =================
 namespace Bencode_Lib {
 // ==============================
 // BNode base reference converter

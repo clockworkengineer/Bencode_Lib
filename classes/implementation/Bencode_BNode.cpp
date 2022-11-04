@@ -15,9 +15,9 @@
 // ====================
 // CLASS IMPLEMENTATION
 // ====================
-// =========
-// NAMESPACE
-// =========
+// =================
+// LIBRARY NAMESPACE
+// =================
 namespace Bencode_Lib {
 // ===========================
 // PRIVATE TYPES AND CONSTANTS

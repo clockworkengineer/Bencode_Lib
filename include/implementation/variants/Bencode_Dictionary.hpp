@@ -5,10 +5,10 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <stdexcept>
-// =========
-// NAMESPACE
-// =========
+#include <utility>
+// =================
+// LIBRARY NAMESPACE
+// =================
 namespace Bencode_Lib {
 // ==========
 // Dictionary

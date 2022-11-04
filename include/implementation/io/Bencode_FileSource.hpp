@@ -4,7 +4,6 @@
 // =======
 #include <fstream>
 #include <string>
-#include <vector>
 // ================
 // Source interface
 // ================

@@ -4,9 +4,9 @@
 // =======
 #include <string>
 #include <stdexcept>
-// =========
-// NAMESPACE
-// =========
+// =================
+// LIBRARY NAMESPACE
+// =================
 namespace Bencode_Lib {
 // ================================================================
 // Interface for writing destination stream during Bencode encoding

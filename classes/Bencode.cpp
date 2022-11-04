@@ -22,9 +22,9 @@
 // ====================
 // CLASS IMPLEMENTATION
 // ====================
-// =========
-// NAMESPACE
-// =========
+// =================
+// LIBRARY NAMESPACE
+// =================
 namespace Bencode_Lib {
 // ===========================
 // PRIVATE TYPES AND CONSTANTS
@@ -61,8 +61,12 @@ std::string Bencode::version() const { return (m_implementation->version()); }
 /// </summary>
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param>
-void Bencode::decode(ISource &source) const { m_implementation->decode(source); }
-void Bencode::decode(ISource &&source) const { m_implementation->decode(source); }
+void Bencode::decode(ISource &source) const {
+  m_implementation->decode(source);
+}
+void Bencode::decode(ISource &&source) const {
+  m_implementation->decode(source);
+}
 /// <summary>
 /// Take BNode structure and create an Bencode encoding for it in the
 /// destination stream.

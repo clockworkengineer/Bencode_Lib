@@ -3,12 +3,11 @@
 // C++ STL
 //
 #include <string>
-#include <vector>
 #include <memory>
 #include <stdexcept>
-// =========
-// NAMESPACE
-// =========
+// =================
+// LIBRARY NAMESPACE
+// =================
 namespace Bencode_Lib {
 // =====
 // BNode

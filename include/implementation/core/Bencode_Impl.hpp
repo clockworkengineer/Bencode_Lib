@@ -17,9 +17,9 @@
 // =======
 #include "Bencode_Config.hpp"
 #include "Bencode_Types.hpp"
-// =========
-// NAMESPACE
-// =========
+// =================
+// LIBRARY NAMESPACE
+// =================
 namespace Bencode_Lib {
 // ================
 // CLASS DEFINITION
@@ -42,8 +42,8 @@ public:
   // PUBLIC METHODS
   // ==============
   void decode(ISource &source);
-  void encode(IDestination &destination)const ;
-  std::string version() const ;
+  void encode(IDestination &destination) const;
+  std::string version() const;
   BNode &root() { return (m_bNodeRoot); }
   [[nodiscard]] const BNode &root() const { return (m_bNodeRoot); }
   // ================
