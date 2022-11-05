@@ -8,9 +8,9 @@
 // LIBRARY NAMESPACE
 // =================
 namespace Bencode_Lib {
-// =============
-// Node Creation
-// =============
+// ==============
+// BNode Creation
+// ==============
 inline BNode makeDictionary(Dictionary::EntryList &dictionary) {
   return (BNode{std::make_unique<Dictionary>(dictionary)});
 }

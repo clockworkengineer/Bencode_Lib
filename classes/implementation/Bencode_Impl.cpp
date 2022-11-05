@@ -1,9 +1,9 @@
 //
 // Class: Bencode_Impl
 //
-// Description: Bencode class implementation layer that uses recursion to produce a
-// Bencoding tree (decode) and also reconstitute the tree back into raw Bencoding text
-// (encode).
+// Description: Bencode class implementation layer that uses recursion to
+// produce a Bencoding tree (decode) and also reconstitute the tree back into
+// raw Bencoding text (encode).
 //
 // Dependencies:   C20++ - Language standard features used.
 //
@@ -199,7 +199,7 @@ BNode Bencode_Impl::decodeBNodes(ISource &source) {
 /// output stream.</param> <returns></returns>
 void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
   switch (bNode.getNodeType()) {
-  case BNode::Type::dictionary:
+  case Variant::Type::dictionary:
     destination.add('d');
     for (const auto &bNodeEntry : BRef<Dictionary>(bNode).dictionary()) {
       destination.add(std::to_string(bNodeEntry.first.length()) + ":" +
@@ -208,19 +208,19 @@ void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
     }
     destination.add('e');
     break;
-  case BNode::Type::list:
+  case Variant::Type::list:
     destination.add('l');
     for (const auto &bNodeEntry : BRef<List>(bNode).list()) {
       encodeBNodes(bNodeEntry, destination);
     }
     destination.add('e');
     break;
-  case BNode::Type::integer:
+  case Variant::Type::integer:
     destination.add('i');
     destination.add(std::to_string(BRef<Integer>(bNode).integer()));
     destination.add('e');
     break;
-  case BNode::Type::string: {
+  case Variant::Type::string: {
     std::string stringToEncode = BRef<String>(bNode).string();
     destination.add(std::to_string(static_cast<int>(stringToEncode.length())) +
                     ":" + stringToEncode);

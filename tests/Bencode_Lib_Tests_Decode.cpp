@@ -21,7 +21,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
   SECTION("Decode an integer", "[Bencode][Decode][Integer]") {
     BufferSource bEncodeSource{"i266e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE((bEncode.root()).getNodeType() == BNode::Type::integer);
+    REQUIRE((bEncode.root()).getNodeType() == Variant::Type::integer);
   }
   SECTION("Decode an integer (266) and check value",
           "[Bencode][Decode][Integer]") {
@@ -89,7 +89,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
   SECTION("Decode an string", "[Bencode][Decode][String]") {
     BufferSource bEncodeSource{"12:qwertyuiopas"};
     bEncode.decode(bEncodeSource);
-    REQUIRE((bEncode.root()).getNodeType() == BNode::Type::string);
+    REQUIRE((bEncode.root()).getNodeType() == Variant::Type::string);
   }
   SECTION("Decode a string ('qwertyuiopas') and check value",
           "[Bencode][Decode][String]") {
@@ -112,7 +112,8 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{":"}), Bencode_Lib::Error);
   }
   SECTION("Decode a string with negative length", "[Bencode][Decode][String]") {
-    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"-2:ww"}), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"-2:ww"}),
+                      Bencode_Lib::Error);
   }
   SECTION("Decode a string with max length (buffer overflow attempt)",
           "[Bencode][Decode][String]") {
@@ -144,11 +145,11 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
   SECTION("Decode an List", "[Bencode][Decode]") {
     BufferSource bEncodeSource{"li266ei6780ei88e5:threee"};
     bEncode.decode(bEncodeSource);
-    REQUIRE((bEncode.root()).getNodeType() == BNode::Type::list);
-    REQUIRE((bEncode.root())[0].getNodeType() == BNode::Type::integer);
-    REQUIRE((bEncode.root())[1].getNodeType() == BNode::Type::integer);
-    REQUIRE((bEncode.root())[2].getNodeType() == BNode::Type::integer);
-    REQUIRE((bEncode.root())[3].getNodeType() == BNode::Type::string);
+    REQUIRE((bEncode.root()).getNodeType() == Variant::Type::list);
+    REQUIRE((bEncode.root())[0].getNodeType() == Variant::Type::integer);
+    REQUIRE((bEncode.root())[1].getNodeType() == Variant::Type::integer);
+    REQUIRE((bEncode.root())[2].getNodeType() == Variant::Type::integer);
+    REQUIRE((bEncode.root())[3].getNodeType() == Variant::Type::string);
     REQUIRE(BRef<Integer>((bEncode.root())[0]).integer() == 266);
     REQUIRE(BRef<Integer>((bEncode.root())[1]).integer() == 6780);
     REQUIRE(BRef<Integer>((bEncode.root())[2]).integer() == 88);
@@ -179,10 +180,10 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
   SECTION("Decode an Dictionary", "[Bencode][Decode][Dictionary]") {
     BufferSource bEncodeSource{"d3:onei1e5:threei3e3:twoi2ee"};
     bEncode.decode(bEncodeSource);
-    REQUIRE((bEncode.root()).getNodeType() == BNode::Type::dictionary);
-    REQUIRE((bEncode.root())["one"].getNodeType() == BNode::Type::integer);
-    REQUIRE((bEncode.root())["two"].getNodeType() == BNode::Type::integer);
-    REQUIRE((bEncode.root())["three"].getNodeType() == BNode::Type::integer);
+    REQUIRE((bEncode.root()).getNodeType() == Variant::Type::dictionary);
+    REQUIRE((bEncode.root())["one"].getNodeType() == Variant::Type::integer);
+    REQUIRE((bEncode.root())["two"].getNodeType() == Variant::Type::integer);
+    REQUIRE((bEncode.root())["three"].getNodeType() == Variant::Type::integer);
     REQUIRE(BRef<Integer>((bEncode.root())["one"]).integer() == 1);
     REQUIRE(BRef<Integer>((bEncode.root())["two"]).integer() == 2);
     REQUIRE(BRef<Integer>((bEncode.root())["three"]).integer() == 3);
@@ -260,7 +261,7 @@ TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
   SECTION("Decode singlefile.torrent", "[Bencode][Decode][Torrents]") {
     FileSource bEncodeSource{prefixTestDataPath(kSingleFileTorrent)};
     bEncode.decode(bEncodeSource);
-    REQUIRE((bEncode.root()).getNodeType() == BNode::Type::dictionary);
+    REQUIRE((bEncode.root()).getNodeType() == Variant::Type::dictionary);
   }
   SECTION("Decode singlefile.torrent and check value ",
           "[Bencode][Decode][Torrents]") {
@@ -274,7 +275,7 @@ TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
   SECTION("Decode multifile.torrent", "[Bencode][Decode][Torrents]") {
     FileSource bEncodeSource{prefixTestDataPath(kMultiFileTorrent)};
     bEncode.decode(bEncodeSource);
-    REQUIRE((bEncode.root()).getNodeType() == BNode::Type::dictionary);
+    REQUIRE((bEncode.root()).getNodeType() == Variant::Type::dictionary);
   }
   SECTION("Decode multifile.torrent and check value ",
           "[Bencode][Decode][Torrents]") {

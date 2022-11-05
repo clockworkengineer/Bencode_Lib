@@ -165,12 +165,9 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
     BufferSource bEncodeSource{
         "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<String>((bEncode.root())["one"]).string() ==
-            "0123456789");
-    REQUIRE(BRef<String>((bEncode.root())["two"]).string() ==
-            "asdfghjkl");
-    REQUIRE(BRef<String>((bEncode.root())["three"]).string() ==
-            "qwerty");
+    REQUIRE(BRef<String>((bEncode.root())["one"]).string() == "0123456789");
+    REQUIRE(BRef<String>((bEncode.root())["two"]).string() == "asdfghjkl");
+    REQUIRE(BRef<String>((bEncode.root())["three"]).string() == "qwerty");
   }
   SECTION("Decode list and check its components using indexing",
           "[Bencode][BNode][Index]") {
@@ -178,8 +175,7 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
     REQUIRE(BRef<String>((bEncode.root())[0]).string() == "sillyy");
-    REQUIRE(BRef<String>((bEncode.root())[1]).string() ==
-            "poiuytrewqas");
+    REQUIRE(BRef<String>((bEncode.root())[1]).string() == "poiuytrewqas");
     REQUIRE(BRef<String>((bEncode.root())[2]).string() ==
             "abcdefghijklmnopqrstuvwxyz");
   }
@@ -190,12 +186,9 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
                                "two9:asdfghjkle26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
     REQUIRE(BRef<String>((bEncode.root())[0]).string() == "sillyy");
-    REQUIRE(BRef<String>((bEncode.root())[1]["one"]).string() ==
-            "0123456789");
-    REQUIRE(BRef<String>((bEncode.root())[1]["two"]).string() ==
-            "asdfghjkl");
-    REQUIRE(BRef<String>((bEncode.root())[1]["three"]).string() ==
-            "qwerty");
+    REQUIRE(BRef<String>((bEncode.root())[1]["one"]).string() == "0123456789");
+    REQUIRE(BRef<String>((bEncode.root())[1]["two"]).string() == "asdfghjkl");
+    REQUIRE(BRef<String>((bEncode.root())[1]["three"]).string() == "qwerty");
     REQUIRE(BRef<String>((bEncode.root())[2]).string() ==
             "abcdefghijklmnopqrstuvwxyz");
   }
@@ -205,10 +198,10 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
         "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     bEncode.decode(bEncodeSource);
     REQUIRE_THROWS_AS((bEncode.root())["onee"].getNodeType() ==
-                          BNode::Type::dictionary,
+                          Variant::Type::dictionary,
                       BNode::Error);
     REQUIRE_THROWS_WITH((bEncode.root())["onee"].getNodeType() ==
-                            BNode::Type::dictionary,
+                            Variant::Type::dictionary,
                         "BNode Error: Invalid key used in dictionary.");
   }
   SECTION("Decode list and check an invalid index generates exception",
@@ -216,9 +209,10 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
     BufferSource bEncodeSource{
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
-    REQUIRE_THROWS_AS((bEncode.root())[3].getNodeType() == BNode::Type::list,
+    REQUIRE_THROWS_AS((bEncode.root())[3].getNodeType() == Variant::Type::list,
                       BNode::Error);
-    REQUIRE_THROWS_WITH((bEncode.root())[3].getNodeType() == BNode::Type::list,
+    REQUIRE_THROWS_WITH((bEncode.root())[3].getNodeType() ==
+                            Variant::Type::list,
                         "BNode Error: Invalid index used in list.");
   }
 }

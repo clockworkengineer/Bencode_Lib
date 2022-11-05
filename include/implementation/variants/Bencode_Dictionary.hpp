@@ -17,7 +17,8 @@ struct Dictionary : Variant {
   using Entry = std::pair<std::string, BNode>;
   using EntryList = std::vector<Entry>;
   explicit Dictionary(Dictionary::EntryList &entryList)
-      : Variant(BNode::Type::dictionary), m_dictionary(std::move(entryList)) {}
+      : Variant(Variant::Type::dictionary), m_dictionary(std::move(entryList)) {
+  }
   [[nodiscard]] bool contains(const std::string &key) const {
     if (auto it = std::find_if(m_dictionary.begin(), m_dictionary.end(),
                                [&key](const Entry &entry) -> bool {

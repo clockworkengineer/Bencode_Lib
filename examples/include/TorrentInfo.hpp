@@ -135,7 +135,8 @@ private:
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
 inline void TorrentInfo::populate() {
-  if (m_bEncode.root().getNodeType() != Bencode_Lib::BNode::Type::dictionary) {
+  if (m_bEncode.root().getNodeType() !=
+      Bencode_Lib::Variant::Type::dictionary) {
     throw Bencode_Lib::Error("Valid torrent file not found.");
   }
   auto &bNodeTop = BRef<Dictionary>(m_bEncode.root());

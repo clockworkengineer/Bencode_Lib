@@ -12,13 +12,13 @@ namespace Bencode_Lib {
 // =====
 // BNode
 // =====
-struct Variant;
 struct BNode {
-  enum class Type { base = 0, dictionary, list, integer, string };
+  // BNode Error
   struct Error : public std::runtime_error {
     explicit Error(const std::string &message)
         : std::runtime_error("BNode Error: " + message) {}
   };
+  // Constructors/Destructors
   BNode() = default;
   explicit BNode(std::unique_ptr<Variant> bNodeVariant)
       : m_bNodeVariant(std::move(bNodeVariant)) {}
@@ -27,14 +27,22 @@ struct BNode {
   BNode(BNode &&other) = default;
   BNode &operator=(BNode &&other) = default;
   ~BNode() = default;
+  // Indexing operators
   BNode &operator[](const std::string &key);
   const BNode &operator[](const std::string &key) const;
   BNode &operator[](int index);
   const BNode &operator[](int index) const;
-  [[nodiscard]] Type getNodeType() const;
+  // Get BNode type
+  [[nodiscard]] Variant::Type getNodeType() const {
+    return (m_bNodeVariant->getNodeType());
+  }
   // Get reference to BNode variant
-  [[nodiscard]] std::unique_ptr<Variant> &getVariant();
-  [[nodiscard]] const std::unique_ptr<Variant> &getVariant() const;
+  [[nodiscard]] std::unique_ptr<Variant> &getVariant() {
+    return (m_bNodeVariant);
+  }
+  [[nodiscard]] const std::unique_ptr<Variant> &getVariant() const {
+    return (m_bNodeVariant);
+  }
 
 private:
   std::unique_ptr<Variant> m_bNodeVariant;

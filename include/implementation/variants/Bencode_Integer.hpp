@@ -11,7 +11,7 @@ namespace Bencode_Lib {
 // =======
 struct Integer : Variant {
   explicit Integer(int64_t integer)
-      : Variant(BNode::Type::integer), m_value(integer) {}
+      : Variant(Variant::Type::integer), m_value(integer) {}
   [[nodiscard]] int64_t integer() const { return (m_value); }
 
 private:
