@@ -90,7 +90,7 @@ std::string Bencode_Impl::extractString(ISource &source) {
 /// <param name="source">Pointer to input interface used to decode Bencoded
 /// stream.</param> <returns>String BNode.</returns>
 BNode Bencode_Impl::decodeString(ISource &source) {
-  return (makeString(extractString(source)));
+  return (BNode::make<String>(extractString(source)));
 }
 /// <summary>
 /// Decode an integer from the input stream of characters referenced by ISource.
@@ -104,7 +104,7 @@ BNode Bencode_Impl::decodeInteger(ISource &source) {
     throw Error("Syntax Error detected.");
   }
   source.next();
-  return (makeInteger(integer));
+  return (BNode::make<Integer>(integer));
 }
 /// <summary>
 /// Decode a dictionary from the input stream of characters referenced by
@@ -137,7 +137,7 @@ BNode Bencode_Impl::decodeDictionary(ISource &source) {
     throw Error("Syntax Error detected.");
   }
   source.next();
-  return (makeDictionary(dictionary));
+  return (BNode::make<Dictionary>(dictionary));
 }
 /// <summary>
 /// Decode a list from the input stream of characters referenced by ISource.
@@ -154,7 +154,7 @@ BNode Bencode_Impl::decodeList(ISource &source) {
     throw Error("Syntax Error detected.");
   }
   source.next();
-  return (makeList(list));
+  return (BNode::make<List>(list));
 }
 /// <summary>
 /// Decode a BNode from the input stream of characters referenced by ISource.In
