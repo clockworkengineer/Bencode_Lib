@@ -74,11 +74,9 @@ void Bencode::decode(ISource &&source) const {
 /// <param name="destination ">Pointer to interface used to facilitate the
 /// output stream.</param>
 void Bencode::encode(IDestination &destination) const {
-
   m_implementation->encode(destination);
 }
 void Bencode::encode(IDestination &&destination) const {
-
   m_implementation->encode(destination);
 }
 /// <summary>
