@@ -43,9 +43,13 @@ struct BNode {
   [[nodiscard]] const std::unique_ptr<Variant> &getVariant() const {
     return (m_bNodeVariant);
   }
-    // Make BNode
-  template<typename T, typename U> static BNode make(U &&value) { return (BNode{ std::make_unique<T>(T{ value }) }); }
-  template<typename T> static BNode make() { return (BNode{ std::make_unique<T>() }); }
+  // Make BNode
+  template <typename T, typename U> static BNode make(U &&value) {
+    return (BNode{std::make_unique<T>(T{value})});
+  }
+  template <typename T> static BNode make() {
+    return (BNode{std::make_unique<T>()});
+  }
 
 private:
   std::unique_ptr<Variant> m_bNodeVariant;

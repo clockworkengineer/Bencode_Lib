@@ -67,7 +67,7 @@ private:
   // =================
   // PRIVATE VARIABLES
   // =================
-  // Root of BNoding Tree
+  // Root of BNode tree
   BNode m_bNodeRoot;
 };
 } // namespace Bencode_Lib

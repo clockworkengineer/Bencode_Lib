@@ -35,19 +35,12 @@ namespace fs = std::filesystem;
 // LOCAL TYPES/DEFINITIONS
 // ======================
 /// <summary>
-/// Return directory name containing torrent files.
-/// </summary>
-/// <returns>Torrent file directory</returns>
-std::string torrentFileDirectory() {
-  return ((fs::current_path() / "files").string());
-}
-/// <summary>
 /// Return a vector of torrent files to analyze.
 /// </summary>
 /// <returns>Vector of torrent file names</returns>
 std::vector<std::string> readTorrentFileList() {
   std::vector<std::string> fileList;
-  for (auto &file : fs::directory_iterator(fs::path(torrentFileDirectory()))) {
+  for (auto &file : fs::directory_iterator((fs::current_path() / "files"))) {
     if (const auto fileName = file.path().string();
         fileName.ends_with(".torrent")) {
       fileList.push_back(fileName);
@@ -66,7 +59,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     PLOG_INFO << Bencode_Lib::Bencode().version();
     // For each torrent file extract its information and display
     for (const auto &fileName : readTorrentFileList()) {
-      TorrentInfo torrentFile { fileName};
+      TorrentInfo torrentFile{fileName};
       torrentFile.populate();
       PLOG_INFO << torrentFile.dump();
     }
