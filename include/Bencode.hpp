@@ -10,12 +10,9 @@
 // =================
 namespace Bencode_Lib {
 // ====================
-// Forward declarations
+// FORWARD DECLARATIONS
 // ====================
-class Bencode_Impl;
-class ISource;
-class IDestination;
-struct BNode;
+#include "Bencode_Forward.hpp"
 // ================
 // CLASS DEFINITION
 // ================
