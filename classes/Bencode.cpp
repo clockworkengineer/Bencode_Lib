@@ -57,9 +57,9 @@ Bencode::~Bencode() {}
 /// </summary>
 std::string Bencode::version() const { return (m_implementation->version()); }
 /// <summary>
-/// Decode Bencoded byte string pointed to by source stream into BNode(s).
+/// Decode Bencoded byte string referenced by by source stream into BNode(s).
 /// </summary>
-/// <param name="source">Pointer to input interface used to decode Bencoded
+/// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param>
 void Bencode::decode(ISource &source) const {
   m_implementation->decode(source);
@@ -71,7 +71,7 @@ void Bencode::decode(ISource &&source) const {
 /// Take BNode structure and create an Bencode encoding for it in the
 /// destination stream.
 /// </summary>
-/// <param name="destination ">Pointer to interface used to facilitate the
+/// <param name="destination ">Reference to interface used to facilitate the
 /// output stream.</param>
 void Bencode::encode(IDestination &destination) const {
   m_implementation->encode(destination);
