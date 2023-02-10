@@ -3,7 +3,7 @@
 //
 // Description: Bencode class implementation layer that uses recursion to
 // produce a Bencoding tree (decode) and also reconstitute the tree back into
-// raw Bencoding text (encode).
+// raw Bencoding bytes (encode).
 //
 // Dependencies:   C20++ - Language standard features used.
 //
