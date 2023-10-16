@@ -1,14 +1,7 @@
 #pragma once
-//
-// C++ STL
-//
-// =================
-// LIBRARY NAMESPACE
-// =================
+
 namespace Bencode_Lib {
-// ========
-// Variants
-// ========
+
 struct Variant {
   enum class Type { base = 0, dictionary, list, integer, string };
   explicit Variant(Type nodeType = Type::base) : m_nodeType(nodeType) {}
@@ -22,5 +15,4 @@ struct Variant {
 private:
   Variant::Type m_nodeType;
 };
-
 } // namespace Bencode_Lib

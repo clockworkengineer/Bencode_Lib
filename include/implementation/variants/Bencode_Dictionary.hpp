@@ -1,18 +1,12 @@
 #pragma once
-//
-// C++ STL
-//
+
 #include <string>
 #include <vector>
 #include <memory>
 #include <utility>
-// =================
-// LIBRARY NAMESPACE
-// =================
+
 namespace Bencode_Lib {
-// ==========
-// Dictionary
-// ==========
+
 struct Dictionary : Variant {
   using Entry = std::pair<std::string, BNode>;
   using EntryList = std::vector<Entry>;

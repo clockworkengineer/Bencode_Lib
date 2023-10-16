@@ -7,32 +7,12 @@
 //
 // Dependencies:   C20++ - Language standard features used.
 //
-// =================
-// CLASS DEFINITIONS
-// =================
+
 #include "Bencode.hpp"
 #include "Bencode_Impl.hpp"
-// ====================
-// CLASS IMPLEMENTATION
-// ====================
-// NAMESPACE
-// =========
+
 namespace Bencode_Lib {
-// ===========================
-// PRIVATE TYPES AND CONSTANTS
-// ===========================
-// ==========================
-// PUBLIC TYPES AND CONSTANTS
-// ==========================
-// ========================
-// PRIVATE STATIC VARIABLES
-// ========================
-// =======================
-// PUBLIC STATIC VARIABLES
-// =======================
-// ===============
-// PRIVATE METHODS
-// ===============
+
 /// <summary>
 /// Extract a Integer from the input stream of characters referenced by ISource.
 /// </summary>
@@ -64,6 +44,7 @@ int64_t Bencode_Impl::extractInteger(ISource &source) {
   }
   return (std::stoll(&number[0]));
 }
+
 /// <summary>
 /// Extract a byte string from the input stream of characters referenced by
 /// ISource.
@@ -83,6 +64,7 @@ std::string Bencode_Impl::extractString(ISource &source) {
   }
   return (buffer);
 }
+
 /// <summary>
 /// Decode a byte string from the input stream of characters referenced by
 /// ISource.
@@ -92,6 +74,7 @@ std::string Bencode_Impl::extractString(ISource &source) {
 BNode Bencode_Impl::decodeString(ISource &source) {
   return (BNode::make<String>(extractString(source)));
 }
+
 /// <summary>
 /// Decode an integer from the input stream of characters referenced by ISource.
 /// </summary>
@@ -106,6 +89,7 @@ BNode Bencode_Impl::decodeInteger(ISource &source) {
   source.next();
   return (BNode::make<Integer>(integer));
 }
+
 /// <summary>
 /// Decode a dictionary from the input stream of characters referenced by
 /// ISource.
@@ -139,6 +123,7 @@ BNode Bencode_Impl::decodeDictionary(ISource &source) {
   source.next();
   return (BNode::make<Dictionary>(dictionary));
 }
+
 /// <summary>
 /// Decode a list from the input stream of characters referenced by ISource.
 /// </summary>
@@ -156,6 +141,7 @@ BNode Bencode_Impl::decodeList(ISource &source) {
   source.next();
   return (BNode::make<List>(list));
 }
+
 /// <summary>
 /// Decode a BNode from the input stream of characters referenced by ISource.In
 /// order to traverse
@@ -190,6 +176,7 @@ BNode Bencode_Impl::decodeBNodes(ISource &source) {
   }
   throw Error("Syntax Error detected.");
 }
+
 /// <summary>
 /// Recursively traverse a BNode structure and produce an Bencode encoding of it
 /// on the output stream referenced through the IDestination interface.
@@ -230,9 +217,7 @@ void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
     throw Error("Unknown BNode type encountered during encode.");
   }
 }
-// ==============
-// PUBLIC METHODS
-// ==============
+
 /// <summary>
 ///  Get JSONLib version.
 /// </summary>
@@ -242,6 +227,7 @@ std::string Bencode_Impl::version() const {
                 << BENCODE_VERSION_MINOR << "." << BENCODE_VERSION_PATCH;
   return (versionString.str());
 }
+
 /// <summary>
 /// Decode Bencoded byte string pointed to by source stream into BNode(s).
 /// </summary>
@@ -250,6 +236,7 @@ std::string Bencode_Impl::version() const {
 void Bencode_Impl::decode(ISource &source) {
   m_bNodeRoot = decodeBNodes(source);
 }
+
 /// <summary>
 /// Take BNode structure and create an Bencode encoding for it in the
 /// destination stream.

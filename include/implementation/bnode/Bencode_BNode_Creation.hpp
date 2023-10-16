@@ -1,16 +1,9 @@
 #pragma once
-//
-// C++ STL
-//
+
 #include <string>
 #include <memory>
-// =================
-// LIBRARY NAMESPACE
-// =================
+
 namespace Bencode_Lib {
-// =====================
-// BNode index overloads
-// =====================
 // List
 inline BNode &BNode::operator[](int index) {
   return (BRef<List>(*this)[index]);

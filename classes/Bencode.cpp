@@ -14,75 +14,33 @@
 //
 // Dependencies:   C20++ - Language standard features used.
 //
-// =================
-// CLASS DEFINITIONS
-// =================
+
 #include "Bencode.hpp"
 #include "Bencode_Impl.hpp"
-// ====================
-// CLASS IMPLEMENTATION
-// ====================
-// =================
-// LIBRARY NAMESPACE
-// =================
+
 namespace Bencode_Lib {
-// ===========================
-// PRIVATE TYPES AND CONSTANTS
-// ===========================
-// ==========================
-// PUBLIC TYPES AND CONSTANTS
-// ==========================
-// ========================
-// PRIVATE STATIC VARIABLES
-// ========================
-// =======================
-// PUBLIC STATIC VARIABLES
-// =======================
-// ===============
-// PRIVATE METHODS
-// ===============
-// ==============
-// PUBLIC METHODS
-// ==============
-/// <summary>
-/// JSON constructor.
-/// </summary>
+
 Bencode::Bencode() : m_implementation(std::make_unique<Bencode_Impl>()) {}
-/// <summary>
-/// JSON destructor.
-/// </summary>
+
 Bencode::~Bencode() {}
-/// <summary>
-/// Get Bencode_Lib version
-/// </summary>
+
 std::string Bencode::version() const { return (m_implementation->version()); }
-/// <summary>
-/// Decode Bencoded byte string referenced by by source stream into BNode(s).
-/// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
-/// stream.</param>
+
 void Bencode::decode(ISource &source) const {
   m_implementation->decode(source);
 }
 void Bencode::decode(ISource &&source) const {
   m_implementation->decode(source);
 }
-/// <summary>
-/// Take BNode structure and create an Bencode encoding for it in the
-/// destination stream.
-/// </summary>
-/// <param name="destination ">Reference to interface used to facilitate the
-/// output stream.</param>
+
 void Bencode::encode(IDestination &destination) const {
   m_implementation->encode(destination);
 }
 void Bencode::encode(IDestination &&destination) const {
   m_implementation->encode(destination);
 }
-/// <summary>
-/// Return root of Bencoding tree.
-/// </summary>
-/// <returns>Root of Bencoding tree.</returns>
+
 BNode &Bencode::root() { return (m_implementation->root()); }
 const BNode &Bencode::root() const { return (m_implementation->root()); }
+
 } // namespace Bencode_Lib

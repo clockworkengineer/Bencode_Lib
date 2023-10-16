@@ -1,14 +1,7 @@
 #pragma once
-//
-// C++ STL
-//
-// =================
-// LIBRARY NAMESPACE
-// =================
+
 namespace Bencode_Lib {
-// =======
-// Integer
-// =======
+
 struct Integer : Variant {
   explicit Integer(int64_t integer)
       : Variant(Variant::Type::integer), m_value(integer) {}
@@ -17,5 +10,4 @@ struct Integer : Variant {
 private:
   int64_t m_value = 0;
 };
-
 } // namespace Bencode_Lib

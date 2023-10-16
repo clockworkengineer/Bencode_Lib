@@ -1,15 +1,9 @@
 #pragma once
-//
-// C++ STL
-//
+
 #include <vector>
-// =================
-// LIBRARY NAMESPACE
-// =================
+
 namespace Bencode_Lib {
-// ====
-// List
-// ====
+
 struct List : Variant {
   using Entry = BNode;
   using EntryList = std::vector<Entry>;
@@ -34,5 +28,4 @@ struct List : Variant {
 private:
   EntryList m_list;
 };
-
 } // namespace Bencode_Lib

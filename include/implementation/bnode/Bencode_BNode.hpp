@@ -1,17 +1,11 @@
 #pragma once
-//
-// C++ STL
-//
+
 #include <string>
 #include <memory>
 #include <stdexcept>
-// =================
-// LIBRARY NAMESPACE
-// =================
+
 namespace Bencode_Lib {
-// =====
-// BNode
-// =====
+
 struct BNode {
   // BNode Error
   struct Error : public std::runtime_error {

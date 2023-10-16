@@ -1,27 +1,14 @@
 #pragma once
-// =======
-// C++ STL
-// =======
+
 #include <fstream>
 #include <string>
-// =====================
-// Destination interface
-// =====================
+
 #include "IDestination.hpp"
-// =================
-// LIBRARY NAMESPACE
-// =================
+
 namespace Bencode_Lib {
-// ================
-// CLASS DEFINITION
-// ================
+
 class FileDestination : public IDestination {
 public:
-  // ==========================
-  // PUBLIC TYPES AND CONSTANTS
-  // ==========================
-  // ======================
-  // CONSTRUCTOR/DESTRUCTOR
   // ======================
   explicit FileDestination(const std::string &destinationFileName) {
     m_destination.open(destinationFileName.c_str(), std::ios_base::binary);
@@ -36,9 +23,7 @@ public:
   FileDestination(FileDestination &&other) = delete;
   FileDestination &operator=(FileDestination &&other) = delete;
   virtual ~FileDestination() = default;
-  // ==============
-  // PUBLIC METHODS
-  // ==============
+
   void add(const std::string &bytes) override {
     m_destination.write(bytes.c_str(), bytes.length());
     m_destination.flush();
@@ -47,19 +32,8 @@ public:
     m_destination.put(ch);
     m_destination.flush();
   }
-  // ================
-  // PUBLIC VARIABLES
-  // ================
+
 private:
-  // ===========================
-  // PRIVATE TYPES AND CONSTANTS
-  // ===========================
-  // ===============
-  // PRIVATE METHODS
-  // ===============
-  // =================
-  // PRIVATE VARIABLES
-  // =================
   std::ofstream m_destination;
 };
 } // namespace Bencode_Lib

@@ -1,15 +1,9 @@
 #pragma once
-//
-// C++ STL
-//
+
 #include <string>
-// =================
-// LIBRARY NAMESPACE
-// =================
+
 namespace Bencode_Lib {
-// ======
-// String
-// ======
+
 struct String : Variant {
   explicit String(std::string string)
       : Variant(Variant::Type::string), m_string(std::move(string)) {}
