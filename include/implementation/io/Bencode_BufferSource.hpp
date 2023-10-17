@@ -14,7 +14,7 @@ public:
       throw Error("Empty source buffer passed to be decoded.");
     }
     for (auto ch : sourceBuffer) {
-      m_decodeBuffer.push_back(static_cast<std::byte>(ch));
+      decodeBuffer.push_back(static_cast<std::byte>(ch));
     }
   }
   BufferSource() = delete;
@@ -26,8 +26,8 @@ public:
 
   [[nodiscard]] char current() const override {
     if (more()) {
-      return (static_cast<char>(
-          m_decodeBuffer[static_cast<int>(m_bufferPosition)]));
+      return (
+          static_cast<char>(decodeBuffer[static_cast<int>(bufferPosition)]));
     }
     return (static_cast<char>(EOF));
   }
@@ -35,15 +35,15 @@ public:
     if (!more()) {
       throw Error("Decode buffer empty before decode complete.");
     }
-    m_bufferPosition++;
+    bufferPosition++;
   }
   [[nodiscard]] bool more() const override {
-    return (m_bufferPosition < m_decodeBuffer.size());
+    return (bufferPosition < decodeBuffer.size());
   }
-  void reset() override { m_bufferPosition = 0; }
+  void reset() override { bufferPosition = 0; }
 
 private:
-  std::size_t m_bufferPosition = 0;
-  std::vector<std::byte> m_decodeBuffer;
+  std::size_t bufferPosition = 0;
+  std::vector<std::byte> decodeBuffer;
 };
 } // namespace Bencode_Lib

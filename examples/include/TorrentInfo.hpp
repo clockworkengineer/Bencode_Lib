@@ -94,38 +94,38 @@ private:
     return (std::vector<FileDetails>{});
   }
   // Main tracker server
-  std::string m_announce;
+  std::string announce;
   // Backup tracker server list
-  std::vector<std::string> m_announceList;
+  std::vector<std::string> announceList;
   // Character encoding used for strings (optional)
-  std::string m_encoding;
+  std::string encoding;
   // Default file attributes
-  std::string m_attribute;
+  std::string attribute;
   // Comment
-  std::string m_comment;
+  std::string comment;
   // Creation date
-  std::uint64_t m_creationDate{};
+  std::uint64_t creationDate{};
   // Created by (author)
-  std::string m_createdBy;
+  std::string createdBy;
   // List of torrent files to download
-  std::vector<FileDetails> m_files;
+  std::vector<FileDetails> files;
   // Length of file to download
-  std::uint64_t m_length{};
+  std::uint64_t length{};
   // Name of single file to download (root directory in
   // multiple files)
-  std::string m_name;
+  std::string name;
   // Piece length
-  std::uint64_t m_pieceLength{};
+  std::uint64_t pieceLength{};
   // Number of pieces
-  std::string m_pieces;
+  std::string pieces;
   // Private bitmask
-  std::uint64_t m_privateBitMask{};
+  std::uint64_t privateBitMask{};
   // Source of torrent
-  std::string m_source;
+  std::string source;
   // Bencode encoding for torrent file
-  const Bencode_Lib::Bencode m_bEncode;
+  const Bencode_Lib::Bencode bEncode;
   // Torrent file name
-  std::string m_fileName;
+  std::string torrentFileName;
 };
 // ==============
 // PUBLIC METHODS
@@ -135,27 +135,26 @@ private:
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
 inline void TorrentInfo::populate() {
-  if (m_bEncode.root().getNodeType() !=
-      Bencode_Lib::Variant::Type::dictionary) {
+  if (bEncode.root().getNodeType() != Bencode_Lib::Variant::Type::dictionary) {
     throw Bencode_Lib::Error("Valid torrent file not found.");
   }
-  auto &bNodeTop = BRef<Dictionary>(m_bEncode.root());
-  m_announce = getString(bNodeTop, "announce");
-  m_announceList = getAnnounceList(bNodeTop);
-  m_encoding = getString(bNodeTop, "encoding");
-  m_comment = getString(bNodeTop, "comment");
-  m_creationDate = getInteger(bNodeTop, "creation date");
-  m_createdBy = getString(bNodeTop, "created by");
+  auto &bNodeTop = BRef<Dictionary>(bEncode.root());
+  announce = getString(bNodeTop, "announce");
+  announceList = getAnnounceList(bNodeTop);
+  encoding = getString(bNodeTop, "encoding");
+  comment = getString(bNodeTop, "comment");
+  creationDate = getInteger(bNodeTop, "creation date");
+  createdBy = getString(bNodeTop, "created by");
   if (bNodeTop.contains("info")) {
     auto &bNodeInfo = BRef<Dictionary>(bNodeTop["info"]);
-    m_attribute = getString(bNodeInfo, "attr");
-    m_length = getInteger(bNodeInfo, "length");
-    m_name = getString(bNodeInfo, "name");
-    m_pieceLength = getInteger(bNodeInfo, "piece length");
-    m_pieces = getString(bNodeInfo, "pieces");
-    m_privateBitMask = getInteger(bNodeInfo, "private");
-    m_source = getString(bNodeInfo, "source");
-    m_files = getFilesList(bNodeInfo);
+    attribute = getString(bNodeInfo, "attr");
+    length = getInteger(bNodeInfo, "length");
+    name = getString(bNodeInfo, "name");
+    pieceLength = getInteger(bNodeInfo, "piece length");
+    pieces = getString(bNodeInfo, "pieces");
+    privateBitMask = getInteger(bNodeInfo, "private");
+    source = getString(bNodeInfo, "source");
+    files = getFilesList(bNodeInfo);
   }
 }
 /// <summary>
@@ -166,23 +165,23 @@ inline void TorrentInfo::populate() {
 inline std::string TorrentInfo::dump() {
   std::stringstream os;
   os << "\n------------------------------------------------------------\n";
-  os << "FILE [ " << m_fileName << " ]\n";
+  os << "FILE [ " << torrentFileName << " ]\n";
   os << "------------------------------------------------------------\n";
-  os << "announce [" << m_announce << "]\n";
-  os << "attribute [" << m_attribute << "]\n";
-  os << "encoding [" << m_encoding << "]\n";
-  os << "comment [" << m_comment << "]\n";
-  os << "creation_date [" << m_creationDate << "]\n";
-  os << "created_by [" << m_createdBy << "]\n";
-  os << "length [" << m_length << "]\n";
-  os << "name [" << m_name << "]\n";
-  os << "piece length [" << m_pieceLength << "]\n";
-  os << "private [" << m_privateBitMask << "]\n";
-  os << "source [" << m_source << "]\n";
-  for (const auto &file : m_files) {
+  os << "announce [" << announce << "]\n";
+  os << "attribute [" << attribute << "]\n";
+  os << "encoding [" << encoding << "]\n";
+  os << "comment [" << comment << "]\n";
+  os << "creation_date [" << creationDate << "]\n";
+  os << "created_by [" << createdBy << "]\n";
+  os << "length [" << length << "]\n";
+  os << "name [" << name << "]\n";
+  os << "piece length [" << pieceLength << "]\n";
+  os << "private [" << privateBitMask << "]\n";
+  os << "source [" << source << "]\n";
+  for (const auto &file : files) {
     os << "path [ " << file.path << "] length [" << file.length << "]\n";
   }
-  for (const auto &announceURL : m_announceList) {
+  for (const auto &announceURL : announceList) {
     os << "announce url [ " << announceURL << "]\n";
   }
   os << "------------------------------------------------------------";
@@ -193,6 +192,6 @@ inline std::string TorrentInfo::dump() {
 /// </summary>
 /// <param name="fileName">Torrent file name</param>
 inline void TorrentInfo::load(const std::string &fileName) {
-  m_fileName = fileName;
-  m_bEncode.decode(Bencode_Lib::FileSource{fileName});
+  torrentFileName = fileName;
+  bEncode.decode(Bencode_Lib::FileSource{torrentFileName});
 }

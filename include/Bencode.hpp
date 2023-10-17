@@ -26,6 +26,6 @@ public:
   [[nodiscard]] const BNode &root() const;
 
 private:
-  const std::unique_ptr<Bencode_Impl> m_implementation;
+  const std::unique_ptr<Bencode_Impl> implementation;
 };
 } // namespace Bencode_Lib

@@ -18,16 +18,16 @@ public:
 
   void add(const std::string &sourceBuffer) override {
     for (auto ch : sourceBuffer) {
-      m_encodeBuffer.push_back(static_cast<std::byte>(ch));
+      encodeBuffer.push_back(static_cast<std::byte>(ch));
     }
   }
   void add(const char ch) override {
-    m_encodeBuffer.push_back(static_cast<std::byte>(ch));
+    encodeBuffer.push_back(static_cast<std::byte>(ch));
   }
-  std::vector<std::byte> &getBuffer() { return (m_encodeBuffer); }
-  const std::vector<std::byte> &getBuffer() const { return (m_encodeBuffer); }
+  std::vector<std::byte> &getBuffer() { return (encodeBuffer); }
+  const std::vector<std::byte> &getBuffer() const { return (encodeBuffer); }
 
 private:
-  std::vector<std::byte> m_encodeBuffer;
+  std::vector<std::byte> encodeBuffer;
 };
 } // namespace Bencode_Lib

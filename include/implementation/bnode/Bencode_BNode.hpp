@@ -15,7 +15,7 @@ struct BNode {
   // Constructors/Destructors
   BNode() = default;
   explicit BNode(std::unique_ptr<Variant> bNodeVariant)
-      : m_bNodeVariant(std::move(bNodeVariant)) {}
+      : bNodeVariant(std::move(bNodeVariant)) {}
   BNode(const BNode &other) = delete;
   BNode &operator=(const BNode &other) = delete;
   BNode(BNode &&other) = default;
@@ -28,14 +28,14 @@ struct BNode {
   const BNode &operator[](int index) const;
   // Get BNode type
   [[nodiscard]] Variant::Type getNodeType() const {
-    return (m_bNodeVariant->getNodeType());
+    return (bNodeVariant->getNodeType());
   }
   // Get reference to BNode variant
   [[nodiscard]] std::unique_ptr<Variant> &getVariant() {
-    return (m_bNodeVariant);
+    return (bNodeVariant);
   }
   [[nodiscard]] const std::unique_ptr<Variant> &getVariant() const {
-    return (m_bNodeVariant);
+    return (bNodeVariant);
   }
   // Make BNode
   template <typename T, typename U> static BNode make(U &&value) {
@@ -46,6 +46,6 @@ struct BNode {
   }
 
 private:
-  std::unique_ptr<Variant> m_bNodeVariant;
+  std::unique_ptr<Variant> bNodeVariant;
 };
 } // namespace Bencode_Lib

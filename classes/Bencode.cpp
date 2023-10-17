@@ -20,27 +20,23 @@
 
 namespace Bencode_Lib {
 
-Bencode::Bencode() : m_implementation(std::make_unique<Bencode_Impl>()) {}
+Bencode::Bencode() : implementation(std::make_unique<Bencode_Impl>()) {}
 
 Bencode::~Bencode() {}
 
-std::string Bencode::version() const { return (m_implementation->version()); }
+std::string Bencode::version() const { return (implementation->version()); }
 
-void Bencode::decode(ISource &source) const {
-  m_implementation->decode(source);
-}
-void Bencode::decode(ISource &&source) const {
-  m_implementation->decode(source);
-}
+void Bencode::decode(ISource &source) const { implementation->decode(source); }
+void Bencode::decode(ISource &&source) const { implementation->decode(source); }
 
 void Bencode::encode(IDestination &destination) const {
-  m_implementation->encode(destination);
+  implementation->encode(destination);
 }
 void Bencode::encode(IDestination &&destination) const {
-  m_implementation->encode(destination);
+  implementation->encode(destination);
 }
 
-BNode &Bencode::root() { return (m_implementation->root()); }
-const BNode &Bencode::root() const { return (m_implementation->root()); }
+BNode &Bencode::root() { return (implementation->root()); }
+const BNode &Bencode::root() const { return (implementation->root()); }
 
 } // namespace Bencode_Lib

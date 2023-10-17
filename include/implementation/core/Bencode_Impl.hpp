@@ -26,8 +26,8 @@ public:
   void decode(ISource &source);
   void encode(IDestination &destination) const;
   std::string version() const;
-  BNode &root() { return (m_bNodeRoot); }
-  [[nodiscard]] const BNode &root() const { return (m_bNodeRoot); }
+  BNode &root() { return (bNodeRoot); }
+  [[nodiscard]] const BNode &root() const { return (bNodeRoot); }
 
 private:
   static int64_t extractInteger(ISource &source);
@@ -40,6 +40,6 @@ private:
   static void encodeBNodes(const BNode &bNode, IDestination &destination);
 
   // Root of BNode tree
-  BNode m_bNodeRoot;
+  BNode bNodeRoot;
 };
 } // namespace Bencode_Lib
