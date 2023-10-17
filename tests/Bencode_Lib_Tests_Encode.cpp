@@ -4,17 +4,11 @@
 // Description: Encode unit tests for Bencode class using the Catch2 test
 // framework.
 //
-// ================
-// Test definitions
-// ================
+
 #include "Bencode_Lib_Tests.hpp"
-// =======================
-// Bencode class namespace
-// =======================
+
 using namespace Bencode_Lib;
-// ==========
-// Test cases
-// ==========
+
 TEST_CASE("Bencode for encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
   const Bencode bEncode;

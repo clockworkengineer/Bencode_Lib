@@ -3,17 +3,11 @@
 //
 // Description: Bencode unit test helper functions.
 //
-// ================
-// Test definitions
-// ================
+
 #include "Bencode_Lib_Tests.hpp"
-// =======================
-// Bencode class namespace
-// =======================
+
 using namespace Bencode_Lib;
-// ==========================
-// Unit test helper functions
-// ==========================
+
 /// <summary>
 /// Prefix path to test data file name.
 /// </summary>

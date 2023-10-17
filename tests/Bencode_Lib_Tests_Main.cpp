@@ -4,17 +4,11 @@
 // Description: ISource, IDestination and BNode unit tests for Bencode class
 // using the Catch2 test framework.
 //
-// ================
-// Test definitions
-// ================
+
 #include "Bencode_Lib_Tests.hpp"
-// =======================
-// Bencode class namespace
-// =======================
+
 using namespace Bencode_Lib;
-// ==========
-// Test cases
-// ==========
+
 TEST_CASE("ISource (Buffer interface). Contains file singlefile.torrent.",
           "[Bencode][ISource]") {
   std::string bencodedBuffer{
