@@ -1,22 +1,15 @@
 #pragma once
-// ============
-// STL includes
-// ============
+
 #include <cstdlib>
 #include <iostream>
 #include <filesystem>
 #include <string>
 #include <sstream>
-// =======
-// Bencode
-// =======
+
 #include "Bencode.hpp"
 #include "Bencode_Types.hpp"
 #include "Bencode_Sources.hpp"
-//
-// =============================
-// Torrent file meta information
-// =============================
+
 struct TorrentInfo {
   // Bencode_Lib short cuts
   using Dictionary = Bencode_Lib::Dictionary;
@@ -127,15 +120,13 @@ private:
   // Torrent file name
   std::string torrentFileName;
 };
-// ==============
-// PUBLIC METHODS
-// ==============
+
 /// <summary>
 /// Load torrent file meta information into a structure for processing.
 /// </summary>
 /// <param name="bNode">Root BNode of decoded torrent file.</param>
 inline void TorrentInfo::populate() {
-  if (bEncode.root().getNodeType() != Bencode_Lib::Variant::Type::dictionary) {
+  if (!bEncode.root().is_dictionary()) {
     throw Bencode_Lib::Error("Valid torrent file not found.");
   }
   auto &bNodeTop = BRef<Dictionary>(bEncode.root());

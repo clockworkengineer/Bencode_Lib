@@ -185,8 +185,7 @@ BNode Bencode_Impl::decodeBNodes(ISource &source) {
 /// <param name="destination ">Reference to interface used to facilitate the
 /// output stream.</param> <returns></returns>
 void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
-  switch (bNode.getNodeType()) {
-  case Variant::Type::dictionary:
+  if (bNode.is_dictionary()) {
     destination.add('d');
     for (const auto &bNodeEntry : BRef<Dictionary>(bNode).dictionary()) {
       destination.add(std::to_string(bNodeEntry.first.length()) + ":" +
@@ -194,26 +193,21 @@ void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
       encodeBNodes(bNodeEntry.second, destination);
     }
     destination.add('e');
-    break;
-  case Variant::Type::list:
+  } else if (bNode.is_list()) {
     destination.add('l');
     for (const auto &bNodeEntry : BRef<List>(bNode).list()) {
       encodeBNodes(bNodeEntry, destination);
     }
     destination.add('e');
-    break;
-  case Variant::Type::integer:
+  } else if (bNode.is_integer()) {
     destination.add('i');
     destination.add(std::to_string(BRef<Integer>(bNode).integer()));
     destination.add('e');
-    break;
-  case Variant::Type::string: {
+  } else if (bNode.is_string()) {
     std::string stringToEncode = BRef<String>(bNode).string();
     destination.add(std::to_string(static_cast<int>(stringToEncode.length())) +
                     ":" + stringToEncode);
-    break;
-  }
-  default:
+  } else {
     throw Error("Unknown BNode type encountered during encode.");
   }
 }

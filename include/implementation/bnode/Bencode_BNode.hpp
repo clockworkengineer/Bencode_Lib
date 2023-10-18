@@ -26,9 +26,18 @@ struct BNode {
   const BNode &operator[](const std::string &key) const;
   BNode &operator[](int index);
   const BNode &operator[](int index) const;
-  // Get BNode type
-  [[nodiscard]] Variant::Type getNodeType() const {
-    return (bNodeVariant->getNodeType());
+  // Determine BNode type
+  [[nodiscard]]bool is_string() const {
+    return (bNodeVariant->getNodeType() ==  Variant::Type::string);
+  }
+  [[nodiscard]]bool is_integer() const {
+    return (bNodeVariant->getNodeType() ==  Variant::Type::integer);
+  }
+  [[nodiscard]]bool is_list() const {
+    return (bNodeVariant->getNodeType() ==  Variant::Type::list);
+  }
+  [[nodiscard]]bool is_dictionary() const {
+    return (bNodeVariant->getNodeType() ==  Variant::Type::dictionary);
   }
   // Get reference to BNode variant
   [[nodiscard]] std::unique_ptr<Variant> &getVariant() {

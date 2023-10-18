@@ -7,33 +7,19 @@
 //
 // Dependencies: C++20, Bencode_Lib.
 //
-// =============
-// INCLUDE FILES
-// =============
-// =======
-// C++ STL
-// =======
+
 #include <cstdlib>
 #include <iostream>
 #include <filesystem>
 #include <stdexcept>
-// =======
-// Torrent
-// =======
+
 #include "TorrentInfo.hpp"
-// =======
-// Logging
-// =======
+
 #include "plog/Initializers/RollingFileInitializer.h"
 #include "plog/Log.h"
-// ==========
-// NAMESPACES
-// ==========
-// namespace ben = Bencode_Lib;
+
 namespace fs = std::filesystem;
-// ======================
-// LOCAL TYPES/DEFINITIONS
-// ======================
+
 /// <summary>
 /// Return a vector of torrent files to analyze.
 /// </summary>
@@ -48,9 +34,7 @@ std::vector<std::string> readTorrentFileList() {
   }
   return (fileList);
 }
-// ============================
-// ===== MAIN ENTRY POINT =====
-// ============================
+
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
