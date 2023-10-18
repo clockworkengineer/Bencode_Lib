@@ -12,7 +12,7 @@
 // For an in-depth description of the Bencode specification refer to its
 // Wiki page at https://en.wikipedia.org/wiki/Bencode.
 //
-// Dependencies:   C20++ - Language standard features used.
+// Dependencies:   C++20 - Language standard features used.
 //
 
 #include "Bencode.hpp"

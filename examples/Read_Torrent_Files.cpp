@@ -5,7 +5,7 @@
 // Details on the torrent file format can be found at the wiki page
 // https://en.wikipedia.org/wiki/Torrent_file.
 //
-// Dependencies: C20++, Bencode_Lib.
+// Dependencies: C++20, Bencode_Lib.
 //
 // =============
 // INCLUDE FILES
