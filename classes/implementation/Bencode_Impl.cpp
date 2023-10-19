@@ -204,11 +204,9 @@ void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).integer()));
     destination.add('e');
   } else if (bNode.is_string()) {
-    std::string stringToEncode = BRef<String>(bNode).string();
-    destination.add(std::to_string(static_cast<int>(stringToEncode.length())) +
-                    ":" + stringToEncode);
-  } else {
-    throw Error("Unknown BNode type encountered during encode.");
+    destination.add(std::to_string(static_cast<int>(
+                        BRef<String>(bNode).string().length())) +
+                    ":" + BRef<String>(bNode).string());
   }
 }
 
