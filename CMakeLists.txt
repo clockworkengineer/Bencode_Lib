@@ -18,7 +18,9 @@ set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
  
 set (BENCODE_SOURCES
     ./classes/Bencode.cpp
-    ./classes/implementation/Bencode_Impl.cpp)
+    ./classes/implementation/Bencode_Impl.cpp
+    ./classes/implementation/Bencode_Impl_Decode.cpp
+    ./classes/implementation/Bencode_Impl_Encode.cpp)
 
 set (BENCODE_INCLUDES
     ./include/Bencode.hpp
