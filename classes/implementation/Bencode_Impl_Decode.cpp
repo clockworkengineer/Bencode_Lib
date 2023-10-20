@@ -112,7 +112,7 @@ BNode Bencode_Impl::decodeDictionary(ISource &source) {
                      [&key](const Dictionary::Entry &entry) -> bool {
                        return (entry.first == key);
                      }) == dictionary.end()) {
-      dictionary.emplace_back(key, decodeBNodes(source));
+      dictionary.emplace_back(key, decodeBNode(source));
     } else {
       throw Error("Syntax Error detected.");
     }
@@ -133,7 +133,7 @@ BNode Bencode_Impl::decodeList(ISource &source) {
   List::EntryList list;
   source.next();
   while (source.more() && source.current() != 'e') {
-    list.emplace_back(decodeBNodes(source));
+    list.emplace_back(decodeBNode(source));
   }
   if (source.current() != 'e') {
     throw Error("Syntax Error detected.");
@@ -150,7 +150,7 @@ BNode Bencode_Impl::decodeList(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Bencode_Impl::decodeBNodes(ISource &source) {
+BNode Bencode_Impl::decodeBNode(ISource &source) {
   switch (source.current()) {
   // Dictionary BNode
   case 'd':

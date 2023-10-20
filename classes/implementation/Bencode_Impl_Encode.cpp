@@ -20,19 +20,19 @@ namespace Bencode_Lib {
 /// <param name="bNode">Reference to root of current BNode structure.</param>
 /// <param name="destination ">Reference to interface used to facilitate the
 /// output stream.</param> <returns></returns>
-void Bencode_Impl::encodeBNodes(const BNode &bNode, IDestination &destination) {
+void Bencode_Impl::encodeBNode(const BNode &bNode, IDestination &destination) {
   if (bNode.is_dictionary()) {
     destination.add('d');
     for (const auto &bNodeEntry : BRef<Dictionary>(bNode).dictionary()) {
       destination.add(std::to_string(bNodeEntry.first.length()) + ":" +
                       bNodeEntry.first);
-      encodeBNodes(bNodeEntry.second, destination);
+      encodeBNode(bNodeEntry.second, destination);
     }
     destination.add('e');
   } else if (bNode.is_list()) {
     destination.add('l');
     for (const auto &bNodeEntry : BRef<List>(bNode).list()) {
-      encodeBNodes(bNodeEntry, destination);
+      encodeBNode(bNodeEntry, destination);
     }
     destination.add('e');
   } else if (bNode.is_integer()) {

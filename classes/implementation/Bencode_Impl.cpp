@@ -28,7 +28,7 @@ std::string Bencode_Impl::version() const {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns></returns>
-void Bencode_Impl::decode(ISource &source) { bNodeRoot = decodeBNodes(source); }
+void Bencode_Impl::decode(ISource &source) { bNodeRoot = decodeBNode(source); }
 
 /// <summary>
 /// Take BNode structure and create an Bencode encoding for it in the
@@ -40,6 +40,6 @@ void Bencode_Impl::encode(IDestination &destination) const {
   if (bNodeRoot.getVariant() == nullptr) {
     throw Error("No Bencoded data to encode.");
   }
-  encodeBNodes(bNodeRoot, destination);
+  encodeBNode(bNodeRoot, destination);
 }
 } // namespace Bencode_Lib

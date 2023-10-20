@@ -36,8 +36,8 @@ private:
   static BNode decodeInteger(ISource &source);
   static BNode decodeDictionary(ISource &source);
   static BNode decodeList(ISource &source);
-  static BNode decodeBNodes(ISource &source);
-  static void encodeBNodes(const BNode &bNode, IDestination &destination);
+  static BNode decodeBNode(ISource &source);
+  static void encodeBNode(const BNode &bNode, IDestination &destination);
 
   // Root of BNode tree
   BNode bNodeRoot;
