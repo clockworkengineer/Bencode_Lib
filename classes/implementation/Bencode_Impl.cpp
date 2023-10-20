@@ -5,7 +5,7 @@
 // produce a Bencoding tree (decode) and also reconstitute the tree back into
 // raw Bencoding bytes (encode).
 //
-// Dependencies:   C++20 - Language standard features used.
+// Dependencies: C++20 - Language standard features used.
 //
 
 #include "Bencode.hpp"

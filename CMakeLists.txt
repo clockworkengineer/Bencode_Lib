@@ -26,6 +26,7 @@ set (BENCODE_INCLUDES
     ./include/Bencode.hpp
     ./include/interface/ISource.hpp
     ./include/interface/IDestination.hpp
+    ./include/interface/IEncoder.hpp
     ./include/implementation/bnode/Bencode_BNode_Creation.hpp
     ./include/implementation/bnode/Bencode_BNode_Reference.hpp
     ./include/implementation/bnode/Bencode_BNode.hpp
@@ -33,6 +34,7 @@ set (BENCODE_INCLUDES
     ./include/implementation/core/Bencode_Forward.hpp
     ./include/implementation/core/Bencode_Impl.hpp
     ./include/implementation/core/Bencode_Types.hpp
+    ./include/implementation/encoder/Encoder_Default.hpp
     ./include/implementation/io/Bencode_Sources.hpp
     ./include/implementation/io/Bencode_BufferSource.hpp
     ./include/implementation/io/Bencode_FileSource.hpp
@@ -54,6 +56,7 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/include/implementation
     ${PROJECT_SOURCE_DIR}/include/implementation/bnode
     ${PROJECT_SOURCE_DIR}/include/implementation/core
+    ${PROJECT_SOURCE_DIR}/include/implementation/encoder
     ${PROJECT_SOURCE_DIR}/include/implementation/io
     ${PROJECT_SOURCE_DIR}/include/implementation/variants
     ${PROJECT_SOURCE_DIR}/include/external
