@@ -10,6 +10,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Impl.hpp"
+#include "Encoder_Default.hpp"
 
 namespace Bencode_Lib {
 
@@ -40,6 +41,7 @@ void Bencode_Impl::encode(IDestination &destination) const {
   if (bNodeRoot.getVariant() == nullptr) {
     throw Error("No Bencoded data to encode.");
   }
-  encodeBNode(bNodeRoot, destination);
+  Encoder_Default encoder;
+  encoder.encode(bNodeRoot, destination);
 }
 } // namespace Bencode_Lib
