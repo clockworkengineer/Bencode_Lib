@@ -42,6 +42,6 @@ void Bencode_Impl::encode(IDestination &destination) const {
     throw Error("No Bencoded data to encode.");
   }
   // Encoder_Default encoder;
-  encoder.encode(bNodeRoot, destination);
+  encoder->encode(bNodeRoot, destination);
 }
 } // namespace Bencode_Lib

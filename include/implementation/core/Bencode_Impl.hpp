@@ -5,6 +5,7 @@
 #include <limits>
 #include <array>
 #include <sstream>
+#include <memory>
 
 #include "ISource.hpp"
 #include "IDestination.hpp"
@@ -43,7 +44,7 @@ private:
 
   // Root of BNode tree
   BNode bNodeRoot;
-
-  Encoder_Default encoder;
+  // Bencode encoder default to Bencode
+  std::unique_ptr<IEncoder> encoder = std::make_unique<Encoder_Default>();
 };
 } // namespace Bencode_Lib

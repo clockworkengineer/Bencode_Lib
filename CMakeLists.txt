@@ -19,7 +19,8 @@ set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
 set (BENCODE_SOURCES
     ./classes/Bencode.cpp
     ./classes/implementation/Bencode_Impl.cpp
-    ./classes/implementation/Bencode_Impl_Decode.cpp)
+    ./classes/implementation/Bencode_Impl_Decode.cpp
+    ./classes/implementation/encoder/Encoder_Default.cpp)
 
 set (BENCODE_INCLUDES
     ./include/Bencode.hpp
@@ -44,7 +45,8 @@ set (BENCODE_INCLUDES
     ./include/implementation/variants/Bencode_Integer.hpp
     ./include/implementation/variants/Bencode_List.hpp
     ./include/implementation/variants/Bencode_String.hpp
-    ./include/implementation/variants/Bencode_Variant.hpp)
+    ./include/implementation/variants/Bencode_Variant.hpp
+    ./include/implementation/encoder/Encoder_Default.hpp)
 
 # Bencode library
 
