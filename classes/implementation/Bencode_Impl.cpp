@@ -41,7 +41,7 @@ void Bencode_Impl::encode(IDestination &destination) const {
   if (bNodeRoot.getVariant() == nullptr) {
     throw Error("No Bencoded data to encode.");
   }
-  Encoder_Default encoder;
+  // Encoder_Default encoder;
   encoder.encode(bNodeRoot, destination);
 }
 } // namespace Bencode_Lib

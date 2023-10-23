@@ -12,6 +12,8 @@
 #include "Bencode_Config.hpp"
 #include "Bencode_Types.hpp"
 
+#include "Encoder_Default.hpp"
+
 namespace Bencode_Lib {
 
 class Bencode_Impl {
@@ -41,5 +43,7 @@ private:
 
   // Root of BNode tree
   BNode bNodeRoot;
+
+  Encoder_Default encoder;
 };
 } // namespace Bencode_Lib

@@ -23,6 +23,6 @@ public:
   // Encode to destination from BNodes
   // =================================
   
-  virtual void encode(const BNode &bNode, IDestination &destination) = 0;
+  virtual void encode(const BNode &bNode, IDestination &destination) const = 0;
 };
 } // namespace Bencode_Lib

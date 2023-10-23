@@ -19,7 +19,7 @@ public:
   Encoder_Default &operator=(Encoder_Default &&other) = delete;
   virtual ~Encoder_Default() = default;
 
-  void encode(const BNode &bNode, IDestination &destination) {
+  void encode(const BNode &bNode, IDestination &destination)  const {
     if (bNode.is_dictionary()) {
       destination.add('d');
       for (const auto &bNodeNext : BRef<Dictionary>(bNode).dictionary()) {
