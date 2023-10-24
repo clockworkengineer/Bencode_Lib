@@ -13,6 +13,7 @@
 #include "Bencode_Config.hpp"
 #include "Bencode_Types.hpp"
 
+#include "Decoder_Default.hpp"
 #include "Encoder_Default.hpp"
 
 namespace Bencode_Lib {
@@ -46,5 +47,7 @@ private:
   BNode bNodeRoot;
   // Bencode encoder default to Bencode
   std::unique_ptr<IEncoder> encoder = std::make_unique<Encoder_Default>();
+
+  std::unique_ptr<IDecoder> decoder = std::make_unique<Decoder_Default>();
 };
 } // namespace Bencode_Lib

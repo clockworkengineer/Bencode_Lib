@@ -19,7 +19,7 @@ set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
 set (BENCODE_SOURCES
     ./classes/Bencode.cpp
     ./classes/implementation/Bencode_Impl.cpp
-    ./classes/implementation/Bencode_Impl_Decode.cpp
+    ./classes/implementation/decoder/Decoder_Default.cpp
     ./classes/implementation/encoder/Encoder_Default.cpp)
 
 set (BENCODE_INCLUDES
@@ -34,6 +34,8 @@ set (BENCODE_INCLUDES
     ./include/implementation/core/Bencode_Forward.hpp
     ./include/implementation/core/Bencode_Impl.hpp
     ./include/implementation/core/Bencode_Types.hpp
+    ./include/implementation/core/Bencode_Types.hpp
+    ./include/implementation/decoder/Decoder_Default.hpp
     ./include/implementation/encoder/Encoder_Default.hpp
     ./include/implementation/io/Bencode_Sources.hpp
     ./include/implementation/io/Bencode_BufferSource.hpp
@@ -45,8 +47,7 @@ set (BENCODE_INCLUDES
     ./include/implementation/variants/Bencode_Integer.hpp
     ./include/implementation/variants/Bencode_List.hpp
     ./include/implementation/variants/Bencode_String.hpp
-    ./include/implementation/variants/Bencode_Variant.hpp
-    ./include/implementation/encoder/Encoder_Default.hpp)
+    ./include/implementation/variants/Bencode_Variant.hpp)
 
 # Bencode library
 
@@ -57,6 +58,7 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/include/implementation
     ${PROJECT_SOURCE_DIR}/include/implementation/bnode
     ${PROJECT_SOURCE_DIR}/include/implementation/core
+    ${PROJECT_SOURCE_DIR}/include/implementation/decoder
     ${PROJECT_SOURCE_DIR}/include/implementation/encoder
     ${PROJECT_SOURCE_DIR}/include/implementation/io
     ${PROJECT_SOURCE_DIR}/include/implementation/variants
