@@ -34,20 +34,11 @@ public:
   [[nodiscard]] const BNode &root() const { return (bNodeRoot); }
 
 private:
-  static int64_t extractInteger(ISource &source);
-  static std::string extractString(ISource &source);
-  static BNode decodeString(ISource &source);
-  static BNode decodeInteger(ISource &source);
-  static BNode decodeDictionary(ISource &source);
-  static BNode decodeList(ISource &source);
-  static BNode decodeBNode(ISource &source);
-  static void encodeBNode(const BNode &bNode, IDestination &destination);
-
   // Root of BNode tree
   BNode bNodeRoot;
-  // Bencode encoder default to Bencode
+  // Bencode encoder default
   std::unique_ptr<IEncoder> encoder = std::make_unique<Encoder_Default>();
-
+  // Bencode decoder default
   std::unique_ptr<IDecoder> decoder = std::make_unique<Decoder_Default>();
 };
 } // namespace Bencode_Lib
