@@ -1,11 +1,3 @@
-//
-// Class: Bencode_Impl_Decode
-//
-// Description: Bencode class implementation layer.
-//
-// Dependencies: C++20 - Language standard features used.
-//
-
 #include "Bencode.hpp"
 #include "Bencode_Impl.hpp"
 
