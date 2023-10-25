@@ -20,14 +20,16 @@
 
 namespace Bencode_Lib {
 
-Bencode::Bencode() : implementation(std::make_unique<Bencode_Impl>()) {}
+/// <summary>
+///  Initialise the implementation layer.
+/// </summary>
 
+Bencode::Bencode() : implementation(std::make_unique<Bencode_Impl>()) {}
 Bencode::~Bencode() {}
 
 /// <summary>
 ///  Get Bencode_Lib version.
 /// </summary>
-
 std::string Bencode::version() const { return (implementation->version()); }
 
 /// <summary>
