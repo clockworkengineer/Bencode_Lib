@@ -8,7 +8,7 @@ namespace Bencode_Lib {
 
 void Encoder_Default::encode(const BNode &bNode,
                              IDestination &destination) const {
-  if (bNode.is_dictionary()) {
+  if (bNode.isDictionary()) {
     destination.add('d');
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).dictionary()) {
       destination.add(std::to_string(bNodeNext.first.length()) + ":" +
@@ -22,11 +22,11 @@ void Encoder_Default::encode(const BNode &bNode,
       encode(bNodeNext, destination);
     }
     destination.add('e');
-  } else if (bNode.is_integer()) {
+  } else if (bNode.isInteger()) {
     destination.add('i');
     destination.add(std::to_string(BRef<Integer>(bNode).integer()));
     destination.add('e');
-  } else if (bNode.is_string()) {
+  } else if (bNode.isString()) {
     destination.add(std::to_string(static_cast<int>(
                         BRef<String>(bNode).string().length())) +
                     ":" + BRef<String>(bNode).string());

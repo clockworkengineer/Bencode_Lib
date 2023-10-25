@@ -191,9 +191,8 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
     BufferSource bEncodeSource{
         "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     bEncode.decode(bEncodeSource);
-    REQUIRE_THROWS_AS((bEncode.root())["onee"].is_dictionary(),
-                      BNode::Error);
-    REQUIRE_THROWS_WITH((bEncode.root())["onee"].is_dictionary(),
+    REQUIRE_THROWS_AS((bEncode.root())["onee"].isDictionary(), BNode::Error);
+    REQUIRE_THROWS_WITH((bEncode.root())["onee"].isDictionary(),
                         "BNode Error: Invalid key used in dictionary.");
   }
   SECTION("Decode list and check an invalid index generates exception",
@@ -201,8 +200,7 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
     BufferSource bEncodeSource{
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
-    REQUIRE_THROWS_AS((bEncode.root())[3].is_list(),
-                      BNode::Error);
+    REQUIRE_THROWS_AS((bEncode.root())[3].is_list(), BNode::Error);
     REQUIRE_THROWS_WITH((bEncode.root())[3].is_list(),
                         "BNode Error: Invalid index used in list.");
   }
