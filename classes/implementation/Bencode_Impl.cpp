@@ -14,7 +14,7 @@
 namespace Bencode_Lib {
 
 /// <summary>
-///  Get JSONLib version.
+///  Get Bencode_Lib version.
 /// </summary>
 std::string Bencode_Impl::version() const {
   std::stringstream versionString;
