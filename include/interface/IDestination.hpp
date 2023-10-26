@@ -7,6 +7,10 @@ namespace Bencode_Lib {
 
 class IDestination {
 public:
+  struct Error : public std::runtime_error {
+    explicit Error(const std::string &message)
+        : std::runtime_error("IDestination Error: " + message) {}
+  };
   IDestination() = default;
   IDestination(const IDestination &other) = delete;
   IDestination &operator=(const IDestination &other) = delete;

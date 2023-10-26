@@ -43,16 +43,16 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
   }
   SECTION("Decode an negative zero (-0) is a syntax error",
           "[Bencode][Decode][Integer]") {
-    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"i-0e"}), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"i-0e"}), IDecoder::Error);
   }
   SECTION("Decode an integer with leading zeros is a syntax error",
           "[Bencode][Decode][Integer]") {
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"i0012e"}),
-                      Bencode_Lib::Error);
+                      IDecoder::Error);
   }
   SECTION("Decode an empty integer is a syntax error",
           "[Bencode][Decode][Integer]") {
-    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"ie"}), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"ie"}), IDecoder::Error);
   }
   SECTION("Decode max 64 bit integer (9223372036854775807) and check value",
           "[Bencode][Decode][Integer]") {
@@ -103,11 +103,11 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
     REQUIRE(BRef<String>(bEncode.root()).string() == "");
   }
   SECTION("Decode a string with no length", "[Bencode][Decode][String]") {
-    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{":"}), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{":"}), IDecoder::Error);
   }
   SECTION("Decode a string with negative length", "[Bencode][Decode][String]") {
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"-2:ww"}),
-                      Bencode_Lib::Error);
+                      IDecoder::Error);
   }
   SECTION("Decode a string with max length (buffer overflow attempt)",
           "[Bencode][Decode][String]") {
@@ -212,42 +212,42 @@ TEST_CASE("Decode generated exceptions", "[Bencode][Decode][Exceptions]") {
   SECTION("Decode an string without terminating ':' on its length",
           "[Bencode][Decode][Exceptions]") {
     BufferSource bEncodeSource{"26abcdefghijklmnopqrstuvwxyz"};
-    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), IDecoder::Error);
   }
   SECTION("Decode an integer without a terminating end",
           "[Bencode][Decode][Exceptions]") {
     BufferSource bEncodeSource{"i266"};
-    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), IDecoder::Error);
   }
   SECTION("Decode an list without a terminating end",
           "[Bencode][Decode][Exceptions]") {
     BufferSource bEncodeSource{"li266ei6780ei88e"};
-    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), IDecoder::Error);
   }
   SECTION("Decode an dictionary without a terminating end",
           "[Bencode][Decode][Exceptions]") {
     BufferSource bEncodeSource{
         "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkl"};
-    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), IDecoder::Error);
   }
   SECTION("Decode an string that terminates prematurely",
           "[Bencode][Decode][Exceptions]") {
     BufferSource bEncodeSource{"26:abcdefghijklmno"};
     REQUIRE_THROWS_WITH(
         bEncode.decode(bEncodeSource),
-        "Bencode Error: Decode buffer empty before decode complete.");
+        "ISource Error: Decode buffer empty before decode complete.");
   }
   SECTION("Duplicate dictionary keys",
           "[Bencode][Decode][Dictionary][Exceptions]") {
     BufferSource bEncodeSource{
         "d3:one10:01234567893:two6:qwerty3:two9:asdfghjkle"};
-    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), IDecoder::Error);
   }
   SECTION("Dictionary Keys not in lexical order",
           "[Bencode][Decode][Dictionary][Exceptions]") {
     BufferSource bEncodeSource{
         "d5:three10:01234567893:one6:qwerty3:two9:asdfghjkle"};
-    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), IDecoder::Error);
   }
 }
 TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
@@ -287,11 +287,11 @@ TEST_CASE("Decode erroneous torrent files",
   SECTION("Decode singlefileerror.torrent",
           "[Bencode][Decode][Torrents][Error]") {
     FileSource bEncodeSource{prefixTestDataPath(kSingleFileWithErrorTorrent)};
-    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), IDecoder::Error);
   }
   SECTION("Decode multifileerror.torrent",
           "[Bencode][Decode][Torrents][Error]") {
     FileSource bEncodeSource{prefixTestDataPath(kMultiFileWithErrorTorrent)};
-    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(bEncodeSource), IDecoder::Error);
   }
 }

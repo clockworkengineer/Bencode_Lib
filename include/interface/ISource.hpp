@@ -7,6 +7,10 @@ namespace Bencode_Lib {
 
 class ISource {
 public:
+  struct Error : public std::runtime_error {
+    explicit Error(const std::string &message)
+        : std::runtime_error("ISource Error: " + message) {}
+  };
   ISource() = default;
   ISource(const ISource &other) = delete;
   ISource &operator=(const ISource &other) = delete;
