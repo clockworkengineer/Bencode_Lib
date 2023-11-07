@@ -4,13 +4,21 @@
 #include <stdexcept>
 
 namespace Bencode_Lib {
-
+// =======================================================
+// Interface for reading source stream during JSON parsing
+// =======================================================
 class ISource {
 public:
+  // =============
+  // ISource Error
+  // =============
   struct Error : public std::runtime_error {
     explicit Error(const std::string &message)
         : std::runtime_error("ISource Error: " + message) {}
   };
+  // ========================
+  // Constructors/destructors
+  // ========================
   ISource() = default;
   ISource(const ISource &other) = delete;
   ISource &operator=(const ISource &other) = delete;

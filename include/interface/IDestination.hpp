@@ -4,13 +4,21 @@
 #include <stdexcept>
 
 namespace Bencode_Lib {
-
+// ====================================================================
+// Interface for writing destination stream during JSON stringification
+// ====================================================================
 class IDestination {
 public:
+  // ==================
+  // IDestination Error
+  // ==================
   struct Error : public std::runtime_error {
     explicit Error(const std::string &message)
         : std::runtime_error("IDestination Error: " + message) {}
   };
+  // ========================
+  // Constructors/destructors
+  // ========================
   IDestination() = default;
   IDestination(const IDestination &other) = delete;
   IDestination &operator=(const IDestination &other) = delete;
