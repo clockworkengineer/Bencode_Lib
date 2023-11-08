@@ -24,7 +24,11 @@ namespace Bencode_Lib {
 ///  Initialise the implementation layer.
 /// </summary>
 
-Bencode::Bencode() : implementation(std::make_unique<Bencode_Impl>()) {}
+Bencode::Bencode(IEncoder *encoder, IDecoder *decoder)
+    : implementation(std::make_unique<Bencode_Impl>()) {
+  implementation->setEncoder(encoder);
+  implementation->setDecoder(decoder);
+}
 Bencode::~Bencode() {}
 
 /// <summary>

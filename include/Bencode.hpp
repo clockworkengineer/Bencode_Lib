@@ -10,7 +10,7 @@ namespace Bencode_Lib {
 
 class Bencode {
 public:
-  Bencode();
+  Bencode(IEncoder *encoder=nullptr, IDecoder *decoder=nullptr);
   Bencode(const Bencode &other) = delete;
   Bencode &operator=(const Bencode &other) = delete;
   Bencode(Bencode &&other) = delete;

@@ -5,4 +5,6 @@
 class Bencode_Impl;
 class ISource;
 class IDestination;
+class IEncoder;
+class IDecoder;
 struct BNode;

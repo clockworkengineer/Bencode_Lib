@@ -27,6 +27,8 @@ public:
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
   ~Bencode_Impl() = default;
 
+  void setEncoder(IEncoder *encoder);
+  void setDecoder(IDecoder *decoder);
   void decode(ISource &source);
   void encode(IDestination &destination) const;
   std::string version() const;
@@ -37,8 +39,8 @@ private:
   // Root of BNode tree
   BNode bNodeRoot;
   // Bencode encoder default
-  std::unique_ptr<IEncoder> encoder = std::make_unique<Encoder_Default>();
+  std::unique_ptr<IEncoder> encoderFn{};
   // Bencode decoder default
-  std::unique_ptr<IDecoder> decoder = std::make_unique<Decoder_Default>();
+  std::unique_ptr<IDecoder> decoderFn{};
 };
 } // namespace Bencode_Lib
