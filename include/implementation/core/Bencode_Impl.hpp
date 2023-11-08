@@ -19,7 +19,9 @@
 namespace Bencode_Lib {
 
 class Bencode_Impl {
+
 public:
+  // Constructors/Destructors
   Bencode_Impl() = default;
   Bencode_Impl(const Bencode_Impl &other) = delete;
   Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
@@ -32,7 +34,7 @@ public:
   void decode(ISource &source);
   void encode(IDestination &destination) const;
   std::string version() const;
-  BNode &root() { return (bNodeRoot); }
+  [[nodiscard]] BNode &root() { return (bNodeRoot); }
   [[nodiscard]] const BNode &root() const { return (bNodeRoot); }
 
 private:
@@ -43,4 +45,5 @@ private:
   // Bencode decoder default
   std::unique_ptr<IDecoder> bNodeDecoder{};
 };
+
 } // namespace Bencode_Lib

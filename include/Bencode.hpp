@@ -9,8 +9,10 @@ namespace Bencode_Lib {
 #include "Bencode_Forward.hpp"
 
 class Bencode {
+
 public:
-  Bencode(IEncoder *encoder=nullptr, IDecoder *decoder=nullptr);
+  // Constructors/Destructors
+  Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
   Bencode(const Bencode &other) = delete;
   Bencode &operator=(const Bencode &other) = delete;
   Bencode(Bencode &&other) = delete;
@@ -28,4 +30,5 @@ public:
 private:
   const std::unique_ptr<Bencode_Impl> implementation;
 };
+
 } // namespace Bencode_Lib

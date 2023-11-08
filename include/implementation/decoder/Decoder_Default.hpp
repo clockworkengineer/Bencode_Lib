@@ -10,7 +10,9 @@
 namespace Bencode_Lib {
 
 class Decoder_Default : public IDecoder {
+
 public:
+  // Constructors/Destructors
   Decoder_Default() = default;
   Decoder_Default(const Decoder_Default &other) = delete;
   Decoder_Default &operator=(const Decoder_Default &other) = delete;
@@ -20,7 +22,7 @@ public:
 
   BNode decode(ISource &source);
 
-private:
+
 private:
   int64_t extractInteger(ISource &source);
   std::string extractString(ISource &source);
@@ -29,4 +31,5 @@ private:
   BNode decodeDictionary(ISource &source);
   BNode decodeList(ISource &source);
 };
+
 } // namespace Bencode_Lib

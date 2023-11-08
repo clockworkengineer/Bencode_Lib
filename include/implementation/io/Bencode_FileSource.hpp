@@ -8,7 +8,9 @@
 namespace Bencode_Lib {
 
 class FileSource : public ISource {
+
 public:
+  // Constructors/Destructors
   explicit FileSource(const std::string &sourceFileName) {
     source.open(sourceFileName.c_str(), std::ios_base::binary);
     if (!source.is_open()) {
@@ -37,4 +39,5 @@ public:
 private:
   mutable std::ifstream source;
 };
+
 } // namespace Bencode_Lib

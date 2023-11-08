@@ -10,8 +10,9 @@
 namespace Bencode_Lib {
 
 class Encoder_Default : public IEncoder {
-public:
 
+public:
+  // Constructors/Destructors
   Encoder_Default() = default;
   Encoder_Default(const Encoder_Default &other) = delete;
   Encoder_Default &operator=(const Encoder_Default &other) = delete;
@@ -19,7 +20,7 @@ public:
   Encoder_Default &operator=(Encoder_Default &&other) = delete;
   virtual ~Encoder_Default() = default;
 
-  void encode(const BNode &bNode, IDestination &destination)  const;
-  
+  void encode(const BNode &bNode, IDestination &destination) const;
 };
+
 } // namespace Bencode_Lib

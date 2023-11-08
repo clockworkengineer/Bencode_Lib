@@ -8,7 +8,9 @@
 namespace Bencode_Lib {
 
 class BufferDestination : public IDestination {
+
 public:
+  // Constructors/Destructors
   BufferDestination() = default;
   BufferDestination(const FileSource &other) = delete;
   BufferDestination &operator=(const FileSource &other) = delete;
@@ -30,4 +32,5 @@ public:
 private:
   std::vector<std::byte> encodeBuffer;
 };
+
 } // namespace Bencode_Lib

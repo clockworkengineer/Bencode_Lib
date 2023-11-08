@@ -57,4 +57,5 @@ struct BNode {
 private:
   std::unique_ptr<Variant> bNodeVariant;
 };
+
 } // namespace Bencode_Lib

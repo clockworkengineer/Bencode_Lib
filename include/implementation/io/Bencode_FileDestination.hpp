@@ -8,8 +8,9 @@
 namespace Bencode_Lib {
 
 class FileDestination : public IDestination {
+
 public:
-  // ======================
+  // Constructors/Destructors
   explicit FileDestination(const std::string &destinationFileName) {
     destination.open(destinationFileName.c_str(), std::ios_base::binary);
     if (!destination.is_open()) {
@@ -36,4 +37,5 @@ public:
 private:
   std::ofstream destination;
 };
+
 } // namespace Bencode_Lib

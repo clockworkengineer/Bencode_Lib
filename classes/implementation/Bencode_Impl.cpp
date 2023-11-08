@@ -44,4 +44,5 @@ void Bencode_Impl::encode(IDestination &destination) const {
   }
   bNodeEncoder->encode(bNodeRoot, destination);
 }
+
 } // namespace Bencode_Lib

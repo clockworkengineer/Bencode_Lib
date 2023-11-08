@@ -3,6 +3,7 @@
 #include <type_traits>
 
 namespace Bencode_Lib {
+
 // ==============================
 // BNode base reference converter
 // ==============================
@@ -33,4 +34,5 @@ template <typename T> const T &BRef(const BNode &bNode) {
   CheckBNodeType<T>(*bNode.getVariant());
   return (static_cast<const T &>(*bNode.getVariant()));
 }
+
 } // namespace Bencode_Lib

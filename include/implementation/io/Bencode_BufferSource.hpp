@@ -8,7 +8,9 @@
 namespace Bencode_Lib {
 
 class BufferSource : public ISource {
+
 public:
+  // Constructors/Destructors
   explicit BufferSource(const std::string &sourceBuffer) {
     if (sourceBuffer.empty()) {
       throw Error("Empty source buffer passed to be decoded.");
@@ -46,4 +48,5 @@ private:
   std::size_t bufferPosition = 0;
   std::vector<std::byte> decodeBuffer;
 };
+
 } // namespace Bencode_Lib
