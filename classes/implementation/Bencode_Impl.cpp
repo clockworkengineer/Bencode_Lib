@@ -13,17 +13,17 @@ namespace Bencode_Lib {
 
 void Bencode_Impl::setEncoder(IEncoder *encoder) {
   if (encoder == nullptr) {
-    encoderFn = std::make_unique<Encoder_Default>();
+    bNodeEncoder = std::make_unique<Encoder_Default>();
   } else {
-    encoderFn.reset(encoder);
+    bNodeEncoder.reset(encoder);
   }
 }
 
 void Bencode_Impl::setDecoder(IDecoder *decoder) {
   if (decoder == nullptr) {
-    decoderFn = std::make_unique<Decoder_Default>();
+    bNodeDecoder = std::make_unique<Decoder_Default>();
   } else {
-    decoderFn.reset(decoder);
+    bNodeDecoder.reset(decoder);
   }
 }
 
@@ -35,13 +35,13 @@ std::string Bencode_Impl::version() const {
 }
 
 void Bencode_Impl::decode(ISource &source) {
-  bNodeRoot = decoderFn->decode(source);
+  bNodeRoot = bNodeDecoder->decode(source);
 }
 
 void Bencode_Impl::encode(IDestination &destination) const {
   if (bNodeRoot.getVariant() == nullptr) {
     throw Error("No Bencoded data to encode.");
   }
-  encoderFn->encode(bNodeRoot, destination);
+  bNodeEncoder->encode(bNodeRoot, destination);
 }
 } // namespace Bencode_Lib

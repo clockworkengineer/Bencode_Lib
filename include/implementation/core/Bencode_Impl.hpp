@@ -39,8 +39,8 @@ private:
   // Root of BNode tree
   BNode bNodeRoot;
   // Bencode encoder default
-  std::unique_ptr<IEncoder> encoderFn{};
+  std::unique_ptr<IEncoder> bNodeEncoder{};
   // Bencode decoder default
-  std::unique_ptr<IDecoder> decoderFn{};
+  std::unique_ptr<IDecoder> bNodeDecoder{};
 };
 } // namespace Bencode_Lib
