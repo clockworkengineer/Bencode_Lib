@@ -47,8 +47,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
   }
   SECTION("Decode an integer with leading zeros is a syntax error",
           "[Bencode][Decode][Integer]") {
-    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"i0012e"}),
-                      IDecoder::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"i0012e"}), IDecoder::Error);
   }
   SECTION("Decode an empty integer is a syntax error",
           "[Bencode][Decode][Integer]") {
@@ -106,8 +105,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{":"}), IDecoder::Error);
   }
   SECTION("Decode a string with negative length", "[Bencode][Decode][String]") {
-    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"-2:ww"}),
-                      IDecoder::Error);
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"-2:ww"}), IDecoder::Error);
   }
   SECTION("Decode a string with max length (buffer overflow attempt)",
           "[Bencode][Decode][String]") {
@@ -139,7 +137,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
   SECTION("Decode an List", "[Bencode][Decode]") {
     BufferSource bEncodeSource{"li266ei6780ei88e5:threee"};
     bEncode.decode(bEncodeSource);
-    REQUIRE((bEncode.root()).is_list());
+    REQUIRE((bEncode.root()).isList());
     REQUIRE((bEncode.root())[0].isInteger());
     REQUIRE((bEncode.root())[1].isInteger());
     REQUIRE((bEncode.root())[2].isInteger());

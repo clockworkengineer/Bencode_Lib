@@ -8,9 +8,15 @@ namespace Bencode_Lib {
 
 #include "Bencode_Forward.hpp"
 
+struct Error : public std::runtime_error {
+  explicit Error(const std::string &message)
+      : std::runtime_error("Bencode Error: " + message) {}
+};
+
 class Bencode {
 
 public:
+
   // Constructors/Destructors
   Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
   Bencode(const Bencode &other) = delete;

@@ -2,7 +2,6 @@
 // ========================
 // Bencode core definitions
 // ========================
-#include "Bencode_Error.hpp"
 #include "Bencode_Variant.hpp"
 #include "Bencode_BNode.hpp"
 #include "Bencode_Dictionary.hpp"

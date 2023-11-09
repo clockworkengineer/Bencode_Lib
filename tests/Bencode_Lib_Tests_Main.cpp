@@ -200,8 +200,8 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
     BufferSource bEncodeSource{
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
-    REQUIRE_THROWS_AS((bEncode.root())[3].is_list(), BNode::Error);
-    REQUIRE_THROWS_WITH((bEncode.root())[3].is_list(),
+    REQUIRE_THROWS_AS((bEncode.root())[3].isList(), BNode::Error);
+    REQUIRE_THROWS_WITH((bEncode.root())[3].isList(),
                         "BNode Error: Invalid index used in list.");
   }
 }

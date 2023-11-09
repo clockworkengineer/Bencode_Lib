@@ -30,7 +30,6 @@ set (BENCODE_INCLUDES
     ./include/implementation/bnode/Bencode_BNode_Creation.hpp
     ./include/implementation/bnode/Bencode_BNode_Reference.hpp
     ./include/implementation/bnode/Bencode_BNode.hpp
-    ./include/implementation/core/Bencode_Error.hpp
     ./include/implementation/core/Bencode_Forward.hpp
     ./include/implementation/core/Bencode_Impl.hpp
     ./include/implementation/core/Bencode_Types.hpp

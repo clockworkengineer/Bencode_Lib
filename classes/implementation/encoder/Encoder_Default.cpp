@@ -16,7 +16,7 @@ void Encoder_Default::encode(const BNode &bNode,
       encode(bNodeNext.second, destination);
     }
     destination.add('e');
-  } else if (bNode.is_list()) {
+  } else if (bNode.isList()) {
     destination.add('l');
     for (const auto &bNodeNext : BRef<List>(bNode).list()) {
       encode(bNodeNext, destination);

@@ -33,7 +33,7 @@ struct BNode {
   [[nodiscard]] bool isInteger() const {
     return (bNodeVariant->getNodeType() == Variant::Type::integer);
   }
-  [[nodiscard]] bool is_list() const {
+  [[nodiscard]] bool isList() const {
     return (bNodeVariant->getNodeType() == Variant::Type::list);
   }
   [[nodiscard]] bool isDictionary() const {
