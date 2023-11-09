@@ -7,7 +7,7 @@
 #include <sstream>
 
 #include "Bencode.hpp"
-#include "Bencode_Types.hpp"
+#include "Bencode_Core.hpp"
 #include "Bencode_Sources.hpp"
 
 struct TorrentInfo {

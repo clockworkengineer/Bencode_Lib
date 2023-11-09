@@ -11,7 +11,7 @@
 #include "IDestination.hpp"
 
 #include "Bencode_Config.hpp"
-#include "Bencode_Types.hpp"
+#include "Bencode_Core.hpp"
 
 #include "Decoder_Default.hpp"
 #include "Encoder_Default.hpp"

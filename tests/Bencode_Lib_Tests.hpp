@@ -10,7 +10,7 @@
 #include "catch2/catch_all.hpp"
 
 #include "Bencode.hpp"
-#include "Bencode_Types.hpp"
+#include "Bencode_Core.hpp"
 #include "Bencode_Sources.hpp"
 #include "Bencode_Destinations.hpp"
 #include "Decoder_Default.hpp"
