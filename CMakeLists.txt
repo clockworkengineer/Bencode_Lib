@@ -27,6 +27,7 @@ set(BENCODE_INCLUDES
   ./include/Bencode_Forward.hpp
   ./include/interface/ISource.hpp
   ./include/interface/IDestination.hpp
+  ./include/interface/IDecoder.hpp
   ./include/interface/IEncoder.hpp
   ./include/implementation/bnode/Bencode_BNode_Creation.hpp
   ./include/implementation/bnode/Bencode_BNode_Reference.hpp
