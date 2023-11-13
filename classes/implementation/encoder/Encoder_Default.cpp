@@ -3,6 +3,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Impl.hpp"
+#include "Encoder_Default.hpp"
 
 namespace Bencode_Lib {
 

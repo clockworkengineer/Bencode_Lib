@@ -13,21 +13,18 @@
 #include "Bencode_Config.hpp"
 #include "Bencode_Core.hpp"
 
-#include "Decoder_Default.hpp"
-#include "Encoder_Default.hpp"
-
 namespace Bencode_Lib {
 
 class Bencode_Impl {
 
 public:
   // Constructors/Destructors
-  Bencode_Impl() = default;
+  Bencode_Impl();
   Bencode_Impl(const Bencode_Impl &other) = delete;
   Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
   Bencode_Impl(Bencode_Impl &&other) = delete;
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
-  ~Bencode_Impl() = default;
+  ~Bencode_Impl();
 
   void setEncoder(IEncoder *encoder);
   void setDecoder(IDecoder *decoder);
@@ -40,9 +37,9 @@ public:
 private:
   // Root of BNode tree
   BNode bNodeRoot;
-  // Bencode encoder default
+  // Bencode encoder
   std::unique_ptr<IEncoder> bNodeEncoder{};
-  // Bencode decoder default
+  // Bencode decoder
   std::unique_ptr<IDecoder> bNodeDecoder{};
 };
 

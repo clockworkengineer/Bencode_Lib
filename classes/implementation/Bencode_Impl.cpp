@@ -8,8 +8,15 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Impl.hpp"
+#include "Decoder_Default.hpp"
+#include "Encoder_Default.hpp"
 
 namespace Bencode_Lib {
+
+// Need size information for destructor to cleanup uniqute_ptr to encoder/decoder.
+Bencode_Impl::Bencode_Impl() {}
+
+Bencode_Impl::~Bencode_Impl() {}
 
 void Bencode_Impl::setEncoder(IEncoder *encoder) {
   if (encoder == nullptr) {

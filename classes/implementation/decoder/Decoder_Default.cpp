@@ -1,5 +1,6 @@
 #include "Bencode.hpp"
 #include "Bencode_Impl.hpp"
+#include "Decoder_Default.hpp"
 
 namespace Bencode_Lib {
 
