@@ -116,7 +116,7 @@ TEST_CASE("Encode generated exceptions", "[Bencode][Encode][Exceptions]") {
   SECTION("Encode called with no BNode tree to encode",
           "[Bencode][Encode][Exceptions]") {
     BufferDestination bEncodeDestination;
-    REQUIRE_THROWS_AS(bEncode.encode(bEncodeDestination), Bencode_Lib::Error);
+    REQUIRE_THROWS_AS(bEncode.encode(bEncodeDestination), Bencode::Error);
     REQUIRE_THROWS_WITH(bEncode.encode(bEncodeDestination),
                         "Bencode Error: No Bencoded data to encode.");
   }
