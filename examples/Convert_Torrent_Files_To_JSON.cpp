@@ -27,14 +27,6 @@ namespace fs = std::filesystem;
 class Encoder_JSON : public Bencode_Lib::IEncoder {
 
 public:
-  // Constructors/Destructors
-  Encoder_JSON() = default;
-  Encoder_JSON(const Encoder_JSON &other) = delete;
-  Encoder_JSON &operator=(const Encoder_JSON &other) = delete;
-  Encoder_JSON(Encoder_JSON &&other) = delete;
-  Encoder_JSON &operator=(Encoder_JSON &&other) = delete;
-  virtual ~Encoder_JSON() = default;
-
   void encode(const Bencode_Lib::BNode &bNode,
               Bencode_Lib::IDestination &destination) const {
     if (bNode.isDictionary()) {
@@ -61,13 +53,16 @@ public:
       destination.add(
           std::to_string(BRef<Bencode_Lib::Integer>(bNode).integer()));
     } else if (bNode.isString()) {
+      std::string jsonString;
       destination.add("\"");
       if (isPrintable(BRef<Bencode_Lib::String>(bNode).string())) {
-        destination.add(BRef<Bencode_Lib::String>(bNode).string());
+        jsonString = BRef<Bencode_Lib::String>(bNode).string();
       } else {
-        destination.add("x");
+        for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).string()) {
+          jsonString +=std ::format("\\u{:04x}", ch);
+        }
       }
-      destination.add("\"");
+      destination.add(jsonString+"\"");
     }
   }
 
