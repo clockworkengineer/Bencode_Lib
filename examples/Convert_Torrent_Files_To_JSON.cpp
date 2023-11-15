@@ -61,8 +61,24 @@ public:
       destination.add(
           std::to_string(BRef<Bencode_Lib::Integer>(bNode).integer()));
     } else if (bNode.isString()) {
-      destination.add("\"" + BRef<Bencode_Lib::String>(bNode).string() + "\"");
+      destination.add("\"");
+      if (isPrintable(BRef<Bencode_Lib::String>(bNode).string())) {
+        destination.add(BRef<Bencode_Lib::String>(bNode).string());
+      } else {
+        destination.add("x");
+      }
+      destination.add("\"");
     }
+  }
+
+private:
+  bool isPrintable(const std::string &str) const {
+    for (unsigned char ch : str) {
+      if (!isprint(ch)) {
+        return (false);
+      }
+    }
+    return (true);
   }
 };
 
