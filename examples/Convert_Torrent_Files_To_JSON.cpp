@@ -14,6 +14,7 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 #include "Bencode_Sources.hpp"
+#include "Bencode_Destinations.hpp"
 
 #include "IDestination.hpp"
 #include "IEncoder.hpp"
@@ -37,29 +38,30 @@ public:
   void encode(const Bencode_Lib::BNode &bNode,
               Bencode_Lib::IDestination &destination) const {
     if (bNode.isDictionary()) {
-      destination.add('d');
+      destination.add('{');
+      int commas = BRef<Bencode_Lib::Dictionary>(bNode).dictionary().size();
       for (const auto &bNodeNext :
            BRef<Bencode_Lib::Dictionary>(bNode).dictionary()) {
-        destination.add(std::to_string(bNodeNext.first.length()) + ":" +
-                        bNodeNext.first);
+        destination.add("\"" + bNodeNext.first + "\"" + " : ");
         encode(bNodeNext.second, destination);
+        if (--commas > 0)
+          destination.add(",");
       }
-      destination.add('e');
+      destination.add('}');
     } else if (bNode.isList()) {
-      destination.add('l');
+      int commas = BRef<Bencode_Lib::List>(bNode).list().size();
+      destination.add('[');
       for (const auto &bNodeNext : BRef<Bencode_Lib::List>(bNode).list()) {
         encode(bNodeNext, destination);
+        if (--commas > 0)
+          destination.add(",");
       }
-      destination.add('e');
+      destination.add(']');
     } else if (bNode.isInteger()) {
-      destination.add('i');
       destination.add(
           std::to_string(BRef<Bencode_Lib::Integer>(bNode).integer()));
-      destination.add('e');
     } else if (bNode.isString()) {
-      destination.add(std::to_string(static_cast<int>(
-                          BRef<Bencode_Lib::String>(bNode).string().length())) +
-                      ":" + BRef<Bencode_Lib::String>(bNode).string());
+      destination.add("\"" + BRef<Bencode_Lib::String>(bNode).string() + "\"");
     }
   }
 };
@@ -79,17 +81,31 @@ std::vector<std::string> readTorrentFileList() {
   return (fileList);
 }
 
+std::string addJSONExtenstion(const std::string &fileName) {
+  std::string jsonFilename = fileName;
+  std::string::size_type i = jsonFilename.find(".torrent");
+  if (i != std::string::npos) {
+    jsonFilename.erase(i, jsonFilename.length());
+    return (jsonFilename + ".json");
+  }
+  return ("");
+}
+
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
     plog::init(plog::debug, "Convert_Torrent_Files_To_JSON.log");
     PLOG_INFO << "Convert_Torrent_Files_To_JSON started ...";
     PLOG_INFO << Bencode_Lib::Bencode().version();
-    std::unique_ptr<Encoder_JSON> jsonEncoder = std::make_unique<Encoder_JSON>();
-    // For each torrent file
     for (const auto &fileName : readTorrentFileList()) {
-      Bencode_Lib::Bencode bEncode(jsonEncoder.release(), nullptr);
+      Bencode_Lib::Bencode bEncode(std::make_unique<Encoder_JSON>().release(),
+                                   nullptr);
       bEncode.decode(Bencode_Lib::FileSource(fileName));
+      std::string jsonFilename = addJSONExtenstion(fileName);
+      if (jsonFilename != "") {
+        std::cout << jsonFilename << std::endl;
+        bEncode.encode(Bencode_Lib::FileDestination(jsonFilename));
+      }
     }
   } catch (const std::exception &ex) {
     std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
