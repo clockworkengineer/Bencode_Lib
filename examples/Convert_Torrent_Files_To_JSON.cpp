@@ -59,10 +59,10 @@ public:
         jsonString = BRef<Bencode_Lib::String>(bNode).string();
       } else {
         for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).string()) {
-          jsonString +=std ::format("\\u{:04x}", ch);
+          jsonString += std ::format("\\u{:04x}", ch);
         }
       }
-      destination.add(jsonString+"\"");
+      destination.add(jsonString + "\"");
     }
   }
 
@@ -92,7 +92,7 @@ std::vector<std::string> readTorrentFileList() {
   return (fileList);
 }
 
-std::string addJSONExtenstion(const std::string &fileName) {
+std::string addJSONExtension(const std::string &fileName) {
   std::string jsonFilename = fileName;
   std::string::size_type i = jsonFilename.find(".torrent");
   if (i != std::string::npos) {
@@ -112,9 +112,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
       Bencode_Lib::Bencode bEncode(std::make_unique<Encoder_JSON>().release(),
                                    nullptr);
       bEncode.decode(Bencode_Lib::FileSource(fileName));
-      std::string jsonFilename = addJSONExtenstion(fileName);
+      std::string jsonFilename = addJSONExtension(fileName);
       if (jsonFilename != "") {
-        std::cout << jsonFilename << std::endl;
+        PLOG_INFO << "Creating file " << jsonFilename;
         bEncode.encode(Bencode_Lib::FileDestination(jsonFilename));
       }
     }
