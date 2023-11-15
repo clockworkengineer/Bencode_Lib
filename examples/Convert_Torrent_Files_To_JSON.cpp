@@ -55,7 +55,7 @@ public:
     } else if (bNode.isString()) {
       std::string jsonString;
       destination.add("\"");
-      if (isPrintable(BRef<Bencode_Lib::String>(bNode).string())) {
+      if (isPrintableString(BRef<Bencode_Lib::String>(bNode).string())) {
         jsonString = BRef<Bencode_Lib::String>(bNode).string();
       } else {
         for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).string()) {
@@ -67,7 +67,7 @@ public:
   }
 
 private:
-  bool isPrintable(const std::string &str) const {
+  bool isPrintableString(const std::string &str) const {
     for (unsigned char ch : str) {
       if (!isprint(ch)) {
         return (false);
