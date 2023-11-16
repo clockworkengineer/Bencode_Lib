@@ -1,5 +1,5 @@
 //
-// Program: Convert_Torrent_Files_To_JSON
+// Program: Torrent_Files_To_JSON
 //
 // Description: Use Bencode_Lib to read in torrent file details.
 //
@@ -105,8 +105,8 @@ std::string addJSONExtension(const std::string &fileName) {
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
-    plog::init(plog::debug, "Convert_Torrent_Files_To_JSON.log");
-    PLOG_INFO << "Convert_Torrent_Files_To_JSON started ...";
+    plog::init(plog::debug, "Torrent_Files_To_JSON.log");
+    PLOG_INFO << "Torrent_Files_To_JSON started ...";
     PLOG_INFO << Bencode_Lib::Bencode().version();
     for (const auto &fileName : readTorrentFileList()) {
       Bencode_Lib::Bencode bEncode(std::make_unique<Encoder_JSON>().release(),
@@ -121,6 +121,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   } catch (const std::exception &ex) {
     std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
   }
-  PLOG_INFO << "Convert_Torrent_Files_To_JSON exited.";
+  PLOG_INFO << "Torrent_Files_To_JSON exited.";
   exit(EXIT_SUCCESS);
 }
