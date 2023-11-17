@@ -16,6 +16,14 @@
 class Encoder_JSON : public Bencode_Lib::IEncoder {
 
 public:
+  // Constructors/destructors
+  Encoder_JSON() = default;
+  Encoder_JSON(const Encoder_JSON &other) = delete;
+  Encoder_JSON &operator=(const Encoder_JSON &other) = delete;
+  Encoder_JSON(Encoder_JSON &&other) = delete;
+  Encoder_JSON &operator=(Encoder_JSON &&other) = delete;
+  ~Encoder_JSON() = default;
+
   void encode(const Bencode_Lib::BNode &bNode,
               Bencode_Lib::IDestination &destination) const {
     if (bNode.isDictionary()) {
