@@ -12,20 +12,11 @@
 #include <filesystem>
 #include <stdexcept>
 
+#include "Utility.hpp"
 #include "Encoder_JSON.hpp"
 
 #include "plog/Initializers/RollingFileInitializer.h"
 #include "plog/Log.h"
-
-std::vector<std::string> createTorrentFileList() {
-  std::vector<std::string> fileList;
-  for (auto &file : std::filesystem::directory_iterator((std::filesystem::current_path() / "files"))) {
-    if (file.path().extension() == ".torrent") {
-      fileList.push_back(file.path().string());
-    }
-  }
-  return (fileList);
-}
 
 std::string createJSONFileName(const std::string &torrentFileName) {
   std::string jsonFilename = torrentFileName;
@@ -41,7 +32,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     plog::init(plog::debug, "Torrent_Files_To_JSON.log");
     PLOG_INFO << "Torrent_Files_To_JSON started ...";
     PLOG_INFO << Bencode_Lib::Bencode().version();
-    for (const auto &torrentFileName : createTorrentFileList()) {
+    for (const auto &torrentFileName : Utility::createTorrentFileList()) {
       bEncode.decode(Bencode_Lib::FileSource(torrentFileName));
       bEncode.encode(
           Bencode_Lib::FileDestination(createJSONFileName(torrentFileName)));
