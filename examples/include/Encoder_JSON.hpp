@@ -48,7 +48,7 @@ public:
         jsonString = BRef<Bencode_Lib::String>(bNode).string();
       } else {
         for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).string()) {
-          jsonString += std ::format("\\u{:04x}", ch);
+          jsonString += std::format("\\u{:04x}", ch);
         }
       }
       destination.add(jsonString + "\"");

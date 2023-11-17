@@ -45,10 +45,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     PLOG_INFO << Bencode_Lib::Bencode().version();
     for (const auto &torrentFileName : createTorrentFileList()) {
       bEncode.decode(Bencode_Lib::FileSource(torrentFileName));
-      std::string jsonFileName = createJSONFileName(torrentFileName);
-      PLOG_INFO << "Creating file " << jsonFileName << " from "
-                << torrentFileName;
-      bEncode.encode(Bencode_Lib::FileDestination(jsonFileName));
+      bEncode.encode(
+          Bencode_Lib::FileDestination(createJSONFileName(torrentFileName)));
+      PLOG_INFO << "Created file " << createJSONFileName(torrentFileName)
+                << " from " << torrentFileName;
     }
   } catch (const std::exception &ex) {
     std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
