@@ -15,9 +15,14 @@ The library has no way of altering the Bencoded data once it has been
 decoded;the client can modify the library as appropriate or add the 
 functionality externally.
 
-The examples folder only contains a program to read in and decode 
+The examples folder only contains 
+
+Read_Torrent_Files - a program to read in and decode 
 torrent files as so far this has been the only practical use the 
 author has found for the use of Bencoded data.
+
+Torrent_Files_To_JSON - a program to read in and decode torrent files
+and encode the tree produced to a JSON file.
 
 For an in-depth description of the Bencode specification refer 
 to its wiki page at https://en.wikipedia.org/wiki/Bencode.
