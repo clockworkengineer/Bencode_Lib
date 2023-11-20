@@ -2,7 +2,8 @@
 #include <vector>
 
 #include "Bencode.hpp"
-#include "Bencode_Impl.hpp"
+#include "Bencode_Core.hpp"
+
 #include "Encoder_Default.hpp"
 
 namespace Bencode_Lib {

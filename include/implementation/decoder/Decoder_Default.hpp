@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 
 #include "Bencode_BNode.hpp"
 #include "ISource.hpp"
