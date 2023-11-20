@@ -3,6 +3,8 @@
 #include <string>
 #include <stdexcept>
 
+#include "ISource.hpp"
+
 #include "Bencode_BNode.hpp"
 
 namespace Bencode_Lib {

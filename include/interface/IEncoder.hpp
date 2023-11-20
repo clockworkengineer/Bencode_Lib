@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Bencode_BNode.hpp"
 #include "IDestination.hpp"
+
+#include "Bencode_BNode.hpp"
 
 namespace Bencode_Lib {
 

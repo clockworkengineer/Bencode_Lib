@@ -3,9 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "Bencode_BNode.hpp"
 #include "IDestination.hpp"
 #include "IEncoder.hpp"
+
+#include "Bencode_BNode.hpp"
 
 namespace Bencode_Lib {
 
