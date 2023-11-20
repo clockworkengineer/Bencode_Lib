@@ -10,8 +10,8 @@
 #include "Bencode_Sources.hpp"
 #include "Bencode_Destinations.hpp"
 
-#include "IDestination.hpp"
 #include "IEncoder.hpp"
+
 
 class Encoder_JSON : public Bencode_Lib::IEncoder {
 
