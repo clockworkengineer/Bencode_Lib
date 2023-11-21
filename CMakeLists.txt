@@ -34,6 +34,7 @@ set(BENCODE_INCLUDES
   ./include/implementation/bnode/Bencode_BNode.hpp
   ./include/implementation/Bencode_Impl.hpp
   ./include/implementation/Bencode_Core.hpp
+  ./include/implementation/Bencode_Interfaces.hpp
   ./include/implementation/decoder/Decoder_Default.hpp
   ./include/implementation/encoder/Encoder_Default.hpp
   ./include/implementation/io/Bencode_Sources.hpp
