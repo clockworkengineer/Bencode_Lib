@@ -4,9 +4,7 @@
 #include <vector>
 #include <array>
 
-#include "Bencode_BNode.hpp"
-#include "ISource.hpp"
-#include "IDecoder.hpp"
+#include "Bencode_Core.hpp"
 
 namespace Bencode_Lib {
 

@@ -10,3 +10,4 @@
 #include "Bencode_String.hpp"
 #include "Bencode_BNode_Reference.hpp"
 #include "Bencode_BNode_Creation.hpp"
+#include "Bencode_Interfaces.hpp"

@@ -6,9 +6,6 @@
 #include <sstream>
 #include <memory>
 
-#include "ISource.hpp"
-#include "IDestination.hpp"
-
 #include "Bencode_Config.hpp"
 #include "Bencode_Core.hpp"
 
