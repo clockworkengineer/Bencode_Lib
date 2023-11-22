@@ -26,7 +26,7 @@ set(BENCODE_INCLUDES
   ./include/Bencode.hpp
   ./include/Bencode_Core.hpp
   ./include/Bencode_Forward.hpp
-  ./include/Bencode_Interfaces.hpp
+  ./include/interface/Bencode_Interfaces.hpp
   ./include/interface/ISource.hpp
   ./include/interface/IDestination.hpp
   ./include/interface/IDecoder.hpp
