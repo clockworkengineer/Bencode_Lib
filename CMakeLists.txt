@@ -24,7 +24,9 @@ set(BENCODE_SOURCES
 
 set(BENCODE_INCLUDES
   ./include/Bencode.hpp
+  ./include/Bencode_Core.hpp
   ./include/Bencode_Forward.hpp
+  ./include/Bencode_Interfaces.hpp
   ./include/interface/ISource.hpp
   ./include/interface/IDestination.hpp
   ./include/interface/IDecoder.hpp
@@ -33,8 +35,6 @@ set(BENCODE_INCLUDES
   ./include/implementation/bnode/Bencode_BNode_Reference.hpp
   ./include/implementation/bnode/Bencode_BNode.hpp
   ./include/implementation/Bencode_Impl.hpp
-  ./include/implementation/Bencode_Core.hpp
-  ./include/implementation/Bencode_Interfaces.hpp
   ./include/implementation/decoder/Decoder_Default.hpp
   ./include/implementation/encoder/Encoder_Default.hpp
   ./include/implementation/io/Bencode_Sources.hpp
