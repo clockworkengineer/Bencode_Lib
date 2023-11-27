@@ -3,10 +3,18 @@
 #include <string>
 #include <stdexcept>
 
-#include "Bencode_Core.hpp"
-
 namespace Bencode_Lib {
 
+// ====================
+// Forward declarations
+// ====================
+
+class ISource;
+struct BNode;
+
+// =============================
+// Interface for Bencode decoder
+// =============================
 class IDecoder {
 public:
   // ==============

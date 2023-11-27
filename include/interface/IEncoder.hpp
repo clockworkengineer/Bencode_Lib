@@ -4,6 +4,16 @@
 
 namespace Bencode_Lib {
 
+// ====================
+// Forward declarations
+// ====================
+
+class IDestination;
+struct BNode;
+
+// =============================
+// Interface for Bencode encoder
+// =============================
 class IEncoder {
 public:
   // ==============

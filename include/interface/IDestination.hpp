@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 namespace Bencode_Lib {
+
 // ====================================================================
 // Interface for writing destination stream during JSON stringification
 // ====================================================================

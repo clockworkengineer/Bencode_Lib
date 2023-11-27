@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 namespace Bencode_Lib {
+  
 // =======================================================
 // Interface for reading source stream during JSON parsing
 // =======================================================
