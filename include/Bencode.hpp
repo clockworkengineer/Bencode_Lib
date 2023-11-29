@@ -6,7 +6,15 @@
 
 namespace Bencode_Lib {
 
-#include "Bencode_Forward.hpp"
+// ===========================================================
+// Bencode forward declarations for interfaces/classes/structs
+// ===========================================================
+class Bencode_Impl;
+class ISource;
+class IDestination;
+class IEncoder;
+class IDecoder;
+struct BNode;
 
 class Bencode {
 

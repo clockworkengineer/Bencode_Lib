@@ -20,11 +20,6 @@ public:
   // ========================
   // Constructors/destructors
   // ========================
-  ISource() = default;
-  ISource(const ISource &other) = delete;
-  ISource &operator=(const ISource &other) = delete;
-  ISource(ISource &&other) = delete;
-  ISource &operator=(ISource &&other) = delete;
   virtual ~ISource() = default;
   // =================
   // Current character

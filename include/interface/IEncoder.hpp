@@ -26,11 +26,6 @@ public:
   // ========================
   // Constructors/destructors
   // ========================
-  IEncoder() = default;
-  IEncoder(const IEncoder &other) = delete;
-  IEncoder &operator=(const IEncoder &other) = delete;
-  IEncoder(IEncoder &&other) = delete;
-  IEncoder &operator=(IEncoder &&other) = delete;
   virtual ~IEncoder() = default;
   // =====================================
   // Encode to destination from BNode tree

@@ -27,11 +27,6 @@ public:
   // ========================
   // Constructors/destructors
   // ========================
-  IDecoder() = default;
-  IDecoder(const IDecoder &other) = delete;
-  IDecoder &operator=(const IDecoder &other) = delete;
-  IDecoder(IDecoder &&other) = delete;
-  IDecoder &operator=(IDecoder &&other) = delete;
   virtual ~IDecoder() = default;
   // ==========================================
   // Decode Bencode into BNode tree from source
