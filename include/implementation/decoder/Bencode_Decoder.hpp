@@ -8,19 +8,18 @@
 
 namespace Bencode_Lib {
 
-class Decoder_Default : public IDecoder {
+class Bencode_Decoder : public IDecoder {
 
 public:
   // Constructors/Destructors
-  Decoder_Default() = default;
-  Decoder_Default(const Decoder_Default &other) = delete;
-  Decoder_Default &operator=(const Decoder_Default &other) = delete;
-  Decoder_Default(Decoder_Default &&other) = delete;
-  Decoder_Default &operator=(Decoder_Default &&other) = delete;
-  virtual ~Decoder_Default() = default;
+  Bencode_Decoder() = default;
+  Bencode_Decoder(const Bencode_Decoder &other) = delete;
+  Bencode_Decoder &operator=(const Bencode_Decoder &other) = delete;
+  Bencode_Decoder(Bencode_Decoder &&other) = delete;
+  Bencode_Decoder &operator=(Bencode_Decoder &&other) = delete;
+  virtual ~Bencode_Decoder() = default;
 
   BNode decode(ISource &source);
-
 
 private:
   int64_t extractInteger(ISource &source);

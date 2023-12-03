@@ -4,11 +4,11 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
-#include "Encoder_Default.hpp"
+#include "Bencode_Encoder.hpp"
 
 namespace Bencode_Lib {
 
-void Encoder_Default::encode(const BNode &bNode,
+void Bencode_Encoder::encode(const BNode &bNode,
                              IDestination &destination) const {
   if (bNode.isDictionary()) {
     destination.add('d');

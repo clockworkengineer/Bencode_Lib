@@ -1,7 +1,7 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
-#include "Decoder_Default.hpp"
+#include "Bencode_Decoder.hpp"
 
 namespace Bencode_Lib {
 
@@ -10,7 +10,7 @@ namespace Bencode_Lib {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Positive integers value.</returns>
-int64_t Decoder_Default::extractInteger(ISource &source) {
+int64_t Bencode_Decoder::extractInteger(ISource &source) {
   // Number size of 64 bit int +2 for sign and terminating null
   std::array<char, std::numeric_limits<int64_t>::digits10 + 2> number{};
   std::size_t digits = 0;
@@ -43,7 +43,7 @@ int64_t Decoder_Default::extractInteger(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>String value decoded.</returns>
-std::string Decoder_Default::extractString(ISource &source) {
+std::string Bencode_Decoder::extractString(ISource &source) {
   int64_t stringLength = extractInteger(source);
   if (source.current() != ':') {
     throw Error("Syntax Error detected.");
@@ -63,7 +63,7 @@ std::string Decoder_Default::extractString(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>String BNode.</returns>
-BNode Decoder_Default::decodeString(ISource &source) {
+BNode Bencode_Decoder::decodeString(ISource &source) {
   return (BNode::make<String>(extractString(source)));
 }
 
@@ -72,7 +72,7 @@ BNode Decoder_Default::decodeString(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Integer BNode.</returns>
-BNode Decoder_Default::decodeInteger(ISource &source) {
+BNode Bencode_Decoder::decodeInteger(ISource &source) {
   source.next();
   int64_t integer = extractInteger(source);
   if (source.current() != 'e') {
@@ -88,7 +88,7 @@ BNode Decoder_Default::decodeInteger(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Dictionary BNode.</returns>
-BNode Decoder_Default::decodeDictionary(ISource &source) {
+BNode Bencode_Decoder::decodeDictionary(ISource &source) {
   Dictionary::EntryList dictionary;
   std::string lastKey{};
   source.next();
@@ -121,7 +121,7 @@ BNode Decoder_Default::decodeDictionary(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>List BNode.</returns>
-BNode Decoder_Default::decodeList(ISource &source) {
+BNode Bencode_Decoder::decodeList(ISource &source) {
   List::EntryList list;
   source.next();
   while (source.more() && source.current() != 'e') {
@@ -142,7 +142,7 @@ BNode Decoder_Default::decodeList(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Decoder_Default::decode(ISource &source) {
+BNode Bencode_Decoder::decode(ISource &source) {
   switch (source.current()) {
   // Dictionary BNode
   case 'd':

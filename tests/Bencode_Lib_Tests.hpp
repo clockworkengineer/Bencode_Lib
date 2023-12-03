@@ -14,7 +14,7 @@
 #include "Bencode_Sources.hpp"
 #include "Bencode_Destinations.hpp"
 
-#include "Decoder_Default.hpp"
+#include "Bencode_Decoder.hpp"
 
 #define kSingleFileTorrent "singlefile.torrent"
 #define kMultiFileTorrent "multifile.torrent"

@@ -9,19 +9,20 @@
 #include "Bencode.hpp"
 #include "Bencode_Impl.hpp"
 
-#include "Decoder_Default.hpp"
-#include "Encoder_Default.hpp"
+#include "Bencode_Decoder.hpp"
+#include "Bencode_Encoder.hpp"
 
 namespace Bencode_Lib {
 
-// Need size information for destructor to cleanup uniqute_ptr to encoder/decoder.
+// Need size information for destructor to cleanup uniqute_ptr to
+// encoder/decoder.
 Bencode_Impl::Bencode_Impl() {}
 
 Bencode_Impl::~Bencode_Impl() {}
 
 void Bencode_Impl::setEncoder(IEncoder *encoder) {
   if (encoder == nullptr) {
-    bNodeEncoder = std::make_unique<Encoder_Default>();
+    bNodeEncoder = std::make_unique<Bencode_Encoder>();
   } else {
     bNodeEncoder.reset(encoder);
   }
@@ -29,7 +30,7 @@ void Bencode_Impl::setEncoder(IEncoder *encoder) {
 
 void Bencode_Impl::setDecoder(IDecoder *decoder) {
   if (decoder == nullptr) {
-    bNodeDecoder = std::make_unique<Decoder_Default>();
+    bNodeDecoder = std::make_unique<Bencode_Decoder>();
   } else {
     bNodeDecoder.reset(decoder);
   }
