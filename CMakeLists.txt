@@ -24,12 +24,12 @@ set(BENCODE_SOURCES
 
 set(BENCODE_INCLUDES
   ./include/Bencode.hpp
-  ./include/Bencode_Core.hpp
   ./include/interface/Bencode_Interfaces.hpp
   ./include/interface/ISource.hpp
   ./include/interface/IDestination.hpp
   ./include/interface/IDecoder.hpp
   ./include/interface/IEncoder.hpp
+  ./include/implementation/Bencode_Core.hpp
   ./include/implementation/bnode/Bencode_BNode_Creation.hpp
   ./include/implementation/bnode/Bencode_BNode_Reference.hpp
   ./include/implementation/bnode/Bencode_BNode.hpp
