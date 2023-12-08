@@ -27,9 +27,9 @@ public:
               Bencode_Lib::IDestination &destination) const {
     if (bNode.isDictionary()) {
       destination.add('{');
-      int commas = BRef<Bencode_Lib::Dictionary>(bNode).dictionary().size();
+      int commas = BRef<Bencode_Lib::Dictionary>(bNode).value().size();
       for (const auto &bNodeNext :
-           BRef<Bencode_Lib::Dictionary>(bNode).dictionary()) {
+           BRef<Bencode_Lib::Dictionary>(bNode).value()) {
         destination.add("\"" + bNodeNext.first + "\"" + " : ");
         encode(bNodeNext.second, destination);
         if (--commas > 0)
@@ -37,9 +37,9 @@ public:
       }
       destination.add('}');
     } else if (bNode.isList()) {
-      int commas = BRef<Bencode_Lib::List>(bNode).list().size();
+      int commas = BRef<Bencode_Lib::List>(bNode).value().size();
       destination.add('[');
-      for (const auto &bNodeNext : BRef<Bencode_Lib::List>(bNode).list()) {
+      for (const auto &bNodeNext : BRef<Bencode_Lib::List>(bNode).value()) {
         encode(bNodeNext, destination);
         if (--commas > 0)
           destination.add(",");
@@ -47,14 +47,14 @@ public:
       destination.add(']');
     } else if (bNode.isInteger()) {
       destination.add(
-          std::to_string(BRef<Bencode_Lib::Integer>(bNode).integer()));
+          std::to_string(BRef<Bencode_Lib::Integer>(bNode).value()));
     } else if (bNode.isString()) {
       std::string jsonString;
       destination.add("\"");
-      if (isPrintableString(BRef<Bencode_Lib::String>(bNode).string())) {
-        jsonString = BRef<Bencode_Lib::String>(bNode).string();
+      if (isPrintableString(BRef<Bencode_Lib::String>(bNode).value())) {
+        jsonString = BRef<Bencode_Lib::String>(bNode).value();
       } else {
-        for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).string()) {
+        for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).value()) {
           // jsonString += std::format("\\u{:04x}", ch);
           char unicode[7];
           sprintf(unicode, "\\u%04x", ch);

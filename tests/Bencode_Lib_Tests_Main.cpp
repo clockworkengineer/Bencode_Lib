@@ -159,18 +159,18 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
     BufferSource bEncodeSource{
         "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<String>((bEncode.root())["one"]).string() == "0123456789");
-    REQUIRE(BRef<String>((bEncode.root())["two"]).string() == "asdfghjkl");
-    REQUIRE(BRef<String>((bEncode.root())["three"]).string() == "qwerty");
+    REQUIRE(BRef<String>((bEncode.root())["one"]).value() == "0123456789");
+    REQUIRE(BRef<String>((bEncode.root())["two"]).value() == "asdfghjkl");
+    REQUIRE(BRef<String>((bEncode.root())["three"]).value() == "qwerty");
   }
   SECTION("Decode list and check its components using indexing",
           "[Bencode][BNode][Index]") {
     BufferSource bEncodeSource{
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<String>((bEncode.root())[0]).string() == "sillyy");
-    REQUIRE(BRef<String>((bEncode.root())[1]).string() == "poiuytrewqas");
-    REQUIRE(BRef<String>((bEncode.root())[2]).string() ==
+    REQUIRE(BRef<String>((bEncode.root())[0]).value() == "sillyy");
+    REQUIRE(BRef<String>((bEncode.root())[1]).value() == "poiuytrewqas");
+    REQUIRE(BRef<String>((bEncode.root())[2]).value() ==
             "abcdefghijklmnopqrstuvwxyz");
   }
   SECTION("Decode list with embedded dictionary and check its components using "
@@ -179,11 +179,11 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
     BufferSource bEncodeSource{"l6:sillyyd3:one10:01234567895:three6:qwerty3:"
                                "two9:asdfghjkle26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<String>((bEncode.root())[0]).string() == "sillyy");
-    REQUIRE(BRef<String>((bEncode.root())[1]["one"]).string() == "0123456789");
-    REQUIRE(BRef<String>((bEncode.root())[1]["two"]).string() == "asdfghjkl");
-    REQUIRE(BRef<String>((bEncode.root())[1]["three"]).string() == "qwerty");
-    REQUIRE(BRef<String>((bEncode.root())[2]).string() ==
+    REQUIRE(BRef<String>((bEncode.root())[0]).value() == "sillyy");
+    REQUIRE(BRef<String>((bEncode.root())[1]["one"]).value() == "0123456789");
+    REQUIRE(BRef<String>((bEncode.root())[1]["two"]).value() == "asdfghjkl");
+    REQUIRE(BRef<String>((bEncode.root())[1]["three"]).value() == "qwerty");
+    REQUIRE(BRef<String>((bEncode.root())[2]).value() ==
             "abcdefghijklmnopqrstuvwxyz");
   }
   SECTION("Decode dictionary and check an invalid key generates exception",
@@ -211,12 +211,12 @@ TEST_CASE("Check BNode reference functions work.",
   SECTION("Integer reference.", "[Bencode][BNode][Reference]") {
     BufferSource bEncodeSource{"i45500e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<Integer>((bEncode.root())).integer() == 45500);
+    REQUIRE(BRef<Integer>((bEncode.root())).value() == 45500);
   }
   SECTION("String reference.", "[Bencode][BNode][Reference]") {
     BufferSource bEncodeSource{"10:0123456789"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<String>((bEncode.root())).string() == "0123456789");
+    REQUIRE(BRef<String>((bEncode.root())).value() == "0123456789");
   }
   SECTION("List reference.", "[Bencode][BNode][Reference]") {
     BufferSource bEncodeSource{
@@ -246,7 +246,7 @@ TEST_CASE("Check R-Value reference encode/decode.",
     bEncode.decode(BufferSource{"i45500e"});
     bEncode.encode(
         BufferDestination{}); // Does nothing as sink (for completeness)
-    REQUIRE(BRef<Integer>((bEncode.root())).integer() == 45500);
+    REQUIRE(BRef<Integer>((bEncode.root())).value() == 45500);
   }
   SECTION("Encode/Decode both with R-Value reference (File).",
           "[Bencode][BNode][R-alue Reference]") {

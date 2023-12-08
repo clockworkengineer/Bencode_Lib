@@ -21,25 +21,25 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
           "[Bencode][Decode][Integer]") {
     BufferSource bEncodeSource{"i266e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<Integer>(bEncode.root()).integer() == 266);
+    REQUIRE(BRef<Integer>(bEncode.root()).value() == 266);
   }
   SECTION("Decode an integer (1000) and check value",
           "[Bencode][Decode][Integer]") {
     BufferSource bEncodeSource{"i1000e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<Integer>(bEncode.root()).integer() == 1000);
+    REQUIRE(BRef<Integer>(bEncode.root()).value() == 1000);
   }
   SECTION("Decode an integer (0) and check value",
           "[Bencode][Decode][Integer]") {
     BufferSource bEncodeSource{"i0e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<Integer>(bEncode.root()).integer() == 0);
+    REQUIRE(BRef<Integer>(bEncode.root()).value() == 0);
   }
   SECTION("Decode an negative integer (-666) and check value",
           "[Bencode][Decode][Integer]") {
     BufferSource bEncodeSource{"i-666e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<Integer>(bEncode.root()).integer() == -666);
+    REQUIRE(BRef<Integer>(bEncode.root()).value() == -666);
   }
   SECTION("Decode an negative zero (-0) is a syntax error",
           "[Bencode][Decode][Integer]") {
@@ -57,7 +57,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
           "[Bencode][Decode][Integer]") {
     BufferSource bEncodeSource{"i9223372036854775807e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<Integer>(bEncode.root()).integer() ==
+    REQUIRE(BRef<Integer>(bEncode.root()).value() ==
             std::numeric_limits<int64_t>::max());
   }
   SECTION("Decode out of range positive 64 bit integer (9223372036854775808) "
@@ -70,7 +70,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
           "[Bencode][Decode][Integer]") {
     BufferSource bEncodeSource{"i-9223372036854775808e"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<Integer>(bEncode.root()).integer() ==
+    REQUIRE(BRef<Integer>(bEncode.root()).value() ==
             std::numeric_limits<int64_t>::min());
   }
   SECTION("Decode out of range negative 64 bit integer (-9223372036854775809) "
@@ -88,18 +88,18 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
           "[Bencode][Decode][String]") {
     BufferSource bEncodeSource{"12:qwertyuiopas"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<String>(bEncode.root()).string() == "qwertyuiopas");
+    REQUIRE(BRef<String>(bEncode.root()).value() == "qwertyuiopas");
   }
   SECTION("Decode a string ('abcdefghijklmnopqrstuvwxyz') and check value",
           "[Bencode][Decode][String]") {
     BufferSource bEncodeSource{"26:abcdefghijklmnopqrstuvwxyz"};
     bEncode.decode(bEncodeSource);
-    REQUIRE(BRef<String>(bEncode.root()).string() ==
+    REQUIRE(BRef<String>(bEncode.root()).value() ==
             "abcdefghijklmnopqrstuvwxyz");
   }
   SECTION("Decode a string with zero length", "[Bencode][Decode][String]") {
     REQUIRE_NOTHROW(bEncode.decode(BufferSource{"0:"}));
-    REQUIRE(BRef<String>(bEncode.root()).string() == "");
+    REQUIRE(BRef<String>(bEncode.root()).value() == "");
   }
   SECTION("Decode a string with no length", "[Bencode][Decode][String]") {
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{":"}), IDecoder::Error);
@@ -120,7 +120,7 @@ TEST_CASE("Bencode for decode of a table of integer test data",
       table<std::string, int64_t>({{"i277e", 277}, {"i32767e", 32767}}));
   BufferSource bEncodeSource{testInput};
   bEncode.decode(bEncodeSource);
-  REQUIRE(BRef<Integer>(bEncode.root()).integer() == expected);
+  REQUIRE(BRef<Integer>(bEncode.root()).value() == expected);
 }
 TEST_CASE("Bencode for decode of a table of string test data",
           "[Bencode][Decode][String]") {
@@ -129,7 +129,7 @@ TEST_CASE("Bencode for decode of a table of string test data",
       {{"13:qwertyuiopasd", "qwertyuiopasd"}, {"6:mnbvcx", "mnbvcx"}}));
   BufferSource bEncodeSource{testInput};
   bEncode.decode(bEncodeSource);
-  REQUIRE(BRef<String>(bEncode.root()).string() == expected);
+  REQUIRE(BRef<String>(bEncode.root()).value() == expected);
 }
 TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
           "[Bencode][Decode][List]") {
@@ -142,18 +142,18 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
     REQUIRE((bEncode.root())[1].isInteger());
     REQUIRE((bEncode.root())[2].isInteger());
     REQUIRE((bEncode.root())[3].isString());
-    REQUIRE(BRef<Integer>((bEncode.root())[0]).integer() == 266);
-    REQUIRE(BRef<Integer>((bEncode.root())[1]).integer() == 6780);
-    REQUIRE(BRef<Integer>((bEncode.root())[2]).integer() == 88);
-    REQUIRE(BRef<String>((bEncode.root())[3]).string() == "three");
+    REQUIRE(BRef<Integer>((bEncode.root())[0]).value() == 266);
+    REQUIRE(BRef<Integer>((bEncode.root())[1]).value() == 6780);
+    REQUIRE(BRef<Integer>((bEncode.root())[2]).value() == 88);
+    REQUIRE(BRef<String>((bEncode.root())[3]).value() == "three");
   }
   SECTION("Decode an list of integers and check values",
           "[Bencode][Decode][List]") {
     BufferSource bEncodeSource{"li266ei6780ei88ee"};
     bEncode.decode(bEncodeSource);
     std::vector<int64_t> numbers;
-    for (const auto &bNode : BRef<List>(bEncode.root()).list()) {
-      numbers.push_back(BRef<Integer>(bNode).integer());
+    for (const auto &bNode : BRef<List>(bEncode.root()).value()) {
+      numbers.push_back(BRef<Integer>(bNode).value());
     }
     REQUIRE(numbers == std::vector<int64_t>{266, 6780, 88});
   }
@@ -163,8 +163,8 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bEncode.decode(bEncodeSource);
     std::vector<std::string> strings;
-    for (const auto &bNode : BRef<List>(bEncode.root()).list()) {
-      strings.push_back(BRef<String>(bNode).string());
+    for (const auto &bNode : BRef<List>(bEncode.root()).value()) {
+      strings.push_back(BRef<String>(bNode).value());
     }
     REQUIRE(strings == std::vector<std::string>{"sillyy", "poiuytrewqas",
                                                 "abcdefghijklmnopqrstuvwxyz"});
@@ -176,17 +176,17 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
     REQUIRE((bEncode.root())["one"].isInteger());
     REQUIRE((bEncode.root())["two"].isInteger());
     REQUIRE((bEncode.root())["three"].isInteger());
-    REQUIRE(BRef<Integer>((bEncode.root())["one"]).integer() == 1);
-    REQUIRE(BRef<Integer>((bEncode.root())["two"]).integer() == 2);
-    REQUIRE(BRef<Integer>((bEncode.root())["three"]).integer() == 3);
+    REQUIRE(BRef<Integer>((bEncode.root())["one"]).value() == 1);
+    REQUIRE(BRef<Integer>((bEncode.root())["two"]).value() == 2);
+    REQUIRE(BRef<Integer>((bEncode.root())["three"]).value() == 3);
   }
   SECTION("Decode an Dictionary of ints and check values",
           "[Bencode][Decode][Dictionary]") {
     BufferSource bEncodeSource{"d3:onei1e5:threei3e3:twoi2ee"};
     bEncode.decode(bEncodeSource);
     std::map<std::string, int64_t> entries;
-    for (const auto &bNode : BRef<Dictionary>(bEncode.root()).dictionary()) {
-      entries[bNode.first] = BRef<Integer>(bNode.second).integer();
+    for (const auto &bNode : BRef<Dictionary>(bEncode.root()).value()) {
+      entries[bNode.first] = BRef<Integer>(bNode.second).value();
     }
     REQUIRE(entries == std::map<std::string, int64_t>{
                            {"one", 1}, {"two", 2}, {"three", 3}});
@@ -197,8 +197,8 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
         "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     bEncode.decode(bEncodeSource);
     std::map<std::string, std::string> entries;
-    for (const auto &bNode : BRef<Dictionary>(bEncode.root()).dictionary()) {
-      entries[bNode.first] = BRef<String>(bNode.second).string();
+    for (const auto &bNode : BRef<Dictionary>(bEncode.root()).value()) {
+      entries[bNode.first] = BRef<String>(bNode.second).value();
     }
     REQUIRE(entries == std::map<std::string, std::string>{{"one", "0123456789"},
                                                           {"two", "asdfghjkl"},

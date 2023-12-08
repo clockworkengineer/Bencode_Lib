@@ -45,8 +45,8 @@ struct Dictionary : Variant {
     }
     throw BNode::Error("Invalid key used in dictionary.");
   }
-  [[nodiscard]] EntryList &dictionary() { return (bNodeDictionary); }
-  [[nodiscard]] const EntryList &dictionary() const { return (bNodeDictionary); }
+  [[nodiscard]] EntryList &value() { return (bNodeDictionary); }
+  [[nodiscard]] const EntryList &value() const { return (bNodeDictionary); }
 
 private:
   Dictionary::EntryList bNodeDictionary;

@@ -41,13 +41,13 @@ struct TorrentInfo {
 private:
   std::string getString(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
-      return (BRef<String>(bNode[field]).string());
+      return (BRef<String>(bNode[field]).value());
     }
     return ("");
   }
   std::uint64_t getInteger(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
-      return (BRef<Integer>(bNode[field]).integer());
+      return (BRef<Integer>(bNode[field]).value());
     }
     return (0);
   }
@@ -56,9 +56,9 @@ private:
     // string is encased in its own list for an extra level (bug ?).
     if (bNode.contains("announce-list")) {
       std::vector<std::string> servers;
-      for (auto &server : BRef<List>(bNode["announce-list"]).list()) {
-        for (auto &bNodeString : BRef<List>(server).list()) {
-          servers.push_back(BRef<String>(bNodeString).string());
+      for (auto &server : BRef<List>(bNode["announce-list"]).value()) {
+        for (auto &bNodeString : BRef<List>(server).value()) {
+          servers.push_back(BRef<String>(bNodeString).value());
         }
       }
       return (servers);
@@ -68,8 +68,8 @@ private:
   std::string getFilePath(const Dictionary &bNode) {
     if (bNode.contains("path")) {
       std::filesystem::path path{};
-      for (auto &folder : BRef<List>(bNode["path"]).list()) {
-        path /= BRef<String>(folder).string();
+      for (auto &folder : BRef<List>(bNode["path"]).value()) {
+        path /= BRef<String>(folder).value();
       }
       return (path.string());
     }
@@ -78,7 +78,7 @@ private:
   std::vector<TorrentInfo::FileDetails> getFilesList(const Dictionary &bNode) {
     if (bNode.contains("files")) {
       std::vector<FileDetails> fileList;
-      for (auto &file : BRef<List>(bNode["files"]).list()) {
+      for (auto &file : BRef<List>(bNode["files"]).value()) {
         fileList.emplace_back(getFilePath(BRef<Dictionary>(file)),
                               getInteger(BRef<Dictionary>(file), "length"));
       }

@@ -9,9 +9,11 @@ struct List : Variant {
   using EntryList = std::vector<Entry>;
   explicit List(EntryList &entryList)
       : Variant(Variant::Type::list), bNodeList(std::move(entryList)) {}
-  [[nodiscard]] int size() const { return (static_cast<int>(bNodeList.size())); }
-  [[nodiscard]] EntryList &list() { return (bNodeList); }
-  [[nodiscard]] const EntryList &list() const { return (bNodeList); }
+  [[nodiscard]] int size() const {
+    return (static_cast<int>(bNodeList.size()));
+  }
+  [[nodiscard]] EntryList &value() { return (bNodeList); }
+  [[nodiscard]] const EntryList &value() const { return (bNodeList); }
   BNode &operator[](int index) {
     if ((index >= 0) && (index < (static_cast<int>(bNodeList.size())))) {
       return (bNodeList[index]);
