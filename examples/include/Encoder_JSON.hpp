@@ -12,7 +12,6 @@
 
 #include "IEncoder.hpp"
 
-
 class Encoder_JSON : public Bencode_Lib::IEncoder {
 
 public:
@@ -56,7 +55,15 @@ public:
         jsonString = BRef<Bencode_Lib::String>(bNode).string();
       } else {
         for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).string()) {
-          jsonString += std::format("\\u{:04x}", ch);
+          // jsonString += std::format("\\u{:04x}", ch);
+          char unicode[7];
+          sprintf(unicode, "\\u%04x", ch);
+          jsonString += unicode[0];
+          jsonString += unicode[1];
+          jsonString += unicode[2];
+          jsonString += unicode[3];
+          jsonString += unicode[4];
+          jsonString += unicode[5];
         }
       }
       destination.add(jsonString + "\"");
