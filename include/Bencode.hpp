@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <memory>
 
+#include "Bencode_Config.hpp"
+
 namespace Bencode_Lib {
 
 // ===========================================================

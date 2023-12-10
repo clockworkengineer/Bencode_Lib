@@ -6,7 +6,7 @@
 #include <sstream>
 #include <memory>
 
-#include "Bencode_Config.hpp"
+#include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
 namespace Bencode_Lib {
