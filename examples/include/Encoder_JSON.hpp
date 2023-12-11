@@ -8,8 +8,6 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
-#include "IEncoder.hpp"
-
 class Encoder_JSON : public Bencode_Lib::IEncoder {
 
 public:
@@ -55,7 +53,7 @@ public:
         for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).value()) {
           // jsonString += std::format("\\u{:04x}", ch);
           char unicode[7];
-          sprintf(unicode, "\\u%04x", ch);
+          sprintf_s(unicode, "\\u%04x", ch);
           jsonString += unicode[0];
           jsonString += unicode[1];
           jsonString += unicode[2];

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Bencode_Core.hpp"
+#include <string>
+#include <stdexcept>
 
 namespace Bencode_Lib {
 

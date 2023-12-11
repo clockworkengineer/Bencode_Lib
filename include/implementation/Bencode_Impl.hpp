@@ -14,7 +14,6 @@ namespace Bencode_Lib {
 class Bencode_Impl {
 
 public:
-  // Constructors/Destructors
   Bencode_Impl();
   Bencode_Impl(const Bencode_Impl &other) = delete;
   Bencode_Impl &operator=(const Bencode_Impl &other) = delete;

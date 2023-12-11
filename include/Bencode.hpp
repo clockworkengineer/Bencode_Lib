@@ -11,11 +11,11 @@ namespace Bencode_Lib {
 // ===========================================================
 // Bencode forward declarations for interfaces/classes/structs
 // ===========================================================
-class Bencode_Impl;
 class ISource;
 class IDestination;
 class IEncoder;
 class IDecoder;
+class Bencode_Impl;
 struct BNode;
 
 class Bencode {
@@ -35,11 +35,18 @@ public:
   Bencode &operator=(Bencode &&other) = delete;
   ~Bencode();
 
+  // Decode Bencode into BNode tree
   void decode(ISource &source) const;
   void decode(ISource &&source) const;
+
+  // Encode Bencode from BNode tree
   void encode(IDestination &destination) const;
   void encode(IDestination &&destination) const;
+
+  // Return Bencode_Lib version
   [[nodiscard]] std::string version() const;
+
+  // Return BNode tree root
   [[nodiscard]] BNode &root();
   [[nodiscard]] const BNode &root() const;
 
