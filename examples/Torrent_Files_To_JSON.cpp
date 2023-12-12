@@ -10,7 +10,7 @@
 #include <stdexcept>
 
 #include "Utility.hpp"
-#include "Encoder_JSON.hpp"
+#include "JSON_Encoder.hpp"
 
 #include "plog/Initializers/RollingFileInitializer.h"
 #include "plog/Log.h"
@@ -24,7 +24,7 @@ std::string createJSONFileName(const std::string &torrentFileName) {
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    Bencode_Lib::Bencode bEncode(std::make_unique<Encoder_JSON>().release());
+    Bencode_Lib::Bencode bEncode(std::make_unique<JSON_Encoder>().release());
     // Initialise logging.
     plog::init(plog::debug, "Torrent_Files_To_JSON.log");
     PLOG_INFO << "Torrent_Files_To_JSON started ...";

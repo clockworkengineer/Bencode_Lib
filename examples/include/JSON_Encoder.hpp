@@ -8,16 +8,16 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
-class Encoder_JSON : public Bencode_Lib::IEncoder {
+class JSON_Encoder : public Bencode_Lib::IEncoder {
 
 public:
   // Constructors/destructors
-  Encoder_JSON() = default;
-  Encoder_JSON(const Encoder_JSON &other) = delete;
-  Encoder_JSON &operator=(const Encoder_JSON &other) = delete;
-  Encoder_JSON(Encoder_JSON &&other) = delete;
-  Encoder_JSON &operator=(Encoder_JSON &&other) = delete;
-  ~Encoder_JSON() = default;
+  JSON_Encoder() = default;
+  JSON_Encoder(const JSON_Encoder &other) = delete;
+  JSON_Encoder &operator=(const JSON_Encoder &other) = delete;
+  JSON_Encoder(JSON_Encoder &&other) = delete;
+  JSON_Encoder &operator=(JSON_Encoder &&other) = delete;
+  ~JSON_Encoder() = default;
 
   void encode(const Bencode_Lib::BNode &bNode,
               Bencode_Lib::IDestination &destination) const {

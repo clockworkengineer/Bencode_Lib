@@ -8,16 +8,16 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
-class Encoder_XML : public Bencode_Lib::IEncoder {
+class XML_Encoder : public Bencode_Lib::IEncoder {
 
 public:
   // Constructors/destructors
-  Encoder_XML() = default;
-  Encoder_XML(const Encoder_XML &other) = delete;
-  Encoder_XML &operator=(const Encoder_XML &other) = delete;
-  Encoder_XML(Encoder_XML &&other) = delete;
-  Encoder_XML &operator=(Encoder_XML &&other) = delete;
-  ~Encoder_XML() = default;
+  XML_Encoder() = default;
+  XML_Encoder(const XML_Encoder &other) = delete;
+  XML_Encoder &operator=(const XML_Encoder &other) = delete;
+  XML_Encoder(XML_Encoder &&other) = delete;
+  XML_Encoder &operator=(XML_Encoder &&other) = delete;
+  ~XML_Encoder() = default;
 
   void encode(const Bencode_Lib::BNode &bNode,
               Bencode_Lib::IDestination &destination) const {
@@ -78,7 +78,7 @@ private:
         for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).value()) {
           // jsonString += std::format("\\u{:04x}", ch);
           char unicode[7];
-          sprintf(unicode, "\\u%04x", ch);
+          sprintf_s(unicode, "\\u%04x", ch);
           xmlString += unicode[0];
           xmlString += unicode[1];
           xmlString += unicode[2];
