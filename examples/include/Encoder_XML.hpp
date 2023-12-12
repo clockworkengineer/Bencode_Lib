@@ -21,26 +21,39 @@ public:
 
   void encode(const Bencode_Lib::BNode &bNode,
               Bencode_Lib::IDestination &destination) const {
+    destination.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    destination.add("<root>");
+    encodeXML(bNode, destination);
+    destination.add("</root>");
+  }
+
+private:
+  bool isPrintableString(const std::string &str) const {
+    for (unsigned char ch : str) {
+      if (!isprint(ch)) {
+        return (false);
+      }
+    }
+    return (true);
+  }
+
+  void encodeXML(const Bencode_Lib::BNode &bNode,
+                 Bencode_Lib::IDestination &destination) const {
     if (bNode.isDictionary()) {
-      destination.add('{');
-      int commas = BRef<Bencode_Lib::Dictionary>(bNode).value().size();
       for (const auto &bNodeNext :
            BRef<Bencode_Lib::Dictionary>(bNode).value()) {
-        destination.add("\"" + bNodeNext.first + "\"" + " : ");
-        encode(bNodeNext.second, destination);
-        if (--commas > 0)
-          destination.add(",");
+        destination.add("<" + bNodeNext.first + ">");
+        encodeXML(bNodeNext.second, destination);
+        destination.add("</" + bNodeNext.first + ">");
       }
-      destination.add('}');
     } else if (bNode.isList()) {
       int commas = BRef<Bencode_Lib::List>(bNode).value().size();
       destination.add('[');
       for (const auto &bNodeNext : BRef<Bencode_Lib::List>(bNode).value()) {
-        encode(bNodeNext, destination);
+        encodeXML(bNodeNext, destination);
         if (--commas > 0)
           destination.add(",");
       }
-      destination.add(']');
     } else if (bNode.isInteger()) {
       destination.add(
           std::to_string(BRef<Bencode_Lib::Integer>(bNode).value()));
@@ -64,15 +77,5 @@ public:
       }
       destination.add(jsonString + "\"");
     }
-  }
-
-private:
-  bool isPrintableString(const std::string &str) const {
-    for (unsigned char ch : str) {
-      if (!isprint(ch)) {
-        return (false);
-      }
-    }
-    return (true);
   }
 };
