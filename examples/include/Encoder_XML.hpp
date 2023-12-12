@@ -37,14 +37,26 @@ private:
     return (true);
   }
 
+  std::string removeSpaces(const std::string &elementName) const {
+    std::string altered;
+    for (auto ch : elementName) {
+      if (std::isspace(ch))
+        altered += '-';
+      else
+        altered += ch;
+    }
+    return (altered);
+  }
+  
   void encodeXML(const Bencode_Lib::BNode &bNode,
                  Bencode_Lib::IDestination &destination) const {
     if (bNode.isDictionary()) {
       for (const auto &bNodeNext :
            BRef<Bencode_Lib::Dictionary>(bNode).value()) {
-        destination.add("<" + bNodeNext.first + ">");
+        auto elementName = removeSpaces(bNodeNext.first);
+        destination.add("<" + elementName + ">");
         encodeXML(bNodeNext.second, destination);
-        destination.add("</" + bNodeNext.first + ">");
+        destination.add("</" + elementName + ">");
       }
     } else if (bNode.isList()) {
       int commas = BRef<Bencode_Lib::List>(bNode).value().size();
@@ -58,24 +70,24 @@ private:
       destination.add(
           std::to_string(BRef<Bencode_Lib::Integer>(bNode).value()));
     } else if (bNode.isString()) {
-      std::string jsonString;
+      std::string xmlString;
       destination.add("\"");
       if (isPrintableString(BRef<Bencode_Lib::String>(bNode).value())) {
-        jsonString = BRef<Bencode_Lib::String>(bNode).value();
+        xmlString = BRef<Bencode_Lib::String>(bNode).value();
       } else {
         for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).value()) {
           // jsonString += std::format("\\u{:04x}", ch);
           char unicode[7];
-          sprintf_s(unicode, "\\u%04x", ch);
-          jsonString += unicode[0];
-          jsonString += unicode[1];
-          jsonString += unicode[2];
-          jsonString += unicode[3];
-          jsonString += unicode[4];
-          jsonString += unicode[5];
+          sprintf(unicode, "\\u%04x", ch);
+          xmlString += unicode[0];
+          xmlString += unicode[1];
+          xmlString += unicode[2];
+          xmlString += unicode[3];
+          xmlString += unicode[4];
+          xmlString += unicode[5];
         }
       }
-      destination.add(jsonString + "\"");
+      destination.add(xmlString + "\"");
     }
   }
 };
