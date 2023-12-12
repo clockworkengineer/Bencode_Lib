@@ -15,11 +15,11 @@
 #include "plog/Initializers/RollingFileInitializer.h"
 #include "plog/Log.h"
 
-std::string createJSONFileName(const std::string &torrentFileName) {
+std::string createXMLFileName(const std::string &torrentFileName) {
   std::string jsonFilename = torrentFileName;
   return (
       jsonFilename.erase(jsonFilename.find(".torrent"), jsonFilename.length()) +
-      ".json");
+      ".xml");
 }
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
@@ -32,8 +32,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     for (const auto &torrentFileName : Utility::createTorrentFileList()) {
       bEncode.decode(Bencode_Lib::FileSource(torrentFileName));
       bEncode.encode(
-          Bencode_Lib::FileDestination(createJSONFileName(torrentFileName)));
-      PLOG_INFO << "Created file " << createJSONFileName(torrentFileName)
+          Bencode_Lib::FileDestination(createXMLFileName(torrentFileName)));
+      PLOG_INFO << "Created file " << createXMLFileName(torrentFileName)
                 << " from " << torrentFileName;
     }
   } catch (const std::exception &ex) {
