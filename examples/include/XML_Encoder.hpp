@@ -47,7 +47,7 @@ private:
     }
     return (altered);
   }
-  
+
   void encodeXML(const Bencode_Lib::BNode &bNode,
                  Bencode_Lib::IDestination &destination) const {
     if (bNode.isDictionary()) {
@@ -59,12 +59,16 @@ private:
         destination.add("</" + elementName + ">");
       }
     } else if (bNode.isList()) {
-      int commas = BRef<Bencode_Lib::List>(bNode).value().size();
-      destination.add('[');
-      for (const auto &bNodeNext : BRef<Bencode_Lib::List>(bNode).value()) {
-        encodeXML(bNodeNext, destination);
-        if (--commas > 0)
-          destination.add(",");
+      long index = 0;
+      if (BRef<Bencode_Lib::List>(bNode).value().size() > 1) {
+        for (const auto &bNodeNext : BRef<Bencode_Lib::List>(bNode).value()) {
+          destination.add("<Array" + std::to_string(index) + ">");
+          encodeXML(bNodeNext, destination);
+          destination.add("</Array" + std::to_string(index) + ">");
+          index++;
+        }
+      } else {
+        encodeXML(BRef<Bencode_Lib::List>(bNode).value()[0], destination);
       }
     } else if (bNode.isInteger()) {
       destination.add(
