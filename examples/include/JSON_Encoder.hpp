@@ -47,13 +47,13 @@ public:
     } else if (bNode.isString()) {
       std::string jsonString;
       destination.add("\"");
-      if (isPrintableString(BRef<Bencode_Lib::String>(bNode).value())) {
+      if (isStringPrintable(BRef<Bencode_Lib::String>(bNode).value())) {
         jsonString = BRef<Bencode_Lib::String>(bNode).value();
       } else {
         for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).value()) {
           // jsonString += std::format("\\u{:04x}", ch);
           char unicode[7];
-          sprintf_s(unicode, "\\u%04x", ch);
+          sprintf(unicode, "\\u%04x", ch);
           jsonString += unicode[0];
           jsonString += unicode[1];
           jsonString += unicode[2];
@@ -64,15 +64,5 @@ public:
       }
       destination.add(jsonString + "\"");
     }
-  }
-
-private:
-  bool isPrintableString(const std::string &str) const {
-    for (unsigned char ch : str) {
-      if (!isprint(ch)) {
-        return (false);
-      }
-    }
-    return (true);
   }
 };

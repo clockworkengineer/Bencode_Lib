@@ -32,5 +32,18 @@ public:
   // Encode to destination from BNode tree
   // =====================================
   virtual void encode(const BNode &bNode, IDestination &destination) const = 0;
+
+protected:
+  // =============================================
+  // Does string contain all printaable characters
+  // =============================================
+  bool isStringPrintable(const std::string &str) const {
+    for (unsigned char ch : str) {
+      if (!isprint(ch)) {
+        return (false);
+      }
+    }
+    return (true);
+  }
 };
 } // namespace Bencode_Lib

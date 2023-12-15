@@ -28,14 +28,6 @@ public:
   }
 
 private:
-  bool isPrintableString(const std::string &str) const {
-    for (unsigned char ch : str) {
-      if (!isprint(ch)) {
-        return (false);
-      }
-    }
-    return (true);
-  }
 
   std::string removeSpaces(const std::string &elementName) const {
     std::string altered;
@@ -76,13 +68,13 @@ private:
     } else if (bNode.isString()) {
       std::string xmlString;
       destination.add("\"");
-      if (isPrintableString(BRef<Bencode_Lib::String>(bNode).value())) {
+      if (isStringPrintable(BRef<Bencode_Lib::String>(bNode).value())) {
         xmlString = BRef<Bencode_Lib::String>(bNode).value();
       } else {
         for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).value()) {
           // jsonString += std::format("\\u{:04x}", ch);
           char unicode[7];
-          sprintf_s(unicode, "\\u%04x", ch);
+          sprintf(unicode, "\\u%04x", ch);
           xmlString += unicode[0];
           xmlString += unicode[1];
           xmlString += unicode[2];
