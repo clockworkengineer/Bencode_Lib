@@ -28,7 +28,6 @@ public:
   }
 
 private:
-
   std::string removeSpaces(const std::string &elementName) const {
     std::string altered;
     for (auto ch : elementName) {
@@ -66,24 +65,14 @@ private:
       destination.add(
           std::to_string(BRef<Bencode_Lib::Integer>(bNode).value()));
     } else if (bNode.isString()) {
-      std::string xmlString;
       destination.add("\"");
       if (isStringPrintable(BRef<Bencode_Lib::String>(bNode).value())) {
-        xmlString = BRef<Bencode_Lib::String>(bNode).value();
+        destination.add(BRef<Bencode_Lib::String>(bNode).value());
       } else {
-        for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).value()) {
-          // jsonString += std::format("\\u{:04x}", ch);
-          char unicode[7];
-          sprintf(unicode, "\\u%04x", ch);
-          xmlString += unicode[0];
-          xmlString += unicode[1];
-          xmlString += unicode[2];
-          xmlString += unicode[3];
-          xmlString += unicode[4];
-          xmlString += unicode[5];
-        }
+        destination.add(
+            translateStringToEscapes(BRef<Bencode_Lib::String>(bNode).value()));
       }
-      destination.add(xmlString + "\"");
+      destination.add("\"");
     }
   }
 };

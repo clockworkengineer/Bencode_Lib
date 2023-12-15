@@ -45,24 +45,14 @@ public:
       destination.add(
           std::to_string(BRef<Bencode_Lib::Integer>(bNode).value()));
     } else if (bNode.isString()) {
-      std::string jsonString;
       destination.add("\"");
       if (isStringPrintable(BRef<Bencode_Lib::String>(bNode).value())) {
-        jsonString = BRef<Bencode_Lib::String>(bNode).value();
+        destination.add(BRef<Bencode_Lib::String>(bNode).value());
       } else {
-        for (unsigned char ch : BRef<Bencode_Lib::String>(bNode).value()) {
-          // jsonString += std::format("\\u{:04x}", ch);
-          char unicode[7];
-          sprintf(unicode, "\\u%04x", ch);
-          jsonString += unicode[0];
-          jsonString += unicode[1];
-          jsonString += unicode[2];
-          jsonString += unicode[3];
-          jsonString += unicode[4];
-          jsonString += unicode[5];
-        }
+        destination.add(
+            translateStringToEscapes(BRef<Bencode_Lib::String>(bNode).value()));
       }
-      destination.add(jsonString + "\"");
+      destination.add("\"");
     }
   }
 };
