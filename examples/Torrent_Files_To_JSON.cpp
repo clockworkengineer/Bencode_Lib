@@ -15,13 +15,6 @@
 #include "plog/Initializers/RollingFileInitializer.h"
 #include "plog/Log.h"
 
-std::string createJSONFileName(const std::string &torrentFileName) {
-  std::string jsonFilename = torrentFileName;
-  return (
-      jsonFilename.erase(jsonFilename.find(".torrent"), jsonFilename.length()) +
-      ".json");
-}
-
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     Bencode_Lib::Bencode bEncode(std::make_unique<JSON_Encoder>().release());
@@ -32,8 +25,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     for (const auto &torrentFileName : Utility::createTorrentFileList()) {
       bEncode.decode(Bencode_Lib::FileSource(torrentFileName));
       bEncode.encode(
-          Bencode_Lib::FileDestination(createJSONFileName(torrentFileName)));
-      PLOG_INFO << "Created file " << createJSONFileName(torrentFileName)
+          Bencode_Lib::FileDestination(Utility::createFileName(torrentFileName, ".json")));
+      PLOG_INFO << "Created file " << Utility::createFileName(torrentFileName, ".json")
                 << " from " << torrentFileName;
     }
   } catch (const std::exception &ex) {
