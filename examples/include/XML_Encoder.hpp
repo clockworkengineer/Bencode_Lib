@@ -28,23 +28,13 @@ public:
   }
 
 private:
-  std::string removeSpaces(const std::string &elementName) const {
-    std::string altered;
-    for (auto ch : elementName) {
-      if (std::isspace(ch))
-        altered += '-';
-      else
-        altered += ch;
-    }
-    return (altered);
-  }
-
   void encodeXML(const Bencode_Lib::BNode &bNode,
                  Bencode_Lib::IDestination &destination) const {
     if (bNode.isDictionary()) {
       for (const auto &bNodeNext :
            BRef<Bencode_Lib::Dictionary>(bNode).value()) {
-        auto elementName = removeSpaces(bNodeNext.first);
+        auto elementName = bNodeNext.first;
+        std::replace(elementName.begin(), elementName.end(), ' ', '-');
         destination.add("<" + elementName + ">");
         encodeXML(bNodeNext.second, destination);
         destination.add("</" + elementName + ">");
