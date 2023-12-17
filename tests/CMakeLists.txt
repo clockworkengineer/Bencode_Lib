@@ -3,28 +3,29 @@ cmake_minimum_required(VERSION 3.16.3)
 project("Bencode_Lib Unit Tests" VERSION 1.0.0 DESCRIPTION "Bencode C++ Library Catch Unit Tests" LANGUAGES CXX)
 
 # Get Catch2 from repository
-
 include(FetchContent)
 
 FetchContent_Declare(
   Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.4.0
+  GIT_TAG v3.4.0
 )
 
 FetchContent_MakeAvailable(Catch2)
 
 # Enable unit tests
-
 enable_testing()
 
 set(TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Unit_Tests)
 
 set(TEST_SOURCES
-    Bencode_Lib_Tests_Main.cpp
-    Bencode_Lib_Tests_Decode.cpp
-    Bencode_Lib_Tests_Encode.cpp
-    Bencode_Lib_Tests_Helper.cpp)
+  Bencode_Lib_Tests_BNode.cpp
+  Bencode_Lib_Tests_Decode.cpp
+  Bencode_Lib_Tests_Encode.cpp
+  Bencode_Lib_Tests_ISource.cpp
+  Bencode_Lib_Tests_IDestination.cpp
+  Bencode_Lib_Tests_Helper.cpp
+  Bencode_Lib_Tests_Misc.cpp)
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
