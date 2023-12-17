@@ -1,7 +1,7 @@
 //
 // Unit Tests: Bencode
 //
-// Description: ISource, IDestination and BNode unit tests for Bencode class
+// Description: IDestination unit tests for Bencode class
 // using the Catch2 test framework.
 //
 
