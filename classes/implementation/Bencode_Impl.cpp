@@ -54,4 +54,28 @@ void Bencode_Impl::encode(IDestination &destination) const {
   bNodeEncoder->encode(bNodeRoot, destination);
 }
 
+BNode &Bencode_Impl::operator[](const std::string &key)
+{
+  // try {
+     if (bNodeRoot.isEmpty()) { bNodeRoot = BNode::make<Dictionary>(Dictionary::EntryList()); }
+     return (bNodeRoot[key]);
+  // } catch ([[maybe_unused]] BNode::Error &error) {
+  //   JRef<Object>(bNodeRoot).add(Object::Entry(key, BNode::make<Hole>()));
+  //   return (bNodeRoot[key]);
+  // }
+}
+const BNode &Bencode_Impl::operator[](const std::string &key) const { return ((bNodeRoot)[key]); }
+
+BNode &Bencode_Impl::operator[](std::size_t index)
+{
+  // try {
+    if (bNodeRoot.isEmpty()) { bNodeRoot = BNode::make<List>(List::EntryList()); }
+    return (bNodeRoot[index]);
+  // } catch ([[maybe_unused]] BNode::Error &error) {
+  //   JRef<Array>(bNodeRoot).resize(index);
+  //   return (bNodeRoot[index]);
+  // }
+}
+const BNode &Bencode_Impl::operator[](std::size_t index) const { return ((bNodeRoot)[index]); }
+
 } // namespace Bencode_Lib

@@ -27,6 +27,7 @@ struct BNode {
   BNode &operator[](int index);
   const BNode &operator[](int index) const;
   // Determine BNode type
+  [[nodiscard]] bool isEmpty() const { return (bNodeVariant == nullptr); }
   [[nodiscard]] bool isString() const {
     return (bNodeVariant->getNodeType() == Variant::Type::string);
   }

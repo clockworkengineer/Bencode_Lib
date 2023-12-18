@@ -28,6 +28,10 @@ public:
   std::string version() const;
   [[nodiscard]] BNode &root() { return (bNodeRoot); }
   [[nodiscard]] const BNode &root() const { return (bNodeRoot); }
+  BNode &operator[](const std::string &key);
+  const BNode &operator[](const std::string &key) const;
+  BNode &operator[](std::size_t index);
+  const BNode &operator[](std::size_t index) const;
 
 private:
   // Root of BNode tree

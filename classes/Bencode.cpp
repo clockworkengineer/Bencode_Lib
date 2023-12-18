@@ -64,4 +64,18 @@ void Bencode::encode(IDestination &&destination) const {
 BNode &Bencode::root() { return (implementation->root()); }
 const BNode &Bencode::root() const { return (implementation->root()); }
 
+/// <summary>
+/// Return object entry for the passed in key.
+/// </summary>
+/// <param name=key>Dictionary entry (BNode) key.</param>
+BNode &Bencode::operator[](const std::string &key) { return ((*implementation)[key]); }
+const BNode &Bencode::operator[](const std::string &key) const { return ((*implementation)[key]); }
+
+/// <summary>
+/// Return list entry for the passed in index.
+/// </summary>
+/// <param name=index>Array entry (BNode) index.</param>
+BNode &Bencode::operator[](std::size_t index) { return ((*implementation)[index]); }
+const BNode &Bencode::operator[](std::size_t index) const { return ((*implementation)[index]); }
+
 } // namespace Bencode_Lib

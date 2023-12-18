@@ -50,6 +50,14 @@ public:
   [[nodiscard]] BNode &root();
   [[nodiscard]] const BNode &root() const;
 
+  // Search for Bencode dictinary entry with a given key
+  BNode &operator[](const std::string &key);
+  const BNode &operator[](const std::string &key) const;
+
+  // Get Bencode list entry at index
+  BNode &operator[](std::size_t index);
+  const BNode &operator[](std::size_t index) const;
+
 private:
   const std::unique_ptr<Bencode_Impl> implementation;
 };
