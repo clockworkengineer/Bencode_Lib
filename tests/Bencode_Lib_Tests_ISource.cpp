@@ -1,7 +1,8 @@
 //
 // Unit Tests: Bencode
 //
-// Description: ISource unit tests for Bencode class using the Catch2 test framework.
+// Description: ISource unit tests for Bencode class
+// using the Catch2 test framework.
 //
 
 #include "Bencode_Lib_Tests.hpp"

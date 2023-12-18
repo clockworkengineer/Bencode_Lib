@@ -1,8 +1,8 @@
 //
 // Unit Tests: Bencode
 //
-// Description: Encode unit tests for Bencode class using the Catch2 test
-// framework.
+// Description: Encode unit tests for Bencode class 
+// using the Catch2 test framework.
 //
 
 #include "Bencode_Lib_Tests.hpp"

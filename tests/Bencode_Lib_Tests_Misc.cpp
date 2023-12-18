@@ -1,7 +1,7 @@
 //
 // Unit Tests: Bencode
 //
-// Description: Misalanous unit tests for Bencode class
+// Description: Miscellaneous unit tests for Bencode class
 // using the Catch2 test framework.
 //
 
