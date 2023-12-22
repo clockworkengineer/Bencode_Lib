@@ -5,6 +5,12 @@
 
 namespace Bencode_Lib {
 
+inline BNode::BNode(int integer) { *this = BNode::make<Integer>(integer); }
+inline BNode::BNode(long integer) { *this = BNode::make<Integer>(integer); }
+inline BNode::BNode(long long integer) { *this = BNode::make<Integer>(integer); }
+inline BNode::BNode(const char *string) { *this = BNode::make<String>(string); }
+inline BNode::BNode(std::string &string) { *this = BNode::make<String>(string); }
+
 // List
 inline BNode &BNode::operator[](int index) {
   return (BRef<List>(*this)[index]);

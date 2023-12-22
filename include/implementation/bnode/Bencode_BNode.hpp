@@ -16,6 +16,11 @@ struct BNode {
   BNode() = default;
   explicit BNode(std::unique_ptr<Variant> bNodeVariant)
       : bNodeVariant(std::move(bNodeVariant)) {}
+  explicit BNode(int integer);
+  explicit BNode(long integer);
+  explicit BNode(long long integer);
+  explicit BNode(const char *string);
+  explicit BNode(std::string &string);
   BNode(const BNode &other) = delete;
   BNode &operator=(const BNode &other) = delete;
   BNode(BNode &&other) = default;
