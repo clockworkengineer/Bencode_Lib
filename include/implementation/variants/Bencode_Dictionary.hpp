@@ -10,8 +10,13 @@ namespace Bencode_Lib {
 struct Dictionary : Variant {
   using Entry = std::pair<std::string, BNode>;
   using EntryList = std::vector<Entry>;
+  Dictionary() : Variant(Variant::Type::dictionary){};
   explicit Dictionary(Dictionary::EntryList &entryList)
-      : Variant(Variant::Type::dictionary), bNodeDictionary(std::move(entryList)) {}
+      : Variant(Variant::Type::dictionary),
+        bNodeDictionary(std::move(entryList)) {}
+  // Add array element
+  void add(Entry &entry) { bNodeDictionary.emplace_back(std::move(entry)); }
+  void add(Entry &&entry) { bNodeDictionary.emplace_back(std::move(entry)); }
   [[nodiscard]] bool contains(const std::string &key) const {
     if (auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
                                [&key](const Entry &entry) -> bool {

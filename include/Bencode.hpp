@@ -3,6 +3,7 @@
 #include <string>
 #include <stdexcept>
 #include <memory>
+#include <variant>
 
 #include "Bencode_Config.hpp"
 
@@ -26,7 +27,13 @@ public:
     explicit Error(const std::string &message)
         : std::runtime_error("Bencode Error: " + message) {}
   };
-
+  // Possible Bencode Node internal value types
+  using InternalType =
+    std::variant<int, std::string, BNode>;
+  // Array initializer list
+  using ArrayList = std::initializer_list<InternalType>;
+  // Object initializer list
+  using ObjectList = std::initializer_list<std::pair<std::string, InternalType>>;
   // Constructors/Destructors
   Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
   Bencode(const Bencode &other) = delete;

@@ -21,6 +21,8 @@ struct BNode {
   explicit BNode(long long integer);
   explicit BNode(const char *string);
   explicit BNode(std::string &string);
+  explicit BNode(const Bencode::ArrayList &list);
+  explicit BNode(const Bencode::ObjectList &objectList);
   BNode(const BNode &other) = delete;
   BNode &operator=(const BNode &other) = delete;
   BNode(BNode &&other) = default;
@@ -61,6 +63,7 @@ struct BNode {
   }
 
 private:
+  static BNode internalTypeToJNode(const Bencode::InternalType &type);
   std::unique_ptr<Variant> bNodeVariant;
 };
 

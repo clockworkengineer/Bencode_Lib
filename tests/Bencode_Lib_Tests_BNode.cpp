@@ -37,7 +37,7 @@ TEST_CASE("Check use of BNode constructors.", "[Bencode][BNode][Constructor]") {
     REQUIRE(BRef<String>(bNode).value() == "test string");
   }
   SECTION("Construct BNode(string).", "[Bencode][BNode][Constructor][String]") {
-    std::string string {"test string"};
+    std::string string{"test string"};
     BNode bNode(string);
     REQUIRE_FALSE(!bNode.isString());
     REQUIRE(BRef<String>(bNode).value() == "test string");
@@ -55,26 +55,24 @@ TEST_CASE("Check use of BNode constructors.", "[Bencode][BNode][Constructor]") {
   //     REQUIRE_FALSE(!bNode.isNull());
   //     REQUIRE(BRef<Null>(bNode).getNull() == nullptr);
   //   }
-  //   SECTION("Construct BNode(array).",
-  //   "[Bencode][BNode][Constructor][Array]")
-  //   {
-  //     BNode bNode{ 1, 2, 3, 4 };
-  //     REQUIRE_FALSE(!bNode.isArray());
-  //     auto &array = BRef<Array>(bNode).value();
-  //     REQUIRE(BRef<Number>(array[0]).value<int>() == 1);
-  //     REQUIRE(BRef<Number>(array[1]).value<int>() == 2);
-  //     REQUIRE(BRef<Number>(array[2]).value<int>() == 3);
-  //     REQUIRE(BRef<Number>(array[3]).value<int>() == 4);
-  //   }
-  //   SECTION("Construct BNode(object).",
-  //   "[Bencode][BNode][Constructor][Object]")
-  //   {
-  //     BNode bNode{ { "key1", 55 }, { "key2", 26666 } };
-  //     REQUIRE_FALSE(!bNode.isObject());
-  //     auto &object = BRef<Object>(bNode);
-  //     REQUIRE(BRef<Number>(object["key1"]).value<int>() == 55);
-  //     REQUIRE(BRef<Number>(object["key2"]).value<int>() == 26666);
-  //   }
+  SECTION("Construct BNode(list).", "[Bencode][BNode][Constructor][List]") {
+    BNode bNode{1, 2, 3, 4};
+    REQUIRE_FALSE(!bNode.isList());
+    auto &array = BRef<List>(bNode).value();
+    REQUIRE(BRef<Integer>(array[0]).value() == 1);
+    REQUIRE(BRef<Integer>(array[1]).value() == 2);
+    REQUIRE(BRef<Integer>(array[2]).value() == 3);
+    REQUIRE(BRef<Integer>(array[3]).value() == 4);
+  }
+    SECTION("Construct BNode(dictionary).",
+    "[Bencode][BNode][Constructor][Dictionary]")
+    {
+      BNode bNode{ { "key1", 55 }, { "key2", 26666 } };
+      REQUIRE_FALSE(!bNode.isDictionary());
+      auto &object = BRef<Dictionary>(bNode);
+      REQUIRE(BRef<Integer>(object["key1"]).value() == 55);
+      REQUIRE(BRef<Integer>(object["key2"]).value() == 26666);
+    }
   //   SECTION("Construct BNode(array with nested array).",
   //   "[Bencode][BNode][Constructor][Array]")
   //   {
