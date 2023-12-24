@@ -73,21 +73,21 @@ TEST_CASE("Check use of BNode constructors.", "[Bencode][BNode][Constructor]") {
       REQUIRE(BRef<Integer>(object["key1"]).value() == 55);
       REQUIRE(BRef<Integer>(object["key2"]).value() == 26666);
     }
-  //   SECTION("Construct BNode(array with nested array).",
-  //   "[Bencode][BNode][Constructor][Array]")
-  //   {
-  //     BNode bNode{ 1, 2, 3, 4, BNode{ 5, 6, 7, 8 } };
-  //     REQUIRE_FALSE(!bNode.isArray());
-  //     auto &array = BRef<Array>(bNode).value();
-  //     REQUIRE(BRef<Number>(array[0]).value<int>() == 1);
-  //     REQUIRE(BRef<Number>(array[1]).value<int>() == 2);
-  //     REQUIRE(BRef<Number>(array[2]).value<int>() == 3);
-  //     REQUIRE(BRef<Number>(array[3]).value<int>() == 4);
-  //     REQUIRE(BRef<Number>(array[4][0]).value<int>() == 5);
-  //     REQUIRE(BRef<Number>(array[4][1]).value<int>() == 6);
-  //     REQUIRE(BRef<Number>(array[4][2]).value<int>() == 7);
-  //     REQUIRE(BRef<Number>(array[4][3]).value<int>() == 8);
-  //   }
+    SECTION("Construct BNode(array with nested array).",
+    "[Bencode][BNode][Constructor][Array]")
+    {
+      BNode bNode{ 1, 2, 3, 4, BNode{ 5, 6, 7, 8 } };
+      REQUIRE_FALSE(!bNode.isList());
+      auto &array = BRef<List>(bNode).value();
+      REQUIRE(BRef<Integer>(array[0]).value() == 1);
+      REQUIRE(BRef<Integer>(array[1]).value() == 2);
+      REQUIRE(BRef<Integer>(array[2]).value() == 3);
+      REQUIRE(BRef<Integer>(array[3]).value() == 4);
+      REQUIRE(BRef<Integer>(array[4][0]).value() == 5);
+      REQUIRE(BRef<Integer>(array[4][1]).value() == 6);
+      REQUIRE(BRef<Integer>(array[4][2]).value() == 7);
+      REQUIRE(BRef<Integer>(array[4][3]).value() == 8);
+    }
   //   SECTION("Construct BNode(object with nested object).",
   //   "[Bencode][BNode][Constructor][Object]")
   //   {
