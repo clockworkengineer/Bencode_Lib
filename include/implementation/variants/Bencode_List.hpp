@@ -7,8 +7,11 @@ namespace Bencode_Lib {
 struct List : Variant {
   // Constructors/Destructors
   List() : Variant(Variant::Type::list){};
-  explicit List(std::vector<BNode> &entryList)
-      : Variant(Variant::Type::list), bNodeList(std::move(entryList)) {}
+  List(const List &other) = default;
+  List &operator=(const List &other) = default;
+  List(List &&other) = default;
+  List &operator=(List &&other) = default;
+  ~List() = default;
   // Add array element
   void add(BNode &bNode) { bNodeList.emplace_back(std::move(bNode)); }
   void add(BNode &&bNode) { bNodeList.emplace_back(std::move(bNode)); }

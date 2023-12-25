@@ -69,7 +69,7 @@ const BNode &Bencode_Impl::operator[](const std::string &key) const { return ((b
 BNode &Bencode_Impl::operator[](std::size_t index)
 {
   // try {
-    if (bNodeRoot.isEmpty()) { bNodeRoot = BNode::make<List>(std::vector<BNode>()); }
+    if (bNodeRoot.isEmpty()) { bNodeRoot = BNode::make<List>(); }
     return (bNodeRoot[index]);
   // } catch ([[maybe_unused]] BNode::Error &error) {
   //   JRef<Array>(bNodeRoot).resize(index);

@@ -15,6 +15,11 @@ struct Dictionary : Variant {
   explicit Dictionary(Dictionary::EntryList &entryList)
       : Variant(Variant::Type::dictionary),
         bNodeDictionary(std::move(entryList)) {}
+  Dictionary(const Dictionary &other) = default;
+  Dictionary &operator=(const Dictionary &other) = default;
+  Dictionary(Dictionary &&other) = default;
+  Dictionary &operator=(Dictionary &&other) = default;
+  ~Dictionary() = default;
   // Add array element
   void add(Entry &entry) { bNodeDictionary.emplace_back(std::move(entry)); }
   void add(Entry &&entry) { bNodeDictionary.emplace_back(std::move(entry)); }

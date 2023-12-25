@@ -7,6 +7,11 @@ struct Integer : Variant {
   Integer() : Variant(Variant::Type::integer) {}
   explicit Integer(int64_t integer)
       : Variant(Variant::Type::integer), bNodeInteger(integer) {}
+  Integer(const Integer &other) = default;
+  Integer &operator=(const Integer &other) = default;
+  Integer(Integer &&other) = default;
+  Integer &operator=(Integer &&other) = default;
+  ~Integer() = default;
   // Get BNode value
   [[nodiscard]] int64_t value() const { return (bNodeInteger); }
 

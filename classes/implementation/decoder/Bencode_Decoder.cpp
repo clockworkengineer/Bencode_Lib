@@ -122,16 +122,16 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>List BNode.</returns>
 BNode Bencode_Decoder::decodeList(ISource &source) {
-  std::vector<BNode> list;
+  BNode list = BNode::make<List>();
   source.next();
   while (source.more() && source.current() != 'e') {
-    list.emplace_back(decode(source));
+    BRef<List>(list).add(decode(source));
   }
   if (source.current() != 'e') {
     throw Error("Syntax Error detected.");
   }
   source.next();
-  return (BNode::make<List>(list));
+  return (list);
 }
 
 /// <summary>

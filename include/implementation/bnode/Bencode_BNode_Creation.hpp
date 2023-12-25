@@ -54,9 +54,9 @@ inline BNode BNode::internalTypeToBNode(const Bencode::InternalType &type) {
   if (auto pValue = std::get_if<int>(&type)) {
     return (BNode(*pValue));
   }
-  // if (auto pValue = std::get_if<std::string>(&type)) {
-  //   return (BNode((*pValue)));
-  // }
+  if (auto pValue = std::get_if<std::string>(&type)) {
+    return (BNode((*pValue)));
+  }
   if (auto pValue = std::get_if<BNode>(&type)) {
     return (std::move(*const_cast<BNode *>(pValue)));
   }
