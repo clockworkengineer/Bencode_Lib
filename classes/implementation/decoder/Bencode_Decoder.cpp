@@ -122,7 +122,7 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>List BNode.</returns>
 BNode Bencode_Decoder::decodeList(ISource &source) {
-  List::EntryList list;
+  std::vector<BNode> list;
   source.next();
   while (source.more() && source.current() != 'e') {
     list.emplace_back(decode(source));
