@@ -12,9 +12,11 @@ struct List : Variant {
   // Add array element
   void add(BNode &bNode) { bNodeList.emplace_back(std::move(bNode)); }
   void add(BNode &&bNode) { bNodeList.emplace_back(std::move(bNode)); }
+  // Get BNode size
   [[nodiscard]] int size() const {
     return (static_cast<int>(bNodeList.size()));
   }
+  // Get BNode value
   [[nodiscard]] std::vector<BNode> &value() { return (bNodeList); }
   [[nodiscard]] const std::vector<BNode> &value() const { return (bNodeList); }
   BNode &operator[](int index) {
