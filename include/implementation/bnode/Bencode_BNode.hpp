@@ -14,16 +14,18 @@ struct BNode {
   };
   // Constructors/Destructors
   BNode() = default;
-  explicit BNode(std::unique_ptr<Variant> bNodeVariant)
-      : bNodeVariant(std::move(bNodeVariant)) {}
-  template<typename T> explicit BNode(T value);
-  explicit BNode(const Bencode::ArrayList &list);
-  explicit BNode(const Bencode::ObjectList &objectList);
+  template <typename T> explicit BNode(T value);
+  BNode(const Bencode::ArrayList &list);
+  BNode(const Bencode::ObjectList &objectList);
   BNode(const BNode &other) = delete;
   BNode &operator=(const BNode &other) = delete;
   BNode(BNode &&other) = default;
   BNode &operator=(BNode &&other) = default;
   ~BNode() = default;
+  // Assignment operators
+  template <typename T> BNode &operator=(T value) {
+    return (*this = BNode(value));
+  }
   // Indexing operators
   BNode &operator[](const std::string &key);
   const BNode &operator[](const std::string &key) const;
@@ -57,7 +59,11 @@ struct BNode {
   template <typename T> static BNode make() {
     return (BNode{std::make_unique<T>()});
   }
-
+  // Make BNode
+  // template<typename T, typename... Args> static auto make(Args &&...args)
+  // {
+  //   return (BNode{ std::make_unique<T>(std::forward<Args>(args)...) });
+  // }
 private:
   static BNode internalTypeToBNode(const Bencode::InternalType &type);
   std::unique_ptr<Variant> bNodeVariant;

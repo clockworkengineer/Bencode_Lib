@@ -10,7 +10,7 @@ namespace Bencode_Lib {
 struct Dictionary : Variant {
   using Entry = std::pair<std::string, BNode>;
   using EntryList = std::vector<Entry>;
-  Dictionary() : Variant(Variant::Type::dictionary){};
+  Dictionary () : Variant(Variant::Type::dictionary) {}
   explicit Dictionary(Dictionary::EntryList &entryList)
       : Variant(Variant::Type::dictionary),
         bNodeDictionary(std::move(entryList)) {}

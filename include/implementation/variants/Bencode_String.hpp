@@ -5,6 +5,7 @@
 namespace Bencode_Lib {
 
 struct String : Variant {
+  String() : Variant(Variant::Type::string) {};
   explicit String(std::string string)
       : Variant(Variant::Type::string), bNodeString(std::move(string)) {}
   [[nodiscard]] std::string &value() { return (bNodeString); }
