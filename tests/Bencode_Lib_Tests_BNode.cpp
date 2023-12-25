@@ -58,33 +58,33 @@ TEST_CASE("Check use of BNode constructors.", "[Bencode][BNode][Constructor]") {
   SECTION("Construct BNode(list).", "[Bencode][BNode][Constructor][List]") {
     BNode bNode{1, 2, 3, 4};
     REQUIRE_FALSE(!bNode.isList());
-    auto &array = BRef<List>(bNode).value();
-    REQUIRE(BRef<Integer>(array[0]).value() == 1);
-    REQUIRE(BRef<Integer>(array[1]).value() == 2);
-    REQUIRE(BRef<Integer>(array[2]).value() == 3);
-    REQUIRE(BRef<Integer>(array[3]).value() == 4);
+    auto &list = BRef<List>(bNode).value();
+    REQUIRE(BRef<Integer>(list[0]).value() == 1);
+    REQUIRE(BRef<Integer>(list[1]).value() == 2);
+    REQUIRE(BRef<Integer>(list[2]).value() == 3);
+    REQUIRE(BRef<Integer>(list[3]).value() == 4);
   }
   SECTION("Construct BNode(dictionary).",
           "[Bencode][BNode][Constructor][Dictionary]") {
     BNode bNode{{"key1", 55}, {"key2", 26666}};
     REQUIRE_FALSE(!bNode.isDictionary());
-    auto &object = BRef<Dictionary>(bNode);
-    REQUIRE(BRef<Integer>(object["key1"]).value() == 55);
-    REQUIRE(BRef<Integer>(object["key2"]).value() == 26666);
+    auto &dictionary = BRef<Dictionary>(bNode);
+    REQUIRE(BRef<Integer>(dictionary["key1"]).value() == 55);
+    REQUIRE(BRef<Integer>(dictionary["key2"]).value() == 26666);
   }
   SECTION("Construct BNode(array with nested array).",
           "[Bencode][BNode][Constructor][Array]") {
     BNode bNode{1, 2, 3, 4, BNode{5, 6, 7, 8}};
     REQUIRE_FALSE(!bNode.isList());
-    auto &array = BRef<List>(bNode).value();
-    REQUIRE(BRef<Integer>(array[0]).value() == 1);
-    REQUIRE(BRef<Integer>(array[1]).value() == 2);
-    REQUIRE(BRef<Integer>(array[2]).value() == 3);
-    REQUIRE(BRef<Integer>(array[3]).value() == 4);
-    REQUIRE(BRef<Integer>(array[4][0]).value() == 5);
-    REQUIRE(BRef<Integer>(array[4][1]).value() == 6);
-    REQUIRE(BRef<Integer>(array[4][2]).value() == 7);
-    REQUIRE(BRef<Integer>(array[4][3]).value() == 8);
+    auto &list = BRef<List>(bNode).value();
+    REQUIRE(BRef<Integer>(list[0]).value() == 1);
+    REQUIRE(BRef<Integer>(list[1]).value() == 2);
+    REQUIRE(BRef<Integer>(list[2]).value() == 3);
+    REQUIRE(BRef<Integer>(list[3]).value() == 4);
+    REQUIRE(BRef<Integer>(list[4][0]).value() == 5);
+    REQUIRE(BRef<Integer>(list[4][1]).value() == 6);
+    REQUIRE(BRef<Integer>(list[4][2]).value() == 7);
+    REQUIRE(BRef<Integer>(list[4][3]).value() == 8);
   }
   SECTION("Construct BNode(object with nested dictionary).",
           "[Bencode][BNode][Constructor][Dictionary]") {
@@ -92,35 +92,35 @@ TEST_CASE("Check use of BNode constructors.", "[Bencode][BNode][Constructor]") {
                 {"key2", 26666},
                 {"key3", BNode{{"key4", 5555}, {"key5", 7777}}}};
     REQUIRE_FALSE(!bNode.isDictionary());
-    auto &object = BRef<Dictionary>(bNode);
-    REQUIRE(BRef<Integer>(object["key1"]).value() == 55);
-    REQUIRE(BRef<Integer>(object["key2"]).value() == 26666);
-    REQUIRE(BRef<Integer>(object["key3"]["key4"]).value() == 5555);
-    REQUIRE(BRef<Integer>(object["key3"]["key5"]).value() == 7777);
+    auto &dictionary = BRef<Dictionary>(bNode);
+    REQUIRE(BRef<Integer>(dictionary["key1"]).value() == 55);
+    REQUIRE(BRef<Integer>(dictionary["key2"]).value() == 26666);
+    REQUIRE(BRef<Integer>(dictionary["key3"]["key4"]).value() == 5555);
+    REQUIRE(BRef<Integer>(dictionary["key3"]["key5"]).value() == 7777);
   }
   SECTION("Construct BNode(array with nested dictionary).",
           "[Bencode][BNode][Constructor][List]") {
     BNode bNode{1, 2, 3, 4, BNode{{"key4", 5555}, {"key5", 7777}}};
     REQUIRE_FALSE(!bNode.isList());
-    auto &array = BRef<List>(bNode).value();
-    REQUIRE(BRef<Integer>(array[0]).value() == 1);
-    REQUIRE(BRef<Integer>(array[1]).value() == 2);
-    REQUIRE(BRef<Integer>(array[2]).value() == 3);
-    REQUIRE(BRef<Integer>(array[3]).value() == 4);
-    REQUIRE(BRef<Integer>(array[4]["key4"]).value() == 5555);
-    REQUIRE(BRef<Integer>(array[4]["key5"]).value() == 7777);
+    auto &list = BRef<List>(bNode).value();
+    REQUIRE(BRef<Integer>(list[0]).value() == 1);
+    REQUIRE(BRef<Integer>(list[1]).value() == 2);
+    REQUIRE(BRef<Integer>(list[2]).value() == 3);
+    REQUIRE(BRef<Integer>(list[3]).value() == 4);
+    REQUIRE(BRef<Integer>(list[4]["key4"]).value() == 5555);
+    REQUIRE(BRef<Integer>(list[4]["key5"]).value() == 7777);
   }
   SECTION("Construct BNode(dictionary with nested list).",
           "[Bencode][BNode][Constructor][Dictionary]") {
     BNode bNode{{"key1", 55}, {"key2", 26666}, {"key3", BNode{5, 6, 7, 8}}};
     REQUIRE_FALSE(!bNode.isDictionary());
-    auto &object = BRef<Dictionary>(bNode);
-    REQUIRE(BRef<Integer>(object["key1"]).value() == 55);
-    REQUIRE(BRef<Integer>(object["key2"]).value() == 26666);
-    REQUIRE(BRef<Integer>(object["key3"][0]).value() == 5);
-    REQUIRE(BRef<Integer>(object["key3"][1]).value() == 6);
-    REQUIRE(BRef<Integer>(object["key3"][2]).value() == 7);
-    REQUIRE(BRef<Integer>(object["key3"][3]).value() == 8);
+    auto &dictionary = BRef<Dictionary>(bNode);
+    REQUIRE(BRef<Integer>(dictionary["key1"]).value() == 55);
+    REQUIRE(BRef<Integer>(dictionary["key2"]).value() == 26666);
+    REQUIRE(BRef<Integer>(dictionary["key3"][0]).value() == 5);
+    REQUIRE(BRef<Integer>(dictionary["key3"][1]).value() == 6);
+    REQUIRE(BRef<Integer>(dictionary["key3"][2]).value() == 7);
+    REQUIRE(BRef<Integer>(dictionary["key3"][3]).value() == 8);
   }
 }
 // // =================
