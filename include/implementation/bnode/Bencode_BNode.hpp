@@ -16,11 +16,7 @@ struct BNode {
   BNode() = default;
   explicit BNode(std::unique_ptr<Variant> bNodeVariant)
       : bNodeVariant(std::move(bNodeVariant)) {}
-  explicit BNode(int integer);
-  explicit BNode(long integer);
-  explicit BNode(long long integer);
-  explicit BNode(const char *string);
-  explicit BNode(std::string &string);
+  template<typename T> explicit BNode(T value);
   explicit BNode(const Bencode::ArrayList &list);
   explicit BNode(const Bencode::ObjectList &objectList);
   BNode(const BNode &other) = delete;
@@ -63,7 +59,7 @@ struct BNode {
   }
 
 private:
-  static BNode internalTypeToJNode(const Bencode::InternalType &type);
+  static BNode internalTypeToBNode(const Bencode::InternalType &type);
   std::unique_ptr<Variant> bNodeVariant;
 };
 

@@ -6,29 +6,33 @@
 
 namespace Bencode_Lib {
 
-inline BNode::BNode(int integer) { *this = BNode::make<Integer>(integer); }
-inline BNode::BNode(long integer) { *this = BNode::make<Integer>(integer); }
-inline BNode::BNode(long long integer) {
-  *this = BNode::make<Integer>(integer);
-}
-inline BNode::BNode(const char *string) { *this = BNode::make<String>(string); }
-inline BNode::BNode(std::string &string) {
-  *this = BNode::make<String>(string);
-}
+// Construct BNode from raw values
+template<typename T> BNode::BNode(T value)
+{
 
+  if constexpr (std::is_arithmetic_v<T>) {
+    *this = BNode::make<Integer>(value);
+  } else if constexpr (std::is_same_v<T, const char *>) {
+    *this = BNode::make<String>(value);
+  } else if constexpr (std::is_same_v<T, std::string>) {
+    *this = BNode::make<String>(value); 
+  } else if constexpr (std::is_convertible_v<T, std::unique_ptr<Variant>>) {
+    bNodeVariant = std::move(value);
+  }
+}
 // Construct BNode Array from initializer list
 inline BNode::BNode(const Bencode::ArrayList &list) {
   *this = BNode::make<List>();
   for (const auto &entry : list) {
-    BRef<List>(*this).add(internalTypeToJNode(entry));
+    BRef<List>(*this).add(internalTypeToBNode(entry));
   }
 }
-// Construct JNode Object from initializer list
+// Construct BNode Object from initializer list
 inline BNode::BNode(const Bencode::ObjectList &object) {
   *this = BNode::make<Dictionary>();
   for (const auto &entry : object) {
     BRef<Dictionary>(*this).add(
-        Dictionary::Entry(entry.first, internalTypeToJNode(entry.second)));
+        Dictionary::Entry(entry.first, internalTypeToBNode(entry.second)));
   }
 }
 // List
@@ -46,7 +50,7 @@ inline const BNode &BNode::operator[](const std::string &key) const {
   return (BRef<const Dictionary>(*this)[key]);
 }
 
-inline BNode BNode::internalTypeToJNode(const Bencode::InternalType &type) {
+inline BNode BNode::internalTypeToBNode(const Bencode::InternalType &type) {
   if (auto pValue = std::get_if<int>(&type)) {
     return (BNode(*pValue));
   }
