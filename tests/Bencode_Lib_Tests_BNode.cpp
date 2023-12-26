@@ -59,7 +59,7 @@ TEST_CASE("Check use of BNode constructors.", "[Bencode][BNode][Constructor]") {
     REQUIRE(BRef<Integer>(dictionary["key1"]).value() == 55);
     REQUIRE(BRef<Integer>(dictionary["key2"]).value() == 26666);
   }
-  SECTION("Construct BNode(array with nested array).",
+  SECTION("Construct BNode(list with nested list).",
           "[Bencode][BNode][Constructor][Array]") {
     BNode bNode{1, 2, 3, 4, BNode{5, 6, 7, 8}};
     REQUIRE_FALSE(!bNode.isList());
@@ -85,7 +85,7 @@ TEST_CASE("Check use of BNode constructors.", "[Bencode][BNode][Constructor]") {
     REQUIRE(BRef<Integer>(dictionary["key3"]["key4"]).value() == 5555);
     REQUIRE(BRef<Integer>(dictionary["key3"]["key5"]).value() == 7777);
   }
-  SECTION("Construct BNode(array with nested dictionary).",
+  SECTION("Construct BNode(list with nested dictionary).",
           "[Bencode][BNode][Constructor][List]") {
     BNode bNode{1, 2, 3, 4, BNode{{"key4", 5555}, {"key5", 7777}}};
     REQUIRE_FALSE(!bNode.isList());
@@ -189,7 +189,7 @@ TEST_CASE("Check use of BNode assigment operators.",
     REQUIRE(BRef<Integer>(dictionary["key1"]).value() == 55);
     REQUIRE(BRef<Integer>(dictionary["key2"]).value() == 26666);
   }
-  SECTION("Assign BNode with array with nested list.",
+  SECTION("Assign BNode with list with nested list.",
           "[Bencode][BNode][Constructor][List]") {
     bNode = {1, 2, 3, 4, BNode{5, 6, 7, 8}};
     REQUIRE_FALSE(!bNode.isList());
@@ -219,13 +219,13 @@ TEST_CASE("Check use of BNode assigment operators.",
           "[Bencode][BNode][Constructor][List]") {
     bNode = {1, 2, 3, 4, BNode{{"key4", 5555}, {"key5", 7777}}};
     REQUIRE_FALSE(!bNode.isList());
-    auto &array = BRef<List>(bNode).value();
-    REQUIRE(BRef<Integer>(array[0]).value() == 1);
-    REQUIRE(BRef<Integer>(array[1]).value() == 2);
-    REQUIRE(BRef<Integer>(array[2]).value() == 3);
-    REQUIRE(BRef<Integer>(array[3]).value() == 4);
-    REQUIRE(BRef<Integer>(array[4]["key4"]).value() == 5555);
-    REQUIRE(BRef<Integer>(array[4]["key5"]).value() == 7777);
+    auto &list = BRef<List>(bNode).value();
+    REQUIRE(BRef<Integer>(list[0]).value() == 1);
+    REQUIRE(BRef<Integer>(list[1]).value() == 2);
+    REQUIRE(BRef<Integer>(list[2]).value() == 3);
+    REQUIRE(BRef<Integer>(list[3]).value() == 4);
+    REQUIRE(BRef<Integer>(list[4]["key4"]).value() == 5555);
+    REQUIRE(BRef<Integer>(list[4]["key5"]).value() == 7777);
   }
   SECTION("Assign BNode with dictionary with nested a list.",
           "[Bencode][BNode][Constructor][Object]") {
