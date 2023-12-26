@@ -13,6 +13,8 @@ template <typename T> BNode::BNode(T value) {
     *this = BNode::make<Integer>(value);
   } else if constexpr (std::is_floating_point_v<T>) {
     *this = BNode::make<Integer>(static_cast<long long>(value));
+  } else if constexpr (std::is_null_pointer_v<T>) {
+    *this = BNode::make<Integer>(0);
   } else if constexpr (std::is_same_v<T, const char *>) {
     *this = BNode::make<String>(value);
   } else if constexpr (std::is_same_v<T, std::string>) {
