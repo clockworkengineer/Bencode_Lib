@@ -9,8 +9,10 @@ namespace Bencode_Lib {
 // Construct BNode from raw values
 template <typename T> BNode::BNode(T value) {
 
-  if constexpr (std::is_arithmetic_v<T>) {
+  if constexpr (std::is_integral_v<T>) {
     *this = BNode::make<Integer>(value);
+  } else if constexpr (std::is_floating_point_v<T>) {
+    *this = BNode::make<Integer>(static_cast<long long>(value));
   } else if constexpr (std::is_same_v<T, const char *>) {
     *this = BNode::make<String>(value);
   } else if constexpr (std::is_same_v<T, std::string>) {
