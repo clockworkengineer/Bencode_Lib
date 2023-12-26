@@ -33,10 +33,10 @@ private:
     if (bNode.isDictionary()) {
       for (const auto &bNodeNext :
            BRef<Bencode_Lib::Dictionary>(bNode).value()) {
-        auto elementName = bNodeNext.first;
+        auto elementName = bNodeNext.getKey();
         std::replace(elementName.begin(), elementName.end(), ' ', '-');
         destination.add("<" + elementName + ">");
-        encodeXML(bNodeNext.second, destination);
+        encodeXML(bNodeNext.getBNode(), destination);
         destination.add("</" + elementName + ">");
       }
     } else if (bNode.isList()) {

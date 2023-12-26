@@ -8,7 +8,21 @@
 namespace Bencode_Lib {
 
 struct Dictionary : Variant {
-  using Entry = std::pair<std::string, BNode>;
+  // Dictionary entry
+  struct Entry {
+    Entry(const std::string &key, BNode &bNode)
+        : entryKey(key), entryBNode(std::move(bNode)) {}
+    Entry(const std::string &key, BNode &&bNode)
+        : entryKey(key), entryBNode(std::move(bNode)) {}
+    std::string &getKey() { return (entryKey); }
+    const std::string &getKey() const { return (entryKey); }
+    BNode &getBNode() { return (entryBNode); }
+    const BNode &getBNode() const { return (entryBNode); }
+
+  private:
+    std::string entryKey;
+    BNode entryBNode;
+  };
   using EntryList = std::vector<Entry>;
   // Constructors/Destructors
   Dictionary() : Variant(Variant::Type::dictionary) {}
@@ -26,7 +40,7 @@ struct Dictionary : Variant {
   [[nodiscard]] bool contains(const std::string &key) const {
     if (auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
                                [&key](const Entry &entry) -> bool {
-                                 return (entry.first == key);
+                                 return (entry.getKey() == key);
                                });
         it != bNodeDictionary.end()) {
       return (true);
@@ -39,20 +53,20 @@ struct Dictionary : Variant {
   BNode &operator[](const std::string &key) {
     if (auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
                                [&key](const Entry &entry) -> bool {
-                                 return (entry.first == key);
+                                 return (entry.getKey() == key);
                                });
         it != bNodeDictionary.end()) {
-      return (it->second);
+      return (it->getBNode());
     }
     throw BNode::Error("Invalid key used in dictionary.");
   }
   const BNode &operator[](const std::string &key) const {
     if (auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
                                [&key](const Entry &entry) -> bool {
-                                 return (entry.first == key);
+                                 return (entry.getKey() == key);
                                });
         it != bNodeDictionary.end()) {
-      return (it->second);
+      return (it->getBNode());
     }
     throw BNode::Error("Invalid key used in dictionary.");
   }

@@ -26,8 +26,8 @@ public:
       int commas = BRef<Bencode_Lib::Dictionary>(bNode).value().size();
       for (const auto &bNodeNext :
            BRef<Bencode_Lib::Dictionary>(bNode).value()) {
-        destination.add("\"" + bNodeNext.first + "\"" + " : ");
-        encode(bNodeNext.second, destination);
+        destination.add("\"" + bNodeNext.getKey() + "\"" + " : ");
+        encode(bNodeNext.getBNode(), destination);
         if (--commas > 0)
           destination.add(",");
       }

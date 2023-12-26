@@ -102,7 +102,7 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
     // Check key not duplicate and insert
     if (std::find_if(dictionary.begin(), dictionary.end(),
                      [&key](const Dictionary::Entry &entry) -> bool {
-                       return (entry.first == key);
+                       return (entry.getKey() == key);
                      }) == dictionary.end()) {
       dictionary.emplace_back(key, decode(source));
     } else {

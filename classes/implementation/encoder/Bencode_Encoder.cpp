@@ -13,9 +13,9 @@ void Bencode_Encoder::encode(const BNode &bNode,
   if (bNode.isDictionary()) {
     destination.add('d');
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
-      destination.add(std::to_string(bNodeNext.first.length()) + ":" +
-                      bNodeNext.first);
-      encode(bNodeNext.second, destination);
+      destination.add(std::to_string(bNodeNext.getKey().length()) + ":" +
+                      bNodeNext.getKey());
+      encode(bNodeNext.getBNode(), destination);
     }
     destination.add('e');
   } else if (bNode.isList()) {
