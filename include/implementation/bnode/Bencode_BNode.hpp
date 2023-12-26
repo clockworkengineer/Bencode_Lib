@@ -15,8 +15,8 @@ struct BNode {
   // Constructors/Destructors
   BNode() = default;
   template <typename T> explicit BNode(T value);
-  BNode(const Bencode::ArrayList &list);
-  BNode(const Bencode::ObjectList &objectList);
+  BNode(const Bencode::ListInitializer &list);
+  BNode(const Bencode::DictionaryInitializer &DictionaryInitializer);
   BNode(const BNode &other) = delete;
   BNode &operator=(const BNode &other) = delete;
   BNode(BNode &&other) = default;
@@ -53,17 +53,10 @@ struct BNode {
     return (bNodeVariant);
   }
   // Make BNode
-  template <typename T, typename U> static BNode make(U &&value) {
-    return (BNode{std::make_unique<T>(T{value})});
+  template <typename T, typename... Args> static auto make(Args &&...args) {
+    return (BNode{std::make_unique<T>(std::forward<Args>(args)...)});
   }
-  template <typename T> static BNode make() {
-    return (BNode{std::make_unique<T>()});
-  }
-  // Make BNode
-  // template<typename T, typename... Args> static auto make(Args &&...args)
-  // {
-  //   return (BNode{ std::make_unique<T>(std::forward<Args>(args)...) });
-  // }
+
 private:
   static BNode internalTypeToBNode(const Bencode::InternalType &type);
   std::unique_ptr<Variant> bNodeVariant;

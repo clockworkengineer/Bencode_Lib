@@ -29,11 +29,11 @@ public:
   };
   // Possible Bencode Node internal value types
   using InternalType =
-    std::variant<int, std::string, BNode>;
-  // Array initializer list
-  using ArrayList = std::initializer_list<InternalType>;
-  // Object initializer list
-  using ObjectList = std::initializer_list<std::pair<std::string, InternalType>>;
+    std::variant<int, long, long long, std::string, BNode>;
+  // List initializer list
+  using ListInitializer = std::initializer_list<InternalType>;
+  // Dictionary initializer list
+  using DictionaryInitializer = std::initializer_list<std::pair<std::string, InternalType>>;
   // Constructors/Destructors
   Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
   Bencode(const Bencode &other) = delete;
