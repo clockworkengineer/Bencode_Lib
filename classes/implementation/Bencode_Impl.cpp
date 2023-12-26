@@ -57,7 +57,7 @@ void Bencode_Impl::encode(IDestination &destination) const {
 BNode &Bencode_Impl::operator[](const std::string &key)
 {
   // try {
-     if (bNodeRoot.isEmpty()) { bNodeRoot = BNode::make<Dictionary>(Dictionary::EntryList()); }
+     if (bNodeRoot.isEmpty()) { bNodeRoot = BNode::make<Dictionary>(); }
      return (bNodeRoot[key]);
   // } catch ([[maybe_unused]] BNode::Error &error) {
   //   JRef<Object>(bNodeRoot).add(Object::Entry(key, BNode::make<Hole>()));

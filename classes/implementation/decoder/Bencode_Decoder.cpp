@@ -89,7 +89,7 @@ BNode Bencode_Decoder::decodeInteger(ISource &source) {
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Dictionary BNode.</returns>
 BNode Bencode_Decoder::decodeDictionary(ISource &source) {
-  Dictionary::EntryList dictionary;
+  BNode dictionary = BNode::make<Dictionary>();
   std::string lastKey{};
   source.next();
   while (source.more() && source.current() != 'e') {
@@ -100,11 +100,8 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
     }
     lastKey = key;
     // Check key not duplicate and insert
-    if (std::find_if(dictionary.begin(), dictionary.end(),
-                     [&key](const Dictionary::Entry &entry) -> bool {
-                       return (entry.getKey() == key);
-                     }) == dictionary.end()) {
-      dictionary.emplace_back(key, decode(source));
+    if (!BRef<Dictionary>(dictionary).contains(key)) {
+      BRef<Dictionary>(dictionary).add(Dictionary::Entry(key, decode(source)));
     } else {
       throw Error("Syntax Error detected.");
     }
@@ -113,7 +110,7 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
     throw Error("Syntax Error detected.");
   }
   source.next();
-  return (BNode::make<Dictionary>(dictionary));
+  return (dictionary);
 }
 
 /// <summary>

@@ -23,12 +23,8 @@ struct Dictionary : Variant {
     std::string entryKey;
     BNode entryBNode;
   };
-  using EntryList = std::vector<Entry>;
   // Constructors/Destructors
   Dictionary() : Variant(Variant::Type::dictionary) {}
-  explicit Dictionary(Dictionary::EntryList &entryList)
-      : Variant(Variant::Type::dictionary),
-        bNodeDictionary(std::move(entryList)) {}
   Dictionary(const Dictionary &other) = default;
   Dictionary &operator=(const Dictionary &other) = default;
   Dictionary(Dictionary &&other) = default;
@@ -70,10 +66,12 @@ struct Dictionary : Variant {
     }
     throw BNode::Error("Invalid key used in dictionary.");
   }
-  [[nodiscard]] EntryList &value() { return (bNodeDictionary); }
-  [[nodiscard]] const EntryList &value() const { return (bNodeDictionary); }
+  [[nodiscard]] std::vector<Entry> &value() { return (bNodeDictionary); }
+  [[nodiscard]] const std::vector<Entry> &value() const {
+    return (bNodeDictionary);
+  }
 
 private:
-  Dictionary::EntryList bNodeDictionary;
+  std::vector<Entry> bNodeDictionary;
 };
 } // namespace Bencode_Lib
