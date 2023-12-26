@@ -166,12 +166,12 @@ TEST_CASE("Check use of BNode assigment operators.",
       REQUIRE_FALSE(!bNode.isInteger());
       REQUIRE(BRef<Integer>(bNode).value() == 1);
     }
-    // SECTION("Assign nullptr to BNode.", "[Bencode][BNode][Assignment][Null]")
-    // {
-    //   bNode = nullptr;
-    //   REQUIRE_FALSE(!bNode.isInteger());
-    //   REQUIRE(BRef<Integer>(bNode).value() == 0);
-    // }
+    SECTION("Assign nullptr to BNode.", "[Bencode][BNode][Assignment][Null]")
+    {
+      bNode = nullptr;
+      REQUIRE_FALSE(!bNode.isInteger());
+      REQUIRE(BRef<Integer>(bNode).value() == 0);
+    }
   SECTION("Assign list to BNode.", "[Bencode][BNode][Assignment][List]") {
     bNode = {1, 2, 3, 4};
     REQUIRE_FALSE(!bNode.isList());
