@@ -43,6 +43,7 @@ set(BENCODE_INCLUDES
   ./include/implementation/io/Bencode_BufferDestination.hpp
   ./include/implementation/io/Bencode_FileDestination.hpp
   ./include/implementation/variants/Bencode_Dictionary.hpp
+  ./include/implementation/variants/Bencode_Hole.hpp
   ./include/implementation/variants/Bencode_Integer.hpp
   ./include/implementation/variants/Bencode_List.hpp
   ./include/implementation/variants/Bencode_String.hpp

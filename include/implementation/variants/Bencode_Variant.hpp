@@ -3,7 +3,7 @@
 namespace Bencode_Lib {
 
 struct Variant {
-  enum class Type { base = 0, dictionary, list, integer, string };
+  enum class Type { base = 0, dictionary, list, integer, string, hole };
   // Constructors/Destructors
   explicit Variant(Type nodeType = Type::base) : nodeType(nodeType) {}
   Variant(const Variant &other) = default;

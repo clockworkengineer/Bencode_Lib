@@ -42,6 +42,9 @@ public:
   Bencode &operator=(Bencode &&other) = delete;
   ~Bencode();
 
+  // Pass in default JSON to parse
+  explicit Bencode(const std::string &bencodeString);
+
   // Decode Bencode into BNode tree
   void decode(ISource &source) const;
   void decode(ISource &&source) const;

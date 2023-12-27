@@ -56,7 +56,6 @@ std::string readBencodedBytesFromFile(const std::string &bencodedFileName) {
 }
 /// <summary>
 /// Convert byte buffer to a string.
-/// the buffer.
 /// </summary>
 /// <param name="buffer">Bencoded byte buffer.</param>
 /// <returns></returns>

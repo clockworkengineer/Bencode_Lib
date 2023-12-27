@@ -30,7 +30,7 @@ inline BNode::BNode(const Bencode::ListInitializer &list) {
     BRef<List>(*this).add(internalTypeToBNode(entry));
   }
 }
-// Construct BNode Object from initializer list
+// Construct BNode Dictionary from initializer list
 inline BNode::BNode(const Bencode::DictionaryInitializer &object) {
   *this = BNode::make<Dictionary>();
   for (const auto &entry : object) {
@@ -47,6 +47,11 @@ inline const BNode &BNode::operator[](int index) const {
 }
 // Dictionary
 inline BNode &BNode::operator[](const std::string &key) {
+  if (this->isHole()) {
+    *this = BNode::make<Dictionary>();
+    BRef<Dictionary>(*this).add(Dictionary::Entry(key, BNode::make<Hole>()));
+    return (BRef<Dictionary>(*this).value().back().getBNode());
+  }
   return (BRef<Dictionary>(*this)[key]);
 }
 inline const BNode &BNode::operator[](const std::string &key) const {

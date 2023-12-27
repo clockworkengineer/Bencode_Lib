@@ -21,7 +21,7 @@
 namespace Bencode_Lib {
 
 /// <summary>
-///  Initialise the implementation layer.
+/// Initialise the implementation layer.
 /// </summary>
 
 Bencode::Bencode(IEncoder *encoder, IDecoder *decoder)
@@ -30,6 +30,14 @@ Bencode::Bencode(IEncoder *encoder, IDecoder *decoder)
   implementation->setDecoder(decoder);
 }
 Bencode::~Bencode() {}
+
+/// <summary>
+/// Bencode constructor. Pass a Bencode string to be initially parsed.
+/// </summary>
+/// <param name="bencodeString">Bencode string.</param>
+Bencode::Bencode(const std::string &bencodeString) : Bencode() {
+  decode(BufferSource{bencodeString});
+}
 
 /// <summary>
 ///  Get Bencode_Lib version.
@@ -68,14 +76,22 @@ const BNode &Bencode::root() const { return (implementation->root()); }
 /// Return object entry for the passed in key.
 /// </summary>
 /// <param name=key>Dictionary entry (BNode) key.</param>
-BNode &Bencode::operator[](const std::string &key) { return ((*implementation)[key]); }
-const BNode &Bencode::operator[](const std::string &key) const { return ((*implementation)[key]); }
+BNode &Bencode::operator[](const std::string &key) {
+  return ((*implementation)[key]);
+}
+const BNode &Bencode::operator[](const std::string &key) const {
+  return ((*implementation)[key]);
+}
 
 /// <summary>
 /// Return list entry for the passed in index.
 /// </summary>
 /// <param name=index>Array entry (BNode) index.</param>
-BNode &Bencode::operator[](std::size_t index) { return ((*implementation)[index]); }
-const BNode &Bencode::operator[](std::size_t index) const { return ((*implementation)[index]); }
+BNode &Bencode::operator[](std::size_t index) {
+  return ((*implementation)[index]);
+}
+const BNode &Bencode::operator[](std::size_t index) const {
+  return ((*implementation)[index]);
+}
 
 } // namespace Bencode_Lib

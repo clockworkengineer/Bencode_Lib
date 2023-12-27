@@ -56,13 +56,13 @@ void Bencode_Impl::encode(IDestination &destination) const {
 
 BNode &Bencode_Impl::operator[](const std::string &key)
 {
-  // try {
+   try {
      if (bNodeRoot.isEmpty()) { bNodeRoot = BNode::make<Dictionary>(); }
      return (bNodeRoot[key]);
-  // } catch ([[maybe_unused]] BNode::Error &error) {
-  //   JRef<Object>(bNodeRoot).add(Object::Entry(key, BNode::make<Hole>()));
-  //   return (bNodeRoot[key]);
-  // }
+  } catch ([[maybe_unused]] BNode::Error &error) {
+    BRef<Dictionary>(bNodeRoot).add(Dictionary::Entry(key, BNode::make<Hole>()));
+    return (bNodeRoot[key]);
+  }
 }
 const BNode &Bencode_Impl::operator[](const std::string &key) const { return ((bNodeRoot)[key]); }
 
@@ -72,7 +72,7 @@ BNode &Bencode_Impl::operator[](std::size_t index)
     if (bNodeRoot.isEmpty()) { bNodeRoot = BNode::make<List>(); }
     return (bNodeRoot[index]);
   // } catch ([[maybe_unused]] BNode::Error &error) {
-  //   JRef<Array>(bNodeRoot).resize(index);
+  //   BRef<Array>(bNodeRoot).resize(index);
   //   return (bNodeRoot[index]);
   // }
 }

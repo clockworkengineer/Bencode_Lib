@@ -20,6 +20,7 @@ set(TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Unit_Tests)
 
 set(TEST_SOURCES
   Bencode_Lib_Tests_BNode.cpp
+  Bencode_Lib_Tests_Bencode.cpp
   Bencode_Lib_Tests_Decode.cpp
   Bencode_Lib_Tests_Encode.cpp
   Bencode_Lib_Tests_ISource.cpp

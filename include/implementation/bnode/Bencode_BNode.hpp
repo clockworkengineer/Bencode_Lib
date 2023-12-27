@@ -45,6 +45,9 @@ struct BNode {
   [[nodiscard]] bool isDictionary() const {
     return (bNodeVariant->getNodeType() == Variant::Type::dictionary);
   }
+  [[nodiscard]] bool isHole() const {
+    return (bNodeVariant->getNodeType() == Variant::Type::hole);
+  }
   // Get reference to BNode variant
   [[nodiscard]] std::unique_ptr<Variant> &getVariant() {
     return (bNodeVariant);
