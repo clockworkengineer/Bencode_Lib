@@ -176,41 +176,38 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE_FALSE(!bencode[0].isInteger());
     REQUIRE(BRef<Integer>(bencode[0]).value() == 3);
   }
+
+  SECTION(
+      "Initialise root Bencode list with one entry containing a const char *.",
+      "[Bencode][Create][List][String]") {
+    Bencode bencode;
+    bencode[0] = "robert";
+    REQUIRE_FALSE(!bencode[0].isString());
+    REQUIRE(BRef<String>(bencode[0]).value() == "robert");
+  }
+  SECTION(
+      "Initialise root Bencode list with one entry containing a std::string.",
+      "[Bencode][Create][List][String]") {
+    Bencode bencode;
+    bencode[0] = std::string{"robert"};
+    REQUIRE_FALSE(!bencode[0].isString());
+    REQUIRE(BRef<String>(bencode[0]).value() == "robert");
+  }
+  SECTION("Initialise root Bencode list with one entry containing a boolean.",
+          "[Bencode][Create][List][Integer]") {
+    Bencode bencode;
+    bencode[0] = true;
+    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE(BRef<Integer>(bencode[0]).value() == 1);
+  }
+  SECTION("Initialise root Bencode list with one entry containing a nullptr.",
+          "[Bencode][Create][List][Integer]") {
+    Bencode bencode;
+    bencode[0] = nullptr;
+    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE(BRef<Integer>(bencode[0]).value() == 0);
+  }
 }
-//   SECTION(
-//       "Initialise root Bencode list with one entry containing a const char
-//       *.",
-//       "[Bencode][Create][List][String]") {
-//     Bencode bencode;
-//     bencode[0] = "robert";
-//     REQUIRE_FALSE(!bencode[0].isString());
-//     REQUIRE(BRef<String>(bencode.root()[0]).value() == "robert");
-//   }
-//   SECTION(
-//       "Initialise root Bencode list with one entry containing a
-//       std::string.",
-//       "[Bencode][Create][List][String]") {
-//     Bencode bencode;
-//     bencode[0] = std::string{"robert"};
-//     REQUIRE_FALSE(!bencode[0].isString());
-//     REQUIRE(BRef<String>(bencode.root()[0]).value() == "robert");
-//   }
-//   SECTION("Initialise root Bencode list with one entry containing a
-//   boolean.",
-//           "[Bencode][Create][List][Boolean]") {
-//     Bencode bencode;
-//     bencode[0] = true;
-//     REQUIRE_FALSE(!bencode[0].isBoolean());
-//     REQUIRE_FALSE(!BRef<Boolean>(bencode.root()[0]).value());
-//   }
-//   SECTION("Initialise root Bencode list with one entry containing a
-//   null.",
-//           "[Bencode][Create][List][null]") {
-//     Bencode bencode;
-//     bencode[0] = nullptr;
-//     REQUIRE_FALSE(!bencode[0].isNull());
-//     REQUIRE(BRef<Null>(bencode.root()[0]).getNull() == nullptr);
-//   }
 //   SECTION("Create two level list with null at the base and stringify.",
 //           "[Bencode][Create][List][null]") {
 //     Bencode bencode;
