@@ -136,53 +136,47 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE_FALSE(!bencode[0].isInteger());
     REQUIRE(BRef<Integer>(bencode[0]).value() == 300);
   }
+
+  SECTION("Initialise root Bencode list with one entry containing a long.",
+          "[Bencode][Create][List][Integer]") {
+    Bencode bencode;
+    bencode[0] = 30000l;
+    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE(BRef<Integer>(bencode[0]).value() == 30000);
+  }
+
+  SECTION("Initialise root Bencode list with one entry containing a long long.",
+          "[Bencode][Create][List][Integer]") {
+    Bencode bencode;
+    bencode[0] = 30000ll;
+    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE(BRef<Integer>(bencode[0]).value() == 30000);
+  }
+
+  SECTION("Initialise root Bencode list with one entry containing a float.",
+          "[Bencode][Create][List][Integer]") {
+    Bencode bencode;
+    bencode[0] = 3.141f;
+    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE(BRef<Integer>(bencode[0]).value() == 3);
+  }
+
+  SECTION("Initialise root Bencode list with one entry containing a double.",
+          "[Bencode][Create][List][Integer]") {
+    Bencode bencode;
+    bencode[0] = 3.141;
+    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE(BRef<Integer>(bencode[0]).value() == 3);
+  }
+  SECTION(
+      "Initialise root Bencode list with one entry containing a long double.",
+      "[Bencode][Create][List][Integer]") {
+    Bencode bencode;
+    bencode[0] = 3.141l;
+    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE(BRef<Integer>(bencode[0]).value() == 3);
+  }
 }
-//   SECTION("Initialise root Bencode list with one entry containing a
-//   long.",
-//           "[Bencode][Create][List][Integer]") {
-//     Bencode bencode;
-//     bencode[0] = 30000l;
-//     REQUIRE_FALSE(!bencode[0].isInteger());
-//     REQUIRE(BRef<Integer>(bencode.root()[0]).value() == 30000);
-//   }
-//   SECTION(
-//       "Initialise root Bencode list with one entry containing a long
-//       long.",
-//       "[Bencode][Create][List][Integer]") {
-//     Bencode bencode;
-//     bencode[0] = 30000ll;
-//     REQUIRE_FALSE(!bencode[0].isInteger());
-//     REQUIRE(BRef<Integer>(bencode.root()[0]).value<long long>() == 30000);
-//   }
-//   SECTION("Initialise root Bencode list with one entry containing a
-//   float.",
-//           "[Bencode][Create][List][Integer]") {
-//     Bencode bencode;
-//     bencode[0] = 3.141f;
-//     REQUIRE_FALSE(!bencode[0].isInteger());
-//     REQUIRE_FALSE(!equalFloatingPoint(
-//         BRef<Integer>(bencode.root()[0]).value<float>(), 3.141f, 0.0001));
-//   }
-//   SECTION("Initialise root Bencode list with one entry containing a
-//   double.",
-//           "[Bencode][Create][List][Integer]") {
-//     Bencode bencode;
-//     bencode[0] = 3.141l;
-//     REQUIRE_FALSE(!bencode[0].isInteger());
-//     REQUIRE_FALSE(!equalFloatingPoint(
-//         BRef<Integer>(bencode.root()[0]).value<long double>(), 3.141l,
-//         0.0001));
-//   }
-//   SECTION(
-//       "Initialise root Bencode list with one entry containing a long
-//       double.",
-//       "[Bencode][Create][List][Integer]") {
-//     Bencode bencode;
-//     bencode[0] = 3.141;
-//     REQUIRE_FALSE(!bencode[0].isInteger());
-//     REQUIRE_FALSE(!equalFloatingPoint(
-//         BRef<Integer>(bencode.root()[0]).value<double>(), 3.141, 0.0001));
-//   }
 //   SECTION(
 //       "Initialise root Bencode list with one entry containing a const char
 //       *.",
