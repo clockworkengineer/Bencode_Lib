@@ -68,13 +68,13 @@ const BNode &Bencode_Impl::operator[](const std::string &key) const { return ((b
 
 BNode &Bencode_Impl::operator[](std::size_t index)
 {
-  // try {
+  try {
     if (bNodeRoot.isEmpty()) { bNodeRoot = BNode::make<List>(); }
     return (bNodeRoot[index]);
-  // } catch ([[maybe_unused]] BNode::Error &error) {
-  //   BRef<Array>(bNodeRoot).resize(index);
-  //   return (bNodeRoot[index]);
-  // }
+  } catch ([[maybe_unused]] BNode::Error &error) {
+    BRef<List>(bNodeRoot).resize(index);
+    return (bNodeRoot[index]);
+  }
 }
 const BNode &Bencode_Impl::operator[](std::size_t index) const { return ((bNodeRoot)[index]); }
 

@@ -100,43 +100,44 @@ TEST_CASE("Check Bencode dictionary creation api.",
     REQUIRE(BRef<Integer>(bencode["nothing"]["extra"]).value() == 3);
   }
   SECTION("Create three level dictionary and null at base and encode.",
-          "[Bencode][Create][Dictionary][null]") {
+          "[Bencode][Create][Dictionary][Integer]") {
     Bencode bencode;
     bencode["nothing"]["extra"]["more"] = nullptr;
     REQUIRE_FALSE(!bencode["nothing"]["extra"]["more"].isInteger());
     REQUIRE(BRef<Integer>(bencode["nothing"]["extra"]["more"]).value() == 0);
-    // BufferDestination destinationBuffer;
-    // REQUIRE_NOTHROW(bencode.stringify(destinationBuffer));
-    // REQUIRE(destinationBuffer.getBuffer() ==
-    //         R"({"nothing":{"extra":{"more":null}}})");
+    BufferDestination destinationBuffer;
+    REQUIRE_NOTHROW(bencode.encode(destinationBuffer));
+    std::string result;
+    for (auto ch : destinationBuffer.getBuffer())
+      result.push_back(static_cast<char>(ch));
+    REQUIRE(result == R"(d7:nothingd5:extrad4:morei0eeee)");
   }
-// }
-// TEST_CASE("Check Bencode array creation api.", "[Bencode][Create][List]") {
-//   SECTION("Initialise Bencode with Bencode array  passed to constructor.",
-//           "[Bencode][Create][Constructor]") {
-//     REQUIRE_NOTHROW(Bencode(R"([ "pi", 3.141 ])"));
-//   }
-//   SECTION("Initialise Bencode with Bencode array passed to constructor and
-//   "
-//           "validate.",
-//           "[Bencode][Create][Constructor][Validate]") {
-//     const Bencode bencode(R"([ "pi", 3.141 ])");
-//     REQUIRE_FALSE(!bencode.root().isArray());
-//     REQUIRE_FALSE(!bencode.root()[0].isString());
-//     REQUIRE_FALSE(!bencode.root()[1].isInteger());
-//     REQUIRE(BRef<String>(bencode.root()[0]).value() == "pi");
-//     REQUIRE_FALSE(!equalFloatingPoint(
-//         BRef<Integer>(bencode.root()[1]).value<float>(), 3.141f, 0.0001));
-//   }
-//   SECTION("Initialise root Bencode array with one entry containing a
-//   integer.",
-//           "[Bencode][Create][List][Integer]") {
-//     Bencode bencode;
-//     bencode[0] = 300;
-//     REQUIRE_FALSE(!bencode[0].isInteger());
-//     REQUIRE(BRef<Integer>(bencode.root()[0]).value<int>() == 300);
-//   }
-//   SECTION("Initialise root Bencode array with one entry containing a
+}
+TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
+  SECTION("Initialise Bencode with Bencode list  passed to constructor.",
+          "[Bencode][Create][Constructor]") {
+    REQUIRE_NOTHROW(Bencode(R"(l2:pii3ee)"));
+  }
+
+  SECTION("Initialise Bencode with  list passed to constructor and validate.",
+          "[Bencode][Create][Constructor][Validate]") {
+    const Bencode bencode(R"(l2:pii3ee)");
+    REQUIRE_FALSE(!bencode.root().isList());
+    REQUIRE_FALSE(!bencode[0].isString());
+    REQUIRE_FALSE(!bencode[1].isInteger());
+    REQUIRE(BRef<String>(bencode[0]).value() == "pi");
+    REQUIRE(BRef<Integer>(bencode[1]).value() == 3);
+  }
+
+  SECTION("Initialise root Bencode list with one entry containing a integer.",
+          "[Bencode][Create][List][Integer]") {
+    Bencode bencode;
+    bencode[0] = 300;
+    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE(BRef<Integer>(bencode[0]).value() == 300);
+  }
+}
+//   SECTION("Initialise root Bencode list with one entry containing a
 //   long.",
 //           "[Bencode][Create][List][Integer]") {
 //     Bencode bencode;
@@ -145,7 +146,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //     REQUIRE(BRef<Integer>(bencode.root()[0]).value() == 30000);
 //   }
 //   SECTION(
-//       "Initialise root Bencode array with one entry containing a long
+//       "Initialise root Bencode list with one entry containing a long
 //       long.",
 //       "[Bencode][Create][List][Integer]") {
 //     Bencode bencode;
@@ -153,7 +154,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //     REQUIRE_FALSE(!bencode[0].isInteger());
 //     REQUIRE(BRef<Integer>(bencode.root()[0]).value<long long>() == 30000);
 //   }
-//   SECTION("Initialise root Bencode array with one entry containing a
+//   SECTION("Initialise root Bencode list with one entry containing a
 //   float.",
 //           "[Bencode][Create][List][Integer]") {
 //     Bencode bencode;
@@ -162,7 +163,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //     REQUIRE_FALSE(!equalFloatingPoint(
 //         BRef<Integer>(bencode.root()[0]).value<float>(), 3.141f, 0.0001));
 //   }
-//   SECTION("Initialise root Bencode array with one entry containing a
+//   SECTION("Initialise root Bencode list with one entry containing a
 //   double.",
 //           "[Bencode][Create][List][Integer]") {
 //     Bencode bencode;
@@ -173,7 +174,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //         0.0001));
 //   }
 //   SECTION(
-//       "Initialise root Bencode array with one entry containing a long
+//       "Initialise root Bencode list with one entry containing a long
 //       double.",
 //       "[Bencode][Create][List][Integer]") {
 //     Bencode bencode;
@@ -183,7 +184,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //         BRef<Integer>(bencode.root()[0]).value<double>(), 3.141, 0.0001));
 //   }
 //   SECTION(
-//       "Initialise root Bencode array with one entry containing a const char
+//       "Initialise root Bencode list with one entry containing a const char
 //       *.",
 //       "[Bencode][Create][List][String]") {
 //     Bencode bencode;
@@ -192,7 +193,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //     REQUIRE(BRef<String>(bencode.root()[0]).value() == "robert");
 //   }
 //   SECTION(
-//       "Initialise root Bencode array with one entry containing a
+//       "Initialise root Bencode list with one entry containing a
 //       std::string.",
 //       "[Bencode][Create][List][String]") {
 //     Bencode bencode;
@@ -200,7 +201,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //     REQUIRE_FALSE(!bencode[0].isString());
 //     REQUIRE(BRef<String>(bencode.root()[0]).value() == "robert");
 //   }
-//   SECTION("Initialise root Bencode array with one entry containing a
+//   SECTION("Initialise root Bencode list with one entry containing a
 //   boolean.",
 //           "[Bencode][Create][List][Boolean]") {
 //     Bencode bencode;
@@ -208,7 +209,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //     REQUIRE_FALSE(!bencode[0].isBoolean());
 //     REQUIRE_FALSE(!BRef<Boolean>(bencode.root()[0]).value());
 //   }
-//   SECTION("Initialise root Bencode array with one entry containing a
+//   SECTION("Initialise root Bencode list with one entry containing a
 //   null.",
 //           "[Bencode][Create][List][null]") {
 //     Bencode bencode;
@@ -216,7 +217,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //     REQUIRE_FALSE(!bencode[0].isNull());
 //     REQUIRE(BRef<Null>(bencode.root()[0]).getNull() == nullptr);
 //   }
-//   SECTION("Create two level array with null at the base and stringify.",
+//   SECTION("Create two level list with null at the base and stringify.",
 //           "[Bencode][Create][List][null]") {
 //     Bencode bencode;
 //     bencode[0][0] = nullptr;
@@ -226,7 +227,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
 //     REQUIRE(bencodeDestination.getBuffer() == R"([[null]])");
 //   }
-//   SECTION("Create array with free spaces string at the base and
+//   SECTION("Create list with free spaces string at the base and
 //   stringify.",
 //           "[Bencode][Create][List][null]") {
 //     Bencode bencode;
@@ -239,7 +240,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //             R"([null,null,null,null,null,"test"])");
 //   }
 //   SECTION(
-//       "Create array with free spaces add an number at the base and
+//       "Create list with free spaces add an number at the base and
 //       stringify.",
 //       "[Bencode][Create][List][null]") {
 //     Bencode bencode;
@@ -254,7 +255,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //     REQUIRE(bencodeDestination.getBuffer() ==
 //             R"([null,null,null,15,null,"test"])");
 //   }
-//   SECTION("Create array with initializer list assignment.",
+//   SECTION("Create list with initializer list assignment.",
 //           "[Bencode][Create][List][initializer]") {
 //     Bencode bencode;
 //     bencode[5] = {1.0,   2.0,    3, 4.333, "5.0", "test test test test",
@@ -326,7 +327,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //         bencodeDestination.getBuffer() ==
 //         R"({"pi":3.141,"happy":true,"name":[null,null,null,null,null,"Niels"],"nothing":null,"answer":{"everything":[null,null,null,null,null,42]}})");
 //   }
-//   SECTION("Object with sub array/dictionary create using initializer
+//   SECTION("Object with sub list/dictionary create using initializer
 //   list.",
 //           "[Bencode][Create][Complex]") {
 //     Bencode bencode;
@@ -343,7 +344,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //         bencodeDestination.getBuffer() ==
 //         R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null,"answer":{"everything":42},"list":[1,0,2],"dictionary":{"currency":"USD","value":42.99}})");
 //   }
-//   SECTION("Object with sub array/dictionary with an embedded array create
+//   SECTION("Object with sub list/dictionary with an embedded list create
 //   using "
 //           "initializer list.",
 //           "[Bencode][Create][Complex]") {
@@ -361,7 +362,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //         bencodeDestination.getBuffer() ==
 //         R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null,"answer":{"everything":42},"list":[1,0,2],"dictionary":{"currency":"USD","value":[1,2,3,4,5]}})");
 //   }
-//   SECTION("Object with sub array/dictionary with an embedded dictionary
+//   SECTION("Object with sub list/dictionary with an embedded dictionary
 //   create using "
 //           "initializer list.",
 //           "[Bencode][Create][Complex]") {
@@ -398,7 +399,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //   SECTION("Object creation completely using a nested initializer list.",
 //           "[Bencode][Create][Complex][Initializer") {
 //     // Note: For the moment has to explicitly uses BNode to create a
-//     // nested dictionary/array
+//     // nested dictionary/list
 //     Bencode bencode = {{"pi", 3.141},
 //                     {"happy", true},
 //                     {"name", "Niels"},
@@ -413,4 +414,4 @@ TEST_CASE("Check Bencode dictionary creation api.",
 //         bencodeDestination.getBuffer() ==
 //         R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null,"answer":{"everything":42},"list":[1,0,2],"dictionary":{"currency":"USD","value":42.99}})");
 //   }
-}
+// }

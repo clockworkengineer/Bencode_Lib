@@ -34,6 +34,15 @@ struct List : Variant {
     }
     throw BNode::Error("Invalid index used in list.");
   }
+  // Resize Array
+  void resize(std::size_t index) {
+    bNodeList.resize(index + 1);
+    for (auto &entry : bNodeList) {
+      if (entry.isEmpty()) {
+        entry = BNode::make<Hole>();
+      }
+    }
+  }
 
 private:
   std::vector<BNode> bNodeList;
