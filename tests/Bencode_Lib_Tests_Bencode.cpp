@@ -207,17 +207,17 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE_FALSE(!bencode[0].isInteger());
     REQUIRE(BRef<Integer>(bencode[0]).value() == 0);
   }
+  SECTION("Create two level list with null at the base and stringify.",
+          "[Bencode][Create][List][Integer]") {
+    Bencode bencode;
+    bencode[0][0] = 3000;
+    // REQUIRE_FALSE(!bencode[0][0].isInteger());
+    // REQUIRE(BRef<Integer>(bencode[0][0]).value() == 3000);
+    // BufferDestination bencodeDestination;
+    // REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
+    // REQUIRE(bencodeDestination.getBuffer() == R"([[null]])");
+  }
 }
-//   SECTION("Create two level list with null at the base and stringify.",
-//           "[Bencode][Create][List][null]") {
-//     Bencode bencode;
-//     bencode[0][0] = nullptr;
-//     REQUIRE_FALSE(!bencode[0][0].isNull());
-//     REQUIRE(BRef<Null>(bencode.root()[0][0]).getNull() == nullptr);
-//     BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(bencodeDestination.getBuffer() == R"([[null]])");
-//   }
 //   SECTION("Create list with free spaces string at the base and
 //   stringify.",
 //           "[Bencode][Create][List][null]") {

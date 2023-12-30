@@ -40,7 +40,13 @@ inline BNode::BNode(const Bencode::DictionaryInitializer &object) {
 }
 // List
 inline BNode &BNode::operator[](int index) {
-  return (BRef<List>(*this)[index]);
+  try {
+    if (this->isHole()) { *this = BNode::make<List>(); }
+    return (BRef<List>(*this)[index]);
+  } catch ([[maybe_unused]] const BNode::Error &error) {
+    BRef<List>(*this).resize(index);
+    return (BRef<List>(*this)[index]);
+  }
 }
 inline const BNode &BNode::operator[](int index) const {
   return (BRef<const List>(*this)[index]);
