@@ -253,7 +253,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
   SECTION("Create list with initializer list assignment.",
           "[Bencode][Create][List][initializer]") {
     Bencode bencode;
-    bencode[5] = {1.0,   2.0,    3, 4.333, "5.0", "test test test test",
+    bencode[5] = {1.0,  2.0,    3, 4.333, "5.0", "test test test test",
                   true, nullptr};
     REQUIRE_FALSE(!bencode[5][0].isInteger());
     REQUIRE_FALSE(!bencode[5][1].isInteger());
@@ -294,118 +294,131 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
       result.push_back(static_cast<char>(ch));
     REQUIRE(result == R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0ee)");
   }
+  SECTION("A two level dictionary.", "[Bencode][Create][Complex]") {
+    Bencode bencode;
+    bencode["pi"] = 3.141;
+    bencode["happy"] = true;
+    bencode["name"] = "Niels";
+    bencode["nothing"] = nullptr;
+    bencode["answer"]["everything"] = 42;
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    std::string result;
+    for (auto ch : bencodeDestination.getBuffer())
+      result.push_back(static_cast<char>(ch));
+    REQUIRE(
+        result ==
+        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42eee)");
+  }
+  SECTION("A three level dictionary.", "[Bencode][Create][Complex]") {
+    Bencode bencode;
+    bencode["pi"] = 3.141;
+    bencode["happy"] = true;
+    bencode["name"][5] = "Niels";
+    bencode["nothing"] = nullptr;
+    bencode["answer"]["everything"][5] = 42;
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    std::string result;
+    for (auto ch : bencodeDestination.getBuffer())
+      result.push_back(static_cast<char>(ch));
+    REQUIRE(
+        result ==
+        R"(d2:pii3e5:happyi1e4:namel5:Nielse7:nothingi0e6:answerd10:everythingli42eeee)");
+  }
+  SECTION("Object with sub list/dictionary create using initializer list.",
+          "[Bencode][Create][Complex]") {
+    Bencode bencode;
+    bencode["pi"] = 3.141;
+    bencode["happy"] = true;
+    bencode["name"] = "Niels";
+    bencode["nothing"] = nullptr;
+    bencode["answer"]["everything"] = 42;
+    bencode["list"] = {1, 0, 2};
+    bencode["dictionary"] = {{"currency", "USD"}, {"value", 42.99}};
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    std::string result;
+    for (auto ch : bencodeDestination.getBuffer())
+      result.push_back(static_cast<char>(ch));
+    REQUIRE(
+        result ==
+        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)");
+  }
+  SECTION("Object with sub list/dictionary with an embedded list create using "
+          "initializer list.",
+          "[Bencode][Create][Complex]") {
+    Bencode bencode;
+    bencode["pi"] = 3.141;
+    bencode["happy"] = true;
+    bencode["name"] = "Niels";
+    bencode["nothing"] = nullptr;
+    bencode["answer"]["everything"] = 42;
+    bencode["list"] = {1, 0, 2};
+    bencode["dictionary"] = {{"currency", "USD"},
+                             {"value", BNode{1, 2, 3, 4, 5}}};
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    std::string result;
+    for (auto ch : bencodeDestination.getBuffer())
+      result.push_back(static_cast<char>(ch));
+    REQUIRE(
+        result ==
+        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valueli1ei2ei3ei4ei5eeee)");
+  }
+  SECTION("Object with sub list/dictionary with an embedded dictionary create "
+          "using "
+          "initializer list.",
+          "[Bencode][Create][Complex]") {
+    Bencode bencode;
+    bencode["pi"] = 3.141;
+    bencode["happy"] = true;
+    bencode["name"] = "Niels";
+    bencode["nothing"] = nullptr;
+    bencode["answer"]["everything"] = 42;
+    bencode["list"] = {1, 0, 2};
+    bencode["dictionary"] = {{"currency", "USD"},
+                             {"value", BNode{{"key1", 22}, {"key2", 99.899}}}};
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    std::string result;
+    for (auto ch : bencodeDestination.getBuffer())
+      result.push_back(static_cast<char>(ch));
+    REQUIRE(
+        result ==
+        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valued4:key1i22e4:key2i99eeee)");
+  }
+  //   SECTION("List creation completely using a initializer list.",
+  //           "[Bencode][Create][Complex][Initializer") {
+  //     Bencode bencode = {1, 2, 3, 4};
+  //     BufferDestination bencodeDestination;
+  //     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
+  //     REQUIRE(bencodeDestination.getBuffer() == R"([1,2,3,4])");
+  //   }
+  //   SECTION("Object creation completely using a initializer list.",
+  //           "[Bencode][Create][Complex][Initializer") {
+  //     Bencode bencode = {{"currency", "USD"}, {"value", 42.99}};
+  //     BufferDestination bencodeDestination;
+  //     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
+  //     REQUIRE(bencodeDestination.getBuffer() ==
+  //             R"({"currency":"USD","value":42.99})");
+  //   }
+  //   SECTION("Object creation completely using a nested initializer list.",
+  //           "[Bencode][Create][Complex][Initializer") {
+  //     // Note: For the moment has to explicitly uses BNode to create a
+  //     // nested dictionary/list
+  //     Bencode bencode = {{"pi", 3.141},
+  //                     {"happy", true},
+  //                     {"name", "Niels"},
+  //                     {"nothing", nullptr},
+  //                     {"answer", BNode{{"everything", 42}}},
+  //                     {"list", BNode{1, 0, 2}},
+  //                     {"dictionary", BNode{{"currency", "USD"},
+  //                     {"value", 42.99}}}};
+  //     BufferDestination bencodeDestination;
+  //     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
+  //     REQUIRE(
+  //         bencodeDestination.getBuffer() ==
+  //         R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null,"answer":{"everything":42},"list":[1,0,2],"dictionary":{"currency":"USD","value":42.99}})");
+  //   }
 }
-//   SECTION("A two level dictionary.", "[Bencode][Create][Complex]") {
-//     Bencode bencode;
-//     bencode["pi"] = 3.141;
-//     bencode["happy"] = true;
-//     bencode["name"] = "Niels";
-//     bencode["nothing"] = nullptr;
-//     bencode["answer"]["everything"] = 42;
-//     BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(
-//         bencodeDestination.getBuffer() ==
-//         R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null,"answer":{"everything":42}})");
-//   }
-//   SECTION("A three level dictionary.", "[Bencode][Create][Complex]") {
-//     Bencode bencode;
-//     bencode["pi"] = 3.141;
-//     bencode["happy"] = true;
-//     bencode["name"][5] = "Niels";
-//     bencode["nothing"] = nullptr;
-//     bencode["answer"]["everything"][5] = 42;
-//     BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(
-//         bencodeDestination.getBuffer() ==
-//         R"({"pi":3.141,"happy":true,"name":[null,null,null,null,null,"Niels"],"nothing":null,"answer":{"everything":[null,null,null,null,null,42]}})");
-//   }
-//   SECTION("Object with sub list/dictionary create using initializer
-//   list.",
-//           "[Bencode][Create][Complex]") {
-//     Bencode bencode;
-//     bencode["pi"] = 3.141;
-//     bencode["happy"] = true;
-//     bencode["name"] = "Niels";
-//     bencode["nothing"] = nullptr;
-//     bencode["answer"]["everything"] = 42;
-//     bencode["list"] = {1, 0, 2};
-//     bencode["dictionary"] = {{"currency", "USD"}, {"value", 42.99}};
-//     BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(
-//         bencodeDestination.getBuffer() ==
-//         R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null,"answer":{"everything":42},"list":[1,0,2],"dictionary":{"currency":"USD","value":42.99}})");
-//   }
-//   SECTION("Object with sub list/dictionary with an embedded list create
-//   using "
-//           "initializer list.",
-//           "[Bencode][Create][Complex]") {
-//     Bencode bencode;
-//     bencode["pi"] = 3.141;
-//     bencode["happy"] = true;
-//     bencode["name"] = "Niels";
-//     bencode["nothing"] = nullptr;
-//     bencode["answer"]["everything"] = 42;
-//     bencode["list"] = {1, 0, 2};
-//     bencode["dictionary"] = {{"currency", "USD"}, {"value", BNode{1, 2, 3,
-//     4, 5}}}; BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(
-//         bencodeDestination.getBuffer() ==
-//         R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null,"answer":{"everything":42},"list":[1,0,2],"dictionary":{"currency":"USD","value":[1,2,3,4,5]}})");
-//   }
-//   SECTION("Object with sub list/dictionary with an embedded dictionary
-//   create using "
-//           "initializer list.",
-//           "[Bencode][Create][Complex]") {
-//     Bencode bencode;
-//     bencode["pi"] = 3.141;
-//     bencode["happy"] = true;
-//     bencode["name"] = "Niels";
-//     bencode["nothing"] = nullptr;
-//     bencode["answer"]["everything"] = 42;
-//     bencode["list"] = {1, 0, 2};
-//     bencode["dictionary"] = {{"currency", "USD"},
-//                       {"value", BNode{{"key1", 22}, {"key2", 99.899}}}};
-//     BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(
-//         bencodeDestination.getBuffer() ==
-//         R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null,"answer":{"everything":42},"list":[1,0,2],"dictionary":{"currency":"USD","value":{"key1":22,"key2":99.899}}})");
-//   }
-//   SECTION("List creation completely using a initializer list.",
-//           "[Bencode][Create][Complex][Initializer") {
-//     Bencode bencode = {1, 2, 3, 4};
-//     BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(bencodeDestination.getBuffer() == R"([1,2,3,4])");
-//   }
-//   SECTION("Object creation completely using a initializer list.",
-//           "[Bencode][Create][Complex][Initializer") {
-//     Bencode bencode = {{"currency", "USD"}, {"value", 42.99}};
-//     BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(bencodeDestination.getBuffer() ==
-//             R"({"currency":"USD","value":42.99})");
-//   }
-//   SECTION("Object creation completely using a nested initializer list.",
-//           "[Bencode][Create][Complex][Initializer") {
-//     // Note: For the moment has to explicitly uses BNode to create a
-//     // nested dictionary/list
-//     Bencode bencode = {{"pi", 3.141},
-//                     {"happy", true},
-//                     {"name", "Niels"},
-//                     {"nothing", nullptr},
-//                     {"answer", BNode{{"everything", 42}}},
-//                     {"list", BNode{1, 0, 2}},
-//                     {"dictionary", BNode{{"currency", "USD"},
-//                     {"value", 42.99}}}};
-//     BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(
-//         bencodeDestination.getBuffer() ==
-//         R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null,"answer":{"everything":42},"list":[1,0,2],"dictionary":{"currency":"USD","value":42.99}})");
-//   }
-// }
