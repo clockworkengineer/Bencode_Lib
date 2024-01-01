@@ -65,21 +65,16 @@ inline const BNode &BNode::operator[](const std::string &key) const {
 }
 
 inline BNode BNode::internalTypeToBNode(const Bencode::InternalType &type) {
-  if (auto pValue = std::get_if<int>(&type)) {
-    return (BNode(*pValue));
-  }
-  if (auto pValue = std::get_if<long>(&type)) {
-    return (BNode(*pValue));
-  }
-  if (auto pValue = std::get_if<long long>(&type)) {
-    return (BNode(*pValue));
-  }
-  if (auto pValue = std::get_if<std::string>(&type)) {
-    return (BNode((*pValue)));
-  }
-  if (auto pValue = std::get_if<BNode>(&type)) {
-    return (std::move(*const_cast<BNode *>(pValue)));
-  }
+  if (auto pValue = std::get_if<int>(&type)) { return (BNode(*pValue)); }
+  if (auto pValue = std::get_if<long>(&type)) { return (BNode(*pValue)); }
+  if (auto pValue = std::get_if<long long>(&type)) { return (BNode(*pValue)); }
+  if (auto pValue = std::get_if<float>(&type)) { return (BNode(*pValue)); }
+  if (auto pValue = std::get_if<double>(&type)) { return (BNode(*pValue)); }
+  if (auto pValue = std::get_if<long double>(&type)) { return (BNode(*pValue)); }
+  if (auto pValue = std::get_if<std::string>(&type)) { return (BNode((*pValue))); }
+  if (auto pValue = std::get_if<bool>(&type)) { return (BNode((*pValue))); }
+  if ([[maybe_unused]] auto pValue = std::get_if<std::nullptr_t>(&type)) { return (BNode(0)); }
+  if (auto pValue = std::get_if<BNode>(&type)) { return (std::move(*const_cast<BNode *>(pValue))); }
   throw Error("BNode of non-existant type could not be created.");
 }
 

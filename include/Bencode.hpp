@@ -29,7 +29,7 @@ public:
   };
   // Possible Bencode Node internal value types
   using InternalType =
-    std::variant<int, long, long long, std::string, BNode>;
+ std::variant<int, long, long long, float, double, long double, bool, std::string, std::nullptr_t, BNode>;
   // List initializer list
   using ListInitializer = std::initializer_list<InternalType>;
   // Dictionary initializer list

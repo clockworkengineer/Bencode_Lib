@@ -233,9 +233,8 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
       result.push_back(static_cast<char>(ch));
     REQUIRE(result == R"(l4:teste)");
   }
-  SECTION(
-      "Create list with free spaces add an integer at the base andencode.",
-      "[Bencode][Create][List][Integer]") {
+  SECTION("Create list with free spaces add an integer at the base andencode.",
+          "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[5] = "test";
     REQUIRE_FALSE(!bencode[5].isString());
@@ -250,38 +249,34 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
       result.push_back(static_cast<char>(ch));
     REQUIRE(result == R"(li15e4:teste)");
   }
-  
+
   SECTION("Create list with initializer list assignment.",
           "[Bencode][Create][List][initializer]") {
     Bencode bencode;
     bencode[5] = {1.0,   2.0,    3, 4.333, "5.0", "test test test test",
-               false, nullptr};
-    // REQUIRE_FALSE(!bencode[5][0].isInteger());
-    // REQUIRE_FALSE(!bencode[5][1].isInteger());
-    // REQUIRE_FALSE(!bencode[5][2].isInteger());
-    // REQUIRE_FALSE(!bencode[5][3].isInteger());
-    // REQUIRE_FALSE(!bencode[5][4].isString());
-    // REQUIRE_FALSE(!bencode[5][5].isString());
-    // REQUIRE_FALSE(!bencode[5][6].isBoolean());
-    // REQUIRE_FALSE(!bencode[5][7].isNull());
-    // REQUIRE(BRef<List>(bencode[5]).size() == 8);
-    // REQUIRE_FALSE(!equalFloatingPoint(BRef<Integer>(bencode[5][0]).value<double>(),
-    //                                   1.0, 0.0001));
-    // REQUIRE_FALSE(!equalFloatingPoint(BRef<Integer>(bencode[5][1]).value<double>(),
-    //                                   2.0, 0.0001));
-    // REQUIRE(BRef<Integer>(bencode[5][2]).value<int>() == 3);
-    // REQUIRE_FALSE(!equalFloatingPoint(BRef<Integer>(bencode[5][3]).value<double>(),
-    //                                   4.333, 0.0001));
-    // REQUIRE(BRef<String>(bencode[5][4]).value() == "5.0");
-    // REQUIRE(BRef<String>(bencode[5][5]).value() == "test test test test");
-    // REQUIRE(BRef<Inteer>(bencode[5][6]).value() == 0);
-    // REQUIRE(BRef<Integer>(bencode[5][7]).value() == 0);
-    // BufferDestination bencodeDestination;
-    // REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-    // REQUIRE(
-    //     bencodeDestination.getBuffer() ==
-    //     R"([null,null,null,null,null,[1.0,2.0,3,4.333,"5.0","test test test
-    //     test",false,null]])");
+                  false, nullptr};
+    REQUIRE_FALSE(!bencode[5][0].isInteger());
+    REQUIRE_FALSE(!bencode[5][1].isInteger());
+    REQUIRE_FALSE(!bencode[5][2].isInteger());
+    REQUIRE_FALSE(!bencode[5][3].isInteger());
+    REQUIRE_FALSE(!bencode[5][4].isString());
+    REQUIRE_FALSE(!bencode[5][5].isString());
+    REQUIRE_FALSE(!bencode[5][6].isInteger());
+    REQUIRE_FALSE(!bencode[5][7].isInteger());
+    REQUIRE(BRef<List>(bencode[5]).size() == 8);
+    REQUIRE(BRef<Integer>(bencode[5][0]).value() == 1);
+    REQUIRE(BRef<Integer>(bencode[5][1]).value() == 2);
+    REQUIRE(BRef<Integer>(bencode[5][2]).value() == 3);
+    REQUIRE(BRef<String>(bencode[5][4]).value() == "5.0");
+    REQUIRE(BRef<String>(bencode[5][5]).value() == "test test test test");
+    REQUIRE(BRef<Integer>(bencode[5][6]).value() == 0);
+    REQUIRE(BRef<Integer>(bencode[5][7]).value() == 0);
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    std::string result;
+    for (auto ch : bencodeDestination.getBuffer())
+      result.push_back(static_cast<char>(ch));
+    REQUIRE(result == R"(lli1ei2ei3ei4e3:5.019:test test test testi0ei0eee)");
   }
 }
 // }
