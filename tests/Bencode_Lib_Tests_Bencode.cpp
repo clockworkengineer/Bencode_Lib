@@ -254,7 +254,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
           "[Bencode][Create][List][initializer]") {
     Bencode bencode;
     bencode[5] = {1.0,   2.0,    3, 4.333, "5.0", "test test test test",
-                  false, nullptr};
+                  true, nullptr};
     REQUIRE_FALSE(!bencode[5][0].isInteger());
     REQUIRE_FALSE(!bencode[5][1].isInteger());
     REQUIRE_FALSE(!bencode[5][2].isInteger());
@@ -269,30 +269,32 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE(BRef<Integer>(bencode[5][2]).value() == 3);
     REQUIRE(BRef<String>(bencode[5][4]).value() == "5.0");
     REQUIRE(BRef<String>(bencode[5][5]).value() == "test test test test");
-    REQUIRE(BRef<Integer>(bencode[5][6]).value() == 0);
+    REQUIRE(BRef<Integer>(bencode[5][6]).value() == 1);
     REQUIRE(BRef<Integer>(bencode[5][7]).value() == 0);
     BufferDestination bencodeDestination;
     REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
     std::string result;
     for (auto ch : bencodeDestination.getBuffer())
       result.push_back(static_cast<char>(ch));
-    REQUIRE(result == R"(lli1ei2ei3ei4e3:5.019:test test test testi0ei0eee)");
+    REQUIRE(result == R"(lli1ei2ei3ei4e3:5.019:test test test testi1ei0eee)");
   }
 }
-// }
-// TEST_CASE("Check Bencode create complex Bencode structures.",
-//           "[Bencode][Create][Complex]") {
-//   SECTION("A Single level dictionary.", "[Bencode][Create][Complex]") {
-//     Bencode bencode;
-//     bencode["pi"] = 3.141;
-//     bencode["happy"] = true;
-//     bencode["name"] = "Niels";
-//     bencode["nothing"] = nullptr;
-//     BufferDestination bencodeDestination;
-//     REQUIRE_NOTHROW(bencode.stringify(bencodeDestination));
-//     REQUIRE(bencodeDestination.getBuffer() ==
-//             R"({"pi":3.141,"happy":true,"name":"Niels","nothing":null})");
-//   }
+TEST_CASE("Check Bencode create complex Bencode structures.",
+          "[Bencode][Create][Complex]") {
+  SECTION("A Single level dictionary.", "[Bencode][Create][Complex]") {
+    Bencode bencode;
+    bencode["pi"] = 3.141;
+    bencode["happy"] = true;
+    bencode["name"] = "Niels";
+    bencode["nothing"] = nullptr;
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    std::string result;
+    for (auto ch : bencodeDestination.getBuffer())
+      result.push_back(static_cast<char>(ch));
+    REQUIRE(result == R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0ee)");
+  }
+}
 //   SECTION("A two level dictionary.", "[Bencode][Create][Complex]") {
 //     Bencode bencode;
 //     bencode["pi"] = 3.141;
