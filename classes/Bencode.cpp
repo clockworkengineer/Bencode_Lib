@@ -40,6 +40,18 @@ Bencode::Bencode(const std::string &bencodeString) : Bencode() {
 }
 
 /// <summary>
+/// Bencode constructor (list).
+/// </summary>
+/// <param name="list">Intialiser list of single values or JNode.</param>
+Bencode::Bencode(const ListInitializer &list) : Bencode() { this->root() = BNode(list); }
+
+/// <summary>
+/// Bencode constructor (dictionary).
+/// </summary>
+/// <param name="object">Intialiser list of key/value(JNode) pairs.</param>
+Bencode::Bencode(const DictionaryInitializer &dictionary) : Bencode() { this->root() = BNode(dictionary); }
+
+/// <summary>
 ///  Get Bencode_Lib version.
 /// </summary>
 std::string Bencode::version() const { return (implementation->version()); }

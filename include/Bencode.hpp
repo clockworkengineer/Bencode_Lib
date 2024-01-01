@@ -29,23 +29,29 @@ public:
   };
   // Possible Bencode Node internal value types
   using InternalType =
- std::variant<int, long, long long, float, double, long double, bool, std::string, std::nullptr_t, BNode>;
+      std::variant<int, long, long long, float, double, long double, bool,
+                   std::string, std::nullptr_t, BNode>;
   // List initializer list
   using ListInitializer = std::initializer_list<InternalType>;
   // Dictionary initializer list
-  using DictionaryInitializer = std::initializer_list<std::pair<std::string, InternalType>>;
+  using DictionaryInitializer =
+      std::initializer_list<std::pair<std::string, InternalType>>;
   // Constructors/Destructors
   Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
+  // Pass in default JSON to parse
+  explicit Bencode(const std::string &bencodeString);
+  // Construct array
+  Bencode(const ListInitializer &list);
+  // Construct object
+  Bencode(const DictionaryInitializer &dictionary);
   Bencode(const Bencode &other) = delete;
   Bencode &operator=(const Bencode &other) = delete;
   Bencode(Bencode &&other) = delete;
   Bencode &operator=(Bencode &&other) = delete;
   ~Bencode();
 
-  // Pass in default JSON to parse
-  explicit Bencode(const std::string &bencodeString);
-
   // Decode Bencode into BNode tree
+
   void decode(ISource &source) const;
   void decode(ISource &&source) const;
 

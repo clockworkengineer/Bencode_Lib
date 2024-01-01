@@ -16,7 +16,7 @@ struct BNode {
   BNode() = default;
   template <typename T> explicit BNode(T value);
   BNode(const Bencode::ListInitializer &list);
-  BNode(const Bencode::DictionaryInitializer &DictionaryInitializer);
+  BNode(const Bencode::DictionaryInitializer &dictionary);
   BNode(const BNode &other) = delete;
   BNode &operator=(const BNode &other) = delete;
   BNode(BNode &&other) = default;
