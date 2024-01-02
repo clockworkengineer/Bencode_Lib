@@ -11,9 +11,9 @@ specific about what error has occurred.This is reasoned to add too
 much overhead to the process of parsing for the requirements of this 
 library. 
 
-The library has no way of altering the Bencoded data once it has been 
-decoded;the client can modify the library as appropriate or add the 
-functionality externally.
+The library can both interrogate the BNode tree structure created after
+decoding an bencode source but also modify it in-situ and also create one
+from scratch using C++ operators before saving it away (encoding).
 
 The examples folder only contains 
 
