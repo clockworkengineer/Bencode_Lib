@@ -1,5 +1,5 @@
 //
-// Program: Read_Torrent_Files
+// Program: Bencode_Bencode_Read_Torrent_Files
 //
 // Description: Use Bencode_Lib to read in torrent file details.
 // Details on the torrent file format can be found at the wiki page
@@ -19,7 +19,7 @@
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
-    plog::init(plog::debug, "Read_Torrent_Files.log");
+    plog::init(plog::debug, "Bencode_Read_Torrent_Files.log");
     PLOG_INFO << "Read_Torrent_File started ...";
     PLOG_INFO << Bencode_Lib::Bencode().version();
     // For each torrent file extract its information and display
@@ -31,6 +31,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   } catch (const std::exception &ex) {
     std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
   }
-  PLOG_INFO << "Read_Torrent_Files exited.";
+  PLOG_INFO << "Bencode_Read_Torrent_Files exited.";
   exit(EXIT_SUCCESS);
 }

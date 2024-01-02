@@ -1,5 +1,5 @@
 //
-// Program: Torrent_Files_To_XML
+// Program:  Bencode_Bencode_Torrent_Files_To_XML
 //
 // Description: Use Bencode_Lib to read in torrent file then write
 // it out as XML using a custom encoder.
@@ -19,8 +19,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     Bencode_Lib::Bencode bEncode(std::make_unique<XML_Encoder>().release());
     // Initialise logging.
-    plog::init(plog::debug, "Torrent_Files_To_XML.log");
-    PLOG_INFO << "Torrent_Files_To_XML started ...";
+    plog::init(plog::debug, "Bencode_Torrent_Files_To_XML.log");
+    PLOG_INFO << "Bencode_Torrent_Files_To_XML started ...";
     PLOG_INFO << Bencode_Lib::Bencode().version();
     for (const auto &torrentFileName : Utility::createTorrentFileList()) {
       bEncode.decode(Bencode_Lib::FileSource(torrentFileName));
@@ -33,6 +33,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   } catch (const std::exception &ex) {
     std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
   }
-  PLOG_INFO << "Torrent_Files_To_XML exited.";
+  PLOG_INFO << "Bencode_Torrent_Files_To_XML exited.";
   exit(EXIT_SUCCESS);
 }

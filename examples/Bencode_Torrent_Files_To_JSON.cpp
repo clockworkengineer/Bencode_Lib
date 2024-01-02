@@ -1,5 +1,5 @@
 //
-// Program: Torrent_Files_To_JSON
+// Program:  BencodeBencodeTorrent_Files_To_JSON
 //
 // Description: Use Bencode_Lib to read in torrent file then write
 // it out as JSON using a custom encoder.
@@ -19,8 +19,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     Bencode_Lib::Bencode bEncode(std::make_unique<JSON_Encoder>().release());
     // Initialise logging.
-    plog::init(plog::debug, "Torrent_Files_To_JSON.log");
-    PLOG_INFO << "Torrent_Files_To_JSON started ...";
+    plog::init(plog::debug, "BencodeTorrent_Files_To_JSON.log");
+    PLOG_INFO << "BencodeTorrent_Files_To_JSON started ...";
     PLOG_INFO << Bencode_Lib::Bencode().version();
     for (const auto &torrentFileName : Utility::createTorrentFileList()) {
       bEncode.decode(Bencode_Lib::FileSource(torrentFileName));
@@ -32,6 +32,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   } catch (const std::exception &ex) {
     std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
   }
-  PLOG_INFO << "Torrent_Files_To_JSON exited.";
+  PLOG_INFO << "BencodeTorrent_Files_To_JSON exited.";
   exit(EXIT_SUCCESS);
 }
