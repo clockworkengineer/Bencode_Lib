@@ -26,6 +26,7 @@ public:
   void add(const char ch) override {
     encodeBuffer.push_back(static_cast<std::byte>(ch));
   }
+  virtual void clear() override { encodeBuffer.clear(); }
   std::vector<std::byte> &getBuffer() { return (encodeBuffer); }
   const std::vector<std::byte> &getBuffer() const { return (encodeBuffer); }
 

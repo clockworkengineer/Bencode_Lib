@@ -11,8 +11,8 @@ class FileDestination : public IDestination {
 
 public:
   // Constructors/Destructors
-  explicit FileDestination(const std::string &destinationFileName) {
-    destination.open(destinationFileName.c_str(), std::ios_base::binary);
+  explicit FileDestination(const std::string &filename) : filename(filename) {
+    destination.open(filename.c_str(), std::ios_base::binary);
     if (!destination.is_open()) {
       throw Error("Bencode file output stream failed to open or could not be "
                   "created.");
@@ -34,8 +34,20 @@ public:
     destination.flush();
   }
 
+  virtual void clear() override {
+    if (destination.is_open()) {
+      destination.close();
+    }
+    destination.open(filename.c_str(),
+                     std::ios_base::binary | std::ios_base::trunc);
+    if (!destination.is_open()) {
+      throw Error("File output stream failed to open or could not be created.");
+    }
+  }
+
 private:
   std::ofstream destination;
+  std::string filename;
 };
 
 } // namespace Bencode_Lib
