@@ -138,14 +138,14 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
     BufferSource bEncodeSource{"li266ei6780ei88e5:threee"};
     bEncode.decode(bEncodeSource);
     REQUIRE((bEncode.root()).isList());
-    REQUIRE(bEncode[0].isInteger());
-    REQUIRE(bEncode[1].isInteger());
-    REQUIRE(bEncode[2].isInteger());
-    REQUIRE(bEncode[3].isString());
-    REQUIRE(BRef<Integer>(bEncode[0]).value() == 266);
-    REQUIRE(BRef<Integer>(bEncode[1]).value() == 6780);
-    REQUIRE(BRef<Integer>(bEncode[2]).value() == 88);
-    REQUIRE(BRef<String>(bEncode[3]).value() == "three");
+    REQUIRE((bEncode.root())[0].isInteger());
+    REQUIRE((bEncode.root())[1].isInteger());
+    REQUIRE((bEncode.root())[2].isInteger());
+    REQUIRE((bEncode.root())[3].isString());
+    REQUIRE(BRef<Integer>((bEncode.root())[0]).value() == 266);
+    REQUIRE(BRef<Integer>((bEncode.root())[1]).value() == 6780);
+    REQUIRE(BRef<Integer>((bEncode.root())[2]).value() == 88);
+    REQUIRE(BRef<String>((bEncode.root())[3]).value() == "three");
   }
   SECTION("Decode an list of integers and check values",
           "[Bencode][Decode][List]") {
@@ -173,12 +173,12 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
     BufferSource bEncodeSource{"d3:onei1e5:threei3e3:twoi2ee"};
     bEncode.decode(bEncodeSource);
     REQUIRE((bEncode.root()).isDictionary());
-    REQUIRE(bEncode["one"].isInteger());
-    REQUIRE(bEncode["two"].isInteger());
-    REQUIRE(bEncode["three"].isInteger());
-    REQUIRE(BRef<Integer>(bEncode["one"]).value() == 1);
-    REQUIRE(BRef<Integer>(bEncode["two"]).value() == 2);
-    REQUIRE(BRef<Integer>(bEncode["three"]).value() == 3);
+    REQUIRE((bEncode.root())["one"].isInteger());
+    REQUIRE((bEncode.root())["two"].isInteger());
+    REQUIRE((bEncode.root())["three"].isInteger());
+    REQUIRE(BRef<Integer>((bEncode.root())["one"]).value() == 1);
+    REQUIRE(BRef<Integer>((bEncode.root())["two"]).value() == 2);
+    REQUIRE(BRef<Integer>((bEncode.root())["three"]).value() == 3);
   }
   SECTION("Decode an Dictionary of ints and check values",
           "[Bencode][Decode][Dictionary]") {
