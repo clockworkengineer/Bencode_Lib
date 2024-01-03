@@ -9,19 +9,19 @@ namespace Bencode_Lib {
 // ==============================
 template <typename T> void CheckBNodeType(const Variant &bNodeVariant) {
   if constexpr (std::is_same_v<T, String>) {
-    if (bNodeVariant.getNodeType() != Variant::Type::string) {
+    if (!bNodeVariant.isString()) {
       throw BNode::Error("Node not a string.");
     }
   } else if constexpr (std::is_same_v<T, Integer>) {
-    if (bNodeVariant.getNodeType() != Variant::Type::integer) {
+    if (!bNodeVariant.isInteger()) {
       throw BNode::Error("Node not an integer.");
     }
   } else if constexpr (std::is_same_v<T, List>) {
-    if (bNodeVariant.getNodeType() != Variant::Type::list) {
+    if (!bNodeVariant.isList()) {
       throw BNode::Error("Node not a list.");
     }
   } else if constexpr (std::is_same_v<T, Dictionary>) {
-    if (bNodeVariant.getNodeType() != Variant::Type::dictionary) {
+    if (!bNodeVariant.isDictionary()) {
       throw BNode::Error("Node not a dictionary.");
     }
   }

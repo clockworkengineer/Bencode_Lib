@@ -31,22 +31,22 @@ struct BNode {
   const BNode &operator[](const std::string &key) const;
   BNode &operator[](int index);
   const BNode &operator[](int index) const;
-  // Determine BNode type
+  // Interrogate variant
   [[nodiscard]] bool isEmpty() const { return (bNodeVariant == nullptr); }
   [[nodiscard]] bool isString() const {
-    return (bNodeVariant->getNodeType() == Variant::Type::string);
+    return (bNodeVariant->isString());
   }
   [[nodiscard]] bool isInteger() const {
-    return (bNodeVariant->getNodeType() == Variant::Type::integer);
+    return (bNodeVariant->isInteger());
   }
   [[nodiscard]] bool isList() const {
-    return (bNodeVariant->getNodeType() == Variant::Type::list);
+    return (bNodeVariant->isList());
   }
   [[nodiscard]] bool isDictionary() const {
-    return (bNodeVariant->getNodeType() == Variant::Type::dictionary);
+    return (bNodeVariant->isDictionary());
   }
   [[nodiscard]] bool isHole() const {
-    return (bNodeVariant->getNodeType() == Variant::Type::hole);
+    return (bNodeVariant->isHole());
   }
   // Get reference to BNode variant
   [[nodiscard]] std::unique_ptr<Variant> &getVariant() {
