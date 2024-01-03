@@ -11,8 +11,6 @@ struct Variant {
   Variant(Variant &&other) = default;
   Variant &operator=(Variant &&other) = default;
   ~Variant() = default;
-  // Get BNode type
-  [[nodiscard]] Type getType() const { return (nodeType); }
   // Determine BNode type
   [[nodiscard]] bool isString() const {
     return (nodeType == Variant::Type::string);

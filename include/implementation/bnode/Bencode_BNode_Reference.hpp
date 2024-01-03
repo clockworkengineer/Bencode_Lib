@@ -7,7 +7,7 @@ namespace Bencode_Lib {
 // ==============================
 // BNode base reference converter
 // ==============================
-template <typename T> void CheckBNodeType(const Variant &bNodeVariant) {
+template <typename T> void CheckBNodeType(const BNode &bNodeVariant) {
   if constexpr (std::is_same_v<T, String>) {
     if (!bNodeVariant.isString()) {
       throw BNode::Error("Node not a string.");
@@ -27,11 +27,11 @@ template <typename T> void CheckBNodeType(const Variant &bNodeVariant) {
   }
 }
 template <typename T> T &BRef(BNode &bNode) {
-  CheckBNodeType<T>(*bNode.getVariant());
+  CheckBNodeType<T>(bNode);
   return (static_cast<T &>(*bNode.getVariant()));
 }
 template <typename T> const T &BRef(const BNode &bNode) {
-  CheckBNodeType<T>(*bNode.getVariant());
+  CheckBNodeType<T>(bNode);
   return (static_cast<const T &>(*bNode.getVariant()));
 }
 
