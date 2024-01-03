@@ -66,7 +66,7 @@ inline const BNode &BNode::operator[](const std::string &key) const {
   return (BRef<const Dictionary>(*this)[key]);
 }
 
-inline BNode BNode::typeToBNode(const Bencode::intialiserListTypes &type) {
+inline BNode BNode::typeToBNode(const Bencode::intializerListTypes &type) {
   if (auto pValue = std::get_if<int>(&type)) {
     return (BNode(*pValue));
   }

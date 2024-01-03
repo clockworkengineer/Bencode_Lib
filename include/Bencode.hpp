@@ -28,14 +28,14 @@ public:
         : std::runtime_error("Bencode Error: " + message) {}
   };
   // Possible Bencode BNode intitializer types
-  using intialiserListTypes =
+  using intializerListTypes =
       std::variant<int, long, long long, float, double, long double, bool,
                    std::string, std::nullptr_t, BNode>;
   // List initializer list
-  using ListInitializer = std::initializer_list<intialiserListTypes>;
+  using ListInitializer = std::initializer_list<intializerListTypes>;
   // Dictionary initializer list
   using DictionaryInitializer =
-      std::initializer_list<std::pair<std::string, intialiserListTypes>>;
+      std::initializer_list<std::pair<std::string, intializerListTypes>>;
   // Constructors/Destructors
   Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
   // Pass in default JSON to parse
