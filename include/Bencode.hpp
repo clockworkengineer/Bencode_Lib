@@ -27,15 +27,15 @@ public:
     explicit Error(const std::string &message)
         : std::runtime_error("Bencode Error: " + message) {}
   };
-  // Possible Bencode Node internal value types
-  using InternalType =
+  // Possible Bencode BNode intitializer types
+  using intialiserListTypes =
       std::variant<int, long, long long, float, double, long double, bool,
                    std::string, std::nullptr_t, BNode>;
   // List initializer list
-  using ListInitializer = std::initializer_list<InternalType>;
+  using ListInitializer = std::initializer_list<intialiserListTypes>;
   // Dictionary initializer list
   using DictionaryInitializer =
-      std::initializer_list<std::pair<std::string, InternalType>>;
+      std::initializer_list<std::pair<std::string, intialiserListTypes>>;
   // Constructors/Destructors
   Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
   // Pass in default JSON to parse
@@ -49,27 +49,20 @@ public:
   Bencode(Bencode &&other) = delete;
   Bencode &operator=(Bencode &&other) = delete;
   ~Bencode();
-
   // Decode Bencode into BNode tree
-
   void decode(ISource &source) const;
   void decode(ISource &&source) const;
-
   // Encode Bencode from BNode tree
   void encode(IDestination &destination) const;
   void encode(IDestination &&destination) const;
-
   // Return Bencode_Lib version
   [[nodiscard]] std::string version() const;
-
   // Return BNode tree root
   [[nodiscard]] BNode &root();
   [[nodiscard]] const BNode &root() const;
-
   // Search for Bencode dictinary entry with a given key
   BNode &operator[](const std::string &key);
   const BNode &operator[](const std::string &key) const;
-
   // Get Bencode list entry at index
   BNode &operator[](std::size_t index);
   const BNode &operator[](std::size_t index) const;

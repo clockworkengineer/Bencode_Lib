@@ -27,7 +27,7 @@ template <typename T> BNode::BNode(T value) {
 inline BNode::BNode(const Bencode::ListInitializer &list) {
   *this = BNode::make<List>();
   for (const auto &entry : list) {
-    BRef<List>(*this).add(internalTypeToBNode(entry));
+    BRef<List>(*this).add(typeToBNode(entry));
   }
 }
 // Construct BNode Dictionary from initializer list
@@ -35,13 +35,15 @@ inline BNode::BNode(const Bencode::DictionaryInitializer &object) {
   *this = BNode::make<Dictionary>();
   for (const auto &entry : object) {
     BRef<Dictionary>(*this).add(
-        Dictionary::Entry(entry.first, internalTypeToBNode(entry.second)));
+        Dictionary::Entry(entry.first, typeToBNode(entry.second)));
   }
 }
 // List
 inline BNode &BNode::operator[](int index) {
   try {
-    if (this->isHole()) { *this = BNode::make<List>(); }
+    if (this->isHole()) {
+      *this = BNode::make<List>();
+    }
     return (BRef<List>(*this)[index]);
   } catch ([[maybe_unused]] const BNode::Error &error) {
     BRef<List>(*this).resize(index);
@@ -64,17 +66,37 @@ inline const BNode &BNode::operator[](const std::string &key) const {
   return (BRef<const Dictionary>(*this)[key]);
 }
 
-inline BNode BNode::internalTypeToBNode(const Bencode::InternalType &type) {
-  if (auto pValue = std::get_if<int>(&type)) { return (BNode(*pValue)); }
-  if (auto pValue = std::get_if<long>(&type)) { return (BNode(*pValue)); }
-  if (auto pValue = std::get_if<long long>(&type)) { return (BNode(*pValue)); }
-  if (auto pValue = std::get_if<float>(&type)) { return (BNode(*pValue)); }
-  if (auto pValue = std::get_if<double>(&type)) { return (BNode(*pValue)); }
-  if (auto pValue = std::get_if<long double>(&type)) { return (BNode(*pValue)); }
-  if (auto pValue = std::get_if<std::string>(&type)) { return (BNode((*pValue))); }
-  if (auto pValue = std::get_if<bool>(&type)) { return (BNode((*pValue))); }
-  if ([[maybe_unused]] auto pValue = std::get_if<std::nullptr_t>(&type)) { return (BNode(0)); }
-  if (auto pValue = std::get_if<BNode>(&type)) { return (std::move(*const_cast<BNode *>(pValue))); }
+inline BNode BNode::typeToBNode(const Bencode::intialiserListTypes &type) {
+  if (auto pValue = std::get_if<int>(&type)) {
+    return (BNode(*pValue));
+  }
+  if (auto pValue = std::get_if<long>(&type)) {
+    return (BNode(*pValue));
+  }
+  if (auto pValue = std::get_if<long long>(&type)) {
+    return (BNode(*pValue));
+  }
+  if (auto pValue = std::get_if<float>(&type)) {
+    return (BNode(*pValue));
+  }
+  if (auto pValue = std::get_if<double>(&type)) {
+    return (BNode(*pValue));
+  }
+  if (auto pValue = std::get_if<long double>(&type)) {
+    return (BNode(*pValue));
+  }
+  if (auto pValue = std::get_if<std::string>(&type)) {
+    return (BNode((*pValue)));
+  }
+  if (auto pValue = std::get_if<bool>(&type)) {
+    return (BNode((*pValue)));
+  }
+  if ([[maybe_unused]] auto pValue = std::get_if<std::nullptr_t>(&type)) {
+    return (BNode(0));
+  }
+  if (auto pValue = std::get_if<BNode>(&type)) {
+    return (std::move(*const_cast<BNode *>(pValue)));
+  }
   throw Error("BNode of non-existant type could not be created.");
 }
 
