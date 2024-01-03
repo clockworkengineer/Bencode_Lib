@@ -85,10 +85,10 @@ inline BNode BNode::typeToBNode(const Bencode::intialiserListTypes &type) {
   if (auto pValue = std::get_if<long double>(&type)) {
     return (BNode(*pValue));
   }
-  if (auto pValue = std::get_if<std::string>(&type)) {
+  if (auto pValue = std::get_if<bool>(&type)) {
     return (BNode((*pValue)));
   }
-  if (auto pValue = std::get_if<bool>(&type)) {
+  if (auto pValue = std::get_if<std::string>(&type)) {
     return (BNode((*pValue)));
   }
   if ([[maybe_unused]] auto pValue = std::get_if<std::nullptr_t>(&type)) {
@@ -97,7 +97,7 @@ inline BNode BNode::typeToBNode(const Bencode::intialiserListTypes &type) {
   if (auto pValue = std::get_if<BNode>(&type)) {
     return (std::move(*const_cast<BNode *>(pValue)));
   }
-  throw Error("BNode of non-existant type could not be created.");
+  throw Error("BNode of unsupported type could not be created.");
 }
 
 } // namespace Bencode_Lib
