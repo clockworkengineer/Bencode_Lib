@@ -48,7 +48,7 @@ void Bencode_Impl::decode(ISource &source) {
 }
 
 void Bencode_Impl::encode(IDestination &destination) const {
-  if (bNodeRoot.getVariant() == nullptr) {
+  if (bNodeRoot.isEmpty()) {
     throw Bencode::Error("No Bencoded data to encode.");
   }
   bNodeEncoder->encode(bNodeRoot, destination);

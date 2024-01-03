@@ -61,7 +61,7 @@ struct BNode {
   }
 
 private:
-  static BNode typeToBNode(const Bencode::intializerListTypes &type);
+  BNode typeToBNode(const Bencode::intializerListTypes &type);
   std::unique_ptr<Variant> bNodeVariant;
 };
 
