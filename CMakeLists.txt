@@ -31,6 +31,7 @@ set(BENCODE_INCLUDES
   ./include/interface/IEncoder.hpp
   ./include/implementation/Bencode_Core.hpp
   ./include/implementation/bnode/Bencode_BNode_Creation.hpp
+  ./include/implementation/bnode/Bencode_BNode_Index.hpp
   ./include/implementation/bnode/Bencode_BNode_Reference.hpp
   ./include/implementation/bnode/Bencode_BNode.hpp
   ./include/implementation/Bencode_Impl.hpp

@@ -11,6 +11,7 @@
 #include "Bencode_String.hpp"
 #include "Bencode_BNode_Reference.hpp"
 #include "Bencode_BNode_Creation.hpp"
+#include "Bencode_BNode_Index.hpp"
 #include "Bencode_Interfaces.hpp"
 #include "Bencode_Sources.hpp"
 #include "Bencode_Destinations.hpp"
