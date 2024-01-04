@@ -362,7 +362,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
         result ==
         R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valued4:key1i22e4:key2i99eeee)");
   }
-  SECTION("List creation completely using a initializer list.",
+  SECTION("List creation completely using a initializer list assignment.",
           "[Bencode][Create][Complex][Initializer") {
     Bencode bencode = {1, 2, 3, 4};
     BufferDestination bencodeDestination;
@@ -370,7 +370,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     REQUIRE(bufferToString(bencodeDestination.getBuffer()) ==
             R"(li1ei2ei3ei4ee)");
   }
-  SECTION("Object creation completely using a initializer list.",
+  SECTION("Object creation completely using a initializer list assignment.",
           "[Bencode][Create][Complex][Initializer") {
     Bencode bencode = {{"currency", "USD"}, {"value", 42.99}};
     BufferDestination bencodeDestination;
@@ -378,11 +378,47 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     REQUIRE(bufferToString(bencodeDestination.getBuffer()) ==
             R"(d8:currency3:USD5:valuei42ee)");
   }
-  SECTION("Object creation completely using a nested initializer list.",
-          "[Bencode][Create][Complex][Initializer") {
+  SECTION(
+      "Object creation completely using a nested initializer list assignment.",
+      "[Bencode][Create][Complex][Initializer") {
     // Note: For the moment has to explicitly uses BNode to create a
     // nested dictionary/list
     Bencode bencode = {
+        {"pi", 3.141},
+        {"happy", true},
+        {"name", "Niels"},
+        {"nothing", nullptr},
+        {"answer", BNode{{"everything", 42}}},
+        {"list", BNode{1, 0, 2}},
+        {"dictionary", BNode{{"currency", "USD"}, {"value", 42.99}}}};
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    REQUIRE(
+        bufferToString(bencodeDestination.getBuffer()) ==
+        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)");
+  }
+
+  SECTION("List creation completely using an initializer list.",
+          "[Bencode][Create][Complex][Initializer") {
+    Bencode bencode{1, 2, 3, 4};
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    REQUIRE(bufferToString(bencodeDestination.getBuffer()) ==
+            R"(li1ei2ei3ei4ee)");
+  }
+  SECTION("Object creation completely using an initializer list.",
+          "[Bencode][Create][Complex][Initializer") {
+    Bencode bencode{{"currency", "USD"}, {"value", 42.99}};
+    BufferDestination bencodeDestination;
+    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    REQUIRE(bufferToString(bencodeDestination.getBuffer()) ==
+            R"(d8:currency3:USD5:valuei42ee)");
+  }
+  SECTION("Object creation completely using an nested initializer list.",
+          "[Bencode][Create][Complex][Initializer") {
+    // Note: For the moment has to explicitly uses BNode to create a
+    // nested dictionary/list
+    Bencode bencode{
         {"pi", 3.141},
         {"happy", true},
         {"name", "Niels"},
