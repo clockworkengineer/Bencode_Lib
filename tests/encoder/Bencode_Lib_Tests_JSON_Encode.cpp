@@ -94,4 +94,14 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
             R"({"one" : "0123456789","three" : "qwerty","two" : "asdfghjkl"})");
   }
+  SECTION("JSON encode  an Dictionary of arrays and check value",
+          "[Bencode][Encode][JSON][Dictionary]") {
+    std::string expected{"d3:oneli1ei2ei3ee3:twoli5555e4:fouree"};
+    BufferSource bEncodeSource(expected);
+    BufferDestination bEncodeDestination;
+    bEncode.decode(bEncodeSource);
+    bEncode.encode(bEncodeDestination);
+    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
+            R"({"one" : [1,2,3],"two" : [5555,"four"]})");
+  }
 }
