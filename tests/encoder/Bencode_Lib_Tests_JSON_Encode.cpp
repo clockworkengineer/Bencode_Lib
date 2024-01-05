@@ -1,7 +1,7 @@
 //
 // Unit Tests: Bencode
 //
-// Description: Encode unit tests for Bencode class
+// Description: JSON encode unit tests for Bencode class
 // using the Catch2 test framework.
 //
 
@@ -9,7 +9,7 @@
 
 using namespace Bencode_Lib;
 
-TEST_CASE("Bencode for JSON encode of simple types (integer, string) ",
+TEST_CASE("JSON encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
 
   const Bencode bEncode(std::make_unique<JSON_Encoder>().release());
@@ -49,28 +49,6 @@ TEST_CASE("Bencode for JSON encode of simple types (integer, string) ",
             R"("abcdefghijklmnopqrstuvwxyz")");
   }
 }
-// TEST_CASE("JSON encode of a table of integer test data",
-//           "[Bencode][Encode][JSON][Integer]") {
-//   const Bencode bEncode(std::make_unique<JSON_Encoder>().release());
-//   auto [expected] = GENERATE(table<std::string>({"i277e", "i32767e"}));
-//   BufferSource bEncodeSource(expected);
-//   BufferDestination bEncodeDestination;
-//   bEncode.decode(bEncodeSource);
-//   bEncode.encode(bEncodeDestination);
-//   REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
-// }
-
-// TEST_CASE("Bencode for encode of a table of string test data",
-//           "[Bencode][Encode][String]") {
-//   const Bencode bEncode;
-//   auto [expected] =
-//       GENERATE(table<std::string>({"13:qwertyuiopasd", "6:mnbvcx"}));
-//   BufferSource bEncodeSource(expected);
-//   BufferDestination bEncodeDestination;
-//   bEncode.decode(bEncodeSource);
-//   bEncode.encode(bEncodeDestination);
-//   REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
-// }
 TEST_CASE("JSON encode of collection types (list, dictionary) ",
           "[Bencode][Encode][JSON]") {
   const Bencode bEncode(std::make_unique<JSON_Encoder>().release());
@@ -85,7 +63,17 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
             R"([266,6780,88])");
   }
-
+  SECTION("JSON encode an List of integers and strings "
+          "('li266e4:fivei6780e3:onei88ee') and check value",
+          "[Bencode][Encode][JSON][List]") {
+    std::string expected{"li266e4:fivei6780e3:onei88ee"};
+    BufferSource bEncodeSource(expected);
+    BufferDestination bEncodeDestination;
+    bEncode.decode(bEncodeSource);
+    bEncode.encode(bEncodeDestination);
+    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
+            R"([266,"five",6780,"one",88])");
+  }
   SECTION("JSON encode an Dictionary of integers and check value",
           "[Bencode][Encode][JSON][Dictionary]") {
     std::string expected{"d3:onei1e5:threei3e3:twoi2ee"};
@@ -103,8 +91,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(
-        bufferToString(bEncodeDestination.getBuffer()) ==
-        R"({"one" : "0123456789","three" : "qwerty","two" : "asdfghjkl"})");
+    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
+            R"({"one" : "0123456789","three" : "qwerty","two" : "asdfghjkl"})");
   }
 }
