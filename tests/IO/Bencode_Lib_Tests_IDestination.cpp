@@ -30,7 +30,7 @@ TEST_CASE("IDestination (Buffer interface).", "[Bencode][IDestination]") {
     BufferDestination buffer;
     buffer.add("i65767e");
     REQUIRE(buffer.getBuffer().size() == 7);
-    REQUIRE(bufferToString(buffer.getBuffer()) == "i65767e");
+    REQUIRE(buffer.toString() == "i65767e");
   }
 }
 TEST_CASE("IDestination (File interface).", "[Bencode][IDestination]") {

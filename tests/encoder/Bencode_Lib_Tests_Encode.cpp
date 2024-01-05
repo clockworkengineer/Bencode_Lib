@@ -1,7 +1,7 @@
 //
 // Unit Tests: Bencode
 //
-// Description: Encode unit tests for Bencode class 
+// Description: Encode unit tests for Bencode class
 // using the Catch2 test framework.
 //
 
@@ -18,7 +18,7 @@ TEST_CASE("Bencode for encode of simple types (integer, string) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == "i266e");
+    REQUIRE(bEncodeDestination.toString() == "i266e");
   }
   SECTION("Encode an integer (10000) and check value",
           "[Bencode][Encode][Integer]") {
@@ -26,7 +26,7 @@ TEST_CASE("Bencode for encode of simple types (integer, string) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == "i10000e");
+    REQUIRE(bEncodeDestination.toString() == "i10000e");
   }
   SECTION("Encode an string ('qwertyuiopas') and check its value",
           "[Bencode][Encode][String]") {
@@ -34,8 +34,7 @@ TEST_CASE("Bencode for encode of simple types (integer, string) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
-            "12:qwertyuiopas");
+    REQUIRE(bEncodeDestination.toString() == "12:qwertyuiopas");
   }
   SECTION("Encode an string ('abcdefghijklmnopqrstuvwxyz') and check its value",
           "[Bencode][Encode][String]") {
@@ -43,8 +42,7 @@ TEST_CASE("Bencode for encode of simple types (integer, string) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
-            "26:abcdefghijklmnopqrstuvwxyz");
+    REQUIRE(bEncodeDestination.toString() == "26:abcdefghijklmnopqrstuvwxyz");
   }
 }
 TEST_CASE("Bencode for encode of a table of integer test data",
@@ -55,7 +53,7 @@ TEST_CASE("Bencode for encode of a table of integer test data",
   BufferDestination bEncodeDestination;
   bEncode.decode(bEncodeSource);
   bEncode.encode(bEncodeDestination);
-  REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
+  REQUIRE(bEncodeDestination.toString() == expected);
 }
 TEST_CASE("Bencode for encode of a table of string test data",
           "[Bencode][Encode][String]") {
@@ -66,7 +64,7 @@ TEST_CASE("Bencode for encode of a table of string test data",
   BufferDestination bEncodeDestination;
   bEncode.decode(bEncodeSource);
   bEncode.encode(bEncodeDestination);
-  REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
+  REQUIRE(bEncodeDestination.toString() == expected);
 }
 TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
           "[Bencode][Encode]") {
@@ -78,7 +76,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
+    REQUIRE(bEncodeDestination.toString() == expected);
   }
   SECTION("Encode an List of strings "
           "('l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze') and "
@@ -90,7 +88,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
+    REQUIRE(bEncodeDestination.toString() == expected);
   }
   SECTION("Encode an Dictionary of integers and check value",
           "[Bencode][Encode][Dictionary]") {
@@ -99,7 +97,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
+    REQUIRE(bEncodeDestination.toString() == expected);
   }
   SECTION("Encode an Dictionary of strings and check value",
           "[Bencode][Encode][Dictionary]") {
@@ -108,7 +106,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == expected);
+    REQUIRE(bEncodeDestination.toString() == expected);
   }
 }
 TEST_CASE("Encode generated exceptions", "[Bencode][Encode][Exceptions]") {

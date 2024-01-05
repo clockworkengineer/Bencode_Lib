@@ -11,7 +11,6 @@ using namespace Bencode_Lib;
 
 TEST_CASE("JSON encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
-
   const Bencode bEncode(std::make_unique<JSON_Encoder>().release());
   SECTION("JSON encode an integer (266) and check value",
           "[Bencode][Encode][JSON][Integer]") {
@@ -19,7 +18,7 @@ TEST_CASE("JSON encode of simple types (integer, string) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == "266");
+    REQUIRE(bEncodeDestination.toString() == "266");
   }
   SECTION("JSON encode an integer (10000) and check value",
           "[Bencode][Encode][JSON][Integer]") {
@@ -27,7 +26,7 @@ TEST_CASE("JSON encode of simple types (integer, string) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) == "10000");
+    REQUIRE(bEncodeDestination.toString() == "10000");
   }
   SECTION("JSON encode an string ('qwertyuiopas') and check its value",
           "[Bencode][Encode][JSON][String]") {
@@ -35,8 +34,7 @@ TEST_CASE("JSON encode of simple types (integer, string) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
-            R"("qwertyuiopas")");
+    REQUIRE(bEncodeDestination.toString() == R"("qwertyuiopas")");
   }
   SECTION("JSON encode an string ('abcdefghijklmnopqrstuvwxyz') and check its "
           "value ",
@@ -45,8 +43,7 @@ TEST_CASE("JSON encode of simple types (integer, string) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
-            R"("abcdefghijklmnopqrstuvwxyz")");
+    REQUIRE(bEncodeDestination.toString() == R"("abcdefghijklmnopqrstuvwxyz")");
   }
 }
 TEST_CASE("JSON encode of collection types (list, dictionary) ",
@@ -60,8 +57,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
-            R"([266,6780,88])");
+    REQUIRE(bEncodeDestination.toString() == R"([266,6780,88])");
   }
   SECTION("JSON encode an List of integers and strings "
           "('li266e4:fivei6780e3:onei88ee') and check value",
@@ -71,8 +67,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
-            R"([266,"five",6780,"one",88])");
+    REQUIRE(bEncodeDestination.toString() == R"([266,"five",6780,"one",88])");
   }
   SECTION("JSON encode an Dictionary of integers and check value",
           "[Bencode][Encode][JSON][Dictionary]") {
@@ -81,7 +76,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
+    REQUIRE(bEncodeDestination.toString() ==
             R"({"one" : 1,"three" : 3,"two" : 2})");
   }
   SECTION("JSON encode  an Dictionary of strings and check value",
@@ -91,7 +86,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
+    REQUIRE(bEncodeDestination.toString() ==
             R"({"one" : "0123456789","three" : "qwerty","two" : "asdfghjkl"})");
   }
   SECTION("JSON encode  an Dictionary of arrays and check value",
@@ -101,7 +96,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
+    REQUIRE(bEncodeDestination.toString() ==
             R"({"one" : [1,2,3],"two" : [5555,"four"]})");
   }
 }

@@ -29,6 +29,13 @@ public:
   virtual void clear() override { encodeBuffer.clear(); }
   std::vector<std::byte> &getBuffer() { return (encodeBuffer); }
   const std::vector<std::byte> &getBuffer() const { return (encodeBuffer); }
+  std::string toString() {
+    std::string destination;
+    for (auto ch : encodeBuffer) {
+      destination.push_back(static_cast<char>(ch));
+    }
+    return (destination);
+  }
 
 private:
   std::vector<std::byte> encodeBuffer;

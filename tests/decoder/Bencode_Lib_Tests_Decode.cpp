@@ -261,7 +261,7 @@ TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
+    REQUIRE(bEncodeDestination.toString() ==
             readBencodedBytesFromFile(prefixTestDataPath(kSingleFileTorrent)));
   }
   SECTION("Decode multifile.torrent", "[Bencode][Decode][Torrents]") {
@@ -275,7 +275,7 @@ TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
     BufferDestination bEncodeDestination;
     bEncode.decode(bEncodeSource);
     bEncode.encode(bEncodeDestination);
-    REQUIRE(bufferToString(bEncodeDestination.getBuffer()) ==
+    REQUIRE(bEncodeDestination.toString() ==
             readBencodedBytesFromFile(prefixTestDataPath(kMultiFileTorrent)));
   }
 }

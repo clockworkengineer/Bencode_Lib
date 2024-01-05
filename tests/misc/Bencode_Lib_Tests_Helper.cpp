@@ -54,15 +54,3 @@ std::string readBencodedBytesFromFile(const std::string &bencodedFileName) {
   bencodedFile.close();
   return (bencodedFileBuffer.str());
 }
-/// <summary>
-/// Convert byte buffer to a string.
-/// </summary>
-/// <param name="buffer">Bencoded byte buffer.</param>
-/// <returns></returns>
-std::string bufferToString(const std::vector<std::byte> &buffer) {
-  std::string destination;
-  for (auto ch : buffer) {
-    destination.push_back(static_cast<char>(ch));
-  }
-  return (destination);
-}
