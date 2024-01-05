@@ -6,13 +6,13 @@
 #include <string>
 #include <sstream>
 #include <map>
+#include <memory>
 
 #include "catch2/catch_all.hpp"
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-
-
+#include "JSON_Encoder.hpp"
 #include "Bencode_Decoder.hpp"
 
 #define kSingleFileTorrent "singlefile.torrent"
