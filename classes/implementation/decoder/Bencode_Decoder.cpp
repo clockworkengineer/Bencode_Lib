@@ -1,6 +1,5 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-
 #include "Bencode_Decoder.hpp"
 
 namespace Bencode_Lib {
@@ -19,7 +18,7 @@ int64_t Bencode_Decoder::extractInteger(ISource &source) {
     source.next();
   }
   while (source.more() && (std::isdigit(source.current()) != 0)) {
-    // Number too large to be  in buffer
+    // Number too large to fit in buffer
     if (digits == number.size()) {
       throw Error("Syntax Error detected.");
     }

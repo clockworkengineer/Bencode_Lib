@@ -37,6 +37,8 @@ set(BENCODE_INCLUDES
   ./include/implementation/Bencode_Impl.hpp
   ./include/implementation/decoder/Bencode_Decoder.hpp
   ./include/implementation/encoder/Bencode_Encoder.hpp
+  ./include/implementation/encoder/JSON_Encoder.hpp
+  ./include/implementation/encoder/XML_Encoder.hpp
   ./include/implementation/io/Bencode_Sources.hpp
   ./include/implementation/io/Bencode_BufferSource.hpp
   ./include/implementation/io/Bencode_FileSource.hpp
