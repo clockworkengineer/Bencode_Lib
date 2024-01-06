@@ -244,18 +244,18 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
   const Bencode bEncode;
   SECTION("Decode dictionary and check its components using indexing",
           "[Bencode][BNode][Index]") {
-    BufferSource bEncodeSource{
+    BufferSource source{
         "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
-    bEncode.decode(bEncodeSource);
+    bEncode.decode(source);
     REQUIRE(BRef<String>((bEncode.root())["one"]).value() == "0123456789");
     REQUIRE(BRef<String>((bEncode.root())["two"]).value() == "asdfghjkl");
     REQUIRE(BRef<String>((bEncode.root())["three"]).value() == "qwerty");
   }
   SECTION("Decode list and check its components using indexing",
           "[Bencode][BNode][Index]") {
-    BufferSource bEncodeSource{
+    BufferSource source{
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
-    bEncode.decode(bEncodeSource);
+    bEncode.decode(source);
     REQUIRE(BRef<String>((bEncode.root())[0]).value() == "sillyy");
     REQUIRE(BRef<String>((bEncode.root())[1]).value() == "poiuytrewqas");
     REQUIRE(BRef<String>((bEncode.root())[2]).value() ==
@@ -264,9 +264,9 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
   SECTION("Decode list with embedded dictionary and check its components using "
           "indexing",
           "[Bencode][BNode][Index]") {
-    BufferSource bEncodeSource{"l6:sillyyd3:one10:01234567895:three6:qwerty3:"
+    BufferSource source{"l6:sillyyd3:one10:01234567895:three6:qwerty3:"
                                "two9:asdfghjkle26:abcdefghijklmnopqrstuvwxyze"};
-    bEncode.decode(bEncodeSource);
+    bEncode.decode(source);
     REQUIRE(BRef<String>((bEncode.root())[0]).value() == "sillyy");
     REQUIRE(BRef<String>((bEncode.root())[1]["one"]).value() == "0123456789");
     REQUIRE(BRef<String>((bEncode.root())[1]["two"]).value() == "asdfghjkl");
@@ -276,18 +276,18 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
   }
   SECTION("Decode dictionary and check an invalid key generates exception",
           "[Bencode][BNode][Index]") {
-    BufferSource bEncodeSource{
+    BufferSource source{
         "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
-    bEncode.decode(bEncodeSource);
+    bEncode.decode(source);
     REQUIRE_THROWS_AS((bEncode.root())["onee"].isDictionary(), BNode::Error);
     REQUIRE_THROWS_WITH((bEncode.root())["onee"].isDictionary(),
                         "BNode Error: Invalid key used in dictionary.");
   }
   SECTION("Decode list and check an invalid index generates exception",
           "[Bencode][BNode][Index]") {
-    BufferSource bEncodeSource{
+    BufferSource source{
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
-    bEncode.decode(bEncodeSource);
+    bEncode.decode(source);
     REQUIRE_THROWS_AS((bEncode.root())[3].isList(), BNode::Error);
     REQUIRE_THROWS_WITH((bEncode.root())[3].isList(),
                         "BNode Error: Invalid index used in list.");
@@ -297,30 +297,30 @@ TEST_CASE("Check BNode reference functions work.",
           "[Bencode][BNode][Reference]") {
   const Bencode bEncode;
   SECTION("Integer reference.", "[Bencode][BNode][Reference]") {
-    BufferSource bEncodeSource{"i45500e"};
-    bEncode.decode(bEncodeSource);
+    BufferSource source{"i45500e"};
+    bEncode.decode(source);
     REQUIRE(BRef<Integer>((bEncode.root())).value() == 45500);
   }
   SECTION("String reference.", "[Bencode][BNode][Reference]") {
-    BufferSource bEncodeSource{"10:0123456789"};
-    bEncode.decode(bEncodeSource);
+    BufferSource source{"10:0123456789"};
+    bEncode.decode(source);
     REQUIRE(BRef<String>((bEncode.root())).value() == "0123456789");
   }
   SECTION("List reference.", "[Bencode][BNode][Reference]") {
-    BufferSource bEncodeSource{
+    BufferSource source{
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
-    bEncode.decode(bEncodeSource);
+    bEncode.decode(source);
     REQUIRE(BRef<List>((bEncode.root())).size() == 3);
   }
   SECTION("Dictionary reference.", "[Bencode][BNode][Reference]") {
-    BufferSource bEncodeSource{
+    BufferSource source{
         "d4:four10:01234567893:one8:123456785:three6:qwerty3:two9:asdfghjkle"};
-    bEncode.decode(bEncodeSource);
+    bEncode.decode(source);
     REQUIRE(BRef<Dictionary>((bEncode.root())).size() == 4);
   }
   SECTION("BRef check node type correct.", "[Bencode][BNode][Reference]") {
-    BufferSource bEncodeSource{"i45500e"};
-    bEncode.decode(bEncodeSource);
+    BufferSource source{"i45500e"};
+    bEncode.decode(source);
     REQUIRE_THROWS_AS(BRef<Dictionary>(bEncode.root()), BNode::Error);
     REQUIRE_THROWS_WITH(BRef<Dictionary>(bEncode.root()),
                         "BNode Error: Node not a dictionary.");

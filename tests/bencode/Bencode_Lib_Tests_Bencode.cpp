@@ -105,9 +105,9 @@ TEST_CASE("Check Bencode dictionary creation api.",
     bencode["nothing"]["extra"]["more"] = nullptr;
     REQUIRE_FALSE(!bencode["nothing"]["extra"]["more"].isInteger());
     REQUIRE(BRef<Integer>(bencode["nothing"]["extra"]["more"]).value() == 0);
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() ==
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() ==
             R"(d7:nothingd5:extrad4:morei0eeee)");
   }
 }
@@ -211,9 +211,9 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     bencode[0][0] = 3000;
     REQUIRE_FALSE(!bencode[0][0].isInteger());
     REQUIRE(BRef<Integer>(bencode[0][0]).value() == 3000);
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() == R"(lli3000eee)");
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() == R"(lli3000eee)");
   }
   SECTION("Create list with free spaces string at the base and encode.",
           "[Bencode][Create][List][String]") {
@@ -221,9 +221,9 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     bencode[5] = "test";
     REQUIRE_FALSE(!bencode[5].isString());
     REQUIRE(BRef<String>(bencode[5]).value() == "test");
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() == R"(l4:teste)");
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() == R"(l4:teste)");
   }
   SECTION("Create list with free spaces add an integer at the base andencode.",
           "[Bencode][Create][List][Integer]") {
@@ -234,9 +234,9 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     bencode[3] = 15;
     REQUIRE_FALSE(!bencode[3].isInteger());
     REQUIRE(BRef<Integer>(bencode[3]).value() == 15);
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() == R"(li15e4:teste)");
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() == R"(li15e4:teste)");
   }
 
   SECTION("Create list with initializer list assignment.",
@@ -260,9 +260,9 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE(BRef<String>(bencode[5][5]).value() == "test test test test");
     REQUIRE(BRef<Integer>(bencode[5][6]).value() == 1);
     REQUIRE(BRef<Integer>(bencode[5][7]).value() == 0);
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() ==
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() ==
             R"(lli1ei2ei3ei4e3:5.019:test test test testi1ei0eee)");
   }
 }
@@ -274,9 +274,9 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     bencode["happy"] = true;
     bencode["name"] = "Niels";
     bencode["nothing"] = nullptr;
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() ==
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() ==
             R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0ee)");
   }
   SECTION("A two level dictionary.", "[Bencode][Create][Complex]") {
@@ -286,10 +286,10 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     bencode["name"] = "Niels";
     bencode["nothing"] = nullptr;
     bencode["answer"]["everything"] = 42;
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
-        bencodeDestination.toString() ==
+        destination.toString() ==
         R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42eee)");
   }
   SECTION("A three level dictionary.", "[Bencode][Create][Complex]") {
@@ -299,10 +299,10 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     bencode["name"][5] = "Niels";
     bencode["nothing"] = nullptr;
     bencode["answer"]["everything"][5] = 42;
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
-        bencodeDestination.toString() ==
+        destination.toString() ==
         R"(d2:pii3e5:happyi1e4:namel5:Nielse7:nothingi0e6:answerd10:everythingli42eeee)");
   }
   SECTION("Object with sub list/dictionary create using initializer list.",
@@ -315,10 +315,10 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     bencode["answer"]["everything"] = 42;
     bencode["list"] = {1, 0, 2};
     bencode["dictionary"] = {{"currency", "USD"}, {"value", 42.99}};
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
-        bencodeDestination.toString() ==
+        destination.toString() ==
         R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)");
   }
   SECTION("Object with sub list/dictionary with an embedded list create using "
@@ -333,10 +333,10 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     bencode["list"] = {1, 0, 2};
     bencode["dictionary"] = {{"currency", "USD"},
                              {"value", BNode{1, 2, 3, 4, 5}}};
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
-        bencodeDestination.toString() ==
+        destination.toString() ==
         R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valueli1ei2ei3ei4ei5eeee)");
   }
   SECTION("Object with sub list/dictionary with an embedded dictionary create "
@@ -352,10 +352,10 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     bencode["list"] = {1, 0, 2};
     bencode["dictionary"] = {{"currency", "USD"},
                              {"value", BNode{{"key1", 22}, {"key2", 99.899}}}};
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
     std::string result;
-    for (auto ch : bencodeDestination.getBuffer())
+    for (auto ch : destination.getBuffer())
       result.push_back(static_cast<char>(ch));
     REQUIRE(
         result ==
@@ -364,16 +364,16 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
   SECTION("List creation completely using a initializer list assignment.",
           "[Bencode][Create][Complex][Initializer]") {
     Bencode bencode = {1, 2, 3, 4};
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() == R"(li1ei2ei3ei4ee)");
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() == R"(li1ei2ei3ei4ee)");
   }
   SECTION("Object creation completely using a initializer list assignment.",
           "[Bencode][Create][Complex][Initializer]") {
     Bencode bencode = {{"currency", "USD"}, {"value", 42.99}};
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() == R"(d8:currency3:USD5:valuei42ee)");
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() == R"(d8:currency3:USD5:valuei42ee)");
   }
   SECTION(
       "Object creation completely using a nested initializer list assignment.",
@@ -388,26 +388,26 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
         {"answer", BNode{{"everything", 42}}},
         {"list", BNode{1, 0, 2}},
         {"dictionary", BNode{{"currency", "USD"}, {"value", 42.99}}}};
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
-        bencodeDestination.toString() ==
+        destination.toString() ==
         R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)");
   }
 
   SECTION("List creation completely using an initializer list.",
           "[Bencode][Create][Complex][Initializer]") {
     Bencode bencode{1, 2, 3, 4};
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() == R"(li1ei2ei3ei4ee)");
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() == R"(li1ei2ei3ei4ee)");
   }
   SECTION("Object creation completely using an initializer list.",
           "[Bencode][Create][Complex][Initializer]") {
     Bencode bencode{{"currency", "USD"}, {"value", 42.99}};
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
-    REQUIRE(bencodeDestination.toString() == R"(d8:currency3:USD5:valuei42ee)");
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE(destination.toString() == R"(d8:currency3:USD5:valuei42ee)");
   }
   SECTION("Object creation completely using an nested initializer list.",
           "[Bencode][Create][Complex][Initializer]") {
@@ -421,10 +421,10 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
         {"answer", BNode{{"everything", 42}}},
         {"list", BNode{1, 0, 2}},
         {"dictionary", BNode{{"currency", "USD"}, {"value", 42.99}}}};
-    BufferDestination bencodeDestination;
-    REQUIRE_NOTHROW(bencode.encode(bencodeDestination));
+    BufferDestination destination;
+    REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
-        bencodeDestination.toString() ==
+        destination.toString() ==
         R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)");
   }
 }
