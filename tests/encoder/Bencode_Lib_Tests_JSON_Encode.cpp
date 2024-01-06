@@ -79,7 +79,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     REQUIRE(bEncodeDestination.toString() ==
             R"({"one" : 1,"three" : 3,"two" : 2})");
   }
-  SECTION("JSON encode  an Dictionary of strings and check value",
+  SECTION("JSON encode an Dictionary of strings and check value",
           "[Bencode][Encode][JSON][Dictionary]") {
     std::string expected{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     BufferSource bEncodeSource(expected);
@@ -89,7 +89,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     REQUIRE(bEncodeDestination.toString() ==
             R"({"one" : "0123456789","three" : "qwerty","two" : "asdfghjkl"})");
   }
-  SECTION("JSON encode  an Dictionary of arrays and check value",
+  SECTION("JSON encode an Dictionary of arrays and check value",
           "[Bencode][Encode][JSON][Dictionary]") {
     std::string expected{"d3:oneli1ei2ei3ee3:twoli5555e4:fouree"};
     BufferSource bEncodeSource(expected);
