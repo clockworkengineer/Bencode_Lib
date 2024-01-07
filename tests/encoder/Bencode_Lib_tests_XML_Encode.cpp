@@ -38,7 +38,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        R"(<?xml version="1.0" encoding="UTF-8"?><root>"qwertyuiopas"</root>)");
+        R"(<?xml version="1.0" encoding="UTF-8"?><root>qwertyuiopas</root>)");
   }
   SECTION("XML encode an string ('abcdefghijklmnopqrstuvwxyz') and check its "
           "value ",
@@ -49,7 +49,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        R"(<?xml version="1.0" encoding="UTF-8"?><root>"abcdefghijklmnopqrstuvwxyz"</root>)");
+        R"(<?xml version="1.0" encoding="UTF-8"?><root>abcdefghijklmnopqrstuvwxyz</root>)");
   }
 }
 TEST_CASE("XML encode of collection types (list, dictionary) ",
@@ -74,7 +74,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        R"(<?xml version="1.0" encoding="UTF-8"?><root><Array0>266</Array0><Array1>"five"</Array1><Array2>6780</Array2><Array3>"one"</Array3><Array4>88</Array4></root>)");
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><Array0>266</Array0><Array1>five</Array1><Array2>6780</Array2><Array3>one</Array3><Array4>88</Array4></root>)");
   }
   SECTION("XML encode an Dictionary of integers and check value",
           "[Bencode][Encode][XML][Dictionary]") {
@@ -94,7 +94,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        R"(<?xml version="1.0" encoding="UTF-8"?><root><one>"0123456789"</one><three>"qwerty"</three><two>"asdfghjkl"</two></root>)");
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><one>0123456789</one><three>qwerty</three><two>asdfghjkl</two></root>)");
   }
   SECTION("XML encode an Dictionary of arrays and check value",
           "[Bencode][Encode][XML][Dictionary]") {
@@ -104,6 +104,6 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        R"(<?xml version="1.0" encoding="UTF-8"?><root><one><Array0>1</Array0><Array1>2</Array1><Array2>3</Array2></one><two><Array0>5555</Array0><Array1>"four"</Array1></two></root>)");
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><one><Array0>1</Array0><Array1>2</Array1><Array2>3</Array2></one><two><Array0>5555</Array0><Array1>four</Array1></two></root>)");
   }
 }

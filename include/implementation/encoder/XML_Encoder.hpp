@@ -55,14 +55,12 @@ private:
       destination.add(
           std::to_string(BRef<Bencode_Lib::Integer>(bNode).value()));
     } else if (bNode.isString()) {
-      destination.add("\"");
       if (isStringPrintable(BRef<Bencode_Lib::String>(bNode).value())) {
         destination.add(BRef<Bencode_Lib::String>(bNode).value());
       } else {
         destination.add(
             translateStringToEscapes(BRef<Bencode_Lib::String>(bNode).value()));
       }
-      destination.add("\"");
     }
   }
 };
