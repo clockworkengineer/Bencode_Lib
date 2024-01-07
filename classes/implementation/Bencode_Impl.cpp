@@ -54,6 +54,17 @@ void Bencode_Impl::encode(IDestination &destination) const {
   bNodeEncoder->encode(bNodeRoot, destination);
 }
 
+void Bencode_Impl::traverse(IAction &action)
+{
+  if (bNodeRoot.isEmpty()) { throw Bencode::Error("No Bencode to traverse."); }
+  traverseBNodes(bNodeRoot, action);
+}
+void Bencode_Impl::traverse(IAction &action) const
+{
+  if (bNodeRoot.isEmpty()) { throw Bencode::Error("No Bencode to traverse."); }
+  traverseBNodes(bNodeRoot, action);
+}
+
 BNode &Bencode_Impl::operator[](const std::string &key)
 {
    try {

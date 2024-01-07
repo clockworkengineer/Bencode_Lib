@@ -25,8 +25,8 @@ set(TEST_SOURCES
   ./encoder/Bencode_Lib_Tests_Encode.cpp
   ./encoder/Bencode_Lib_Tests_JSON_Encode.cpp
   ./encoder/Bencode_Lib_Tests_XML_Encode.cpp
-  ./IO/Bencode_Lib_Tests_ISource.cpp
-  ./IO/Bencode_Lib_Tests_IDestination.cpp
+  ./io/Bencode_Lib_Tests_ISource.cpp
+  ./io/Bencode_Lib_Tests_IDestination.cpp
   ./misc/Bencode_Lib_Tests_Helper.cpp
   ./misc/Bencode_Lib_Tests_Misc.cpp)
 

@@ -78,6 +78,16 @@ void Bencode::encode(IDestination &&destination) const {
 }
 
 /// <summary>
+/// Recursively traverse JNode structure calling IAction methods (read only)
+//  or to change the Bencode tree node directly.
+/// </summary>
+/// <param name=action>Action methods to call during traversal.</param>
+// Traverse using non-const Bencode so can change Bencode tree
+void Bencode::traverse(IAction &action) { implementation->traverse(action); }
+// Traverse using const Bencode so cannot change Bencode tree
+void Bencode::traverse(IAction &action) const { std::as_const(*implementation).traverse(action); }
+
+/// <summary>
 /// Get root of BNode tree.
 /// </summary>
 /// <returns>Root of BNode encoded tree.</returns>
