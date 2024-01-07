@@ -14,24 +14,32 @@ namespace Bencode_Lib {
 class Bencode_Impl {
 
 public:
+  // Constructors/Destructors
   Bencode_Impl();
   Bencode_Impl(const Bencode_Impl &other) = delete;
   Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
   Bencode_Impl(Bencode_Impl &&other) = delete;
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
   ~Bencode_Impl();
-
+  // Set encoder/decoder for BNode tree
   void setEncoder(IEncoder *encoder);
   void setDecoder(IDecoder *decoder);
+  // Decode Bencoder file into BNode tree
   void decode(ISource &source);
+  // Encode BNode tree
   void encode(IDestination &destination) const;
+  // Bencode version
   std::string version() const;
+  // Return root BNode of tree
   [[nodiscard]] BNode &root() { return (bNodeRoot); }
   [[nodiscard]] const BNode &root() const { return (bNodeRoot); }
+  // Travse BNode tree
   void traverse(IAction &action);
   void traverse(IAction &action) const;
+  // Search for Bencode dictionary entry with a given key
   BNode &operator[](const std::string &key);
   const BNode &operator[](const std::string &key) const;
+  // Get Bencode list element at index
   BNode &operator[](std::size_t index);
   const BNode &operator[](std::size_t index) const;
 
