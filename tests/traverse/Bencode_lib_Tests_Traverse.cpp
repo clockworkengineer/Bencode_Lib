@@ -9,16 +9,6 @@
 
 using namespace Bencode_Lib;
 
-#pragma once
-
-#include <set>
-#include <sstream>
-
-#include "Bencode.hpp"
-#include "Bencode_Sources.hpp"
-#include "Bencode_Destinations.hpp"
-#include "Bencode_Core.hpp"
-
 class Bencode_Analyzer : public Bencode_Lib::IAction {
 public:
   Bencode_Analyzer() = default;
@@ -59,7 +49,7 @@ public:
 };
 TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
   const Bencode bEncode;
-  SECTION("Decode an Integer  and traverse", "[Bencode][Traverse][Integer]") {
+  SECTION("Decode an Integer and traverse", "[Bencode][Traverse][Integer]") {
     BufferSource source{"i266e"};
     bEncode.decode(source);
     Bencode_Analyzer analyzer;
@@ -104,4 +94,16 @@ TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
     REQUIRE(analyzer.totalStrings == 0);
     REQUIRE(analyzer.totalLists == 0);
   }
+//   SECTION("Decode a complex tree and traverse",
+//           "[Bencode][Traverse][Dictionary]") {
+//     BufferSource source{R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)"};
+//     bEncode.decode(source);
+//     Bencode_Analyzer analyzer;
+//     // bEncode.traverse(analyzer);
+//     // REQUIRE(analyzer.totalNodes == 4);
+//     // REQUIRE(analyzer.totalIntegers == 3);
+//     // REQUIRE(analyzer.totalDictionarys == 1);
+//     // REQUIRE(analyzer.totalStrings == 0);
+//     // REQUIRE(analyzer.totalLists == 0);
+//   }
 }
