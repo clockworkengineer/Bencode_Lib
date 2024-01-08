@@ -9,37 +9,31 @@
 
 using namespace Bencode_Lib;
 
-class Bencode_Analyzer : public Bencode_Lib::IAction {
+class Bencode_Analyzer : public IAction {
 public:
   Bencode_Analyzer() = default;
   virtual ~Bencode_Analyzer() = default;
-  virtual void
-  onBNode([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
+  virtual void onBNode([[maybe_unused]] const BNode &bNode) override {
     totalNodes++;
   }
-  virtual void
-  onString([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
+  virtual void onString([[maybe_unused]] const BNode &bNode) override {
     totalStrings++;
   }
-  virtual void
-  onInteger([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
+  virtual void onInteger([[maybe_unused]] const BNode &bNode) override {
     totalIntegers++;
   }
-  virtual void
-  onList([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
+  virtual void onList([[maybe_unused]] const BNode &bNode) override {
     totalLists++;
   }
-  virtual void
-  onDictionary([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
+  virtual void onDictionary([[maybe_unused]] const BNode &bNode) override {
     totalDictionarys++;
   }
   // Non-const api not used
-  virtual void onInteger([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  virtual void onList([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  virtual void
-  onDictionary([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  virtual void onBNode([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  virtual void onString([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
+  virtual void onInteger([[maybe_unused]] BNode &bNode) override {}
+  virtual void onList([[maybe_unused]] BNode &bNode) override {}
+  virtual void onDictionary([[maybe_unused]] BNode &bNode) override {}
+  virtual void onBNode([[maybe_unused]] BNode &bNode) override {}
+  virtual void onString([[maybe_unused]] BNode &bNode) override {}
 
   int64_t totalNodes{};
   int64_t totalDictionarys{};
@@ -94,16 +88,17 @@ TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
     REQUIRE(analyzer.totalStrings == 0);
     REQUIRE(analyzer.totalLists == 0);
   }
-//   SECTION("Decode a complex tree and traverse",
-//           "[Bencode][Traverse][Dictionary]") {
-//     BufferSource source{R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)"};
-//     bEncode.decode(source);
-//     Bencode_Analyzer analyzer;
-//     // bEncode.traverse(analyzer);
-//     // REQUIRE(analyzer.totalNodes == 4);
-//     // REQUIRE(analyzer.totalIntegers == 3);
-//     // REQUIRE(analyzer.totalDictionarys == 1);
-//     // REQUIRE(analyzer.totalStrings == 0);
-//     // REQUIRE(analyzer.totalLists == 0);
-//   }
+  //   SECTION("Decode a complex tree and traverse",
+  //           "[Bencode][Traverse][Dictionary]") {
+  //     BufferSource
+  //     source{R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)"};
+  //     bEncode.decode(source);
+  //     Bencode_Analyzer analyzer;
+  //     // bEncode.traverse(analyzer);
+  //     // REQUIRE(analyzer.totalNodes == 4);
+  //     // REQUIRE(analyzer.totalIntegers == 3);
+  //     // REQUIRE(analyzer.totalDictionarys == 1);
+  //     // REQUIRE(analyzer.totalStrings == 0);
+  //     // REQUIRE(analyzer.totalLists == 0);
+  //   }
 }
