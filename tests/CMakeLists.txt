@@ -28,7 +28,8 @@ set(TEST_SOURCES
   ./io/Bencode_Lib_Tests_ISource.cpp
   ./io/Bencode_Lib_Tests_IDestination.cpp
   ./misc/Bencode_Lib_Tests_Helper.cpp
-  ./misc/Bencode_Lib_Tests_Misc.cpp)
+  ./misc/Bencode_Lib_Tests_Misc.cpp
+  ./traverse/Bencode_lib_Tests_Traverse.cpp)
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)

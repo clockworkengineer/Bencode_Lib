@@ -62,17 +62,20 @@ private:
 /// <param name=action>Action methods to call during traversal.</param>
 template <typename T>
 void Bencode_Impl::traverseBNodes(T &bNode, IAction &action) {
-  action.onBNode(bNode);
   if (bNode.isInteger()) {
+    action.onBNode(bNode);
     action.onInteger(bNode);
   } else if (bNode.isString()) {
+    action.onBNode(bNode);
     action.onString(bNode);
   } else if (bNode.isDictionary()) {
+    action.onBNode(bNode);
     action.onDictionary(bNode);
     for (auto &entry : BRef<Dictionary>(bNode).value()) {
       traverseBNodes(entry.getBNode(), action);
     }
   } else if (bNode.isList()) {
+    action.onBNode(bNode);
     action.onList(bNode);
     for (auto &entry : BRef<List>(bNode).value()) {
       traverseBNodes(entry, action);
