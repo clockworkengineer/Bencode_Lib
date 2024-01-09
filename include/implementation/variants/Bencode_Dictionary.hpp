@@ -32,18 +32,10 @@ struct Dictionary : Variant {
   ~Dictionary() = default;
   // Add array element
   void add(Entry &entry) {
-    auto key = entry.getKey();
-    auto it = std::find_if(
-        bNodeDictionary.begin(), bNodeDictionary.end(),
-        [&key](const Entry &entry) -> bool { return (entry.getKey() > key); });
-    bNodeDictionary.insert(it, std::move(entry));
+    bNodeDictionary.insert(findEntry(entry), std::move(entry));
   }
   void add(Entry &&entry) {
-    auto key = entry.getKey();
-    auto it = std::find_if(
-        bNodeDictionary.begin(), bNodeDictionary.end(),
-        [&key](const Entry &entry) -> bool { return (entry.getKey() > key); });
-    bNodeDictionary.insert(it, std::move(entry));
+    bNodeDictionary.insert(findEntry(entry), std::move(entry));
   }
   [[nodiscard]] bool contains(const std::string &key) const {
     if (auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
@@ -84,6 +76,20 @@ struct Dictionary : Variant {
   }
 
 private:
+  auto findKey(const std::string &key) {
+    auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
+                           [&key](const Entry &current) -> bool {
+                             return (current.getKey() >= key);
+                           });
+    return (it);
+  }
+  auto findEntry(const Entry &entry) {
+    auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
+                           [&entry](const Entry &current) -> bool {
+                             return (current.getKey() >= entry.getKey());
+                           });
+    return (it);
+  }
   std::vector<Entry> bNodeDictionary;
 };
 } // namespace Bencode_Lib
