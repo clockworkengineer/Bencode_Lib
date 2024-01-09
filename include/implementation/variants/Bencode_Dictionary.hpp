@@ -31,8 +31,20 @@ struct Dictionary : Variant {
   Dictionary &operator=(Dictionary &&other) = default;
   ~Dictionary() = default;
   // Add array element
-  void add(Entry &entry) { bNodeDictionary.emplace_back(std::move(entry)); }
-  void add(Entry &&entry) { bNodeDictionary.emplace_back(std::move(entry)); }
+  void add(Entry &entry) {
+    auto key = entry.getKey();
+    auto it = std::find_if(
+        bNodeDictionary.begin(), bNodeDictionary.end(),
+        [&key](const Entry &entry) -> bool { return (entry.getKey() > key); });
+    bNodeDictionary.insert(it, std::move(entry));
+  }
+  void add(Entry &&entry) {
+    auto key = entry.getKey();
+    auto it = std::find_if(
+        bNodeDictionary.begin(), bNodeDictionary.end(),
+        [&key](const Entry &entry) -> bool { return (entry.getKey() > key); });
+    bNodeDictionary.insert(it, std::move(entry));
+  }
   [[nodiscard]] bool contains(const std::string &key) const {
     if (auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
                                [&key](const Entry &entry) -> bool {

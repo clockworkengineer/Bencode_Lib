@@ -88,17 +88,17 @@ TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
     REQUIRE(analyzer.totalStrings == 0);
     REQUIRE(analyzer.totalLists == 0);
   }
-  //   SECTION("Decode a complex tree and traverse",
-  //           "[Bencode][Traverse][Dictionary]") {
-  //     BufferSource
-  //     source{R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)"};
-  //     bEncode.decode(source);
-  //     Bencode_Analyzer analyzer;
-  //     // bEncode.traverse(analyzer);
-  //     // REQUIRE(analyzer.totalNodes == 4);
-  //     // REQUIRE(analyzer.totalIntegers == 3);
-  //     // REQUIRE(analyzer.totalDictionarys == 1);
-  //     // REQUIRE(analyzer.totalStrings == 0);
-  //     // REQUIRE(analyzer.totalLists == 0);
-  //   }
+    SECTION("Decode a complex tree and traverse",
+            "[Bencode][Traverse][Dictionary]") {
+      BufferSource
+      source{R"(d6:answerd10:everythingi42ee10:dictionaryd8:currency3:USD5:valuei42ee5:happyi1e4:listli1ei0ei2ee4:name5:Niels7:nothingi0e2:pii3ee)"};
+      bEncode.decode(source);
+      Bencode_Analyzer analyzer;
+      bEncode.traverse(analyzer);
+      REQUIRE(analyzer.totalNodes == 14);
+      REQUIRE(analyzer.totalIntegers == 8);
+      REQUIRE(analyzer.totalDictionarys == 3);
+      REQUIRE(analyzer.totalStrings == 2);
+      REQUIRE(analyzer.totalLists == 1);
+    }
 }

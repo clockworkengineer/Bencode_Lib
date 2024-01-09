@@ -277,7 +277,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(destination.toString() ==
-            R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0ee)");
+            R"(d5:happyi1e4:name5:Niels7:nothingi0e2:pii3ee)");
   }
   SECTION("A two level dictionary.", "[Bencode][Create][Complex]") {
     Bencode bencode;
@@ -290,7 +290,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
         destination.toString() ==
-        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42eee)");
+        R"(d6:answerd10:everythingi42ee5:happyi1e4:name5:Niels7:nothingi0e2:pii3ee)");
   }
   SECTION("A three level dictionary.", "[Bencode][Create][Complex]") {
     Bencode bencode;
@@ -303,7 +303,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
         destination.toString() ==
-        R"(d2:pii3e5:happyi1e4:namel5:Nielse7:nothingi0e6:answerd10:everythingli42eeee)");
+        R"(d6:answerd10:everythingli42eee5:happyi1e4:namel5:Nielse7:nothingi0e2:pii3ee)");
   }
   SECTION("Object with sub list/dictionary create using initializer list.",
           "[Bencode][Create][Complex]") {
@@ -319,7 +319,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
         destination.toString() ==
-        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)");
+        R"(d6:answerd10:everythingi42ee10:dictionaryd8:currency3:USD5:valuei42ee5:happyi1e4:listli1ei0ei2ee4:name5:Niels7:nothingi0e2:pii3ee)");
   }
   SECTION("Object with sub list/dictionary with an embedded list create using "
           "initializer list.",
@@ -337,7 +337,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
         destination.toString() ==
-        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valueli1ei2ei3ei4ei5eeee)");
+        R"(d6:answerd10:everythingi42ee10:dictionaryd8:currency3:USD5:valueli1ei2ei3ei4ei5eee5:happyi1e4:listli1ei0ei2ee4:name5:Niels7:nothingi0e2:pii3ee)");
   }
   SECTION("Object with sub list/dictionary with an embedded dictionary create "
           "using "
@@ -359,7 +359,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
       result.push_back(static_cast<char>(ch));
     REQUIRE(
         result ==
-        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valued4:key1i22e4:key2i99eeee)");
+        R"(d6:answerd10:everythingi42ee10:dictionaryd8:currency3:USD5:valued4:key1i22e4:key2i99eee5:happyi1e4:listli1ei0ei2ee4:name5:Niels7:nothingi0e2:pii3ee)");
   }
   SECTION("List creation completely using a initializer list assignment.",
           "[Bencode][Create][Complex][Initializer]") {
@@ -392,7 +392,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
         destination.toString() ==
-        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)");
+        R"(d6:answerd10:everythingi42ee10:dictionaryd8:currency3:USD5:valuei42ee5:happyi1e4:listli1ei0ei2ee4:name5:Niels7:nothingi0e2:pii3ee)");
   }
 
   SECTION("List creation completely using an initializer list.",
@@ -425,6 +425,6 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(
         destination.toString() ==
-        R"(d2:pii3e5:happyi1e4:name5:Niels7:nothingi0e6:answerd10:everythingi42ee4:listli1ei0ei2ee10:dictionaryd8:currency3:USD5:valuei42eee)");
+        R"(d6:answerd10:everythingi42ee10:dictionaryd8:currency3:USD5:valuei42ee5:happyi1e4:listli1ei0ei2ee4:name5:Niels7:nothingi0e2:pii3ee)");
   }
 }
