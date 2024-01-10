@@ -38,11 +38,7 @@ struct Dictionary : Variant {
     bNodeDictionary.insert(findEntry(entry), std::move(entry));
   }
   [[nodiscard]] bool contains(const std::string &key) const {
-    if (auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
-                               [&key](const Entry &entry) -> bool {
-                                 return (entry.getKey() == key);
-                               });
-        it != bNodeDictionary.end()) {
+    if (auto it = findKey(key); it != bNodeDictionary.end()) {
       return (true);
     }
     return (false);
@@ -68,7 +64,7 @@ struct Dictionary : Variant {
   }
 
 private:
-  // Search for a given entry given a key and dictionary/list
+  // Search for a given entry given a key
   [[nodiscard]] std::vector<Entry>::iterator findKey(const std::string &key) {
     auto entry = std::find_if(
         bNodeDictionary.begin(), bNodeDictionary.end(),
@@ -82,6 +78,7 @@ private:
         [&key](const Entry &entry) -> bool { return (entry.getKey() == key); });
     return (entry);
   }
+  // Find place for entry in ordered dictionary
   std::vector<Entry>::iterator findEntry(const Entry &entry) {
     auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
                            [&entry](const Entry &current) -> bool {
