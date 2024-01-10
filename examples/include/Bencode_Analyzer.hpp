@@ -8,16 +8,17 @@
 #include "Bencode_Destinations.hpp"
 #include "Bencode_Core.hpp"
 
-class Bencode_Analyzer : public Bencode_Lib::IAction
-{
+class Bencode_Analyzer : public Bencode_Lib::IAction {
 public:
   Bencode_Analyzer() = default;
   virtual ~Bencode_Analyzer() = default;
   // Add BNode details to analysis
-  virtual void onBNode([[maybe_unused]] const Bencode_Lib::BNode &bNode) override { totalNodes++; }
+  virtual void
+  onBNode([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
+    totalNodes++;
+  }
   // Add string details to analysis
-  virtual void onString(const Bencode_Lib::BNode &bNode) override
-  {
+  virtual void onString(const Bencode_Lib::BNode &bNode) override {
     const Bencode_Lib::String &bNodeString = BRef<Bencode_Lib::String>(bNode);
     totalStrings++;
     sizeInBytes += sizeof(Bencode_Lib::String);
@@ -26,27 +27,29 @@ public:
     uniqueStrings.insert(bNodeString.value());
   }
   // Add integer details to analysis
-  virtual void onInteger([[maybe_unused]]const Bencode_Lib::BNode &bNode) override
-  {
+  virtual void
+  onInteger([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
     totalIntegers++;
     sizeInBytes += sizeof(Bencode_Lib::Integer);
   }
   // Add list details to analysis
-  virtual void onList(const Bencode_Lib::BNode &bNode) override
-  {
+  virtual void onList(const Bencode_Lib::BNode &bNode) override {
     const Bencode_Lib::List &bNodeList = BRef<Bencode_Lib::List>(bNode);
     totalLists++;
     sizeInBytes += sizeof(Bencode_Lib::List);
     maxListSize = std::max(bNodeList.size(), static_cast<int>(maxListSize));
-    for ([[maybe_unused]] auto &bNodeEntry : bNodeList.value()) { sizeInBytes += sizeof(Bencode_Lib::BNode); }
+    for ([[maybe_unused]] auto &bNodeEntry : bNodeList.value()) {
+      sizeInBytes += sizeof(Bencode_Lib::BNode);
+    }
   }
   // Add dictionary details to analysis
-  virtual void onDictionary(const Bencode_Lib::BNode &bNode) override
-  {
-    const Bencode_Lib::Dictionary &bNodeDictionary = BRef<Bencode_Lib::Dictionary>(bNode);
+  virtual void onDictionary(const Bencode_Lib::BNode &bNode) override {
+    const Bencode_Lib::Dictionary &bNodeDictionary =
+        BRef<Bencode_Lib::Dictionary>(bNode);
     totalDictionarys++;
     sizeInBytes += sizeof(Bencode_Lib::Dictionary);
-    maxDictionarySize = std::max(bNodeDictionary.value().size(), maxDictionarySize);
+    maxDictionarySize =
+        std::max(bNodeDictionary.value().size(), maxDictionarySize);
     for (auto &entry : bNodeDictionary.value()) {
       auto &key = entry.getKey();
       uniqueKeys.insert(key);
@@ -59,47 +62,57 @@ public:
   // Non-const api not used
   virtual void onInteger([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
   virtual void onList([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  virtual void onDictionary([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
+  virtual void
+  onDictionary([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
   virtual void onBNode([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
   virtual void onString([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
   // Output analysis details
-  std::string dump()
-  {
+  std::string dump() {
     std::stringstream os;
     os << "\n------------------Bencode Tree Stats------------------\n";
     os << "Bencode Tree contains " << totalNodes << " nodes.\n";
     os << "Bencode Tree size " << sizeInBytes << " in bytes.\n";
-    os << "------------------Bencode Bencode_Lib::Dictionary Stats------------------\n";
-    os << "Bencode Tree contains " << totalDictionarys << " objectEntries.\n";
+    os << "------------------Bencode Bencode_Lib::Dictionary "
+          "Stats------------------\n";
+    os << "Bencode Tree contains " << totalDictionarys << " dictionairies..\n";
     os << "Bencode Tree max object size " << maxDictionarySize << ".\n";
     os << "Bencode Tree total " << totalKeys << " keys.\n";
     os << "Bencode Tree contains " << uniqueKeys.size() << " unique keys.\n";
     os << "Bencode Tree max key size " << maxKeySize << " in bytes.\n";
-    os << "------------------Bencode Bencode_Lib::List Stats------------------\n";
-    os << "Bencode Tree contains " << totalLists << " arrays.\n";
+    os << "------------------Bencode Bencode_Lib::List "
+          "Stats------------------\n";
+    os << "Bencode Tree contains " << totalLists << " lists.\n";
     os << "Bencode Tree max array size " << maxListSize << ".\n";
-    os << "------------------Bencode Bencode_Lib::String Stats------------------\n";
+    os << "------------------Bencode Bencode_Lib::String "
+          "Stats------------------\n";
     os << "Bencode Tree total " << totalStrings << " strings.\n";
-    os << "Bencode Tree contains " << uniqueStrings.size() << " unique strings.\n";
+    os << "Bencode Tree contains " << uniqueStrings.size()
+       << " unique strings.\n";
     os << "Bencode Tree max string size " << maxStringSize << " in bytes.\n";
-    os << "------------------Bencode Bencode_Lib::Integer Stats------------------\n";
+    os << "------------------Bencode Bencode_Lib::Integer "
+          "Stats------------------\n";
     os << "Bencode Tree contains " << totalIntegers << " integers.\n";
     return (os.str());
   }
-  static std::string dumpBNodeSizes()
-  {
+  static std::string dumpBNodeSizes() {
     std::stringstream os;
-    os << "\n--------------------Bencode_Lib::BNode Sizes---------------------\n";
-    os << "Bencode_Lib::BNode size " << sizeof(Bencode_Lib::BNode) << " in bytes.\n";
-    os << "Bencode_Lib::Dictionary size " << sizeof(Bencode_Lib::Dictionary) << " in bytes.\n";
-    os << "Bencode_Lib::Dictionary Entry size " << sizeof(Bencode_Lib::Dictionary::Entry) << " in bytes.\n";
-    os << "Bencode_Lib::List size " << sizeof(Bencode_Lib::List) << " in bytes.\n";
-    os << "Bencode_Lib::Integer size " << sizeof(Bencode_Lib::Integer) << " in bytes.\n";
-    os << "Bencode_Lib::String size " << sizeof(Bencode_Lib::String) << " in bytes.\n";
+    os << "\n--------------------Bencode_Lib::BNode "
+          "Sizes---------------------\n";
+    os << "Bencode_Lib::BNode size " << sizeof(Bencode_Lib::BNode)
+       << " in bytes.\n";
+    os << "Bencode_Lib::Dictionary size " << sizeof(Bencode_Lib::Dictionary)
+       << " in bytes.\n";
+    os << "Bencode_Lib::Dictionary Entry size "
+       << sizeof(Bencode_Lib::Dictionary::Entry) << " in bytes.\n";
+    os << "Bencode_Lib::List size " << sizeof(Bencode_Lib::List)
+       << " in bytes.\n";
+    os << "Bencode_Lib::Integer size " << sizeof(Bencode_Lib::Integer)
+       << " in bytes.\n";
+    os << "Bencode_Lib::String size " << sizeof(Bencode_Lib::String)
+       << " in bytes.\n";
     return (os.str());
   }
-  static std::string dumpNumericSizes()
-  {
+  static std::string dumpNumericSizes() {
     std::stringstream os;
     os << "\n--------------------System Numeric Sizes---------------------\n";
     os << "Short size " << sizeof(short) << " in bytes.\n";
