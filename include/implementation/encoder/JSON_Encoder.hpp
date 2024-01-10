@@ -8,7 +8,9 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
-class JSON_Encoder : public Bencode_Lib::IEncoder {
+namespace Bencode_Lib {
+
+class JSON_Encoder : public IEncoder {
 
 public:
   // Constructors/destructors
@@ -19,13 +21,13 @@ public:
   JSON_Encoder &operator=(JSON_Encoder &&other) = delete;
   ~JSON_Encoder() = default;
 
-  void encode(const Bencode_Lib::BNode &bNode,
-              Bencode_Lib::IDestination &destination) const {
+  void encode(const BNode &bNode,
+              IDestination &destination) const {
     if (bNode.isDictionary()) {
       destination.add('{');
-      int commas = BRef<Bencode_Lib::Dictionary>(bNode).value().size();
+      int commas = BRef<Dictionary>(bNode).value().size();
       for (const auto &bNodeNext :
-           BRef<Bencode_Lib::Dictionary>(bNode).value()) {
+           BRef<Dictionary>(bNode).value()) {
         destination.add("\"" + bNodeNext.getKey() + "\"" + " : ");
         encode(bNodeNext.getBNode(), destination);
         if (--commas > 0)
@@ -33,9 +35,9 @@ public:
       }
       destination.add('}');
     } else if (bNode.isList()) {
-      int commas = BRef<Bencode_Lib::List>(bNode).value().size();
+      int commas = BRef<List>(bNode).value().size();
       destination.add('[');
-      for (const auto &bNodeNext : BRef<Bencode_Lib::List>(bNode).value()) {
+      for (const auto &bNodeNext : BRef<List>(bNode).value()) {
         encode(bNodeNext, destination);
         if (--commas > 0)
           destination.add(",");
@@ -43,16 +45,18 @@ public:
       destination.add(']');
     } else if (bNode.isInteger()) {
       destination.add(
-          std::to_string(BRef<Bencode_Lib::Integer>(bNode).value()));
+          std::to_string(BRef<Integer>(bNode).value()));
     } else if (bNode.isString()) {
       destination.add("\"");
-      if (isStringPrintable(BRef<Bencode_Lib::String>(bNode).value())) {
-        destination.add(BRef<Bencode_Lib::String>(bNode).value());
+      if (isStringPrintable(BRef<String>(bNode).value())) {
+        destination.add(BRef<String>(bNode).value());
       } else {
         destination.add(
-            translateStringToEscapes(BRef<Bencode_Lib::String>(bNode).value()));
+            translateStringToEscapes(BRef<String>(bNode).value()));
       }
       destination.add("\"");
     }
   }
 };
+
+} // namespace Bencode_Lib

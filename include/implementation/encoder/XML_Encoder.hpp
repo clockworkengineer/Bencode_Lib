@@ -8,7 +8,9 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
-class XML_Encoder : public Bencode_Lib::IEncoder {
+namespace Bencode_Lib {
+
+class XML_Encoder : public IEncoder {
 
 public:
   // Constructors/destructors
@@ -19,8 +21,8 @@ public:
   XML_Encoder &operator=(XML_Encoder &&other) = delete;
   ~XML_Encoder() = default;
 
-  void encode(const Bencode_Lib::BNode &bNode,
-              Bencode_Lib::IDestination &destination) const {
+  void encode(const BNode &bNode,
+              IDestination &destination) const {
     destination.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     destination.add("<root>");
     encodeXML(bNode, destination);
@@ -28,11 +30,11 @@ public:
   }
 
 private:
-  void encodeXML(const Bencode_Lib::BNode &bNode,
-                 Bencode_Lib::IDestination &destination) const {
+  void encodeXML(const BNode &bNode,
+                 IDestination &destination) const {
     if (bNode.isDictionary()) {
       for (const auto &bNodeNext :
-           BRef<Bencode_Lib::Dictionary>(bNode).value()) {
+           BRef<Dictionary>(bNode).value()) {
         auto elementName = bNodeNext.getKey();
         std::replace(elementName.begin(), elementName.end(), ' ', '-');
         destination.add("<" + elementName + ">");
@@ -41,26 +43,28 @@ private:
       }
     } else if (bNode.isList()) {
       long index = 0;
-      if (BRef<Bencode_Lib::List>(bNode).value().size() > 1) {
-        for (const auto &bNodeNext : BRef<Bencode_Lib::List>(bNode).value()) {
+      if (BRef<List>(bNode).value().size() > 1) {
+        for (const auto &bNodeNext : BRef<List>(bNode).value()) {
           destination.add("<Array" + std::to_string(index) + ">");
           encodeXML(bNodeNext, destination);
           destination.add("</Array" + std::to_string(index) + ">");
           index++;
         }
       } else {
-        encodeXML(BRef<Bencode_Lib::List>(bNode).value()[0], destination);
+        encodeXML(BRef<List>(bNode).value()[0], destination);
       }
     } else if (bNode.isInteger()) {
       destination.add(
-          std::to_string(BRef<Bencode_Lib::Integer>(bNode).value()));
+          std::to_string(BRef<Integer>(bNode).value()));
     } else if (bNode.isString()) {
-      if (isStringPrintable(BRef<Bencode_Lib::String>(bNode).value())) {
-        destination.add(BRef<Bencode_Lib::String>(bNode).value());
+      if (isStringPrintable(BRef<String>(bNode).value())) {
+        destination.add(BRef<String>(bNode).value());
       } else {
         destination.add(
-            translateStringToEscapes(BRef<Bencode_Lib::String>(bNode).value()));
+            translateStringToEscapes(BRef<String>(bNode).value()));
       }
     }
   }
 };
+
+} // namespace Bencode_Lib

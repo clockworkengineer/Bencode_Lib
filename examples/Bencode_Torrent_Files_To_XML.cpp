@@ -17,7 +17,7 @@
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    Bencode_Lib::Bencode bEncode(std::make_unique<XML_Encoder>().release());
+    Bencode_Lib::Bencode bEncode(std::make_unique<Bencode_Lib::XML_Encoder>().release());
     // Initialise logging.
     plog::init(plog::debug, "Bencode_Torrent_Files_To_XML.log");
     PLOG_INFO << "Bencode_Torrent_Files_To_XML started ...";

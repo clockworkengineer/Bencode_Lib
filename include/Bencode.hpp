@@ -61,7 +61,7 @@ public:
   // Return BNode tree root
   [[nodiscard]] BNode &root();
   [[nodiscard]] const BNode &root() const;
-  // Traverse JSON tree
+  // Traverse Bencode tree
   void traverse(IAction &action);
   void traverse(IAction &action) const;
   // Search for Bencode dictinary entry with a given key
