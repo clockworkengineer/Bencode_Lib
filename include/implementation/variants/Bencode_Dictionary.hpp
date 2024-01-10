@@ -51,21 +51,13 @@ struct Dictionary : Variant {
     return (static_cast<int>(bNodeDictionary.size()));
   }
   BNode &operator[](const std::string &key) {
-    if (auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
-                               [&key](const Entry &entry) -> bool {
-                                 return (entry.getKey() == key);
-                               });
-        it != bNodeDictionary.end()) {
+    if (auto it = findKey(key); it != bNodeDictionary.end()) {
       return (it->getBNode());
     }
     throw BNode::Error("Invalid key used in dictionary.");
   }
   const BNode &operator[](const std::string &key) const {
-    if (auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
-                               [&key](const Entry &entry) -> bool {
-                                 return (entry.getKey() == key);
-                               });
-        it != bNodeDictionary.end()) {
+    if (auto it = findKey(key); it != bNodeDictionary.end()) {
       return (it->getBNode());
     }
     throw BNode::Error("Invalid key used in dictionary.");
@@ -76,14 +68,21 @@ struct Dictionary : Variant {
   }
 
 private:
-  auto findKey(const std::string &key) {
-    auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
-                           [&key](const Entry &current) -> bool {
-                             return (current.getKey() >= key);
-                           });
-    return (it);
+  // Search for a given entry given a key and dictionary/list
+  [[nodiscard]] std::vector<Entry>::iterator findKey(const std::string &key) {
+    auto entry = std::find_if(
+        bNodeDictionary.begin(), bNodeDictionary.end(),
+        [&key](Entry &entry) -> bool { return (entry.getKey() == key); });
+    return (entry);
   }
-  auto findEntry(const Entry &entry) {
+  [[nodiscard]] std::vector<Entry>::const_iterator
+  findKey(const std::string &key) const {
+    auto entry = std::find_if(
+        bNodeDictionary.begin(), bNodeDictionary.end(),
+        [&key](const Entry &entry) -> bool { return (entry.getKey() == key); });
+    return (entry);
+  }
+  std::vector<Entry>::iterator findEntry(const Entry &entry) {
     auto it = std::find_if(bNodeDictionary.begin(), bNodeDictionary.end(),
                            [&entry](const Entry &current) -> bool {
                              return (current.getKey() >= entry.getKey());
