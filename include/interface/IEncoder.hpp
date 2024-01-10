@@ -54,7 +54,7 @@ protected:
     for (unsigned char ch : stringToTranslate) {
       // translatedString += std::format("\\u{:04x}", ch);
       char unicode[7];
-      sprintf(unicode, "\\u%04x", ch);
+      sprintf_s(unicode, "\\u%04x", ch);
       translatedString += unicode[0];
       translatedString += unicode[1];
       translatedString += unicode[2];

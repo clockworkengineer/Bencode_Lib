@@ -14,7 +14,7 @@
 #include "plog/Initializers/RollingFileInitializer.h"
 #include "plog/Log.h"
 
-namespace js = Bencode_Lib;
+namespace be = Bencode_Lib;
 
 /// <summary>
 /// Parse Bencode file and analyze its Bencode tree.
@@ -23,9 +23,9 @@ namespace js = Bencode_Lib;
 void processBencodeFile(const std::string &fileName)
 {
   PLOG_INFO << "Analyzing " << fileName;
-  const js::Bencode bEncode;
+  const be::Bencode bEncode;
   Bencode_Analyzer bEncodeAnalyzer;
-  bEncode.decode(js::FileSource{ fileName });
+  bEncode.decode(be::FileSource{ fileName });
   bEncode.traverse(bEncodeAnalyzer);
   PLOG_INFO << bEncodeAnalyzer.dump();
   PLOG_INFO << "Finished " << fileName << ".";
@@ -37,7 +37,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
   plog::init(plog::debug, "Bencode_Analyze_File.log");
   PLOG_INFO << "Bencode_Analyze_File started ...";
   // Output Bencode Lib version and data structure metrics
-  PLOG_INFO << js::Bencode().version();
+  PLOG_INFO << be::Bencode().version();
   PLOG_INFO << Bencode_Analyzer::dumpNumericSizes();
   PLOG_INFO << Bencode_Analyzer::dumpBNodeSizes();
   // Analyze Bencode files.
