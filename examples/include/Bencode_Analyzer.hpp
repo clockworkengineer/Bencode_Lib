@@ -25,13 +25,13 @@ public:
     maxStringSize = std::max(bNodeString.value().size(), maxKeySize);
     uniqueStrings.insert(bNodeString.value());
   }
-  // Add number details to analysis
+  // Add integer details to analysis
   virtual void onInteger([[maybe_unused]]const Bencode_Lib::BNode &bNode) override
   {
     totalIntegers++;
     sizeInBytes += sizeof(Bencode_Lib::Integer);
   }
-  // Add array details to analysis
+  // Add list details to analysis
   virtual void onList(const Bencode_Lib::BNode &bNode) override
   {
     const Bencode_Lib::List &bNodeList = BRef<Bencode_Lib::List>(bNode);
@@ -40,7 +40,7 @@ public:
     maxListSize = std::max(bNodeList.size(), static_cast<int>(maxListSize));
     for ([[maybe_unused]] auto &bNodeEntry : bNodeList.value()) { sizeInBytes += sizeof(Bencode_Lib::BNode); }
   }
-  // Add object details to analysis
+  // Add dictionary details to analysis
   virtual void onDictionary(const Bencode_Lib::BNode &bNode) override
   {
     const Bencode_Lib::Dictionary &bNodeDictionary = BRef<Bencode_Lib::Dictionary>(bNode);
@@ -83,18 +83,7 @@ public:
     os << "Bencode Tree contains " << uniqueStrings.size() << " unique strings.\n";
     os << "Bencode Tree max string size " << maxStringSize << " in bytes.\n";
     os << "------------------Bencode Bencode_Lib::Integer Stats------------------\n";
-    os << "Bencode Tree contains " << totalIntegers << " numbers.\n";
-    os << "Bencode Tree contains " << totalInteger << " integers.\n";
-    os << "Bencode Tree contains " << totalLong << " longs.\n";
-    os << "Bencode Tree contains " << totalLongLong << " long longs.\n";
-    os << "Bencode Tree contains " << totalFloat << " floats.\n";
-    os << "Bencode Tree contains " << totalDouble << " doubles.\n";
-    os << "Bencode Tree contains " << totalLongDouble << " long doubles.\n";
-    os << "------------------Bencode Bencode_Lib::Boolean Stats------------------\n";
-    os << "Bencode Tree contains " << totalBoolean << " booleans.\n";
-    os << "------------------Bencode Bencode_Lib::Null Stats------------------\n";
-    os << "Bencode Tree contains " << totalNull << " nulls.\n";
-    os << "----------------------------------------------------";
+    os << "Bencode Tree contains " << totalIntegers << " integers.\n";
     return (os.str());
   }
   static std::string dumpBNodeSizes()
@@ -142,14 +131,4 @@ private:
   size_t maxStringSize{};
   // Bencode_Lib::Integer
   int64_t totalIntegers{};
-  int64_t totalInteger{};
-  int64_t totalLong{};
-  int64_t totalLongLong{};
-  int64_t totalFloat{};
-  int64_t totalDouble{};
-  int64_t totalLongDouble{};
-  // Bencode_Lib::Boolean
-  int64_t totalBoolean{};
-  // Bencode_Lib::Null
-  int64_t totalNull{};
 };
