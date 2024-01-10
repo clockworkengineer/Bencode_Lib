@@ -38,10 +38,8 @@ struct Dictionary : Variant {
     bNodeDictionary.insert(findEntry(entry), std::move(entry));
   }
   [[nodiscard]] bool contains(const std::string &key) const {
-    if (auto it = findKey(key); it != bNodeDictionary.end()) {
-      return (true);
-    }
-    return (false);
+    auto it = findKey(key);
+    return (it != bNodeDictionary.end());
   }
   [[nodiscard]] int size() const {
     return (static_cast<int>(bNodeDictionary.size()));

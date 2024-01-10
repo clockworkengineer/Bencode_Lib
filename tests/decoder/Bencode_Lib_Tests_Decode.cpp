@@ -193,8 +193,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
   }
   SECTION("Decode a Dictionary of strings and check values",
           "[Bencode][Decode][Dictionary]") {
-    BufferSource source{
-        "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
+    BufferSource source{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     bEncode.decode(source);
     std::map<std::string, std::string> entries;
     for (const auto &bNode : BRef<Dictionary>(bEncode.root()).value()) {
@@ -224,8 +223,7 @@ TEST_CASE("Decode generated exceptions", "[Bencode][Decode][Exceptions]") {
   }
   SECTION("Decode an dictionary without a terminating end",
           "[Bencode][Decode][Exceptions]") {
-    BufferSource source{
-        "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkl"};
+    BufferSource source{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkl"};
     REQUIRE_THROWS_AS(bEncode.decode(source), IDecoder::Error);
   }
   SECTION("Decode an string that terminates prematurely",
@@ -237,14 +235,17 @@ TEST_CASE("Decode generated exceptions", "[Bencode][Decode][Exceptions]") {
   }
   SECTION("Duplicate dictionary keys",
           "[Bencode][Decode][Dictionary][Exceptions]") {
-    BufferSource source{
-        "d3:one10:01234567893:two6:qwerty3:two9:asdfghjkle"};
+    BufferSource source{"d3:one10:01234567893:two6:qwerty3:two9:asdfghjkle"};
     REQUIRE_THROWS_AS(bEncode.decode(source), IDecoder::Error);
   }
   SECTION("Dictionary Keys not in lexical order",
           "[Bencode][Decode][Dictionary][Exceptions]") {
-    BufferSource source{
-        "d5:three10:01234567893:one6:qwerty3:two9:asdfghjkle"};
+    BufferSource source{"d5:three10:01234567893:one6:qwerty3:two9:asdfghjkle"};
+    REQUIRE_THROWS_AS(bEncode.decode(source), IDecoder::Error);
+  }
+  SECTION("Decode an Dictionary of ints that terminates early",
+          "[Bencode][Decode][Dictionary]") {
+    BufferSource source{"d3:onei1e5:threei3ee3:twoi2ee"};
     REQUIRE_THROWS_AS(bEncode.decode(source), IDecoder::Error);
   }
 }
