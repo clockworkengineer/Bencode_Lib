@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <vector>
 #include <string>
+#include <iostream>
 
 class Utility {
 public:
@@ -22,12 +23,5 @@ public:
     return (
         newFileName.erase(newFileName.find(".torrent"), newFileName.length()) +
         newExtension);
-  }
-  static std::string bufferToString(const std::vector<std::byte> &buffer) {
-    std::string destination;
-    for (auto ch : buffer) {
-      destination.push_back(static_cast<char>(ch));
-    }
-    return (destination);
   }
 };

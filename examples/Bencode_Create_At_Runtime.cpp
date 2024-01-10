@@ -49,7 +49,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
                           {"array", be::BNode{23.22, 33, 55, 99.99}}};
     be::BufferDestination destination;
     bEncode.encode(destination);
-    PLOG_INFO << Utility::bufferToString(destination.getBuffer());
+    PLOG_INFO << destination.toString();
     destination.clear();
     // create Bencode using an intialiser list and nesting array/objects using
     // BNode{}.
@@ -63,7 +63,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
         {"object", be::BNode{{"currency", "USD"},
                              {"value", be::BNode{23.22, 33, 55, 99.99}}}}};
     bEncode2.encode(destination);
-    PLOG_INFO << Utility::bufferToString(destination.getBuffer());
+    PLOG_INFO << destination.toString();
   } catch (std::exception &ex) {
     PLOG_ERROR << "Error: " << ex.what();
   }
