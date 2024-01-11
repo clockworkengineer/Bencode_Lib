@@ -32,41 +32,5 @@ public:
   // Encode to destination from BNode tree
   // =====================================
   virtual void encode(const BNode &bNode, IDestination &destination) const = 0;
-
-protected:
-  // =============================================
-  // Does string contain all printaable characters
-  // =============================================
-  bool isStringPrintable(const std::string &str) const {
-    for (unsigned char ch : str) {
-      if (!isprint(ch)) {
-        return (false);
-      }
-    }
-    return (true);
-  }
-  // ===============================================
-  // Translate string to escape sequences ("\uxxxx")
-  // ===============================================
-  std::string
-  translateStringToEscapes(const std::string stringToTranslate) const {
-    std::string translatedString;
-    for (unsigned char ch : stringToTranslate) {
-      if (!isprint(ch)) {
-        // translatedString += std::format("\\u{:04x}", ch);
-        char unicode[7];
-        sprintf_s(unicode, "\\u%04x", ch);
-        translatedString += unicode[0];
-        translatedString += unicode[1];
-        translatedString += unicode[2];
-        translatedString += unicode[3];
-        translatedString += unicode[4];
-        translatedString += unicode[5];
-      } else {
-        translatedString += ch;
-      }
-    }
-    return (translatedString);
-  }
 };
 } // namespace Bencode_Lib

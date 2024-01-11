@@ -7,10 +7,11 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "Translator.hhp"
 
 namespace Bencode_Lib {
 
-class JSON_Encoder : public IEncoder {
+class JSON_Encoder : public IEncoder, protected Translator {
 
 public:
   // Constructors/destructors
