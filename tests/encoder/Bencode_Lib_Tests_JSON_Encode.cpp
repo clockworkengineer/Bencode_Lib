@@ -45,6 +45,20 @@ TEST_CASE("JSON encode of simple types (integer, string) ",
     bEncode.encode(destination);
     REQUIRE(destination.toString() == R"("abcdefghijklmnopqrstuvwxyz")");
   }
+  SECTION("JSON encode an string with unprintable characters "
+          "('abcdefghijklmnopqrstuvwxyz') and check its "
+          "value ",
+          "[Bencode][Encode][JSON][String]") {
+    std::string escaped{"29:abcdefghijklmnopqrstuvwxyz"};
+    escaped += static_cast<char>(0);
+    escaped += static_cast<char>(1);
+    escaped += static_cast<char>(2);
+    BufferSource source{escaped};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == R"("abcdefghijklmnopqrstuvwxyz\u0000\u0001\u0002")");
+  }
 }
 TEST_CASE("JSON encode of collection types (list, dictionary) ",
           "[Bencode][Encode][JSON]") {
@@ -73,8 +87,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     BufferDestination destination;
     bEncode.decode(source);
     bEncode.encode(destination);
-    REQUIRE(destination.toString() ==
-            R"({"one" : 1,"three" : 3,"two" : 2})");
+    REQUIRE(destination.toString() == R"({"one" : 1,"three" : 3,"two" : 2})");
   }
   SECTION("JSON encode an Dictionary of strings and check value",
           "[Bencode][Encode][JSON][Dictionary]") {
