@@ -17,25 +17,23 @@ public:
   // ===============================================
   // Translate string to escape sequences ("\uxxxx")
   // ===============================================
-  std::string
-  translateStringToEscapes(const std::string stringToTranslate) const {
-    std::string translatedString;
-    for (unsigned char ch : stringToTranslate) {
+  std::string translateToEscapes(const std::string toTranslate) const {
+    std::string translated;
+    for (unsigned char ch : toTranslate) {
       if (!isprint(ch)) {
-        // translatedString += std::format("\\u{:04x}", ch);
-        char unicode[7];
-        sprintf_s(unicode, "\\u%04x", ch);
-        translatedString += unicode[0];
-        translatedString += unicode[1];
-        translatedString += unicode[2];
-        translatedString += unicode[3];
-        translatedString += unicode[4];
-        translatedString += unicode[5];
+        char escaped[7];
+        sprintf_s(escaped, "\\u%04x", ch);
+        translated += escaped[0];
+        translated += escaped[1];
+        translated += escaped[2];
+        translated += escaped[3];
+        translated += escaped[4];
+        translated += escaped[5];
       } else {
-        translatedString += ch;
+        translated += ch;
       }
     }
-    return (translatedString);
+    return (translated);
   }
 };
 } // namespace Bencode_Lib

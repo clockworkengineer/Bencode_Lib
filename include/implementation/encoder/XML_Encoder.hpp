@@ -54,7 +54,7 @@ private:
     } else if (bNode.isInteger()) {
       destination.add(std::to_string(BRef<Integer>(bNode).value()));
     } else if (bNode.isString()) {
-      destination.add(translateStringToEscapes(BRef<String>(bNode).value()));
+      destination.add(translateToEscapes(BRef<String>(bNode).value()));
     }
   }
 };
