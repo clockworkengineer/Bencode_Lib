@@ -7,7 +7,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Translator.hhp"
+#include "Translator.hpp"
 
 namespace Bencode_Lib {
 
