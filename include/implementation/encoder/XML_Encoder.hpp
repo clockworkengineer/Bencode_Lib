@@ -21,8 +21,7 @@ public:
   XML_Encoder &operator=(XML_Encoder &&other) = delete;
   ~XML_Encoder() = default;
 
-  void encode(const BNode &bNode,
-              IDestination &destination) const {
+  void encode(const BNode &bNode, IDestination &destination) const {
     destination.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     destination.add("<root>");
     encodeXML(bNode, destination);
@@ -30,11 +29,9 @@ public:
   }
 
 private:
-  void encodeXML(const BNode &bNode,
-                 IDestination &destination) const {
+  void encodeXML(const BNode &bNode, IDestination &destination) const {
     if (bNode.isDictionary()) {
-      for (const auto &bNodeNext :
-           BRef<Dictionary>(bNode).value()) {
+      for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
         auto elementName = bNodeNext.getKey();
         std::replace(elementName.begin(), elementName.end(), ' ', '-');
         destination.add("<" + elementName + ">");
@@ -54,15 +51,9 @@ private:
         encodeXML(BRef<List>(bNode).value()[0], destination);
       }
     } else if (bNode.isInteger()) {
-      destination.add(
-          std::to_string(BRef<Integer>(bNode).value()));
+      destination.add(std::to_string(BRef<Integer>(bNode).value()));
     } else if (bNode.isString()) {
-      if (isStringPrintable(BRef<String>(bNode).value())) {
-        destination.add(BRef<String>(bNode).value());
-      } else {
-        destination.add(
-            translateStringToEscapes(BRef<String>(bNode).value()));
-      }
+      destination.add(translateStringToEscapes(BRef<String>(bNode).value()));
     }
   }
 };

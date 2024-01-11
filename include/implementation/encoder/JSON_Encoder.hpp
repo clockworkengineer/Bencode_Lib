@@ -21,13 +21,11 @@ public:
   JSON_Encoder &operator=(JSON_Encoder &&other) = delete;
   ~JSON_Encoder() = default;
 
-  void encode(const BNode &bNode,
-              IDestination &destination) const {
+  void encode(const BNode &bNode, IDestination &destination) const {
     if (bNode.isDictionary()) {
       destination.add('{');
       int commas = BRef<Dictionary>(bNode).value().size();
-      for (const auto &bNodeNext :
-           BRef<Dictionary>(bNode).value()) {
+      for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
         destination.add("\"" + bNodeNext.getKey() + "\"" + " : ");
         encode(bNodeNext.getBNode(), destination);
         if (--commas > 0)
@@ -44,16 +42,10 @@ public:
       }
       destination.add(']');
     } else if (bNode.isInteger()) {
-      destination.add(
-          std::to_string(BRef<Integer>(bNode).value()));
+      destination.add(std::to_string(BRef<Integer>(bNode).value()));
     } else if (bNode.isString()) {
       destination.add("\"");
-      if (isStringPrintable(BRef<String>(bNode).value())) {
-        destination.add(BRef<String>(bNode).value());
-      } else {
-        destination.add(
-            translateStringToEscapes(BRef<String>(bNode).value()));
-      }
+      destination.add(translateStringToEscapes(BRef<String>(bNode).value()));
       destination.add("\"");
     }
   }
