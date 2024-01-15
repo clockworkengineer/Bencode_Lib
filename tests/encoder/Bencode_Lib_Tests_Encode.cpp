@@ -1,5 +1,5 @@
 //
-// Unit Tests: Bencode
+// Unit Tests: Bencode_Lib_Tests_Encode
 //
 // Description: Encode unit tests for Bencode class
 // using the Catch2 test framework.
