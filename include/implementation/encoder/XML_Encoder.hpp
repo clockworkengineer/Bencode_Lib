@@ -40,13 +40,11 @@ private:
         destination.add("</" + elementName + ">");
       }
     } else if (bNode.isList()) {
-      long index = 0;
       if (BRef<List>(bNode).value().size() > 1) {
         for (const auto &bNodeNext : BRef<List>(bNode).value()) {
-          destination.add("<Array" + std::to_string(index) + ">");
+          destination.add("<Row>");
           encodeXML(bNodeNext, destination);
-          destination.add("</Array" + std::to_string(index) + ">");
-          index++;
+          destination.add("</Row>");
         }
       } else {
         encodeXML(BRef<List>(bNode).value()[0], destination);

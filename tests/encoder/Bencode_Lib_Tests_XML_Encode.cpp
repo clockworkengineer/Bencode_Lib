@@ -63,7 +63,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        R"(<?xml version="1.0" encoding="UTF-8"?><root><Array0>266</Array0><Array1>6780</Array1><Array2>88</Array2></root>)");
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><Row>266</Row><Row>6780</Row><Row>88</Row></root>)");
   }
   SECTION("XML encode an List of integers and strings "
           "('li266e4:fivei6780e3:onei88ee') and check value",
@@ -74,7 +74,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        R"(<?xml version="1.0" encoding="UTF-8"?><root><Array0>266</Array0><Array1>five</Array1><Array2>6780</Array2><Array3>one</Array3><Array4>88</Array4></root>)");
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><Row>266</Row><Row>five</Row><Row>6780</Row><Row>one</Row><Row>88</Row></root>)");
   }
   SECTION("XML encode an Dictionary of integers and check value",
           "[Bencode][Encode][XML][Dictionary]") {
@@ -104,6 +104,6 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        R"(<?xml version="1.0" encoding="UTF-8"?><root><one><Array0>1</Array0><Array1>2</Array1><Array2>3</Array2></one><two><Array0>5555</Array0><Array1>four</Array1></two></root>)");
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><one><Row>1</Row><Row>2</Row><Row>3</Row></one><two><Row>5555</Row><Row>four</Row></two></root>)");
   }
 }
