@@ -66,6 +66,18 @@ TEST_CASE("XML encode of simple types (integer, string) ",
         destination.toString() ==
         R"(<?xml version="1.0" encoding="UTF-8"?><root>abcdefghijklmnopqrstuvwxyz&#x0000;&#x0001;&#x0002;</root>)");
   }
+  SECTION("XML encode an string with escaped XML characters "
+          "('abcdefghijklmnopqrstuvwxyz&<>'\"') and check its value ",
+          "[Bencode][Encode][JSON][String]") {
+    std::string escaped{R"(32:abcdefghijklmnopqrstuvwxyz &<>'")"};
+    BufferSource source{escaped};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root>abcdefghijklmnopqrstuvwxyz &amp;&lt;&gt;&apos;&quot;</root>)");
+  }
 }
 TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML]") {

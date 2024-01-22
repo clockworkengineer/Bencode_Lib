@@ -30,7 +30,19 @@ public:
         translated += escaped[3];
         translated += ";";
       } else {
-        translated += ch;
+        if (ch == '&') {
+          translated += "&amp;";
+        } else if (ch == '<') {
+          translated += "&lt;";
+        } else if (ch == '>') {
+          translated += "&gt;";
+        } else if (ch == '\'') {
+          translated += "&apos;";
+        } else if (ch == '"') {
+          translated += "&quot;";
+        } else {
+          translated += ch;
+        }
       }
     }
     return (translated);
