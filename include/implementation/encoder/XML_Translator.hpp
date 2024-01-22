@@ -21,14 +21,14 @@ public:
     std::string translated;
     for (unsigned char ch : toTranslate) {
       if (!isprint(ch)) {
-        char escaped[7];
-        sprintf_s(escaped, "\\u%04x", ch);
+        char escaped[5];
+        translated += "&#x";
+        sprintf_s(escaped, "%04x", ch);
         translated += escaped[0];
         translated += escaped[1];
         translated += escaped[2];
         translated += escaped[3];
-        translated += escaped[4];
-        translated += escaped[5];
+        translated += ";";
       } else {
         translated += ch;
       }
