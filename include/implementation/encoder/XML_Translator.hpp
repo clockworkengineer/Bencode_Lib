@@ -14,9 +14,9 @@ public:
     explicit Error(const std::string &message)
         : std::runtime_error("Translator Error: " + message) {}
   };
-  // ===============================================
-  // Translate string to escape sequences ("\uxxxx")
-  // ===============================================
+  // ======================================================================
+  // Translate string characters to XML character references when necessary
+  // ======================================================================
   std::string translate(const std::string toTranslate) const {
     std::string translated;
     for (unsigned char ch : toTranslate) {
