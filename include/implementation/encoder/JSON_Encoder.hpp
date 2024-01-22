@@ -7,11 +7,11 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Translator.hpp"
+#include "JSON_Translator.hpp"
 
 namespace Bencode_Lib {
 
-class JSON_Encoder : public IEncoder, protected Translator {
+class JSON_Encoder : public IEncoder, protected JSON_Translator {
 
 public:
   // Constructors/destructors
@@ -46,7 +46,7 @@ public:
       destination.add(std::to_string(BRef<Integer>(bNode).value()));
     } else if (bNode.isString()) {
       destination.add("\"");
-      destination.add(translateToEscapes(BRef<String>(bNode).value()));
+      destination.add(translate(BRef<String>(bNode).value()));
       destination.add("\"");
     }
   }

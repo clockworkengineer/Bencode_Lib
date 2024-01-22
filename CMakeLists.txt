@@ -40,7 +40,8 @@ set(BENCODE_INCLUDES
   ./include/implementation/encoder/Bencode_Encoder.hpp
   ./include/implementation/encoder/JSON_Encoder.hpp
   ./include/implementation/encoder/XML_Encoder.hpp
-  ./include/implementation/encoder/Translator.hpp
+  ./include/implementation/encoder/JSON_Translator.hpp
+  ./include/implementation/encoder/XML_Translator.hpp
   ./include/implementation/io/Bencode_Sources.hpp
   ./include/implementation/io/Bencode_BufferSource.hpp
   ./include/implementation/io/Bencode_FileSource.hpp

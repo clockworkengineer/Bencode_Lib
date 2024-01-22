@@ -5,7 +5,7 @@
 
 namespace Bencode_Lib {
 
-class Translator {
+class XML_Translator {
 public:
   // ==============
   // Translator Error
@@ -17,7 +17,7 @@ public:
   // ===============================================
   // Translate string to escape sequences ("\uxxxx")
   // ===============================================
-  std::string translateToEscapes(const std::string toTranslate) const {
+  std::string translate(const std::string toTranslate) const {
     std::string translated;
     for (unsigned char ch : toTranslate) {
       if (!isprint(ch)) {

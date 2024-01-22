@@ -7,11 +7,11 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Translator.hpp"
+#include "XML_Translator.hpp"
 
 namespace Bencode_Lib {
 
-class XML_Encoder : public IEncoder, protected Translator {
+class XML_Encoder : public IEncoder, protected XML_Translator {
 
 public:
   // Constructors/destructors
@@ -52,7 +52,7 @@ private:
     } else if (bNode.isInteger()) {
       destination.add(std::to_string(BRef<Integer>(bNode).value()));
     } else if (bNode.isString()) {
-      destination.add(translateToEscapes(BRef<String>(bNode).value()));
+      destination.add(translate(BRef<String>(bNode).value()));
     }
   }
 };
