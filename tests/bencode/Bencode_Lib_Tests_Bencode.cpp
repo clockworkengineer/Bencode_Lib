@@ -107,8 +107,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
     REQUIRE(BRef<Integer>(bencode["nothing"]["extra"]["more"]).value() == 0);
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.encode(destination));
-    REQUIRE(destination.toString() ==
-            R"(d7:nothingd5:extrad4:morei0eeee)");
+    REQUIRE(destination.toString() == R"(d7:nothingd5:extrad4:morei0eeee)");
   }
 }
 TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
@@ -354,11 +353,8 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
                              {"value", BNode{{"key1", 22}, {"key2", 99.899}}}};
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.encode(destination));
-    std::string result;
-    for (auto ch : destination.getBuffer())
-      result.push_back(static_cast<char>(ch));
     REQUIRE(
-        result ==
+        destination.toString() ==
         R"(d6:answerd10:everythingi42ee10:dictionaryd8:currency3:USD5:valued4:key1i22e4:key2i99eee5:happyi1e4:listli1ei0ei2ee4:name5:Niels7:nothingi0e2:pii3ee)");
   }
   SECTION("List creation completely using a initializer list assignment.",

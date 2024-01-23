@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <string>
+#include <iostream>
 
 #include "IDestination.hpp"
 
@@ -28,13 +29,15 @@ public:
   void add(const std::string &bytes) override {
     destination.write(bytes.c_str(), bytes.length());
     destination.flush();
+    length += bytes.length();
   }
   void add(const char ch) override {
     destination.put(ch);
     destination.flush();
+    length++;
   }
 
-  virtual void clear() override {
+  void clear() override {
     if (destination.is_open()) {
       destination.close();
     }
@@ -43,11 +46,15 @@ public:
     if (!destination.is_open()) {
       throw Error("File output stream failed to open or could not be created.");
     }
+    length = 0;
   }
+
+  std::size_t size() { return (length); }
 
 private:
   std::ofstream destination;
   std::string filename;
+  std::size_t length{};
 };
 
 } // namespace Bencode_Lib

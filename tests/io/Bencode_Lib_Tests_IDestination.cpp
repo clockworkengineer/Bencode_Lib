@@ -16,20 +16,20 @@ TEST_CASE("IDestination (Buffer interface).", "[Bencode][IDestination]") {
   SECTION("Create BufferDestination and get buffer which should be empty.",
           "[Bencode][IDestination]") {
     BufferDestination buffer;
-    REQUIRE_FALSE(!buffer.getBuffer().empty());
+    REQUIRE_FALSE(!buffer.size()==0);
   }
   SECTION("Create BufferDestination and add one character.",
           "[Bencode][IDestination]") {
     BufferDestination buffer;
     buffer.add('i');
-    REQUIRE(buffer.getBuffer().size() == 1);
+    REQUIRE(buffer.size() == 1);
   }
   SECTION(
       "Create BufferDestination and add an encoded integer and check result.",
       "[Bencode][IDestination]") {
     BufferDestination buffer;
     buffer.add("i65767e");
-    REQUIRE(buffer.getBuffer().size() == 7);
+    REQUIRE(buffer.size() == 7);
     REQUIRE(buffer.toString() == "i65767e");
   }
 }

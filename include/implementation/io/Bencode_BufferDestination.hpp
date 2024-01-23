@@ -27,8 +27,8 @@ public:
     encodeBuffer.push_back(static_cast<std::byte>(ch));
   }
   virtual void clear() override { encodeBuffer.clear(); }
-  std::vector<std::byte> &getBuffer() { return (encodeBuffer); }
-  const std::vector<std::byte> &getBuffer() const { return (encodeBuffer); }
+
+  std::size_t size() { return (encodeBuffer.size()); }
   std::string toString() {
     std::string destination;
     for (auto ch : encodeBuffer) {
