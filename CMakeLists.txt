@@ -40,8 +40,8 @@ set(BENCODE_INCLUDES
   ./include/implementation/encoder/Bencode_Encoder.hpp
   ./include/implementation/encoder/JSON_Encoder.hpp
   ./include/implementation/encoder/XML_Encoder.hpp
-  ./include/implementation/encoder/JSON_Translator.hpp
-  ./include/implementation/encoder/XML_Translator.hpp
+  ./include/implementation/translator/JSON_Translator.hpp
+  ./include/implementation/translator/XML_Translator.hpp
   ./include/implementation/io/Bencode_Sources.hpp
   ./include/implementation/io/Bencode_BufferSource.hpp
   ./include/implementation/io/Bencode_FileSource.hpp
@@ -66,6 +66,7 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
   ${PROJECT_SOURCE_DIR}/include/implementation/encoder
   ${PROJECT_SOURCE_DIR}/include/implementation/io
   ${PROJECT_SOURCE_DIR}/include/implementation/variants
+  ${PROJECT_SOURCE_DIR}/include/implementation/translator
   ${PROJECT_SOURCE_DIR}/include/external
   ${PROJECT_BINARY_DIR})
 
