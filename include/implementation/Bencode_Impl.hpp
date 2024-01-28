@@ -15,15 +15,12 @@ class Bencode_Impl {
 
 public:
   // Constructors/Destructors
-  Bencode_Impl();
+  Bencode_Impl(IEncoder *encoder, IDecoder *decoder);
   Bencode_Impl(const Bencode_Impl &other) = delete;
   Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
   Bencode_Impl(Bencode_Impl &&other) = delete;
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
   ~Bencode_Impl();
-  // Set encoder/decoder for BNode tree
-  void setEncoder(IEncoder *encoder);
-  void setDecoder(IDecoder *decoder);
   // Decode Bencoder file into BNode tree
   void decode(ISource &source);
   // Encode BNode tree

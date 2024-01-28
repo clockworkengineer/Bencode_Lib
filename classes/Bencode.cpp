@@ -25,9 +25,7 @@ namespace Bencode_Lib {
 /// </summary>
 
 Bencode::Bencode(IEncoder *encoder, IDecoder *decoder)
-    : implementation(std::make_unique<Bencode_Impl>()) {
-  implementation->setEncoder(encoder);
-  implementation->setDecoder(decoder);
+    : implementation(std::make_unique<Bencode_Impl>(encoder, decoder)) {
 }
 Bencode::~Bencode() {}
 

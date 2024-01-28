@@ -1,5 +1,5 @@
 //
-// Program:  BencodeBencodeTorrent_Files_To_JSON
+// Program:  Bencode_Torrent_Files_To_JSON
 //
 // Description: Use Bencode_Lib to read in torrent file then write
 // it out as JSON using a custom encoder.

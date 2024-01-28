@@ -16,25 +16,20 @@ namespace Bencode_Lib {
 
 // Need size information for destructor to cleanup uniqute_ptr to
 // encoder/decoder.
-Bencode_Impl::Bencode_Impl() {}
-
-Bencode_Impl::~Bencode_Impl() {}
-
-void Bencode_Impl::setEncoder(IEncoder *encoder) {
+Bencode_Impl::Bencode_Impl(IEncoder *encoder, IDecoder *decoder) {
   if (encoder == nullptr) {
     bNodeEncoder = std::make_unique<Bencode_Encoder>();
   } else {
     bNodeEncoder.reset(encoder);
   }
-}
-
-void Bencode_Impl::setDecoder(IDecoder *decoder) {
   if (decoder == nullptr) {
     bNodeDecoder = std::make_unique<Bencode_Decoder>();
   } else {
     bNodeDecoder.reset(decoder);
   }
 }
+
+Bencode_Impl::~Bencode_Impl() {}
 
 std::string Bencode_Impl::version() const {
   std::stringstream versionString;
