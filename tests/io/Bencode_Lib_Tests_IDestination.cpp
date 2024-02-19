@@ -25,7 +25,7 @@ TEST_CASE("IDestination (Buffer interface).", "[Bencode][IDestination]") {
     REQUIRE(buffer.size() == 1);
   }
   SECTION(
-      "Create BufferDestination and add an encoded integer and check result.",
+      "Create BufferDestination and add an encoded integert.",
       "[Bencode][IDestination]") {
     BufferDestination buffer;
     buffer.add("i65767e");
@@ -60,7 +60,7 @@ TEST_CASE("IDestination (File interface).", "[Bencode][IDestination]") {
     std::filesystem::path filePath{prefixTestDataPath(kGeneratedTorrentFile)};
     REQUIRE(std::filesystem::file_size(filePath) == 1);
   }
-  SECTION("Create FileDestination, add an encoded integer and check result.",
+  SECTION("Create FileDestination, add an encoded integer.",
           "[Bencode][IDestination]") {
     std::filesystem::remove(prefixTestDataPath(kGeneratedTorrentFile));
     FileDestination file{prefixTestDataPath(kGeneratedTorrentFile)};
