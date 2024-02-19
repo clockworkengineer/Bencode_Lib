@@ -21,14 +21,10 @@ public:
     std::string translated;
     for (unsigned char ch : toTranslate) {
       if (!isprint(ch)) {
-        char escaped[7];
-        sprintf_s(escaped, "\\u%04x", ch);
-        translated += escaped[0];
-        translated += escaped[1];
-        translated += escaped[2];
-        translated += escaped[3];
-        translated += escaped[4];
-        translated += escaped[5];
+        const char *digits = "0123456789ABCDEF";
+        translated += "\\u00";
+        translated += digits[(ch >> 4) & 0x0f];
+        translated += digits[(ch)&0x0f];
       } else {
         translated += ch;
       }

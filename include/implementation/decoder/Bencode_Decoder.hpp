@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <limits>
 
 #include "Bencode_Core.hpp"
 
