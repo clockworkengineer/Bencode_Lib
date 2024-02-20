@@ -30,6 +30,7 @@ set(BENCODE_INCLUDES
   ./include/interface/IDestination.hpp
   ./include/interface/IDecoder.hpp
   ./include/interface/IEncoder.hpp
+  ./include/interface/ITranslator.hpp
   ./include/implementation/Bencode_Core.hpp
   ./include/implementation/bnode/Bencode_BNode_Creation.hpp
   ./include/implementation/bnode/Bencode_BNode_Index.hpp
