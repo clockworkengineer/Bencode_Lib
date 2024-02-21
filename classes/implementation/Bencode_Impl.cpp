@@ -18,7 +18,7 @@ namespace Bencode_Lib {
 // encoder/decoder.
 Bencode_Impl::Bencode_Impl(IEncoder *encoder, IDecoder *decoder) {
   if (encoder == nullptr) {
-    bNodeEncoder = std::make_unique<Bencode_Encoder>();
+    bNodeEncoder = std::make_unique<Bencode_Encoder>(Bencode_Translator());
   } else {
     bNodeEncoder.reset(encoder);
   }
