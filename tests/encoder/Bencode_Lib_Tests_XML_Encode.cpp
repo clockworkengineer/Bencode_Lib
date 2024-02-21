@@ -6,12 +6,13 @@
 //
 
 #include "Bencode_Lib_Tests.hpp"
+#include "XML_Encoder.hpp"
 
 using namespace Bencode_Lib;
 
 TEST_CASE("XML encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
-  const Bencode bEncode(std::make_unique<XML_Encoder>().release());
+  const Bencode bEncode(std::make_unique<XML_Encoder>(XML_Translator()).release());
   SECTION("XML encode an integer (266).", "[Bencode][Encode][XML][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
@@ -78,7 +79,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
 }
 TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML]") {
-  const Bencode bEncode(std::make_unique<XML_Encoder>().release());
+  const Bencode bEncode(std::make_unique<XML_Encoder>(XML_Translator()).release());
   SECTION("XML encode an List of integers('li266ei6780ei88ee').",
           "[Bencode][Encode][XML][List]") {
     BufferSource source{"li266ei6780ei88ee"};
