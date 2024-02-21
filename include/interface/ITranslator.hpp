@@ -2,7 +2,6 @@
 
 #include <string>
 #include <stdexcept>
-#include <array>
 
 namespace Bencode_Lib {
 
@@ -27,11 +26,11 @@ public:
   // Convert any escape sequences in a string to their correct sequence
   // of UTF-8 characters.
   // =====================================================================
-  virtual std::string from(const std::string &escapedString) = 0;
+  virtual std::string from(const std::string &escapedString) const  = 0;
   // =========================================================================
   // Convert a string from raw character values (UTF8) so that it has character
   // escapes where applicable for its form.
   // =========================================================================
-  virtual std::string to(const std::string &rawString) = 0;
+  virtual std::string to(const std::string &rawString) const = 0;
 };
 }// namespace Bencode_Lib

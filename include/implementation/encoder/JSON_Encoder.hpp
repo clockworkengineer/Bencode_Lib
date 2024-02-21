@@ -41,7 +41,7 @@ public:
       destination.add(std::to_string(BRef<Integer>(bNode).value()));
     } else if (bNode.isString()) {
       destination.add("\"");
-      destination.add(translate(BRef<String>(bNode).value()));
+      destination.add(to(BRef<String>(bNode).value()));
       destination.add("\"");
     }
   }
