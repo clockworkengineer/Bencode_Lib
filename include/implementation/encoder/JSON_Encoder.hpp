@@ -10,7 +10,9 @@ class JSON_Encoder : public IEncoder, protected JSON_Translator {
 
 public:
   // Constructors/destructors
-  JSON_Encoder() = default;
+  explicit JSON_Encoder(ITranslator &translator) : jsonTranslator(translator) {}
+  explicit JSON_Encoder(ITranslator &&translator)
+      : jsonTranslator(translator) {}
   JSON_Encoder(const JSON_Encoder &other) = delete;
   JSON_Encoder &operator=(const JSON_Encoder &other) = delete;
   JSON_Encoder(JSON_Encoder &&other) = delete;
@@ -41,10 +43,13 @@ public:
       destination.add(std::to_string(BRef<Integer>(bNode).value()));
     } else if (bNode.isString()) {
       destination.add("\"");
-      destination.add(to(BRef<String>(bNode).value()));
+      destination.add(jsonTranslator.to(BRef<String>(bNode).value()));
       destination.add("\"");
     }
   }
+
+private:
+  ITranslator &jsonTranslator;
 };
 
 } // namespace Bencode_Lib

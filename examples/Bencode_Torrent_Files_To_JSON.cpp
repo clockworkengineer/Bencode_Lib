@@ -17,7 +17,7 @@
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    Bencode_Lib::Bencode bEncode(std::make_unique<Bencode_Lib::JSON_Encoder>().release());
+    Bencode_Lib::Bencode bEncode(std::make_unique<Bencode_Lib::JSON_Encoder>(Bencode_Lib::JSON_Translator()).release());
     // Initialise logging.
     plog::init(plog::debug, "BencodeTorrent_Files_To_JSON.log");
     PLOG_INFO << "BencodeTorrent_Files_To_JSON started ...";
