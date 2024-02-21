@@ -12,7 +12,8 @@ using namespace Bencode_Lib;
 
 TEST_CASE("JSON encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
-  const Bencode bEncode(std::make_unique<JSON_Encoder>(JSON_Translator()).release());
+  const Bencode bEncode(
+      std::make_unique<JSON_Encoder>(JSON_Translator()).release());
   SECTION("JSON encode an integer (266).", "[Bencode][Encode][JSON][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
@@ -27,6 +28,14 @@ TEST_CASE("JSON encode of simple types (integer, string) ",
     bEncode.decode(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "10000");
+  }
+  SECTION("JSON encode an integer (-10000).",
+          "[Bencode][Encode][JSON][Integer]") {
+    BufferSource source{"i-10000e"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == "-10000");
   }
   SECTION("JSON encode an string ('qwertyuiopas').",
           "[Bencode][Encode][JSON][String]") {
@@ -43,6 +52,13 @@ TEST_CASE("JSON encode of simple types (integer, string) ",
     bEncode.decode(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == R"("abcdefghijklmnopqrstuvwxyz")");
+  }
+  SECTION("JSON encode an empty string.", "[Bencode][Encode][JSON][String]") {
+    BufferSource source{"0:"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == R"("")");
   }
   SECTION("JSON encode an string with unprintable character. "
           "('abcdefghijklmnopqrstuvwxyz').",
@@ -61,7 +77,8 @@ TEST_CASE("JSON encode of simple types (integer, string) ",
 }
 TEST_CASE("JSON encode of collection types (list, dictionary) ",
           "[Bencode][Encode][JSON]") {
-  const Bencode bEncode(std::make_unique<JSON_Encoder>(JSON_Translator()).release());
+  const Bencode bEncode(
+      std::make_unique<JSON_Encoder>(JSON_Translator()).release());
   SECTION("JSON encode an List of integers('li266ei6780ei88ee').",
           "[Bencode][Encode][JSON][List]") {
     BufferSource source{"li266ei6780ei88ee"};
@@ -78,6 +95,14 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     bEncode.decode(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == R"([266,"five",6780,"one",88])");
+  }
+  SECTION("JSON encode an empty Lis).",
+          "[Bencode][Encode][JSON][List]") {
+    BufferSource source{"le"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == R"([])");
   }
   SECTION("JSON encode an Dictionary of integers.",
           "[Bencode][Encode][JSON][Dictionary]") {

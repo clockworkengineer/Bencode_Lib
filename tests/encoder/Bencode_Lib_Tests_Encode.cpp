@@ -26,6 +26,13 @@ TEST_CASE("Bencode for encode of simple types (integer, string) ",
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "i10000e");
   }
+  SECTION("Encode an integer (-10000).", "[Bencode][Encode][Integer]") {
+    BufferSource source{"i-10000e"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == "i-10000e");
+  }
   SECTION("Encode an string ('qwertyuiopas').", "[Bencode][Encode][String]") {
     BufferSource source{"12:qwertyuiopas"};
     BufferDestination destination;
@@ -40,6 +47,13 @@ TEST_CASE("Bencode for encode of simple types (integer, string) ",
     bEncode.decode(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "26:abcdefghijklmnopqrstuvwxyz");
+  }
+  SECTION("Encode an empty string ('').", "[Bencode][Encode][String]") {
+    BufferSource source{"0:"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == "0:");
   }
 }
 TEST_CASE("Bencode for encode of a table of integer test data",
@@ -86,6 +100,15 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(destination.toString() == expected);
   }
+  SECTION("Encode ampty List."
+          "[Bencode][Encode][List]") {
+    std::string expected{"le"};
+    BufferSource source(expected);
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == expected);
+  }
   SECTION("Encode an Dictionary of integers.",
           "[Bencode][Encode][Dictionary]") {
     std::string expected{"d3:onei1e5:threei3e3:twoi2ee"};
@@ -97,6 +120,14 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
   }
   SECTION("Encode an Dictionary of strings.", "[Bencode][Encode][Dictionary]") {
     std::string expected{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
+    BufferSource source(expected);
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == expected);
+  }
+  SECTION("Encode an empty  Dictionary.", "[Bencode][Encode][Dictionary]") {
+    std::string expected{"de"};
     BufferSource source(expected);
     BufferDestination destination;
     bEncode.decode(source);
