@@ -96,8 +96,7 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(destination.toString() == R"([266,"five",6780,"one",88])");
   }
-  SECTION("JSON encode an empty Lis).",
-          "[Bencode][Encode][JSON][List]") {
+  SECTION("JSON encode an empty List).", "[Bencode][Encode][JSON][List]") {
     BufferSource source{"le"};
     BufferDestination destination;
     bEncode.decode(source);
@@ -129,5 +128,29 @@ TEST_CASE("JSON encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             R"({"one" : [1,2,3],"two" : [5555,"four"]})");
+  }
+  SECTION("JSON encode an empty Dictionary.",
+          "[Bencode][Encode][JSON][Dictionary]") {
+    BufferSource source{"de"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == R"({})");
+  }
+  SECTION("JSON encode an empty List of empty Dictionaries.",
+          "[Bencode][Encode][JSON][Dictionary]") {
+    BufferSource source{"ldededededee"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == R"([{},{},{},{},{}])");
+  }
+  SECTION("JSON encode an empty List of empty lists.",
+          "[Bencode][Encode][JSON][Dictionary]") {
+    BufferSource source{"llelelelelee"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == R"([[],[],[],[],[]])");
   }
 }
