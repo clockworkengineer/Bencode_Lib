@@ -12,7 +12,8 @@ using namespace Bencode_Lib;
 
 TEST_CASE("XML encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
-  const Bencode bEncode(std::make_unique<XML_Encoder>(XML_Translator()).release());
+  const Bencode bEncode(
+      std::make_unique<XML_Encoder>(XML_Translator()).release());
   SECTION("XML encode an integer (266).", "[Bencode][Encode][XML][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
@@ -28,6 +29,15 @@ TEST_CASE("XML encode of simple types (integer, string) ",
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             R"(<?xml version="1.0" encoding="UTF-8"?><root>10000</root>)");
+  }
+  SECTION("XML encode an integer (-10000).",
+          "[Bencode][Encode][XML][Integer]") {
+    BufferSource source{"i-10000e"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() ==
+            R"(<?xml version="1.0" encoding="UTF-8"?><root>-10000</root>)");
   }
   SECTION("XML encode an string ('qwertyuiopas').",
           "[Bencode][Encode][XML][String]") {
@@ -48,6 +58,15 @@ TEST_CASE("XML encode of simple types (integer, string) ",
     REQUIRE(
         destination.toString() ==
         R"(<?xml version="1.0" encoding="UTF-8"?><root>abcdefghijklmnopqrstuvwxyz</root>)");
+  }
+  SECTION("XML encode an empty string."
+          "[Bencode][Encode][XML][String]") {
+    BufferSource source{"0:"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() ==
+            R"(<?xml version="1.0" encoding="UTF-8"?><root></root>)");
   }
   SECTION("XML encode an string with unprintable characters "
           "('abcdefghijklmnopqrstuvwxyz').",
@@ -79,7 +98,8 @@ TEST_CASE("XML encode of simple types (integer, string) ",
 }
 TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML]") {
-  const Bencode bEncode(std::make_unique<XML_Encoder>(XML_Translator()).release());
+  const Bencode bEncode(
+      std::make_unique<XML_Encoder>(XML_Translator()).release());
   SECTION("XML encode an List of integers('li266ei6780ei88ee').",
           "[Bencode][Encode][XML][List]") {
     BufferSource source{"li266ei6780ei88ee"};
@@ -100,6 +120,15 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
     REQUIRE(
         destination.toString() ==
         R"(<?xml version="1.0" encoding="UTF-8"?><root><Row>266</Row><Row>five</Row><Row>6780</Row><Row>one</Row><Row>88</Row></root>)");
+  }
+  SECTION("XML encode an empty List.", "[Bencode][Encode][XML][List]") {
+    BufferSource source{"le"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><Row></Row></root>)");
   }
   SECTION("XML encode an Dictionary of integers.",
           "[Bencode][Encode][XML][Dictionary]") {
@@ -130,5 +159,34 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
     REQUIRE(
         destination.toString() ==
         R"(<?xml version="1.0" encoding="UTF-8"?><root><one><Row>1</Row><Row>2</Row><Row>3</Row></one><two><Row>5555</Row><Row>four</Row></two></root>)");
+  }
+  SECTION("XML encode an empty Dictionary.",
+          "[Bencode][Encode][XML][Dictionary]") {
+    BufferSource source{"de"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() ==
+            R"(<?xml version="1.0" encoding="UTF-8"?><root></root>)");
+  }
+  SECTION("JSON encode an empty List of empty Dictionaries.",
+          "[Bencode][Encode][JSON][Dictionary]") {
+    BufferSource source{"ldededededee"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><Row></Row><Row></Row><Row></Row><Row></Row><Row></Row></root>)");
+  }
+  SECTION("XML encode an list of empty lists.",
+          "[Bencode][Encode][XML][Dictionary]") {
+    BufferSource source{"llelelelelee"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><Row><Row></Row></Row><Row><Row></Row></Row><Row><Row></Row></Row><Row><Row></Row></Row><Row><Row></Row></Row></root>)");
   }
 }

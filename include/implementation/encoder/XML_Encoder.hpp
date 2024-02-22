@@ -45,7 +45,8 @@ private:
           destination.add("</Row>");
         }
       } else {
-        encodeXML(BRef<List>(bNode).value()[0], destination);
+          destination.add("<Row>");
+          destination.add("</Row>");
       }
     } else if (bNode.isInteger()) {
       destination.add(std::to_string(BRef<Integer>(bNode).value()));
