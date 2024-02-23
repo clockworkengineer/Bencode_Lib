@@ -16,7 +16,7 @@ TEST_CASE("IDestination (Buffer interface).", "[Bencode][IDestination]") {
   SECTION("Create BufferDestination and get buffer which should be empty.",
           "[Bencode][IDestination]") {
     BufferDestination buffer;
-    REQUIRE_FALSE(!buffer.size()==0);
+    REQUIRE_FALSE(!(buffer.size()==0));
   }
   SECTION("Create BufferDestination and add one character.",
           "[Bencode][IDestination]") {
