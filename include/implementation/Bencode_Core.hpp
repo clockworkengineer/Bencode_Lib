@@ -15,3 +15,4 @@
 #include "Bencode_Interfaces.hpp"
 #include "Bencode_Sources.hpp"
 #include "Bencode_Destinations.hpp"
+#include "Bencode_Error.hpp"

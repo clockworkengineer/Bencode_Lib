@@ -47,20 +47,20 @@ void Bencode_Impl::decode(ISource &source) {
 
 void Bencode_Impl::encode(IDestination &destination) const {
   if (bNodeRoot.isEmpty()) {
-    throw Bencode::Error("No Bencoded data to encode.");
+    throw Error("No Bencoded data to encode.");
   }
   bNodeEncoder->encode(bNodeRoot, destination);
 }
 
 void Bencode_Impl::traverse(IAction &action) {
   if (bNodeRoot.isEmpty()) {
-    throw Bencode::Error("No Bencode to traverse.");
+    throw Error("No Bencode to traverse.");
   }
   traverseBNodes(bNodeRoot, action);
 }
 void Bencode_Impl::traverse(IAction &action) const {
   if (bNodeRoot.isEmpty()) {
-    throw Bencode::Error("No Bencode to traverse.");
+    throw Error("No Bencode to traverse.");
   }
   traverseBNodes(bNodeRoot, action);
 }

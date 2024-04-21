@@ -32,6 +32,7 @@ set(BENCODE_INCLUDES
   ./include/interface/IEncoder.hpp
   ./include/interface/ITranslator.hpp
   ./include/implementation/Bencode_Core.hpp
+  ./include/implementation/common/Bencode_Error.hpp
   ./include/implementation/bnode/Bencode_BNode_Creation.hpp
   ./include/implementation/bnode/Bencode_BNode_Index.hpp
   ./include/implementation/bnode/Bencode_BNode_Reference.hpp
@@ -63,6 +64,7 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
   ${PROJECT_SOURCE_DIR}/include
   ${PROJECT_SOURCE_DIR}/include/interface
   ${PROJECT_SOURCE_DIR}/include/implementation
+  ${PROJECT_SOURCE_DIR}/include/implementation/common
   ${PROJECT_SOURCE_DIR}/include/implementation/bnode
   ${PROJECT_SOURCE_DIR}/include/implementation/decoder
   ${PROJECT_SOURCE_DIR}/include/implementation/encoder

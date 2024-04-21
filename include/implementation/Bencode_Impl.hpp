@@ -75,8 +75,7 @@ void Bencode_Impl::traverseBNodes(T &bNode, IAction &action) {
       traverseBNodes(entry, action);
     }
   } else if (!bNode.isHole()) {
-    throw Bencode::Error(
-        "Unknown BNode type encountered during tree traversal.");
+    throw Error("Unknown BNode type encountered during tree traversal.");
   }
 }
 

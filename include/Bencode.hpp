@@ -23,11 +23,6 @@ struct BNode;
 class Bencode {
 
 public:
-  // Bencode error
-  struct Error : public std::runtime_error {
-    explicit Error(const std::string &message)
-        : std::runtime_error("Bencode Error: " + message) {}
-  };
   // Possible Bencode BNode intitializer types
   using intializerListTypes =
       std::variant<int, long, long long, float, double, long double, bool,
