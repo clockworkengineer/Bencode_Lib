@@ -5,10 +5,8 @@
 // buffer or file. It is also  possible to customize this with the
 // ISource and IDestination interfaces if required. Although Bencoded
 // data is treated as std::byte externally this library uses char and
-// std::string internally.Note: At present it will report incorrect Bencode
-// syntax but will not be specific about what error has occurred; this
-// is reasoned to add too much overhead to the process of parsing for the
-// requirements of this library (this might change in future versions).
+// std::string internally.
+//
 // For an in-depth description of the Bencode specification refer to its
 // Wiki page at https://en.wikipedia.org/wiki/Bencode.
 //
@@ -25,8 +23,7 @@ namespace Bencode_Lib {
 /// </summary>
 
 Bencode::Bencode(IEncoder *encoder, IDecoder *decoder)
-    : implementation(std::make_unique<Bencode_Impl>(encoder, decoder)) {
-}
+    : implementation(std::make_unique<Bencode_Impl>(encoder, decoder)) {}
 Bencode::~Bencode() {}
 
 /// <summary>
@@ -41,13 +38,17 @@ Bencode::Bencode(const std::string &bencodeString) : Bencode() {
 /// Bencode constructor (list).
 /// </summary>
 /// <param name="list">Intialiser list of single values or JNode.</param>
-Bencode::Bencode(const ListInitializer &list) : Bencode() { this->root() = BNode(list); }
+Bencode::Bencode(const ListInitializer &list) : Bencode() {
+  this->root() = BNode(list);
+}
 
 /// <summary>
 /// Bencode constructor (dictionary).
 /// </summary>
 /// <param name="object">Intialiser list of key/value(JNode) pairs.</param>
-Bencode::Bencode(const DictionaryInitializer &dictionary) : Bencode() { this->root() = BNode(dictionary); }
+Bencode::Bencode(const DictionaryInitializer &dictionary) : Bencode() {
+  this->root() = BNode(dictionary);
+}
 
 /// <summary>
 ///  Get Bencode_Lib version.
@@ -83,7 +84,9 @@ void Bencode::encode(IDestination &&destination) const {
 // Traverse using non-const Bencode so can change Bencode tree
 void Bencode::traverse(IAction &action) { implementation->traverse(action); }
 // Traverse using const Bencode so cannot change Bencode tree
-void Bencode::traverse(IAction &action) const { std::as_const(*implementation).traverse(action); }
+void Bencode::traverse(IAction &action) const {
+  std::as_const(*implementation).traverse(action);
+}
 
 /// <summary>
 /// Get root of BNode tree.
