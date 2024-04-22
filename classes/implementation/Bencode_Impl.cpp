@@ -41,7 +41,7 @@ std::string Bencode_Impl::version() const {
 void Bencode_Impl::decode(ISource &source) {
   bNodeRoot = bNodeDecoder->decode(source);
   if (source.more()) {
-    throw IDecoder::Error("Source stream terminated early.");
+    throw SyntaxError("Source stream terminated early.");
   }
 }
 

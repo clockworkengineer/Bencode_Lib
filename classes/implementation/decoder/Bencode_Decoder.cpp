@@ -20,18 +20,18 @@ int64_t Bencode_Decoder::extractInteger(ISource &source) {
   while (source.more() && (std::isdigit(source.current()) != 0)) {
     // Number too large to fit in buffer
     if (digits == number.size()) {
-      throw Error("Syntax Error detected.");
+      throw SyntaxError("Integer to large to fit in conversion buffer.");
     }
     number[digits++] = source.current();
     source.next();
   }
   // Check integer has no leading zero and is not empty ('ie')
   if ((number[0] == '0' && digits > 1) || (digits == 0)) {
-    throw Error("Syntax Error detected.");
+    throw SyntaxError("Empty Integer or has leading zero.");
   }
   // Check-for -0
   if ((number[0] == '-') && (number[1] == '0') && (digits == 2)) {
-    throw Error("Syntax Error detected.");
+    throw SyntaxError("Negative zero is not allowed.");
   }
   return (std::stoll(&number[0]));
 }
@@ -45,7 +45,7 @@ int64_t Bencode_Decoder::extractInteger(ISource &source) {
 std::string Bencode_Decoder::extractString(ISource &source) {
   int64_t stringLength = extractInteger(source);
   if (source.current() != ':') {
-    throw Error("Syntax Error detected.");
+    throw SyntaxError("Missing colon separator in string value.");
   }
   source.next();
   std::string buffer;
@@ -75,7 +75,7 @@ BNode Bencode_Decoder::decodeInteger(ISource &source) {
   source.next();
   int64_t integer = extractInteger(source);
   if (source.current() != 'e') {
-    throw Error("Syntax Error detected.");
+    throw SyntaxError("Missing end terminator on integer value.");
   }
   source.next();
   return (BNode::make<Integer>(integer));
@@ -95,18 +95,18 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
     std::string key = extractString(source);
     // Check keys in lexical order
     if (lastKey > key) {
-      throw Error("Syntax Error detected.");
+      throw SyntaxError("Dictionary keys not in sequence.");
     }
     lastKey = key;
     // Check key not duplicate and insert
     if (!BRef<Dictionary>(dictionary).contains(key)) {
       BRef<Dictionary>(dictionary).add(Dictionary::Entry(key, decode(source)));
     } else {
-      throw Error("Syntax Error detected.");
+      throw SyntaxError("Duplicate dictionary key.");
     }
   }
   if (source.current() != 'e') {
-    throw Error("Syntax Error detected.");
+    throw SyntaxError("Missing end terminator on dictionary.");
   }
   source.next();
   return (dictionary);
@@ -124,7 +124,7 @@ BNode Bencode_Decoder::decodeList(ISource &source) {
     BRef<List>(list).add(decode(source));
   }
   if (source.current() != 'e') {
-    throw Error("Syntax Error detected.");
+    throw SyntaxError("Missing end terminator on list.");
   }
   source.next();
   return (list);
@@ -162,7 +162,7 @@ BNode Bencode_Decoder::decode(ISource &source) {
   case '9':
     return (decodeString(source));
   }
-  throw Error("Syntax Error detected.");
+  throw SyntaxError("Expected integer, string, list or dictionary not present.");
 }
 
 } // namespace Bencode_Lib
