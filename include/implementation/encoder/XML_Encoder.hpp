@@ -12,8 +12,7 @@ class XML_Encoder : public IEncoder {
 
 public:
   // Constructors/destructors
-  explicit XML_Encoder(ITranslator &translator) : xmlTranslator(translator) {}
-  explicit XML_Encoder(ITranslator &&translator) : xmlTranslator(translator) {}
+  XML_Encoder() = default;
   XML_Encoder(const XML_Encoder &other) = delete;
   XML_Encoder &operator=(const XML_Encoder &other) = delete;
   XML_Encoder(XML_Encoder &&other) = delete;
@@ -45,8 +44,8 @@ private:
           destination.add("</Row>");
         }
       } else {
-          destination.add("<Row>");
-          destination.add("</Row>");
+        destination.add("<Row>");
+        destination.add("</Row>");
       }
     } else if (bNode.isInteger()) {
       destination.add(std::to_string(BRef<Integer>(bNode).value()));
@@ -56,7 +55,7 @@ private:
   }
 
 private:
-  ITranslator &xmlTranslator;
+  XML_Translator xmlTranslator;
 };
 
 } // namespace Bencode_Lib

@@ -19,7 +19,7 @@ namespace be = Bencode_Lib;
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    be::Bencode bEncode(std::make_unique<be::XML_Encoder>(be::XML_Translator()).release());
+    be::Bencode bEncode(std::make_unique<be::XML_Encoder>().release());
     // Initialise logging.
     plog::init(plog::debug, "Bencode_Torrent_Files_To_XML.log");
     PLOG_INFO << "Bencode_Torrent_Files_To_XML started ...";

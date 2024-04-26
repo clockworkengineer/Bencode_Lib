@@ -10,10 +10,7 @@ class Bencode_Encoder : public IEncoder {
 
 public:
   // Constructors/Destructors
-  explicit Bencode_Encoder(ITranslator &translator)
-      : bencodeTranslator(translator) {}
-  explicit Bencode_Encoder(ITranslator &&translator)
-      : bencodeTranslator(translator) {}
+  Bencode_Encoder() = default;
   Bencode_Encoder(const Bencode_Encoder &other) = delete;
   Bencode_Encoder &operator=(const Bencode_Encoder &other) = delete;
   Bencode_Encoder(Bencode_Encoder &&other) = delete;
@@ -23,7 +20,7 @@ public:
   void encode(const BNode &bNode, IDestination &destination) const;
 
 private:
-  ITranslator &bencodeTranslator;
+  Bencode_Translator bencodeTranslator;
 };
 
 } // namespace Bencode_Lib

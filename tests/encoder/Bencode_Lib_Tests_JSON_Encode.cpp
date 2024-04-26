@@ -12,8 +12,7 @@ using namespace Bencode_Lib;
 
 TEST_CASE("JSON encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
-  const Bencode bEncode(
-      std::make_unique<JSON_Encoder>(JSON_Translator()).release());
+  const Bencode bEncode(std::make_unique<JSON_Encoder>().release());
   SECTION("JSON encode an integer (266).", "[Bencode][Encode][JSON][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
@@ -77,8 +76,7 @@ TEST_CASE("JSON encode of simple types (integer, string) ",
 }
 TEST_CASE("JSON encode of collection types (list, dictionary) ",
           "[Bencode][Encode][JSON]") {
-  const Bencode bEncode(
-      std::make_unique<JSON_Encoder>(JSON_Translator()).release());
+  const Bencode bEncode(std::make_unique<JSON_Encoder>().release());
   SECTION("JSON encode an List of integers('li266ei6780ei88ee').",
           "[Bencode][Encode][JSON][List]") {
     BufferSource source{"li266ei6780ei88ee"};

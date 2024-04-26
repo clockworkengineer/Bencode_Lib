@@ -19,8 +19,7 @@ namespace be = Bencode_Lib;
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    be::Bencode bEncode(
-        std::make_unique<be::JSON_Encoder>(be::JSON_Translator()).release());
+    be::Bencode bEncode(std::make_unique<be::JSON_Encoder>().release());
     // Initialise logging.
     plog::init(plog::debug, "BencodeTorrent_Files_To_JSON.log");
     PLOG_INFO << "BencodeTorrent_Files_To_JSON started ...";

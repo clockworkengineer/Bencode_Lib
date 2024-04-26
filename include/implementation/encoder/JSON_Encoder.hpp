@@ -10,9 +10,7 @@ class JSON_Encoder : public IEncoder {
 
 public:
   // Constructors/destructors
-  explicit JSON_Encoder(ITranslator &translator) : jsonTranslator(translator) {}
-  explicit JSON_Encoder(ITranslator &&translator)
-      : jsonTranslator(translator) {}
+  JSON_Encoder() = default;
   JSON_Encoder(const JSON_Encoder &other) = delete;
   JSON_Encoder &operator=(const JSON_Encoder &other) = delete;
   JSON_Encoder(JSON_Encoder &&other) = delete;
@@ -49,7 +47,7 @@ public:
   }
 
 private:
-  ITranslator &jsonTranslator;
+  JSON_Translator jsonTranslator;
 };
 
 } // namespace Bencode_Lib
