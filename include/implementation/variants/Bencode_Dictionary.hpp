@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <utility>
+#include <algorithm>
 
 namespace Bencode_Lib {
 
