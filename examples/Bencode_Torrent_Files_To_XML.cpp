@@ -7,13 +7,8 @@
 // Dependencies: C++20, Bencode_Lib.
 //
 
-#include <stdexcept>
-
-#include "Utility.hpp"
+#include "Bencode_Utility.hpp"
 #include "XML_Encoder.hpp"
-
-#include "plog/Initializers/RollingFileInitializer.h"
-#include "plog/Log.h"
 
 namespace be = Bencode_Lib;
 

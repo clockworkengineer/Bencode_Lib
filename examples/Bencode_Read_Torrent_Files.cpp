@@ -8,13 +8,8 @@
 // Dependencies: C++20, Bencode_Lib.
 //
 
-#include <stdexcept>
-
-#include "Utility.hpp"
-#include "TorrentInfo.hpp"
-
-#include "plog/Initializers/RollingFileInitializer.h"
-#include "plog/Log.h"
+#include "Bencode_Utility.hpp"
+#include "Bencode_TorrentInfo.hpp"
 
 namespace be = Bencode_Lib;
 

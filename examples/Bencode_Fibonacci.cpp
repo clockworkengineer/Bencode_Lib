@@ -8,13 +8,9 @@
 // Dependencies: C++20, PLOG, Bencode_Lib.
 //
 
-#include "Utility.hpp"
-
+#include "Bencode_Utility.hpp"
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-
-#include "plog/Initializers/RollingFileInitializer.h"
-#include "plog/Log.h"
 
 namespace be = Bencode_Lib;
 

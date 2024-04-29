@@ -4,6 +4,10 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <stdexcept>
+
+#include "plog/Initializers/RollingFileInitializer.h"
+#include "plog/Log.h"
 
 class Utility {
 public:

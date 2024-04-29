@@ -9,7 +9,6 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
-
 struct TorrentInfo {
   // Bencode_Lib short cuts
   using Dictionary = Bencode_Lib::Dictionary;
