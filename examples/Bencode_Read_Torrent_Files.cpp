@@ -16,7 +16,7 @@ namespace be = Bencode_Lib;
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
-    plog::init(plog::debug, "Bencode_Read_Torrent_Files.log");
+    init(plog::debug, "Bencode_Read_Torrent_Files.log");
     PLOG_INFO << "Read_Torrent_File started ...";
     PLOG_INFO << be::Bencode().version();
     // For each torrent file extract its information and display

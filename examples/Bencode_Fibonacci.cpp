@@ -19,12 +19,11 @@ namespace be = Bencode_Lib;
 /// </summary>
 /// <returns>Bencode settings file name.</returns>
 std::string bEncodeFibonacciFile() {
-  return (
-      (std::filesystem::current_path() / "files" / "fibonacci.ben").string());
+  return (std::filesystem::current_path() / "files" / "fibonacci.ben").string();
 }
 /// <summary>
 /// Read in current fibonacci sequence from Bencode file, calculate the
-//  next in sequence and write back to Bencode file.
+///  next in sequence and write back to Bencode file.
 /// </summary>
 void nextFibonacci() {
   be::Bencode bEncode;
@@ -35,7 +34,7 @@ void nextFibonacci() {
     // Parse in current sequence
     bEncode.decode(be::FileSource{bEncodeFibonacciFile()});
     // Get index of last element
-    auto last = be::BRef<be::List>(bEncode.root()).size() - 1;
+    const auto last = be::BRef<be::List>(bEncode.root()).size() - 1;
     // Next is sum of last two entries
     auto next = be::BRef<be::Integer>(bEncode[last]).value();
     next += be::BRef<be::Integer>(bEncode[last - 1]).value();
@@ -49,7 +48,7 @@ void nextFibonacci() {
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
-    plog::init(plog::debug, "Bencode_Fibonacci.log");
+    init(plog::debug, "Bencode_Fibonacci.log");
     PLOG_INFO << "Bencode_Fibonacci started ...";
     // Log version
     PLOG_INFO << be::Bencode().version();

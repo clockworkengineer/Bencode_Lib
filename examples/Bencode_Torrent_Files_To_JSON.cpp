@@ -14,9 +14,9 @@ namespace be = Bencode_Lib;
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    be::Bencode bEncode(be::makeEncoder<be::JSON_Encoder>());
+    const be::Bencode bEncode(be::makeEncoder<be::JSON_Encoder>());
     // Initialise logging.
-    plog::init(plog::debug, "BencodeTorrent_Files_To_JSON.log");
+    init(plog::debug, "BencodeTorrent_Files_To_JSON.log");
     PLOG_INFO << "BencodeTorrent_Files_To_JSON started ...";
     PLOG_INFO << be::Bencode().version();
     for (const auto &torrentFileName : Utility::createTorrentFileList()) {

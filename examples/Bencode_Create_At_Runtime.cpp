@@ -17,7 +17,7 @@ namespace be = Bencode_Lib;
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
-    plog::init(plog::debug, "Bencode_Create_At_Runtime.log");
+    init(plog::debug, "Bencode_Create_At_Runtime.log");
     PLOG_INFO << "Bencode_Create_At_Runtime started ...";
     // Log version
     PLOG_INFO << be::Bencode().version();
@@ -47,7 +47,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     destination.clear();
     // create Bencode using an intialiser list and nesting array/objects using
     // BNode{}.
-    be::Bencode bEncode2 = {
+    const be::Bencode bEncode2 = {
         {"pi", 3.141},
         {"sad", true},
         {"first_name", "Niels"},

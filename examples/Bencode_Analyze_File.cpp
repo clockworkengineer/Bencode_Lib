@@ -30,7 +30,7 @@ void processBencodeFile(const std::string &fileName)
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
   // Initialise logging.
-  plog::init(plog::debug, "Bencode_Analyze_File.log");
+  init(plog::debug, "Bencode_Analyze_File.log");
   PLOG_INFO << "Bencode_Analyze_File started ...";
   // Output Bencode Lib version and data structure metrics
   PLOG_INFO << be::Bencode().version();
