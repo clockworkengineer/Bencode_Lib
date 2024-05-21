@@ -25,12 +25,12 @@ public:
   FileSource &operator=(FileSource &&other) = delete;
   virtual ~FileSource() = default;
 
-  char current() const override { return (static_cast<char>(source.peek())); }
+  char current() const override { return static_cast<char>(source.peek()); }
   void next() override {
     char c = 0;
     source.get(c);
   }
-  bool more() const override { return (source.peek() != EOF); }
+  bool more() const override { return source.peek() != EOF; }
   void reset() override {
     source.clear();
     source.seekg(0, std::ios_base::beg);

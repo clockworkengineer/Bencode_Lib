@@ -26,34 +26,34 @@ template <typename T> BNode::BNode(T value) {
 // Convert intializer list type to BNode
 inline BNode BNode::typeToBNode(const Bencode::intializerListTypes &type) {
   if (auto pValue = std::get_if<int>(&type)) {
-    return (BNode(*pValue));
+    return BNode(*pValue);
   }
   if (auto pValue = std::get_if<long>(&type)) {
-    return (BNode(*pValue));
+    return BNode(*pValue);
   }
   if (auto pValue = std::get_if<long long>(&type)) {
-    return (BNode(*pValue));
+    return BNode(*pValue);
   }
   if (auto pValue = std::get_if<float>(&type)) {
-    return (BNode(*pValue));
+    return BNode(*pValue);
   }
   if (auto pValue = std::get_if<double>(&type)) {
-    return (BNode(*pValue));
+    return BNode(*pValue);
   }
   if (auto pValue = std::get_if<long double>(&type)) {
-    return (BNode(*pValue));
+    return BNode(*pValue);
   }
   if (auto pValue = std::get_if<bool>(&type)) {
-    return (BNode((*pValue)));
+    return BNode(*pValue);
   }
   if (auto pValue = std::get_if<std::string>(&type)) {
-    return (BNode((*pValue)));
+    return BNode(*pValue);
   }
   if ([[maybe_unused]] auto pValue = std::get_if<std::nullptr_t>(&type)) {
-    return (BNode(0));
+    return BNode(0);
   }
   if (auto pValue = std::get_if<BNode>(&type)) {
-    return (std::move(*const_cast<BNode *>(pValue)));
+    return std::move(*const_cast<BNode *>(pValue));
   }
   throw Error("BNode of unsupported type could not be created.");
 }

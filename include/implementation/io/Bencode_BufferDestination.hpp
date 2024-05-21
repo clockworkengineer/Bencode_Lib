@@ -28,13 +28,13 @@ public:
   }
   virtual void clear() override { encodeBuffer.clear(); }
 
-  std::size_t size() { return (encodeBuffer.size()); }
+  std::size_t size() { return encodeBuffer.size(); }
   std::string toString() {
     std::string destination;
     for (auto ch : encodeBuffer) {
       destination.push_back(static_cast<char>(ch));
     }
-    return (destination);
+    return destination;
   }
 
 private:

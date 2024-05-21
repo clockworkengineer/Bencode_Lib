@@ -20,8 +20,8 @@ public:
   // Bencode does nothing
   // ====================
   std::string from(const std::string &escapedString) const override {
-    return (escapedString);
+    return escapedString;
   }
-  std::string to(const std::string &rawString)  const override { return (rawString); };
+  std::string to(const std::string &rawString)  const override { return rawString; };
 };
 } // namespace Bencode_Lib

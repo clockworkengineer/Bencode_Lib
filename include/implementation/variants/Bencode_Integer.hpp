@@ -13,7 +13,7 @@ struct Integer : Variant {
   Integer &operator=(Integer &&other) = default;
   ~Integer() = default;
   // Get BNode value
-  [[nodiscard]] int64_t value() const { return (bNodeInteger); }
+  [[nodiscard]] int64_t value() const { return bNodeInteger; }
 
 private:
   int64_t bNodeInteger = 0;

@@ -15,8 +15,8 @@ struct String : Variant {
   String &operator=(String &&other) = default;
   ~String() = default;
   // Get BNode value
-  [[nodiscard]] std::string &value() { return (bNodeString); }
-  [[nodiscard]] const std::string &value() const { return (bNodeString); }
+  [[nodiscard]] std::string &value() { return bNodeString; }
+  [[nodiscard]] const std::string &value() const { return bNodeString; }
 
 private:
   std::string bNodeString;

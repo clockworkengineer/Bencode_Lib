@@ -17,20 +17,20 @@ struct List : Variant {
   void add(BNode &&bNode) { bNodeList.emplace_back(std::move(bNode)); }
   // Get BNode size
   [[nodiscard]] int size() const {
-    return (static_cast<int>(bNodeList.size()));
+    return static_cast<int>(bNodeList.size());
   }
   // Get BNode value
-  [[nodiscard]] std::vector<BNode> &value() { return (bNodeList); }
-  [[nodiscard]] const std::vector<BNode> &value() const { return (bNodeList); }
+  [[nodiscard]] std::vector<BNode> &value() { return bNodeList; }
+  [[nodiscard]] const std::vector<BNode> &value() const { return bNodeList; }
   BNode &operator[](int index) {
-    if ((index >= 0) && (index < (static_cast<int>(bNodeList.size())))) {
-      return (bNodeList[index]);
+    if (index >= 0 && index < static_cast<int>(bNodeList.size())) {
+      return bNodeList[index];
     }
     throw BNode::Error("Invalid index used in list.");
   }
   const BNode &operator[](int index) const {
-    if ((index >= 0) && (index < (static_cast<int>(bNodeList.size())))) {
-      return (bNodeList[index]);
+    if (index >= 0 && index < static_cast<int>(bNodeList.size())) {
+      return bNodeList[index];
     }
     throw BNode::Error("Invalid index used in list.");
   }

@@ -28,10 +28,9 @@ public:
 
   [[nodiscard]] char current() const override {
     if (more()) {
-      return (
-          static_cast<char>(decodeBuffer[static_cast<int>(bufferPosition)]));
+      return static_cast<char>(decodeBuffer[static_cast<int>(bufferPosition)]);
     }
-    return (static_cast<char>(EOF));
+    return static_cast<char>(EOF);
   }
   void next() override {
     if (!more()) {
@@ -40,7 +39,7 @@ public:
     bufferPosition++;
   }
   [[nodiscard]] bool more() const override {
-    return (bufferPosition < decodeBuffer.size());
+    return bufferPosition < decodeBuffer.size();
   }
   void reset() override { bufferPosition = 0; }
 

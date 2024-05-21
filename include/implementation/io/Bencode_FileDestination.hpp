@@ -49,7 +49,7 @@ public:
     length = 0;
   }
 
-  std::size_t size() { return (length); }
+  std::size_t size() { return length; }
 
 private:
   std::ofstream destination;

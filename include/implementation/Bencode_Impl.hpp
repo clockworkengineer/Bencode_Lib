@@ -28,8 +28,8 @@ public:
   // Bencode version
   static std::string version();
   // Return root BNode of tree
-  [[nodiscard]] BNode &root() { return (bNodeRoot); }
-  [[nodiscard]] const BNode &root() const { return (bNodeRoot); }
+  [[nodiscard]] BNode &root() { return bNodeRoot; }
+  [[nodiscard]] const BNode &root() const { return bNodeRoot; }
   // Travse BNode tree
   void traverse(IAction &action);
   void traverse(IAction &action) const;

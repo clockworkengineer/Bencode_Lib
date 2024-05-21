@@ -13,19 +13,19 @@ struct Variant {
   ~Variant() = default;
   // Determine BNode type
   [[nodiscard]] bool isString() const {
-    return (nodeType == Variant::Type::string);
+    return nodeType == Variant::Type::string;
   }
   [[nodiscard]] bool isInteger() const {
-    return (nodeType == Variant::Type::integer);
+    return nodeType == Variant::Type::integer;
   }
   [[nodiscard]] bool isList() const {
-    return (nodeType == Variant::Type::list);
+    return nodeType == Variant::Type::list;
   }
   [[nodiscard]] bool isDictionary() const {
-    return (nodeType == Variant::Type::dictionary);
+    return nodeType == Variant::Type::dictionary;
   }
   [[nodiscard]] bool isHole() const {
-    return (nodeType == Variant::Type::hole);
+    return nodeType == Variant::Type::hole;
   }
 private:
   Variant::Type nodeType;

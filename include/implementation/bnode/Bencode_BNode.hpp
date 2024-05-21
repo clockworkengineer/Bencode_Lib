@@ -24,7 +24,7 @@ struct BNode {
   ~BNode() = default;
   // Assignment operators
   template <typename T> BNode &operator=(T value) {
-    return (*this = BNode(value));
+    return *this = BNode(value);
   }
   // Indexing operators
   BNode &operator[](const std::string &key);
@@ -32,24 +32,24 @@ struct BNode {
   BNode &operator[](int index);
   const BNode &operator[](int index) const;
   // Interrogate variant
-  [[nodiscard]] bool isEmpty() const { return (bNodeVariant == nullptr); }
-  [[nodiscard]] bool isString() const { return (bNodeVariant->isString()); }
-  [[nodiscard]] bool isInteger() const { return (bNodeVariant->isInteger()); }
-  [[nodiscard]] bool isList() const { return (bNodeVariant->isList()); }
+  [[nodiscard]] bool isEmpty() const { return bNodeVariant == nullptr; }
+  [[nodiscard]] bool isString() const { return bNodeVariant->isString(); }
+  [[nodiscard]] bool isInteger() const { return bNodeVariant->isInteger(); }
+  [[nodiscard]] bool isList() const { return bNodeVariant->isList(); }
   [[nodiscard]] bool isDictionary() const {
-    return (bNodeVariant->isDictionary());
+    return bNodeVariant->isDictionary();
   }
-  [[nodiscard]] bool isHole() const { return (bNodeVariant->isHole()); }
+  [[nodiscard]] bool isHole() const { return bNodeVariant->isHole(); }
   // Get reference to BNode variant
   [[nodiscard]] std::unique_ptr<Variant> &getVariant() {
-    return (bNodeVariant);
+    return bNodeVariant;
   }
   [[nodiscard]] const std::unique_ptr<Variant> &getVariant() const {
-    return (bNodeVariant);
+    return bNodeVariant;
   }
   // Make BNode
   template <typename T, typename... Args> static auto make(Args &&...args) {
-    return (BNode{std::make_unique<T>(std::forward<Args>(args)...)});
+    return BNode{std::make_unique<T>(std::forward<Args>(args)...)};
   }
 
 private:

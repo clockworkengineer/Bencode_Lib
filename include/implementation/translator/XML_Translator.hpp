@@ -20,7 +20,7 @@ public:
   // Translate string characters to XML character references when necessary
   // ======================================================================
   std::string from(const std::string &escapedString) const override {
-    return (escapedString);
+    return escapedString;
   }
   std::string to(const std::string &escapedString) const override {
     std::string translated;
@@ -28,8 +28,8 @@ public:
       if (!isprint(ch)) {
         translated += "&#x00";
         const char *digits = "0123456789ABCDEF";
-        translated += digits[(ch >> 4) & 0x0f];
-        translated += digits[(ch)&0x0f];
+        translated += digits[ch >> 4 & 0x0f];
+        translated += digits[ch&0x0f];
         translated += ";";
       } else {
         if (ch == '&') {
@@ -47,7 +47,7 @@ public:
         }
       }
     }
-    return (translated);
+    return translated;
   }
 };
 } // namespace Bencode_Lib
