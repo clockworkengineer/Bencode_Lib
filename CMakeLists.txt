@@ -17,61 +17,61 @@ configure_file(Bencode_Config.h.in Bencode_Config.hpp)
 set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
 
 set(BENCODE_SOURCES
-  ./classes/Bencode.cpp
-  ./classes/implementation/Bencode_Impl.cpp
-  ./classes/implementation/decoder/Bencode_Decoder.cpp
-  ./classes/implementation/encoder/Bencode_Encoder.cpp)
+  ./classes/source/Bencode.cpp
+  ./classes/source/implementation/Bencode_Impl.cpp
+  ./classes/source/implementation/decoder/Bencode_Decoder.cpp
+  ./classes/source/implementation/encoder/Bencode_Encoder.cpp)
 
 set(BENCODE_INCLUDES
-  ./include/Bencode.hpp
-  ./include/interface/Bencode_Interfaces.hpp
-  ./include/interface/IAction.hpp
-  ./include/interface/ISource.hpp
-  ./include/interface/IDestination.hpp
-  ./include/interface/IDecoder.hpp
-  ./include/interface/IEncoder.hpp
-  ./include/interface/ITranslator.hpp
-  ./include/implementation/Bencode_Core.hpp
-  ./include/implementation/common/Bencode_Error.hpp
-  ./include/implementation/bnode/Bencode_BNode_Creation.hpp
-  ./include/implementation/bnode/Bencode_BNode_Index.hpp
-  ./include/implementation/bnode/Bencode_BNode_Reference.hpp
-  ./include/implementation/bnode/Bencode_BNode.hpp
-  ./include/implementation/Bencode_Impl.hpp
-  ./include/implementation/decoder/Bencode_Decoder.hpp
-  ./include/implementation/encoder/Bencode_Encoder.hpp
-  ./include/implementation/encoder/JSON_Encoder.hpp
-  ./include/implementation/encoder/XML_Encoder.hpp
-  ./include/implementation/translator/Bencode_Translator.hpp
-  ./include/implementation/translator/JSON_Translator.hpp
-  ./include/implementation/translator/XML_Translator.hpp
-  ./include/implementation/io/Bencode_Sources.hpp
-  ./include/implementation/io/Bencode_BufferSource.hpp
-  ./include/implementation/io/Bencode_FileSource.hpp
-  ./include/implementation/io/Bencode_Destinations.hpp
-  ./include/implementation/io/Bencode_BufferDestination.hpp
-  ./include/implementation/io/Bencode_FileDestination.hpp
-  ./include/implementation/variants/Bencode_Dictionary.hpp
-  ./include/implementation/variants/Bencode_Hole.hpp
-  ./include/implementation/variants/Bencode_Integer.hpp
-  ./include/implementation/variants/Bencode_List.hpp
-  ./include/implementation/variants/Bencode_String.hpp
-  ./include/implementation/variants/Bencode_Variant.hpp)
+  ./classes/include/Bencode.hpp
+  ./classes/include/interface/Bencode_Interfaces.hpp
+  ./classes/include/interface/IAction.hpp
+  ./classes/include/interface/ISource.hpp
+  ./classes/include/interface/IDestination.hpp
+  ./classes/include/interface/IDecoder.hpp
+  ./classes/include/interface/IEncoder.hpp
+  ./classes/include/interface/ITranslator.hpp
+  ./classes/include/implementation/Bencode_Core.hpp
+  ./classes/include/implementation/common/Bencode_Error.hpp
+  ./classes/include/implementation/bnode/Bencode_BNode_Creation.hpp
+  ./classes/include/implementation/bnode/Bencode_BNode_Index.hpp
+  ./classes/include/implementation/bnode/Bencode_BNode_Reference.hpp
+  ./classes/include/implementation/bnode/Bencode_BNode.hpp
+  ./classes/include/implementation/Bencode_Impl.hpp
+  ./classes/include/implementation/decoder/Bencode_Decoder.hpp
+  ./classes/include/implementation/encoder/Bencode_Encoder.hpp
+  ./classes/include/implementation/encoder/JSON_Encoder.hpp
+  ./classes/include/implementation/encoder/XML_Encoder.hpp
+  ./classes/include/implementation/translator/Bencode_Translator.hpp
+  ./classes/include/implementation/translator/JSON_Translator.hpp
+  ./classes/include/implementation/translator/XML_Translator.hpp
+  ./classes/include/implementation/io/Bencode_Sources.hpp
+  ./classes/include/implementation/io/Bencode_BufferSource.hpp
+  ./classes/include/implementation/io/Bencode_FileSource.hpp
+  ./classes/include/implementation/io/Bencode_Destinations.hpp
+  ./classes/include/implementation/io/Bencode_BufferDestination.hpp
+  ./classes/include/implementation/io/Bencode_FileDestination.hpp
+  ./classes/include/implementation/variants/Bencode_Dictionary.hpp
+  ./classes/include/implementation/variants/Bencode_Hole.hpp
+  ./classes/include/implementation/variants/Bencode_Integer.hpp
+  ./classes/include/implementation/variants/Bencode_List.hpp
+  ./classes/include/implementation/variants/Bencode_String.hpp
+  ./classes/include/implementation/variants/Bencode_Variant.hpp)
 
 # Bencode library
 add_library(${BENCODE_LIBRARY_NAME} ${BENCODE_SOURCES} ${BENCODE_INCLUDES})
 target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
-  ${PROJECT_SOURCE_DIR}/include
-  ${PROJECT_SOURCE_DIR}/include/interface
-  ${PROJECT_SOURCE_DIR}/include/implementation
-  ${PROJECT_SOURCE_DIR}/include/implementation/common
-  ${PROJECT_SOURCE_DIR}/include/implementation/bnode
-  ${PROJECT_SOURCE_DIR}/include/implementation/decoder
-  ${PROJECT_SOURCE_DIR}/include/implementation/encoder
-  ${PROJECT_SOURCE_DIR}/include/implementation/io
-  ${PROJECT_SOURCE_DIR}/include/implementation/variants
-  ${PROJECT_SOURCE_DIR}/include/implementation/translator
-  ${PROJECT_SOURCE_DIR}/include/external
+  ${PROJECT_SOURCE_DIR}/classes/include
+  ${PROJECT_SOURCE_DIR}/classes/include/interface
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/common
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/bnode
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/decoder
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/encoder
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/io
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/variants
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/translator
+  ${PROJECT_SOURCE_DIR}/classes/include/external
   ${PROJECT_BINARY_DIR})
 
 # Add tests
