@@ -23,10 +23,10 @@ public:
   BNode decode(ISource &source);
 
 private:
-  int64_t extractInteger(ISource &source);
-  std::string extractString(ISource &source);
-  BNode decodeString(ISource &source);
-  BNode decodeInteger(ISource &source);
+  static int64_t extractInteger(ISource &source);
+  static std::string extractString(ISource &source);
+  static BNode decodeString(ISource &source);
+  static BNode decodeInteger(ISource &source);
   BNode decodeDictionary(ISource &source);
   BNode decodeList(ISource &source);
 };

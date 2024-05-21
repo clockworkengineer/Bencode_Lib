@@ -45,7 +45,7 @@ Bencode::Bencode(const ListInitializer &list) : Bencode() {
 /// <summary>
 /// Bencode constructor (dictionary).
 /// </summary>
-/// <param name="object">Intialiser list of key/value(JNode) pairs.</param>
+/// <param name="dictionary">Intialiser list of key/value(JNode) pairs.</param>
 Bencode::Bencode(const DictionaryInitializer &dictionary) : Bencode() {
   this->root() = BNode(dictionary);
 }
@@ -53,7 +53,7 @@ Bencode::Bencode(const DictionaryInitializer &dictionary) : Bencode() {
 /// <summary>
 ///  Get Bencode_Lib version.
 /// </summary>
-std::string Bencode::version() const { return (implementation->version()); }
+std::string Bencode::version() const { return implementation->version(); }
 
 /// <summary>
 /// Decode Bencoded byte string pointed to by source stream into BNode(s).
@@ -67,7 +67,7 @@ void Bencode::decode(ISource &&source) const { implementation->decode(source); }
 /// Take BNode structure and create an Bencode encoding for it in the
 /// destination stream.
 /// </summary>
-/// <param name="destination ">Reference to interface used to facilitate the
+/// <param name="destination">Reference to interface used to facilitate the
 /// output stream.</param> <returns></returns>
 void Bencode::encode(IDestination &destination) const {
   implementation->encode(destination);
@@ -78,10 +78,10 @@ void Bencode::encode(IDestination &&destination) const {
 
 /// <summary>
 /// Recursively traverse JNode structure calling IAction methods (read only)
-//  or to change the Bencode tree node directly.
+///  or to change the Bencode tree node directly.
 /// </summary>
-/// <param name=action>Action methods to call during traversal.</param>
-// Traverse using non-const Bencode so can change Bencode tree
+/// <param name="action">Action methods to call during traversal.</param>
+/// Traverse using non-const Bencode so can change Bencode tree
 void Bencode::traverse(IAction &action) { implementation->traverse(action); }
 // Traverse using const Bencode so cannot change Bencode tree
 void Bencode::traverse(IAction &action) const {
@@ -92,29 +92,29 @@ void Bencode::traverse(IAction &action) const {
 /// Get root of BNode tree.
 /// </summary>
 /// <returns>Root of BNode encoded tree.</returns>
-BNode &Bencode::root() { return (implementation->root()); }
-const BNode &Bencode::root() const { return (implementation->root()); }
+BNode &Bencode::root() { return implementation->root(); }
+const BNode &Bencode::root() const { return implementation->root(); }
 
 /// <summary>
 /// Return object entry for the passed in key.
 /// </summary>
-/// <param name=key>Dictionary entry (BNode) key.</param>
+/// <param name="key">Dictionary entry (BNode) key.</param>
 BNode &Bencode::operator[](const std::string &key) {
-  return ((*implementation)[key]);
+  return (*implementation)[key];
 }
 const BNode &Bencode::operator[](const std::string &key) const {
-  return ((*implementation)[key]);
+  return (*implementation)[key];
 }
 
 /// <summary>
 /// Return list entry for the passed in index.
 /// </summary>
-/// <param name=index>Array entry (BNode) index.</param>
-BNode &Bencode::operator[](std::size_t index) {
-  return ((*implementation)[index]);
+/// <param name="index">Array entry (BNode) index.</param>
+BNode &Bencode::operator[](const std::size_t index) {
+  return (*implementation)[index];
 }
-const BNode &Bencode::operator[](std::size_t index) const {
-  return ((*implementation)[index]);
+const BNode &Bencode::operator[](const std::size_t index) const {
+  return (*implementation)[index];
 }
 
 } // namespace Bencode_Lib

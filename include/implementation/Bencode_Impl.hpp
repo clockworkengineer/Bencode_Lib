@@ -26,7 +26,7 @@ public:
   // Encode BNode tree
   void encode(IDestination &destination) const;
   // Bencode version
-  std::string version() const;
+  static std::string version();
   // Return root BNode of tree
   [[nodiscard]] BNode &root() { return (bNodeRoot); }
   [[nodiscard]] const BNode &root() const { return (bNodeRoot); }

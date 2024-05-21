@@ -17,7 +17,7 @@ int64_t Bencode_Decoder::extractInteger(ISource &source) {
     number[digits++] = source.current();
     source.next();
   }
-  while (source.more() && (std::isdigit(source.current()) != 0)) {
+  while (source.more() && std::isdigit(source.current()) != 0) {
     // Number too large to fit in buffer
     if (digits == number.size()) {
       throw SyntaxError("Integer to large to fit in conversion buffer.");
@@ -26,14 +26,14 @@ int64_t Bencode_Decoder::extractInteger(ISource &source) {
     source.next();
   }
   // Check integer has no leading zero and is not empty ('ie')
-  if ((number[0] == '0' && digits > 1) || (digits == 0)) {
+  if ((number[0] == '0' && digits > 1) || digits == 0) {
     throw SyntaxError("Empty Integer or has leading zero.");
   }
   // Check-for -0
-  if ((number[0] == '-') && (number[1] == '0') && (digits == 2)) {
+  if (number[0] == '-' && number[1] == '0' && digits == 2) {
     throw SyntaxError("Negative zero is not allowed.");
   }
-  return (std::stoll(&number[0]));
+  return std::stoll(&number[0]);
 }
 
 /// <summary>
@@ -53,7 +53,7 @@ std::string Bencode_Decoder::extractString(ISource &source) {
     buffer += source.current();
     source.next();
   }
-  return (buffer);
+  return buffer;
 }
 
 /// <summary>
@@ -63,7 +63,7 @@ std::string Bencode_Decoder::extractString(ISource &source) {
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>String BNode.</returns>
 BNode Bencode_Decoder::decodeString(ISource &source) {
-  return (BNode::make<String>(extractString(source)));
+  return BNode::make<String>(extractString(source));
 }
 
 /// <summary>
@@ -78,7 +78,7 @@ BNode Bencode_Decoder::decodeInteger(ISource &source) {
     throw SyntaxError("Missing end terminator on integer value.");
   }
   source.next();
-  return (BNode::make<Integer>(integer));
+  return BNode::make<Integer>(integer);
 }
 
 /// <summary>
@@ -109,7 +109,7 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
     throw SyntaxError("Missing end terminator on dictionary.");
   }
   source.next();
-  return (dictionary);
+  return dictionary;
 }
 
 /// <summary>
@@ -127,14 +127,14 @@ BNode Bencode_Decoder::decodeList(ISource &source) {
     throw SyntaxError("Missing end terminator on list.");
   }
   source.next();
-  return (list);
+  return list;
 }
 
 /// <summary>
 /// Decode a BNode from the input stream of characters referenced by ISource.In
 /// order to traverse
-//  and decode complex encodings this method is called recursively to build up a
-//  BNode structure.
+///  and decode complex encodings this method is called recursively to build up a
+///  BNode structure.
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
@@ -142,13 +142,13 @@ BNode Bencode_Decoder::decode(ISource &source) {
   switch (source.current()) {
   // Dictionary BNode
   case 'd':
-    return (decodeDictionary(source));
+    return decodeDictionary(source);
   // List BNode
   case 'l':
-    return (decodeList(source));
+    return decodeList(source);
   // Integer BNode
   case 'i':
-    return (decodeInteger(source));
+    return decodeInteger(source);
   // String BNode
   case '0':
   case '1':
@@ -160,9 +160,11 @@ BNode Bencode_Decoder::decode(ISource &source) {
   case '7':
   case '8':
   case '9':
-    return (decodeString(source));
+    return decodeString(source);
+  default:
+    throw SyntaxError("Expected integer, string, list or dictionary not present.");
   }
-  throw SyntaxError("Expected integer, string, list or dictionary not present.");
+
 }
 
 } // namespace Bencode_Lib

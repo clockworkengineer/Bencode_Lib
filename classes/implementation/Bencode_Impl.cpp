@@ -31,11 +31,11 @@ Bencode_Impl::Bencode_Impl(IEncoder *encoder, IDecoder *decoder) {
 
 Bencode_Impl::~Bencode_Impl() {}
 
-std::string Bencode_Impl::version() const {
+std::string Bencode_Impl::version() {
   std::stringstream versionString;
   versionString << "Bencode_Lib Version " << BENCODE_VERSION_MAJOR << "."
                 << BENCODE_VERSION_MINOR << "." << BENCODE_VERSION_PATCH;
-  return (versionString.str());
+  return versionString.str();
 }
 
 void Bencode_Impl::decode(ISource &source) {
@@ -70,30 +70,30 @@ BNode &Bencode_Impl::operator[](const std::string &key) {
     if (bNodeRoot.isEmpty()) {
       bNodeRoot = BNode::make<Dictionary>();
     }
-    return (bNodeRoot[key]);
+    return bNodeRoot[key];
   } catch ([[maybe_unused]] BNode::Error &error) {
     BRef<Dictionary>(bNodeRoot).add(
         Dictionary::Entry(key, BNode::make<Hole>()));
-    return (bNodeRoot[key]);
+    return bNodeRoot[key];
   }
 }
 const BNode &Bencode_Impl::operator[](const std::string &key) const {
-  return ((bNodeRoot)[key]);
+  return bNodeRoot[key];
 }
 
-BNode &Bencode_Impl::operator[](std::size_t index) {
+BNode &Bencode_Impl::operator[](const std::size_t index) {
   try {
     if (bNodeRoot.isEmpty()) {
       bNodeRoot = BNode::make<List>();
     }
-    return (bNodeRoot[index]);
+    return bNodeRoot[index];
   } catch ([[maybe_unused]] BNode::Error &error) {
     BRef<List>(bNodeRoot).resize(index);
-    return (bNodeRoot[index]);
+    return bNodeRoot[index];
   }
 }
-const BNode &Bencode_Impl::operator[](std::size_t index) const {
-  return ((bNodeRoot)[index]);
+const BNode &Bencode_Impl::operator[](const std::size_t index) const {
+  return bNodeRoot[index];
 }
 
 } // namespace Bencode_Lib
