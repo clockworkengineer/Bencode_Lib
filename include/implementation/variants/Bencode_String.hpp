@@ -6,9 +6,9 @@ namespace Bencode_Lib {
 
 struct String : Variant {
   // Constructors/Destructors
-  String() : Variant(Variant::Type::string){};
+  String() : Variant(Type::string){}
   explicit String(const std::string &string)
-      : Variant(Variant::Type::string), bNodeString(std::move(string)) {}
+      : Variant(Type::string), bNodeString(std::move(string)) {}
   String(const String &other) = default;
   String &operator=(const String &other) = default;
   String(String &&other) = default;

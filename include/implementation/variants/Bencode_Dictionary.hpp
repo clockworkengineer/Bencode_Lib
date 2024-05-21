@@ -25,7 +25,7 @@ struct Dictionary : Variant {
     BNode entryBNode;
   };
   // Constructors/Destructors
-  Dictionary() : Variant(Variant::Type::dictionary) {}
+  Dictionary() : Variant(Type::dictionary) {}
   Dictionary(const Dictionary &other) = default;
   Dictionary &operator=(const Dictionary &other) = default;
   Dictionary(Dictionary &&other) = default;
@@ -65,16 +65,16 @@ struct Dictionary : Variant {
 private:
   // Search for a given entry given a key
   [[nodiscard]] std::vector<Entry>::iterator findKey(const std::string &key) {
-    const auto entry = std::ranges::find_if(bNodeDictionary,
+    const auto keyEntry = std::ranges::find_if(bNodeDictionary,
         [&key](Entry &entry) -> bool { return entry.getKey() == key; });
-    return entry;
+    return keyEntry;
   }
   [[nodiscard]] std::vector<Entry>::const_iterator
   findKey(const std::string &key) const {
-    const auto entry = std::ranges::find_if(
+    const auto keyEntry = std::ranges::find_if(
         bNodeDictionary,
         [&key](const Entry &entry) -> bool { return entry.getKey() == key; });
-    return entry;
+    return keyEntry;
   }
   // Find place for entry in ordered dictionary
   std::vector<Entry>::iterator findEntry(const Entry &entry) {

@@ -30,7 +30,7 @@ public:
     if (more()) {
       return static_cast<char>(decodeBuffer[static_cast<int>(bufferPosition)]);
     }
-    return static_cast<char>(EOF);
+    return EOF;
   }
   void next() override {
     if (!more()) {

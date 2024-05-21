@@ -35,6 +35,6 @@ public:
 };
 // Make custom encoder to pass to Bencode constructor: Note pointer is tidied up internally.
 template <typename T> IEncoder *makeEncoder() {
-  return (std::make_unique<T>().release());
+  return std::make_unique<T>().release();
 }
 } // namespace Bencode_Lib

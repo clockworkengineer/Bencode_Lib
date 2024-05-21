@@ -13,21 +13,21 @@ struct Variant {
   ~Variant() = default;
   // Determine BNode type
   [[nodiscard]] bool isString() const {
-    return nodeType == Variant::Type::string;
+    return nodeType == Type::string;
   }
   [[nodiscard]] bool isInteger() const {
-    return nodeType == Variant::Type::integer;
+    return nodeType == Type::integer;
   }
   [[nodiscard]] bool isList() const {
-    return nodeType == Variant::Type::list;
+    return nodeType == Type::list;
   }
   [[nodiscard]] bool isDictionary() const {
-    return nodeType == Variant::Type::dictionary;
+    return nodeType == Type::dictionary;
   }
   [[nodiscard]] bool isHole() const {
-    return nodeType == Variant::Type::hole;
+    return nodeType == Type::hole;
   }
 private:
-  Variant::Type nodeType;
+  Type nodeType;
 };
 } // namespace Bencode_Lib

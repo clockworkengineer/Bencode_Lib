@@ -8,10 +8,10 @@ namespace Bencode_Lib {
 inline BNode &BNode::operator[](const int index) {
   try {
     if (this->isHole()) {
-      *this = BNode::make<List>();
+      *this = make<List>();
     }
     return BRef<List>(*this)[index];
-  } catch ([[maybe_unused]] const BNode::Error &error) {
+  } catch ([[maybe_unused]] const Error &error) {
     BRef<List>(*this).resize(index);
     return BRef<List>(*this)[index];
   }
@@ -22,8 +22,8 @@ inline const BNode &BNode::operator[](const int index) const {
 // Dictionary
 inline BNode &BNode::operator[](const std::string &key) {
   if (this->isHole()) {
-    *this = BNode::make<Dictionary>();
-    BRef<Dictionary>(*this).add(Dictionary::Entry(key, BNode::make<Hole>()));
+    *this = make<Dictionary>();
+    BRef<Dictionary>(*this).add(Dictionary::Entry(key, make<Hole>()));
     return BRef<Dictionary>(*this).value().back().getBNode();
   }
   return BRef<Dictionary>(*this)[key];

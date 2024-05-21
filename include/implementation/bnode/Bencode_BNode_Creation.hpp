@@ -10,15 +10,15 @@ namespace Bencode_Lib {
 template <typename T> BNode::BNode(T value) {
 
   if constexpr (std::is_integral_v<T>) {
-    *this = BNode::make<Integer>(value);
+    *this = make<Integer>(value);
   } else if constexpr (std::is_floating_point_v<T>) {
-    *this = BNode::make<Integer>(static_cast<long long>(value));
+    *this = make<Integer>(static_cast<long long>(value));
   } else if constexpr (std::is_null_pointer_v<T>) {
-    *this = BNode::make<Integer>(0);
+    *this = make<Integer>(0);
   } else if constexpr (std::is_same_v<T, const char *>) {
-    *this = BNode::make<String>(value);
+    *this = make<String>(value);
   } else if constexpr (std::is_same_v<T, std::string>) {
-    *this = BNode::make<String>(value);
+    *this = make<String>(value);
   } else if constexpr (std::is_convertible_v<T, std::unique_ptr<Variant>>) {
     bNodeVariant = std::move(value);
   }
@@ -59,15 +59,15 @@ inline BNode BNode::typeToBNode(const Bencode::intializerListTypes &type) {
 }
 // Construct BNode Array from initializer list
 inline BNode::BNode(const Bencode::ListInitializer &list) {
-  *this = BNode::make<List>();
+  *this = make<List>();
   for (const auto &entry : list) {
     BRef<List>(*this).add(typeToBNode(entry));
   }
 }
 // Construct BNode Dictionary from initializer list
-inline BNode::BNode(const Bencode::DictionaryInitializer &object) {
-  *this = BNode::make<Dictionary>();
-  for (const auto &[fst, snd] : object) {
+inline BNode::BNode(const Bencode::DictionaryInitializer &dictionary) {
+  *this = make<Dictionary>();
+  for (const auto &[fst, snd] : dictionary) {
     BRef<Dictionary>(*this).add(
         Dictionary::Entry(fst, typeToBNode(snd)));
   }

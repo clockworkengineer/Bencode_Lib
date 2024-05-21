@@ -55,8 +55,8 @@ private:
 /// Recursively traverse BNode tree calling IAction methods and possibly
 /// modifying the tree contents or even structure.
 /// </summary>
-/// <param name=bNode>BNode tree to be traversed.</param>
-/// <param name=action>Action methods to call during traversal.</param>
+/// <param name="bNode">BNode tree to be traversed.</param>
+/// <param name="action">Action methods to call during traversal.</param>
 template <typename T>
 void Bencode_Impl::traverseBNodes(T &bNode, IAction &action) {
   action.onBNode(bNode);

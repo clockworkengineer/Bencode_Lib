@@ -5,7 +5,7 @@ namespace Bencode_Lib {
     
 struct Hole : Variant {
   // Constructors/Destructors
-  Hole() : Variant(Variant::Type::hole) {}
+  Hole() : Variant(Type::hole) {}
   Hole(const Hole &other) = default;
   Hole &operator=(const Hole &other) = default;
   Hole(Hole &&other) = default;

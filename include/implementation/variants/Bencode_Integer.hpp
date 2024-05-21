@@ -4,9 +4,9 @@ namespace Bencode_Lib {
 
 struct Integer : Variant {
   // Constructors/Destructors
-  Integer() : Variant(Variant::Type::integer) {}
+  Integer() : Variant(Type::integer) {}
   explicit Integer(const int64_t integer)
-      : Variant(Variant::Type::integer), bNodeInteger(integer) {}
+      : Variant(Type::integer), bNodeInteger(integer) {}
   Integer(const Integer &other) = default;
   Integer &operator=(const Integer &other) = default;
   Integer(Integer &&other) = default;

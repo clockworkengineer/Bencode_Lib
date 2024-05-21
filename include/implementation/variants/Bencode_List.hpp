@@ -6,7 +6,7 @@ namespace Bencode_Lib {
 
 struct List : Variant {
   // Constructors/Destructors
-  List() : Variant(Variant::Type::list){};
+  List() : Variant(Type::list){}
   List(const List &other) = default;
   List &operator=(const List &other) = default;
   List(List &&other) = default;
