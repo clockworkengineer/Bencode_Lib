@@ -19,15 +19,15 @@ public:
   // ======================================================================
   // Translate string characters to XML character references when necessary
   // ======================================================================
-  std::string from(const std::string &escapedString) const override {
+  [[nodiscard]] std::string from(const std::string &escapedString) const override {
     return escapedString;
   }
-  std::string to(const std::string &escapedString) const override {
+  [[nodiscard]] std::string to(const std::string &escapedString) const override {
     std::string translated;
     for (const unsigned char ch : escapedString) {
       if (!isprint(ch)) {
         translated += "&#x00";
-        const char *digits = "0123456789ABCDEF";
+        const auto digits = "0123456789ABCDEF";
         translated += digits[ch >> 4 & 0x0f];
         translated += digits[ch&0x0f];
         translated += ";";

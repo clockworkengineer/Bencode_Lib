@@ -16,7 +16,7 @@ public:
   BufferDestination &operator=(const FileSource &other) = delete;
   BufferDestination(BufferDestination &&other) = delete;
   BufferDestination &operator=(BufferDestination &&other) = delete;
-  virtual ~BufferDestination() = default;
+  ~BufferDestination() override = default;
 
   void add(const std::string &sourceBuffer) override {
     for (auto ch : sourceBuffer) {
@@ -26,9 +26,9 @@ public:
   void add(const char ch) override {
     encodeBuffer.push_back(static_cast<std::byte>(ch));
   }
-  virtual void clear() override { encodeBuffer.clear(); }
+  void clear() override { encodeBuffer.clear(); }
 
-  std::size_t size() const { return encodeBuffer.size(); }
+  [[nodiscard]] std::size_t size() const { return encodeBuffer.size(); }
   std::string toString() {
     std::string destination;
     for (auto ch : encodeBuffer) {

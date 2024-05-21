@@ -18,9 +18,9 @@ public:
   Bencode_Decoder &operator=(const Bencode_Decoder &other) = delete;
   Bencode_Decoder(Bencode_Decoder &&other) = delete;
   Bencode_Decoder &operator=(Bencode_Decoder &&other) = delete;
-  virtual ~Bencode_Decoder() = default;
+  ~Bencode_Decoder() override = default;
 
-  BNode decode(ISource &source);
+  BNode decode(ISource &source) override;
 
 private:
   static int64_t extractInteger(ISource &source);

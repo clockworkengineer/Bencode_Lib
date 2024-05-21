@@ -24,7 +24,7 @@ public:
   BufferSource &operator=(const BufferSource &other) = delete;
   BufferSource(BufferSource &&other) = delete;
   BufferSource &operator=(BufferSource &&other) = delete;
-  virtual ~BufferSource() = default;
+  ~BufferSource() override = default;
 
   [[nodiscard]] char current() const override {
     if (more()) {

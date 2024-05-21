@@ -19,14 +19,14 @@ public:
   // ===============================================
   // Translate string to escape sequences ("\uxxxx")
   // ===============================================
-  std::string from(const std::string &escapedString) const override {
+  [[nodiscard]] std::string from(const std::string &escapedString) const override {
     return escapedString;
   }
-  std::string to(const std::string &escapedString) const override {
+  [[nodiscard]] std::string to(const std::string &escapedString) const override {
     std::string translated;
     for (const unsigned char ch : escapedString) {
       if (!isprint(ch)) {
-        const char *digits = "0123456789ABCDEF";
+        const auto digits = "0123456789ABCDEF";
         translated += "\\u00";
         translated += digits[ch >> 4 & 0x0f];
         translated += digits[ch&0x0f];

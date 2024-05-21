@@ -23,7 +23,7 @@ public:
   FileSource &operator=(const FileSource &other) = delete;
   FileSource(FileSource &&other) = delete;
   FileSource &operator=(FileSource &&other) = delete;
-  virtual ~FileSource() = default;
+  ~FileSource() override = default;
 
   char current() const override { return static_cast<char>(source.peek()); }
   void next() override {

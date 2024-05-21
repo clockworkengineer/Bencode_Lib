@@ -15,9 +15,9 @@ public:
   Bencode_Encoder &operator=(const Bencode_Encoder &other) = delete;
   Bencode_Encoder(Bencode_Encoder &&other) = delete;
   Bencode_Encoder &operator=(Bencode_Encoder &&other) = delete;
-  virtual ~Bencode_Encoder() = default;
+  ~Bencode_Encoder() override = default;
 
-  void encode(const BNode &bNode, IDestination &destination) const;
+  void encode(const BNode &bNode, IDestination &destination) const override;
 
 private:
   Bencode_Translator bencodeTranslator;

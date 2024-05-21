@@ -15,9 +15,9 @@ public:
   JSON_Encoder &operator=(const JSON_Encoder &other) = delete;
   JSON_Encoder(JSON_Encoder &&other) = delete;
   JSON_Encoder &operator=(JSON_Encoder &&other) = delete;
-  ~JSON_Encoder() = default;
+  ~JSON_Encoder() override = default;
 
-  void encode(const BNode &bNode, IDestination &destination) const {
+  void encode(const BNode &bNode, IDestination &destination) const override {
     if (bNode.isDictionary()) {
       destination.add('{');
       int commas = BRef<Dictionary>(bNode).value().size();

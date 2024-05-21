@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 #include <vector>
 #include <memory>
 #include <utility>
@@ -11,14 +12,14 @@ namespace Bencode_Lib {
 struct Dictionary : Variant {
   // Dictionary entry
   struct Entry {
-    Entry(const std::string &key, BNode &bNode)
-        : entryKey(key), entryBNode(std::move(bNode)) {}
-    Entry(const std::string &key, BNode &&bNode)
-        : entryKey(key), entryBNode(std::move(bNode)) {}
+    Entry(std::string key, BNode &bNode)
+        : entryKey(std::move(key)), entryBNode(std::move(bNode)) {}
+    Entry(std::string key, BNode &&bNode)
+        : entryKey(std::move(key)), entryBNode(std::move(bNode)) {}
     std::string &getKey() { return entryKey; }
-    const std::string &getKey() const { return entryKey; }
+    [[nodiscard]] const std::string &getKey() const { return entryKey; }
     BNode &getBNode() { return entryBNode; }
-    const BNode &getBNode() const { return entryBNode; }
+    [[nodiscard]] const BNode &getBNode() const { return entryBNode; }
 
   private:
     std::string entryKey;

@@ -8,7 +8,7 @@ struct String : Variant {
   // Constructors/Destructors
   String() : Variant(Type::string){}
   explicit String(const std::string &string)
-      : Variant(Type::string), bNodeString(std::move(string)) {}
+      : Variant(Type::string), bNodeString(string) {}
   String(const String &other) = default;
   String &operator=(const String &other) = default;
   String(String &&other) = default;

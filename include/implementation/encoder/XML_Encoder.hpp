@@ -17,10 +17,10 @@ public:
   XML_Encoder &operator=(const XML_Encoder &other) = delete;
   XML_Encoder(XML_Encoder &&other) = delete;
   XML_Encoder &operator=(XML_Encoder &&other) = delete;
-  ~XML_Encoder() = default;
+  ~XML_Encoder() override = default;
 
-  void encode(const BNode &bNode, IDestination &destination) const {
-    destination.add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+  void encode(const BNode &bNode, IDestination &destination) const override {
+    destination.add(R"(<?xml version="1.0" encoding="UTF-8"?>)");
     destination.add("<root>");
     encodeXML(bNode, destination);
     destination.add("</root>");

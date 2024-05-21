@@ -24,7 +24,7 @@ public:
   FileDestination &operator=(const FileDestination &other) = delete;
   FileDestination(FileDestination &&other) = delete;
   FileDestination &operator=(FileDestination &&other) = delete;
-  virtual ~FileDestination() = default;
+  ~FileDestination() override = default;
 
   void add(const std::string &bytes) override {
     destination.write(bytes.c_str(), bytes.length());
