@@ -6,7 +6,7 @@
 
 namespace Bencode_Lib {
 
-class JSON_Encoder : public IEncoder {
+class JSON_Encoder final : public IEncoder {
 
 public:
   // Constructors/destructors

@@ -7,12 +7,12 @@
 
 namespace Bencode_Lib {
 
-class BufferDestination : public IDestination {
+class BufferDestination final : public IDestination {
 
 public:
   // Constructors/Destructors
   BufferDestination() = default;
-  BufferDestination(const FileSource &other) = delete;
+  explicit BufferDestination(const FileSource &other) = delete;
   BufferDestination &operator=(const FileSource &other) = delete;
   BufferDestination(BufferDestination &&other) = delete;
   BufferDestination &operator=(BufferDestination &&other) = delete;
@@ -28,7 +28,7 @@ public:
   }
   virtual void clear() override { encodeBuffer.clear(); }
 
-  std::size_t size() { return encodeBuffer.size(); }
+  std::size_t size() const { return encodeBuffer.size(); }
   std::string toString() {
     std::string destination;
     for (auto ch : encodeBuffer) {

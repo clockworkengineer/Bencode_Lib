@@ -7,12 +7,12 @@
 
 namespace Bencode_Lib {
 
-class Bencode_Translator : public ITranslator {
+class Bencode_Translator final : public ITranslator {
 public:
   // ==============
   // Translator Error
   // ==============
-  struct Error : public std::runtime_error {
+  struct Error final : std::runtime_error {
     explicit Error(const std::string &message)
         : std::runtime_error("Bencode Translator Error: " + message) {}
   };

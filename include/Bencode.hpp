@@ -33,7 +33,7 @@ public:
   using DictionaryInitializer =
       std::initializer_list<std::pair<std::string, intializerListTypes>>;
   // Constructors/Destructors
-  Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
+  explicit Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
   // Pass in default JSON to parse
   explicit Bencode(const std::string &bencodeString);
   // Construct array

@@ -7,12 +7,12 @@
 
 namespace Bencode_Lib {
 
-class XML_Translator : public ITranslator {
+class XML_Translator final : public ITranslator {
 public:
   // ==============
   // Translator Error
   // ==============
-  struct Error : public std::runtime_error {
+  struct Error final : std::runtime_error {
     explicit Error(const std::string &message)
         : std::runtime_error("Translator Error: " + message) {}
   };
@@ -24,7 +24,7 @@ public:
   }
   std::string to(const std::string &escapedString) const override {
     std::string translated;
-    for (unsigned char ch : escapedString) {
+    for (const unsigned char ch : escapedString) {
       if (!isprint(ch)) {
         translated += "&#x00";
         const char *digits = "0123456789ABCDEF";

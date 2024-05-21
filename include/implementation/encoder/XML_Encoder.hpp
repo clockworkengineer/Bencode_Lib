@@ -8,7 +8,7 @@
 
 namespace Bencode_Lib {
 
-class XML_Encoder : public IEncoder {
+class XML_Encoder final : public IEncoder {
 
 public:
   // Constructors/destructors
@@ -31,7 +31,7 @@ private:
     if (bNode.isDictionary()) {
       for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
         auto elementName = bNodeNext.getKey();
-        std::replace(elementName.begin(), elementName.end(), ' ', '-');
+        std::ranges::replace(elementName, ' ', '-');
         destination.add("<" + elementName + ">");
         encodeXML(bNodeNext.getBNode(), destination);
         destination.add("</" + elementName + ">");
@@ -52,10 +52,7 @@ private:
     } else if (bNode.isString()) {
       destination.add(xmlTranslator.to(BRef<String>(bNode).value()));
     }
-  }
-
-private:
-  XML_Translator xmlTranslator;
+  }  XML_Translator xmlTranslator;
 };
 
 } // namespace Bencode_Lib

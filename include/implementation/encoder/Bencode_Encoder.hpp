@@ -6,7 +6,7 @@
 
 namespace Bencode_Lib {
 
-class Bencode_Encoder : public IEncoder {
+class Bencode_Encoder final : public IEncoder {
 
 public:
   // Constructors/Destructors

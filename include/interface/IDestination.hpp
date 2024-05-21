@@ -13,7 +13,7 @@ public:
   // ==================
   // IDestination Error
   // ==================
-  struct Error : public std::runtime_error {
+  struct Error final : std::runtime_error {
     explicit Error(const std::string &message)
         : std::runtime_error("IDestination Error: " + message) {}
   };

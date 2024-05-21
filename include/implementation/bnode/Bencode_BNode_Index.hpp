@@ -5,7 +5,7 @@
 namespace Bencode_Lib {
 
 // List
-inline BNode &BNode::operator[](int index) {
+inline BNode &BNode::operator[](const int index) {
   try {
     if (this->isHole()) {
       *this = BNode::make<List>();
@@ -16,7 +16,7 @@ inline BNode &BNode::operator[](int index) {
     return BRef<List>(*this)[index];
   }
 }
-inline const BNode &BNode::operator[](int index) const {
+inline const BNode &BNode::operator[](const int index) const {
   return BRef<const List>(*this)[index];
 }
 // Dictionary

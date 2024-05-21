@@ -7,7 +7,7 @@
 
 namespace Bencode_Lib {
 
-class FileSource : public ISource {
+class FileSource final : public ISource {
 
 public:
   // Constructors/Destructors

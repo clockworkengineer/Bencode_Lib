@@ -9,7 +9,7 @@
 
 namespace Bencode_Lib {
 
-class Bencode_Decoder : public IDecoder {
+class Bencode_Decoder final : public IDecoder {
 
 public:
   // Constructors/Destructors

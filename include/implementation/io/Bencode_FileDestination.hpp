@@ -8,7 +8,7 @@
 
 namespace Bencode_Lib {
 
-class FileDestination : public IDestination {
+class FileDestination final : public IDestination {
 
 public:
   // Constructors/Destructors
@@ -49,7 +49,7 @@ public:
     length = 0;
   }
 
-  std::size_t size() { return length; }
+  std::size_t size() const { return length; }
 
 private:
   std::ofstream destination;

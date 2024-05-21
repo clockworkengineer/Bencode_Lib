@@ -22,20 +22,20 @@ struct List : Variant {
   // Get BNode value
   [[nodiscard]] std::vector<BNode> &value() { return bNodeList; }
   [[nodiscard]] const std::vector<BNode> &value() const { return bNodeList; }
-  BNode &operator[](int index) {
+  BNode &operator[](const int index) {
     if (index >= 0 && index < static_cast<int>(bNodeList.size())) {
       return bNodeList[index];
     }
     throw BNode::Error("Invalid index used in list.");
   }
-  const BNode &operator[](int index) const {
+  const BNode &operator[](const int index) const {
     if (index >= 0 && index < static_cast<int>(bNodeList.size())) {
       return bNodeList[index];
     }
     throw BNode::Error("Invalid index used in list.");
   }
   // Resize Array
-  void resize(std::size_t index) {
+  void resize(const std::size_t index) {
     bNodeList.resize(index + 1);
     for (auto &entry : bNodeList) {
       if (entry.isEmpty()) {

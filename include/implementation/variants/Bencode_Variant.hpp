@@ -5,7 +5,7 @@ namespace Bencode_Lib {
 struct Variant {
   enum class Type { base = 0, dictionary, list, integer, string, hole };
   // Constructors/Destructors
-  explicit Variant(Type nodeType = Type::base) : nodeType(nodeType) {}
+  explicit Variant(const Type nodeType = Type::base) : nodeType(nodeType) {}
   Variant(const Variant &other) = default;
   Variant &operator=(const Variant &other) = default;
   Variant(Variant &&other) = default;

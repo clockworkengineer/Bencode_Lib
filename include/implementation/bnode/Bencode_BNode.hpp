@@ -8,7 +8,7 @@ namespace Bencode_Lib {
 
 struct BNode {
   // BNode Error
-  struct Error : public std::runtime_error {
+  struct Error final : std::runtime_error {
     explicit Error(const std::string &message)
         : std::runtime_error("BNode Error: " + message) {}
   };
@@ -53,7 +53,7 @@ struct BNode {
   }
 
 private:
-  BNode typeToBNode(const Bencode::intializerListTypes &type);
+  static BNode typeToBNode(const Bencode::intializerListTypes &type);
   std::unique_ptr<Variant> bNodeVariant;
 };
 

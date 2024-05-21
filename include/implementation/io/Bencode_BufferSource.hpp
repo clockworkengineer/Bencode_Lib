@@ -7,7 +7,7 @@
 
 namespace Bencode_Lib {
 
-class BufferSource : public ISource {
+class BufferSource final : public ISource {
 
 public:
   // Constructors/Destructors
