@@ -15,7 +15,8 @@ template <typename T> BNode::BNode(T value) {
     *this = make<Integer>(static_cast<long long>(value));
   } else if constexpr (std::is_null_pointer_v<T>) {
     *this = make<Integer>(0);
-  } else if constexpr ((std::is_same_v<T, const char *>)||(std::is_same_v<T, std::string>)) {
+  } else if constexpr (std::is_same_v<T, const char *> ||
+                       std::is_same_v<T, std::string>) {
     *this = make<String>(value);
   } else if constexpr (std::is_convertible_v<T, std::unique_ptr<Variant>>) {
     bNodeVariant = std::move(value);

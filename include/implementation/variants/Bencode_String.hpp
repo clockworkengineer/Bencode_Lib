@@ -1,14 +1,15 @@
 #pragma once
 
 #include <string>
+#include <utility>
 
 namespace Bencode_Lib {
 
 struct String : Variant {
   // Constructors/Destructors
   String() : Variant(Type::string){}
-  explicit String(const std::string &string)
-      : Variant(Type::string), bNodeString(string) {}
+  explicit String(std::string string)
+      : Variant(Type::string), bNodeString(std::move(string)) {}
   String(const String &other) = default;
   String &operator=(const String &other) = default;
   String(String &&other) = default;
