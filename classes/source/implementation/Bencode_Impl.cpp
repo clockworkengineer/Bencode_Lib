@@ -29,7 +29,7 @@ Bencode_Impl::Bencode_Impl(IEncoder *encoder, IDecoder *decoder) {
   }
 }
 
-Bencode_Impl::~Bencode_Impl() {}
+Bencode_Impl::~Bencode_Impl() = default;
 
 std::string Bencode_Impl::version() {
   std::stringstream versionString;
