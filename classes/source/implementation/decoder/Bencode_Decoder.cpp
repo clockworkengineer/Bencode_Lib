@@ -171,7 +171,7 @@ BNode Bencode_Decoder::decodeTree(ISource &source) {
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
 BNode Bencode_Decoder::decode(ISource &source) {
-  return(decodeTree(source));
+  return decodeTree(source);
 }
 
 } // namespace Bencode_Lib

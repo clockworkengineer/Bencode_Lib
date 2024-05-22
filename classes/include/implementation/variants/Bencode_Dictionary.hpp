@@ -65,25 +65,21 @@ struct Dictionary : Variant {
 private:
   // Search for a given entry given a key
   [[nodiscard]] std::vector<Entry>::iterator findKey(const std::string &key) {
-    const auto keyEntry = std::ranges::find_if(bNodeDictionary,
+    return std::ranges::find_if(bNodeDictionary,
         [&key](Entry &entry) -> bool { return entry.getKey() == key; });
-    return keyEntry;
   }
   [[nodiscard]] std::vector<Entry>::const_iterator
   findKey(const std::string &key) const {
-    const auto keyEntry = std::ranges::find_if(
+    return std::ranges::find_if(
         bNodeDictionary,
         [&key](const Entry &entry) -> bool { return entry.getKey() == key; });
-    return keyEntry;
   }
   // Find place for entry in ordered dictionary
   std::vector<Entry>::iterator findEntry(const Entry &entry) {
-    const auto it = std::ranges::find_if(
-        bNodeDictionary,
-                           [&entry](const Entry &current) -> bool {
-                             return current.getKey() >= entry.getKey();
-                           });
-    return it;
+    return std::ranges::find_if(bNodeDictionary,
+                                [&entry](const Entry &current) -> bool {
+                                  return current.getKey() >= entry.getKey();
+                                });
   }
   std::vector<Entry> bNodeDictionary;
 };

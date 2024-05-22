@@ -24,7 +24,7 @@ public:
   }
   [[nodiscard]] std::string to(const std::string &escapedString) const override {
     std::string translated;
-    for (const unsigned char ch : escapedString) {
+    for (const char ch : escapedString) {
       if (!isprint(ch)) {
         const auto digits = "0123456789ABCDEF";
         translated += "\\u00";

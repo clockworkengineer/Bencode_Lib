@@ -24,7 +24,7 @@ namespace Bencode_Lib {
 
 Bencode::Bencode(IEncoder *encoder, IDecoder *decoder)
     : implementation(std::make_unique<Bencode_Impl>(encoder, decoder)) {}
-Bencode::~Bencode() {}
+Bencode::~Bencode() = default;
 
 /// <summary>
 /// Bencode constructor. Pass a Bencode string to be initially parsed.
