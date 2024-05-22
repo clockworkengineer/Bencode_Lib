@@ -100,7 +100,7 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
     lastKey = key;
     // Check key not duplicate and insert
     if (!BRef<Dictionary>(dictionary).contains(key)) {
-      BRef<Dictionary>(dictionary).add(Dictionary::Entry(key, decode(source)));
+      BRef<Dictionary>(dictionary).add(Dictionary::Entry(key, decodeTree(source)));
     } else {
       throw SyntaxError("Duplicate dictionary key.");
     }
@@ -121,7 +121,7 @@ BNode Bencode_Decoder::decodeList(ISource &source) {
   BNode list = BNode::make<List>();
   source.next();
   while (source.more() && source.current() != 'e') {
-    BRef<List>(list).add(decode(source));
+    BRef<List>(list).add(decodeTree(source));
   }
   if (source.current() != 'e') {
     throw SyntaxError("Missing end terminator on list.");
@@ -131,25 +131,22 @@ BNode Bencode_Decoder::decodeList(ISource &source) {
 }
 
 /// <summary>
-/// Decode a BNode from the input stream of characters referenced by ISource.In
-/// order to traverse
-///  and decode complex encodings this method is called recursively to build up a
-///  BNode structure.
+/// Decode a BNode tree root.
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Bencode_Decoder::decode(ISource &source) {
+BNode Bencode_Decoder::decodeTree(ISource &source) {
   switch (source.current()) {
-  // Dictionary BNode
+    // Dictionary BNode
   case 'd':
     return decodeDictionary(source);
-  // List BNode
+    // List BNode
   case 'l':
     return decodeList(source);
-  // Integer BNode
+    // Integer BNode
   case 'i':
     return decodeInteger(source);
-  // String BNode
+    // String BNode
   case '0':
   case '1':
   case '2':
@@ -164,7 +161,17 @@ BNode Bencode_Decoder::decode(ISource &source) {
   default:
     throw SyntaxError("Expected integer, string, list or dictionary not present.");
   }
+}
 
+/// <summary>
+/// Decode a BNode from the input stream of characters referenced by ISource.In
+/// order to traverse and decode complex encodings this method is called
+/// recursively to build up a BNode structure.
+/// </summary>
+/// <param name="source">Reference to input interface used to decode Bencoded
+/// stream.</param> <returns>Root BNode.</returns>
+BNode Bencode_Decoder::decode(ISource &source) {
+  return(decodeTree(source));
 }
 
 } // namespace Bencode_Lib
