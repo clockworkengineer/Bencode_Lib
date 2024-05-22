@@ -71,7 +71,6 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/io
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/variants
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/translator
-  ${PROJECT_SOURCE_DIR}/classes/include/external
   ${PROJECT_BINARY_DIR})
 
 # Add tests
