@@ -136,9 +136,9 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
   }
 }
 TEST_CASE("Encode generated exceptions", "[Bencode][Encode][Exceptions]") {
-  const Bencode bEncode;
   SECTION("Encode called with no BNode tree to encode",
           "[Bencode][Encode][Exceptions]") {
+    const Bencode bEncode;
     BufferDestination destination;
     REQUIRE_THROWS_AS(bEncode.encode(destination), Error);
     REQUIRE_THROWS_WITH(bEncode.encode(destination),

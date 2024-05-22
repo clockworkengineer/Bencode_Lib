@@ -9,31 +9,31 @@
 
 using namespace Bencode_Lib;
 
-class Bencode_Analyzer : public IAction {
+class Bencode_Analyzer final : public IAction {
 public:
   Bencode_Analyzer() = default;
-  virtual ~Bencode_Analyzer() = default;
-  virtual void onBNode([[maybe_unused]] const BNode &bNode) override {
+  ~Bencode_Analyzer() override = default;
+  void onBNode([[maybe_unused]] const BNode &bNode) override {
     totalNodes++;
   }
-  virtual void onString([[maybe_unused]] const BNode &bNode) override {
+  void onString([[maybe_unused]] const BNode &bNode) override {
     totalStrings++;
   }
-  virtual void onInteger([[maybe_unused]] const BNode &bNode) override {
+  void onInteger([[maybe_unused]] const BNode &bNode) override {
     totalIntegers++;
   }
-  virtual void onList([[maybe_unused]] const BNode &bNode) override {
+  void onList([[maybe_unused]] const BNode &bNode) override {
     totalLists++;
   }
-  virtual void onDictionary([[maybe_unused]] const BNode &bNode) override {
+  void onDictionary([[maybe_unused]] const BNode &bNode) override {
     totalDictionarys++;
   }
   // Non-const api not used
-  virtual void onInteger([[maybe_unused]] BNode &bNode) override {}
-  virtual void onList([[maybe_unused]] BNode &bNode) override {}
-  virtual void onDictionary([[maybe_unused]] BNode &bNode) override {}
-  virtual void onBNode([[maybe_unused]] BNode &bNode) override {}
-  virtual void onString([[maybe_unused]] BNode &bNode) override {}
+  void onInteger([[maybe_unused]] BNode &bNode) override {}
+  void onList([[maybe_unused]] BNode &bNode) override {}
+  void onDictionary([[maybe_unused]] BNode &bNode) override {}
+  void onBNode([[maybe_unused]] BNode &bNode) override {}
+  void onString([[maybe_unused]] BNode &bNode) override {}
 
   int64_t totalNodes{};
   int64_t totalDictionarys{};

@@ -92,7 +92,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
   }
   SECTION("Decode a string with zero length", "[Bencode][Decode][String]") {
     REQUIRE_NOTHROW(bEncode.decode(BufferSource{"0:"}));
-    REQUIRE(BRef<String>(bEncode.root()).value() == "");
+    REQUIRE(BRef<String>(bEncode.root()).value().empty());
   }
   SECTION("Decode a string with no length", "[Bencode][Decode][String]") {
     REQUIRE_THROWS_AS(bEncode.decode(BufferSource{":"}), SyntaxError);

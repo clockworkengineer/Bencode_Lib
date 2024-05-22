@@ -11,12 +11,12 @@ using namespace Bencode_Lib;
 /// <summary>
 /// Prefix path to test data file name.
 /// </summary>
-/// <param name="name">Test data file name</param>
+/// <param name="file">Test data file name</param>
 /// <returns>Full path to test data file</returns>
 std::string prefixTestDataPath(const std::string &file) {
-  std::filesystem::path currentPath =
+  const std::filesystem::path currentPath =
       std::filesystem::current_path() / "files" / file;
-  return (currentPath.string());
+  return currentPath.string();
 }
 /// <summary>
 /// Compare two Bencoded files.
@@ -36,9 +36,9 @@ bool compareFiles(const std::string &fileName1, const std::string &fileName2) {
   // seek back to beginning and use std::equal to compare contents
   file1.seekg(0, std::ifstream::beg);
   file2.seekg(0, std::ifstream::beg);
-  return std::equal(std::istreambuf_iterator<char>(file1.rdbuf()),
+  return std::equal(std::istreambuf_iterator(file1.rdbuf()),
                     std::istreambuf_iterator<char>(),
-                    std::istreambuf_iterator<char>(file2.rdbuf()));
+                    std::istreambuf_iterator(file2.rdbuf()));
 }
 /// <summary>
 /// Open a Bencoded file, read its contents into a string buffer and return
@@ -52,5 +52,5 @@ std::string readBencodedBytesFromFile(const std::string &bencodedFileName) {
   std::ostringstream bencodedFileBuffer;
   bencodedFileBuffer << bencodedFile.rdbuf();
   bencodedFile.close();
-  return (bencodedFileBuffer.str());
+  return bencodedFileBuffer.str();
 }
