@@ -9,15 +9,15 @@
 class Bencode_Analyzer : public Bencode_Lib::IAction {
 public:
   Bencode_Analyzer() = default;
-  virtual ~Bencode_Analyzer() = default;
+  ~Bencode_Analyzer() override = default;
   // Add BNode details to analysis
-  virtual void
+  void
   onBNode([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
     totalNodes++;
   }
   // Add string details to analysis
-  virtual void onString(const Bencode_Lib::BNode &bNode) override {
-    const Bencode_Lib::String &bNodeString = BRef<Bencode_Lib::String>(bNode);
+  void onString(const Bencode_Lib::BNode &bNode) override {
+    const auto &bNodeString = BRef<Bencode_Lib::String>(bNode);
     totalStrings++;
     sizeInBytes += sizeof(Bencode_Lib::String);
     sizeInBytes += bNodeString.value().size();
@@ -25,14 +25,14 @@ public:
     uniqueStrings.insert(bNodeString.value());
   }
   // Add integer details to analysis
-  virtual void
+  void
   onInteger([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
     totalIntegers++;
     sizeInBytes += sizeof(Bencode_Lib::Integer);
   }
   // Add list details to analysis
-  virtual void onList(const Bencode_Lib::BNode &bNode) override {
-    const Bencode_Lib::List &bNodeList = BRef<Bencode_Lib::List>(bNode);
+  void onList(const Bencode_Lib::BNode &bNode) override {
+    const auto &bNodeList = BRef<Bencode_Lib::List>(bNode);
     totalLists++;
     sizeInBytes += sizeof(Bencode_Lib::List);
     maxListSize = std::max(bNodeList.size(), static_cast<int>(maxListSize));
@@ -41,8 +41,8 @@ public:
     }
   }
   // Add dictionary details to analysis
-  virtual void onDictionary(const Bencode_Lib::BNode &bNode) override {
-    const Bencode_Lib::Dictionary &bNodeDictionary =
+  void onDictionary(const Bencode_Lib::BNode &bNode) override {
+    const auto &bNodeDictionary =
         BRef<Bencode_Lib::Dictionary>(bNode);
     totalDictionarys++;
     sizeInBytes += sizeof(Bencode_Lib::Dictionary);
@@ -58,14 +58,14 @@ public:
     }
   }
   // Non-const api not used
-  virtual void onInteger([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  virtual void onList([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  virtual void
+  void onInteger([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
+  void onList([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
+  void
   onDictionary([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  virtual void onBNode([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  virtual void onString([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
+  void onBNode([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
+  void onString([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
   // Output analysis details
-  std::string dump() {
+  [[nodiscard]] std::string dump() const {
     std::stringstream os;
     os << "\n------------------Bencode Tree Stats------------------\n";
     os << "Bencode Tree contains " << totalNodes << " nodes.\n";

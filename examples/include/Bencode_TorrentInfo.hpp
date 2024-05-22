@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <string>
 #include <sstream>
+#include <utility>
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
@@ -17,14 +18,14 @@ struct TorrentInfo {
   using Integer = Bencode_Lib::Integer;
   // File details
   struct FileDetails {
-    FileDetails(const std::string &path, std::uint64_t length)
-        : path(path), length(length) {}
+    FileDetails(std::string path, const std::uint64_t length)
+        : path(std::move(path)), length(length) {}
     std::string path;       // Full file path name
     std::uint64_t length{}; // File length in bytes
   };
   // Constructors/destructors
   TorrentInfo() = default;
-  TorrentInfo(const std::string &fileName) { load(fileName); }
+  explicit TorrentInfo(const std::string &fileName) { load(fileName); }
   TorrentInfo(const TorrentInfo &other) = delete;
   TorrentInfo &operator=(const TorrentInfo &other) = delete;
   TorrentInfo(TorrentInfo &&other) = delete;
@@ -38,19 +39,19 @@ struct TorrentInfo {
   std::string dump();
 
 private:
-  std::string getString(const Dictionary &bNode, const char *field) {
+  static std::string getString(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
       return (BRef<String>(bNode[field]).value());
     }
     return ("");
   }
-  std::uint64_t getInteger(const Dictionary &bNode, const char *field) {
+  static std::uint64_t getInteger(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
       return (BRef<Integer>(bNode[field]).value());
     }
     return (0);
   }
-  std::vector<std::string> getAnnounceList(const Dictionary &bNode) {
+  static std::vector<std::string> getAnnounceList(const Dictionary &bNode) {
     // This is meant to be a simple list of strings but for some reason each
     // string is encased in its own list for an extra level (bug ?).
     if (bNode.contains("announce-list")) {
@@ -64,7 +65,7 @@ private:
     }
     return (std::vector<std::string>{});
   }
-  std::string getFilePath(const Dictionary &bNode) {
+  static std::string getFilePath(const Dictionary &bNode) {
     if (bNode.contains("path")) {
       std::filesystem::path path{};
       for (auto &folder : BRef<List>(bNode["path"]).value()) {
@@ -74,7 +75,7 @@ private:
     }
     return ("");
   }
-  std::vector<TorrentInfo::FileDetails> getFilesList(const Dictionary &bNode) {
+  static std::vector<TorrentInfo::FileDetails> getFilesList(const Dictionary &bNode) {
     if (bNode.contains("files")) {
       std::vector<FileDetails> fileList;
       for (auto &file : BRef<List>(bNode["files"]).value()) {
@@ -123,7 +124,6 @@ private:
 /// <summary>
 /// Load torrent file meta information into a structure for processing.
 /// </summary>
-/// <param name="bNode">Root BNode of decoded torrent file.</param>
 inline void TorrentInfo::populate() {
   if (!bEncode.root().isDictionary()) {
     throw Bencode_Lib::Error("Valid torrent file not found.");
@@ -150,8 +150,6 @@ inline void TorrentInfo::populate() {
 /// <summary>
 /// Display to stdout meta information for torrent file.
 /// </summary>
-/// <param name="fileName">Torrent file name</param>
-/// <param name="info">Meta information</param>
 inline std::string TorrentInfo::dump() {
   std::stringstream os;
   os << "\n------------------------------------------------------------\n";

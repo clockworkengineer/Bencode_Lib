@@ -22,7 +22,7 @@ public:
     return (fileList);
   }
   static std::string createFileName(const std::string &torrentFileName,
-                                    const std::string newExtension) {
+                                    const std::string &newExtension) {
     std::string newFileName = torrentFileName;
     return (
         newFileName.erase(newFileName.find(".torrent"), newFileName.length()) +
