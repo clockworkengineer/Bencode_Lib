@@ -22,13 +22,13 @@ public:
   BNode decode(ISource &source) override;
 
 private:
-  static int64_t extractInteger(ISource &source);
-  static std::string extractString(ISource &source);
-  static BNode decodeString(ISource &source);
-  static BNode decodeInteger(ISource &source);
-  static BNode decodeDictionary(ISource &source);
-  static BNode decodeList(ISource &source);
-  static BNode decodeTree(ISource &source);
+  [[nodiscard]] static int64_t extractInteger(ISource &source);
+  [[nodiscard]] static std::string extractString(ISource &source);
+  [[nodiscard]] static BNode decodeString(ISource &source);
+  [[nodiscard]] static BNode decodeInteger(ISource &source);
+  [[nodiscard]] static BNode decodeDictionary(ISource &source);
+  [[nodiscard]] static BNode decodeList(ISource &source);
+  [[nodiscard]] static BNode decodeTree(ISource &source);
 };
 
 } // namespace Bencode_Lib
