@@ -57,13 +57,6 @@ public:
       totalKeys++;
     }
   }
-  // Non-const api not used
-  void onInteger([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  void onList([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  void
-  onDictionary([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  void onBNode([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
-  void onString([[maybe_unused]] Bencode_Lib::BNode &bNode) override {}
   // Output analysis details
   [[nodiscard]] std::string dump() const {
     std::stringstream os;

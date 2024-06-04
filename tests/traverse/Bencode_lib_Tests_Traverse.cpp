@@ -28,12 +28,6 @@ public:
   void onDictionary([[maybe_unused]] const BNode &bNode) override {
     totalDictionarys++;
   }
-  // Non-const api not used
-  void onInteger([[maybe_unused]] BNode &bNode) override {}
-  void onList([[maybe_unused]] BNode &bNode) override {}
-  void onDictionary([[maybe_unused]] BNode &bNode) override {}
-  void onBNode([[maybe_unused]] BNode &bNode) override {}
-  void onString([[maybe_unused]] BNode &bNode) override {}
 
   int64_t totalNodes{};
   int64_t totalDictionarys{};
