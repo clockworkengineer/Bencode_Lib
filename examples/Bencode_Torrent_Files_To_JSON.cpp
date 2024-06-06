@@ -28,7 +28,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
                 << torrentFileName;
     }
   } catch (const std::exception &ex) {
-    std::cout << "Error Processing Torrent File: [" << ex.what() << "]\n";
+    PLOG_ERROR << "Error Processing Torrent File: [" << ex.what() << "]\n";
   }
   PLOG_INFO << "BencodeTorrent_Files_To_JSON exited.";
   exit(EXIT_SUCCESS);

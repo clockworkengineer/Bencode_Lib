@@ -41,7 +41,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
     try {
       processBencodeFile(fileName);
     } catch (std::exception &ex) {
-      std::cout << ex.what() << "\n";
+      PLOG_ERROR << "Error: " << ex.what();
     }
   }
   PLOG_INFO << "Bencode_Analyze_File exited.";
