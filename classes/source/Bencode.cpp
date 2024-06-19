@@ -1,7 +1,7 @@
 //
 // Class: Bencode
 //
-// Description: Perform Bencode encoding encode/decode to/from a byte
+// Description: Perform Bencode encode/decode to/from a byte
 // buffer or file. It is also  possible to customize this with the
 // ISource and IDestination interfaces if required. Although Bencoded
 // data is treated as std::byte externally this library uses char and
@@ -22,7 +22,8 @@ namespace Bencode_Lib {
 /// Initialise the implementation layer.
 /// </summary>
 
-Bencode::Bencode(IEncoder *encoder, IDecoder *decoder)
+Bencode::Bencode([[maybe_unused]] IEncoder *encoder,
+                 [[maybe_unused]] IDecoder *decoder)
     : implementation(std::make_unique<Bencode_Impl>(encoder, decoder)) {}
 Bencode::~Bencode() = default;
 
@@ -82,7 +83,7 @@ void Bencode::encode(IDestination &&destination) const {
 /// </summary>
 /// <param name="action">Action methods to call during traversal.</param>
 /// Traverse using non-const Bencode so can change Bencode tree
-void Bencode::traverse(IAction &action) { implementation->traverse(action); }
+[[maybe_unused]] void Bencode::traverse(IAction &action) { implementation->traverse(action); }
 // Traverse using const Bencode so cannot change Bencode tree
 void Bencode::traverse(IAction &action) const {
   std::as_const(*implementation).traverse(action);

@@ -14,7 +14,7 @@
 
 namespace Bencode_Lib {
 
-// Need size information for destructor to cleanup uniqute_ptr to
+// Need size information for destructor to clean up unique_ptr to
 // encoder/decoder.
 Bencode_Impl::Bencode_Impl(IEncoder *encoder, IDecoder *decoder) {
   if (encoder == nullptr) {

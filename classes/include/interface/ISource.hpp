@@ -36,6 +36,6 @@ public:
   // ===================================
   // Reset to beginning of source stream
   // ===================================
-  virtual void reset() = 0;
+  [[maybe_unused]] virtual void reset() = 0;
 };
 } // namespace Bencode_Lib

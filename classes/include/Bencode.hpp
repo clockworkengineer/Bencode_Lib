@@ -22,7 +22,7 @@ struct BNode;
 class Bencode {
 
 public:
-  // Possible Bencode BNode intitializer types
+  // Possible Bencode BNode initializer types
   using intializerListTypes =
       std::variant<int, long, long long, float, double, long double, bool,
                    std::string, std::nullptr_t, BNode>;
@@ -32,7 +32,8 @@ public:
   using DictionaryInitializer =
       std::initializer_list<std::pair<std::string, intializerListTypes>>;
   // Constructors/Destructors
-  explicit Bencode(IEncoder *encoder = nullptr, IDecoder *decoder = nullptr);
+  explicit Bencode([[maybe_unused]] IEncoder *encoder = nullptr,
+                   [[maybe_unused]] IDecoder *decoder = nullptr);
   // Pass in default JSON to parse
   explicit Bencode(const std::string &bencodeString);
   // Construct array
@@ -56,9 +57,9 @@ public:
   [[nodiscard]] BNode &root();
   [[nodiscard]] const BNode &root() const;
   // Traverse Bencode tree
-  void traverse(IAction &action);
+  [[maybe_unused]] void traverse(IAction &action);
   void traverse(IAction &action) const;
-  // Search for Bencode dictinary entry with a given key
+  // Search for Bencode dictionary entry with a given key
   BNode &operator[](const std::string &key);
   const BNode &operator[](const std::string &key) const;
   // Get Bencode list entry at index

@@ -22,7 +22,7 @@ template <typename T> BNode::BNode(T value) {
     bNodeVariant = std::move(value);
   }
 }
-// Convert intializer list type to BNode
+// Convert initializer list type to BNode
 inline BNode BNode::typeToBNode(const Bencode::intializerListTypes &type) {
   if (const auto pValue = std::get_if<int>(&type)) {
     return BNode(*pValue);

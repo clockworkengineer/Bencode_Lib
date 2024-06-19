@@ -21,7 +21,7 @@ public:
   Bencode_Impl(Bencode_Impl &&other) = delete;
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
   ~Bencode_Impl();
-  // Decode Bencoder file into BNode tree
+  // Decode Bencoded file into BNode tree
   void decode(ISource &source);
   // Encode BNode tree
   void encode(IDestination &destination) const;
@@ -30,7 +30,7 @@ public:
   // Return root BNode of tree
   [[nodiscard]] BNode &root() { return bNodeRoot; }
   [[nodiscard]] const BNode &root() const { return bNodeRoot; }
-  // Travse BNode tree
+  // Traverse BNode tree
   void traverse(IAction &action);
   void traverse(IAction &action) const;
   // Search for Bencode dictionary entry with a given key
