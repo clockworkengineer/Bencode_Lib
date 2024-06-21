@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+
 namespace Bencode_Lib {
     
 struct Hole : Variant {

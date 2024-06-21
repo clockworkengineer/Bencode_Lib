@@ -8,7 +8,6 @@ namespace Bencode_Lib {
 // ====================
 // Forward declarations
 // ====================
-
 class ISource;
 struct BNode;
 

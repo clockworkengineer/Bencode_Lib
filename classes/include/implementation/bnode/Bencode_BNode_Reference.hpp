@@ -28,11 +28,11 @@ template <typename T> void CheckBNodeType(const BNode &bNodeVariant) {
 }
 template <typename T> T &BRef(BNode &bNode) {
   CheckBNodeType<T>(bNode);
-  return static_cast<T &>(*bNode.getVariant());
+  return static_cast<T &>(bNode.getVariant());
 }
 template <typename T> const T &BRef(const BNode &bNode) {
   CheckBNodeType<T>(bNode);
-  return static_cast<const T &>(*bNode.getVariant());
+  return static_cast<const T &>(bNode.getVariant());
 }
 
 } // namespace Bencode_Lib

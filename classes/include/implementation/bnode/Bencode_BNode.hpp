@@ -41,11 +41,11 @@ struct BNode {
   }
   [[nodiscard]] bool isHole() const { return bNodeVariant->isHole(); }
   // Get reference to BNode variant
-  [[nodiscard]] std::unique_ptr<Variant> &getVariant() {
-    return bNodeVariant;
+  [[nodiscard]] Variant &getVariant() {
+    return *bNodeVariant;
   }
-  [[nodiscard]] const std::unique_ptr<Variant> &getVariant() const {
-    return bNodeVariant;
+  [[nodiscard]] const Variant &getVariant() const {
+    return *bNodeVariant;
   }
   // Make BNode
   template <typename T, typename... Args> static auto make(Args &&...args) {

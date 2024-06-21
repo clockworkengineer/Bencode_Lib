@@ -5,17 +5,13 @@
 #include <variant>
 
 #include "Bencode_Config.hpp"
+#include "Bencode_Interfaces.hpp"
 
 namespace Bencode_Lib {
 
-// ===========================================================
-// Bencode forward declarations for interfaces/classes/structs
-// ===========================================================
-class IAction;
-class ISource;
-class IDestination;
-class IEncoder;
-class IDecoder;
+// ============================
+// Bencode forward declarations
+// ============================
 class Bencode_Impl;
 struct BNode;
 
