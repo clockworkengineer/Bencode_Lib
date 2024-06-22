@@ -71,26 +71,36 @@ struct Dictionary : Variant {
 
 private:
   // Search for a given entry given a key
-  [[nodiscard]] std::vector<Entry>::iterator
-  findKey(std::vector<Entry> &dictionary, const std::string &key) {
-    return std::ranges::find_if(dictionary, [&key](Entry &entry) -> bool {
-      return entry.getKey() == key;
-    });
-  }
-  [[nodiscard]] std::vector<Entry>::const_iterator
-  findKey(const std::vector<Entry> &dictionary, const std::string &key) const {
-    return std::ranges::find_if(
-        dictionary,
-        [&key](const Entry &entry) -> bool { return entry.getKey() == key; });
-  }
+  [[nodiscard]] static std::vector<Entry>::iterator
+  findKey(std::vector<Entry> &dictionary, const std::string &key);
+  [[nodiscard]] static std::vector<Entry>::const_iterator
+  findKey(const std::vector<Entry> &dictionary, const std::string &key);
   // Find place for entry in ordered dictionary
-  std::vector<Entry>::iterator findEntry(std::vector<Entry> &dictionary,
-                                         const Entry &entry) {
-    return std::ranges::find_if(dictionary,
-                                [&entry](const Entry &current) -> bool {
-                                  return current.getKey() >= entry.getKey();
-                                });
-  }
+  [[nodiscard]] static std::vector<Entry>::iterator
+  findEntry(std::vector<Entry> &dictionary, const Entry &entry);
+
   std::vector<Entry> bNodeDictionary;
 };
+[[nodiscard]] inline std::vector<Dictionary::Entry>::iterator
+Dictionary::findKey(std::vector<Entry> &dictionary, const std::string &key) {
+  return std::ranges::find_if(dictionary, [&key](Entry &entry) -> bool {
+    return entry.getKey() == key;
+  });
+}
+[[nodiscard]] inline std::vector<Dictionary::Entry>::const_iterator
+Dictionary::findKey(const std::vector<Dictionary::Entry> &dictionary,
+                    const std::string &key) {
+  return std::ranges::find_if(dictionary, [&key](const Entry &entry) -> bool {
+    return entry.getKey() == key;
+  });
+}
+// Find place for entry in ordered dictionary
+[[nodiscard]] inline std::vector<Dictionary::Entry>::iterator
+Dictionary::findEntry(std::vector<Dictionary::Entry> &dictionary,
+                      const Entry &entry) {
+  return std::ranges::find_if(dictionary,
+                              [&entry](const Entry &current) -> bool {
+                                return current.getKey() >= entry.getKey();
+                              });
+}
 } // namespace Bencode_Lib
