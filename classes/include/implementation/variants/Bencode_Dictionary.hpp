@@ -38,26 +38,28 @@ struct Dictionary : Variant {
   ~Dictionary() = default;
   // Add array element
   void add(Entry &entry) {
-    bNodeDictionary.insert(findEntry(entry), std::move(entry));
+    bNodeDictionary.insert(findEntry(bNodeDictionary, entry), std::move(entry));
   }
   void add(Entry &&entry) {
-    bNodeDictionary.insert(findEntry(entry), std::move(entry));
+    bNodeDictionary.insert(findEntry(bNodeDictionary, entry), std::move(entry));
   }
   [[nodiscard]] bool contains(const std::string &key) const {
-    const auto it = findKey(key);
+    const auto it = findKey(bNodeDictionary, key);
     return it != bNodeDictionary.end();
   }
   [[nodiscard]] int size() const {
     return static_cast<int>(bNodeDictionary.size());
   }
   BNode &operator[](const std::string &key) {
-    if (const auto it = findKey(key); it != bNodeDictionary.end()) {
+    if (const auto it = findKey(bNodeDictionary, key);
+        it != bNodeDictionary.end()) {
       return it->getBNode();
     }
     throw Error("Invalid key used in dictionary.");
   }
   const BNode &operator[](const std::string &key) const {
-    if (const auto it = findKey(key); it != bNodeDictionary.end()) {
+    if (const auto it = findKey(bNodeDictionary, key);
+        it != bNodeDictionary.end()) {
       return it->getBNode();
     }
     throw Error("Invalid key used in dictionary.");
@@ -69,19 +71,22 @@ struct Dictionary : Variant {
 
 private:
   // Search for a given entry given a key
-  [[nodiscard]] std::vector<Entry>::iterator findKey(const std::string &key) {
-    return std::ranges::find_if(bNodeDictionary,
-        [&key](Entry &entry) -> bool { return entry.getKey() == key; });
+  [[nodiscard]] std::vector<Entry>::iterator
+  findKey(std::vector<Entry> &dictionary, const std::string &key) {
+    return std::ranges::find_if(dictionary, [&key](Entry &entry) -> bool {
+      return entry.getKey() == key;
+    });
   }
   [[nodiscard]] std::vector<Entry>::const_iterator
-  findKey(const std::string &key) const {
+  findKey(const std::vector<Entry> &dictionary, const std::string &key) const {
     return std::ranges::find_if(
-        bNodeDictionary,
+        dictionary,
         [&key](const Entry &entry) -> bool { return entry.getKey() == key; });
   }
   // Find place for entry in ordered dictionary
-  std::vector<Entry>::iterator findEntry(const Entry &entry) {
-    return std::ranges::find_if(bNodeDictionary,
+  std::vector<Entry>::iterator findEntry(std::vector<Entry> &dictionary,
+                                         const Entry &entry) {
+    return std::ranges::find_if(dictionary,
                                 [&entry](const Entry &current) -> bool {
                                   return current.getKey() >= entry.getKey();
                                 });
