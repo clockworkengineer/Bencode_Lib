@@ -5,6 +5,11 @@
 namespace Bencode_Lib {
 
 struct List : Variant {
+  // List Error
+  struct Error final : std::runtime_error {
+    explicit Error(const std::string &message)
+        : std::runtime_error("List Error: " + message) {}
+  };
   // Constructors/Destructors
   List() : Variant(Type::list){}
   List(const List &other) = default;
@@ -26,13 +31,13 @@ struct List : Variant {
     if (index >= 0 && index < static_cast<int>(bNodeList.size())) {
       return bNodeList[index];
     }
-    throw BNode::Error("Invalid index used in list.");
+    throw Error("Invalid index used in list.");
   }
   const BNode &operator[](const int index) const {
     if (index >= 0 && index < static_cast<int>(bNodeList.size())) {
       return bNodeList[index];
     }
-    throw BNode::Error("Invalid index used in list.");
+    throw Error("Invalid index used in list.");
   }
   // Resize Array
   void resize(const std::size_t index) {

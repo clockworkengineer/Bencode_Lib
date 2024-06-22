@@ -71,7 +71,7 @@ BNode &Bencode_Impl::operator[](const std::string &key) {
       bNodeRoot = BNode::make<Dictionary>();
     }
     return bNodeRoot[key];
-  } catch ([[maybe_unused]] BNode::Error &error) {
+  } catch ([[maybe_unused]] Dictionary::Error &error) {
     BRef<Dictionary>(bNodeRoot).add(
         Dictionary::Entry(key, BNode::make<Hole>()));
     return bNodeRoot[key];

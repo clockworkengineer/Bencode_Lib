@@ -9,6 +9,11 @@
 namespace Bencode_Lib {
 
 struct Dictionary : Variant {
+  // Dictionary Error
+  struct Error final : std::runtime_error {
+    explicit Error(const std::string &message)
+        : std::runtime_error("Dictionary Error: " + message) {}
+  };
   // Dictionary entry
   struct Entry {
     Entry(std::string key, BNode &bNode)
@@ -49,13 +54,13 @@ struct Dictionary : Variant {
     if (const auto it = findKey(key); it != bNodeDictionary.end()) {
       return it->getBNode();
     }
-    throw BNode::Error("Invalid key used in dictionary.");
+    throw Error("Invalid key used in dictionary.");
   }
   const BNode &operator[](const std::string &key) const {
     if (const auto it = findKey(key); it != bNodeDictionary.end()) {
       return it->getBNode();
     }
-    throw BNode::Error("Invalid key used in dictionary.");
+    throw Error("Invalid key used in dictionary.");
   }
   [[nodiscard]] std::vector<Entry> &value() { return bNodeDictionary; }
   [[nodiscard]] const std::vector<Entry> &value() const {
