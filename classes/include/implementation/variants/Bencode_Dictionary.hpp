@@ -17,17 +17,17 @@ struct Dictionary : Variant {
   // Dictionary entry
   struct Entry {
     Entry(std::string key, BNode &bNode)
-        : entryKey(std::move(key)), entryBNode(std::move(bNode)) {}
+        : key(std::move(key)), bNode(std::move(bNode)) {}
     Entry(std::string key, BNode &&bNode)
-        : entryKey(std::move(key)), entryBNode(std::move(bNode)) {}
-    std::string &getKey() { return entryKey; }
-    [[nodiscard]] const std::string &getKey() const { return entryKey; }
-    BNode &getBNode() { return entryBNode; }
-    [[nodiscard]] const BNode &getBNode() const { return entryBNode; }
+        : key(std::move(key)), bNode(std::move(bNode)) {}
+    std::string &getKey() { return key; }
+    [[nodiscard]] const std::string &getKey() const { return key; }
+    BNode &getBNode() { return bNode; }
+    [[nodiscard]] const BNode &getBNode() const { return bNode; }
 
   private:
-    std::string entryKey;
-    BNode entryBNode;
+    std::string key;
+    BNode bNode;
   };
   // Constructors/Destructors
   Dictionary() : Variant(Type::dictionary) {}
