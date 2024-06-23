@@ -27,7 +27,7 @@ struct Dictionary : Variant {
 
   private:
     std::string key;
-    BNode bNode;
+    BNode bNode{};
   };
   // Constructors/Destructors
   Dictionary() : Variant(Type::dictionary) {}
@@ -38,10 +38,16 @@ struct Dictionary : Variant {
   ~Dictionary() = default;
   // Add array element
   void add(Entry &entry) {
-    bNodeDictionary.insert(findEntry(bNodeDictionary, entry), std::move(entry));
+    bNodeDictionary.emplace_back(std::move(entry));
+    std::ranges::sort(bNodeDictionary, [](const Entry &a, const Entry &b) {
+      return a.getKey() < b.getKey();
+    });
   }
   void add(Entry &&entry) {
-    bNodeDictionary.insert(findEntry(bNodeDictionary, entry), std::move(entry));
+    bNodeDictionary.emplace_back(std::move(entry));
+    std::ranges::sort(bNodeDictionary, [](const Entry &a, const Entry &b) {
+      return a.getKey() < b.getKey();
+    });
   }
   [[nodiscard]] bool contains(const std::string &key) const {
     const auto it = findKey(bNodeDictionary, key);
@@ -75,9 +81,6 @@ private:
   findKey(std::vector<Entry> &dictionary, const std::string &key);
   [[nodiscard]] static std::vector<Entry>::const_iterator
   findKey(const std::vector<Entry> &dictionary, const std::string &key);
-  // Find place for entry in ordered dictionary
-  [[nodiscard]] static std::vector<Entry>::iterator
-  findEntry(std::vector<Entry> &dictionary, const Entry &entry);
 
   std::vector<Entry> bNodeDictionary;
 };
@@ -93,14 +96,5 @@ Dictionary::findKey(const std::vector<Dictionary::Entry> &dictionary,
   return std::ranges::find_if(dictionary, [&key](const Entry &entry) -> bool {
     return entry.getKey() == key;
   });
-}
-// Find place for entry in ordered dictionary
-[[nodiscard]] inline std::vector<Dictionary::Entry>::iterator
-Dictionary::findEntry(std::vector<Dictionary::Entry> &dictionary,
-                      const Entry &entry) {
-  return std::ranges::find_if(dictionary,
-                              [&entry](const Entry &current) -> bool {
-                                return current.getKey() >= entry.getKey();
-                              });
 }
 } // namespace Bencode_Lib
