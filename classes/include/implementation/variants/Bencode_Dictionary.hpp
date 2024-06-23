@@ -36,15 +36,10 @@ struct Dictionary : Variant {
   Dictionary(Dictionary &&other) = default;
   Dictionary &operator=(Dictionary &&other) = default;
   ~Dictionary() = default;
-  // Add array element
-  void add(Entry &entry) {
-    bNodeDictionary.emplace_back(std::move(entry));
-    std::ranges::sort(bNodeDictionary, [](const Entry &a, const Entry &b) {
-      return a.getKey() < b.getKey();
-    });
-  }
-  void add(Entry &&entry) {
-    bNodeDictionary.emplace_back(std::move(entry));
+  // Add Entry to Dictionary
+  template<typename T>
+  void add(T&& entry) {
+    bNodeDictionary.emplace_back(std::forward<T>(entry));
     std::ranges::sort(bNodeDictionary, [](const Entry &a, const Entry &b) {
       return a.getKey() < b.getKey();
     });
