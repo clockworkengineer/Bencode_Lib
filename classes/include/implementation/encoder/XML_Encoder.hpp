@@ -1,18 +1,12 @@
 #pragma once
-
 #include <algorithm>
 
-#include "Bencode.hpp"
-#include "Bencode_Core.hpp"
-#include "XML_Translator.hpp"
-
-#pragma once
-#include <algorithm>
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 #include "XML_Translator.hpp"
 
 namespace Bencode_Lib {
+
 class XML_Encoder final : public IEncoder {
 public:
   // Constructors/destructors

@@ -38,7 +38,7 @@ Bencode::Bencode(const std::string &bencodeString) : Bencode() {
 /// <summary>
 /// Bencode constructor (list).
 /// </summary>
-/// <param name="list">Intialiser list of single values or JNode.</param>
+/// <param name="list">Initializer list of single values or JNode.</param>
 Bencode::Bencode(const ListInitializer &list) : Bencode() {
   this->root() = BNode(list);
 }
@@ -46,7 +46,7 @@ Bencode::Bencode(const ListInitializer &list) : Bencode() {
 /// <summary>
 /// Bencode constructor (dictionary).
 /// </summary>
-/// <param name="dictionary">Intialiser list of key/value(JNode) pairs.</param>
+/// <param name="dictionary">Initializer list of key/value(JNode) pairs.</param>
 Bencode::Bencode(const DictionaryInitializer &dictionary) : Bencode() {
   this->root() = BNode(dictionary);
 }

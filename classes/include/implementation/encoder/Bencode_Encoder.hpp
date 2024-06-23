@@ -2,7 +2,9 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 #include "Bencode_Translator.hpp"
+
 namespace Bencode_Lib {
+
 class Bencode_Encoder final : public IEncoder {
 public:
   // Constructors/Destructors
