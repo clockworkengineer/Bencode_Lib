@@ -74,10 +74,7 @@ BNode Bencode_Decoder::decodeString(ISource &source) {
 BNode Bencode_Decoder::decodeInteger(ISource &source) {
   source.next();
   int64_t integer = extractInteger(source);
-  if (source.current() != 'e') {
-    throw SyntaxError("Missing end terminator on integer value.");
-  }
-  source.next();
+  confirmBoundary(source, 'e');
   return BNode::make<Integer>(integer);
 }
 
@@ -105,10 +102,7 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
       throw SyntaxError("Duplicate dictionary key.");
     }
   }
-  if (source.current() != 'e') {
-    throw SyntaxError("Missing end terminator on dictionary.");
-  }
-  source.next();
+  confirmBoundary(source, 'e');
   return dictionary;
 }
 
@@ -123,10 +117,7 @@ BNode Bencode_Decoder::decodeList(ISource &source) {
   while (source.more() && source.current() != 'e') {
     BRef<List>(list).add(decodeTree(source));
   }
-  if (source.current() != 'e') {
-    throw SyntaxError("Missing end terminator on list.");
-  }
-  source.next();
+  confirmBoundary(source, 'e');
   return list;
 }
 
