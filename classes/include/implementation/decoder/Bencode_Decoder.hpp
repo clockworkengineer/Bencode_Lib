@@ -3,6 +3,8 @@
 #include <string>
 #include <array>
 #include <limits>
+#include <functional>
+#include <map>
 
 #include "Bencode_Core.hpp"
 
@@ -28,6 +30,7 @@ private:
   [[nodiscard]] static BNode decodeInteger(ISource &source);
   [[nodiscard]] static BNode decodeDictionary(ISource &source);
   [[nodiscard]] static BNode decodeList(ISource &source);
+  void static confirmBoundary(ISource &source, char expectedBoundary);
   [[nodiscard]] static BNode decodeTree(ISource &source);
 };
 

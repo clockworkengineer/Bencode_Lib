@@ -130,37 +130,40 @@ BNode Bencode_Decoder::decodeList(ISource &source) {
   return list;
 }
 
+void Bencode_Decoder::confirmBoundary(ISource &source, char expectedBoundary) {
+  if (source.current() != expectedBoundary) {
+    throw SyntaxError(std::string("Missing end terminator on ") + expectedBoundary);
+  }
+  source.next();
+}
 /// <summary>
 /// Decode a BNode tree root.
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
 BNode Bencode_Decoder::decodeTree(ISource &source) {
-  switch (source.current()) {
-    // Dictionary BNode
-  case 'd':
-    return decodeDictionary(source);
-    // List BNode
-  case 'l':
-    return decodeList(source);
-    // Integer BNode
-  case 'i':
-    return decodeInteger(source);
-    // String BNode
-  case '0':
-  case '1':
-  case '2':
-  case '3':
-  case '4':
-  case '5':
-  case '6':
-  case '7':
-  case '8':
-  case '9':
-    return decodeString(source);
-  default:
+  using DecoderFunc = std::function<BNode(void)>;
+  std::map<char, DecoderFunc> decoders = {
+      {'d', [&source]{ return decodeDictionary(source); }},
+      {'l', [&source]{ return decodeList(source); }},
+      {'i', [&source]{ return decodeInteger(source); }},
+      {'0', [&source]{ return decodeString(source); }},
+      {'1', [&source]{ return decodeString(source); }},
+      {'2', [&source]{ return decodeString(source); }},
+      {'3', [&source]{ return decodeString(source); }},
+      {'4', [&source]{ return decodeString(source); }},
+      {'5', [&source]{ return decodeString(source); }},
+      {'6', [&source]{ return decodeString(source); }},
+      {'7', [&source]{ return decodeString(source); }},
+      {'8', [&source]{ return decodeString(source); }},
+      {'9', [&source]{ return decodeString(source); }}
+  };
+
+  auto it = decoders.find(source.current());
+  if (it == decoders.end()) {
     throw SyntaxError("Expected integer, string, list or dictionary not present.");
   }
+  return it->second();
 }
 
 /// <summary>
