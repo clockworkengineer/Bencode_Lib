@@ -49,14 +49,14 @@ struct Dictionary : Variant {
     return static_cast<int>(bNodeDictionary.size());
   }
   BNode &operator[](const std::string &key) {
-    auto foundEntry = findEntryWithKey(key);
+    auto foundEntry = findEntryWithKey(bNodeDictionary,key);
+    return foundEntry->getBNode();
+  }
+  const BNode &operator[](const std::string &key) const {
+    auto foundEntry = findEntryWithKey(bNodeDictionary,key);
     return foundEntry->getBNode();
   }
 
-  const BNode &operator[](const std::string &key) const {
-    auto foundEntry = findEntryWithKey(key);
-    return foundEntry->getBNode();
-  }
   [[nodiscard]] std::vector<Entry> &value() { return bNodeDictionary; }
   [[nodiscard]] const std::vector<Entry> &value() const {
     return bNodeDictionary;
@@ -64,37 +64,36 @@ struct Dictionary : Variant {
 
 private:
 
-  static bool isKeyMatch(const Entry &entry, const std::string &key) {
-    return entry.getKey() == key;
+  template <typename T>
+  static auto findKeyHelper(T& dictionary, const std::string &key) {
+    return std::ranges::find_if(dictionary, [&key](auto &entry) -> bool {
+      return entry.getKey() == key;
+    });
   }
 
   [[nodiscard]] static std::vector<Entry>::iterator
   findKey(std::vector<Entry> &dictionary, const std::string &key) {
-    return std::ranges::find_if(dictionary, [&key](Entry &entry) -> bool {
-      return isKeyMatch(entry, key);
-    });
+    return findKeyHelper(dictionary, key);
   }
 
   [[nodiscard]] static std::vector<Entry>::const_iterator
   findKey(const std::vector<Entry> &dictionary, const std::string &key) {
-    return std::ranges::find_if(dictionary, [&key](const Entry &entry) -> bool {
-      return isKeyMatch(entry, key);
-    });
+    return findKeyHelper(dictionary, key);
   }
 
-  [[nodiscard]] std::vector<Entry>::const_iterator
-  findEntryWithKey(const std::string &key) const {
-    const auto it = findKey(bNodeDictionary, key);
-    if (it == bNodeDictionary.end()) {
+  [[nodiscard]] static std::vector<Entry>::const_iterator
+  findEntryWithKey(const std::vector<Entry> &dictionary,const std::string &key)  {
+    const auto it = findKey(dictionary, key);
+    if (it == dictionary.end()) {
       throw Error("Invalid key used in dictionary.");
     }
     return it;
   }
 
-  std::vector<Entry>::iterator
-  findEntryWithKey(const std::string &key) {
-    auto it = findKey(bNodeDictionary, key);
-    if (it == bNodeDictionary.end()) {
+  [[nodiscard]] static std::vector<Entry>::iterator
+  findEntryWithKey(std::vector<Entry> &dictionary,const std::string &key) {
+    auto it = findKey(dictionary, key);
+    if (it == dictionary.end()) {
       throw Error("Invalid key used in dictionary.");
     }
     return it;
