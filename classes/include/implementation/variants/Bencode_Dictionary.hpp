@@ -72,7 +72,7 @@ struct Dictionary : Variant {
 private:
 
   template <typename T>
-  static auto findKey(T &dictionary, const std::string &key) {
+  static auto findEntryByKey(T &dictionary, const std::string &key) {
     auto it =
         std::ranges::find_if(dictionary, [&key](auto &entry) -> bool {
           return entry.getKey() == key;
@@ -86,12 +86,12 @@ private:
   [[nodiscard]] static std::vector<Entry>::const_iterator
   findEntryWithKey(const std::vector<Entry> &dictionary,
                    const std::string &key) {
-    return findKey(dictionary, key);
+    return findEntryByKey(dictionary, key);
   }
 
   [[nodiscard]] static std::vector<Entry>::iterator
   findEntryWithKey(std::vector<Entry> &dictionary, const std::string &key) {
-    return findKey(dictionary, key);
+    return findEntryByKey(dictionary, key);
   }
 
   std::vector<Entry> bNodeDictionary;
