@@ -43,7 +43,7 @@ struct Dictionary : Variant {
   }
   [[nodiscard]] bool contains(const std::string &key) const {
     try {
-      const auto _ = findEntryWithKey(bNodeDictionary, key);
+      auto _ = findEntryWithKey(bNodeDictionary, key);
     } catch (const Error &error) {
       return (false);
     }
@@ -53,12 +53,12 @@ struct Dictionary : Variant {
     return static_cast<int>(bNodeDictionary.size());
   }
   BNode &operator[](const std::string &key) {
-    auto foundEntry = findEntryWithKey(bNodeDictionary, key);
-    return foundEntry->getBNode();
+    auto it = findEntryWithKey(bNodeDictionary, key);
+    return it->getBNode();
   }
   const BNode &operator[](const std::string &key) const {
-    auto foundEntry = findEntryWithKey(bNodeDictionary, key);
-    return foundEntry->getBNode();
+    auto it = findEntryWithKey(bNodeDictionary, key);
+    return it->getBNode();
   }
 
   [[nodiscard]] std::vector<Entry> &value() { return bNodeDictionary; }
@@ -67,11 +67,13 @@ struct Dictionary : Variant {
   }
 
 private:
+
   template <typename T>
   static auto findKey(T &dictionary, const std::string &key) {
-    auto it = std::ranges::find_if(dictionary, [&key](auto &entry) -> bool {
-      return entry.getKey() == key;
-    });
+    auto it =
+        std::ranges::find_if(dictionary, [&key](auto &entry) -> bool {
+          return entry.getKey() == key;
+        });
     if (it == dictionary.end()) {
       throw Error("Invalid key used in dictionary.");
     }
