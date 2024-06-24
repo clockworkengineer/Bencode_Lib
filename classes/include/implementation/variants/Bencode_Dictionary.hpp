@@ -8,25 +8,29 @@
 
 namespace Bencode_Lib {
 
-struct Dictionary : Variant {
-  // Dictionary Error
-  struct Error final : std::runtime_error {
-    explicit Error(const std::string &message)
-        : std::runtime_error("Dictionary Error: " + message) {}
-  };
-  // Dictionary entry
-  struct Entry {
-    Entry(std::string key, BNode &&bNode)
-        : key(std::move(key)), bNode(std::move(bNode)) {}
-    std::string &getKey() { return key; }
-    [[nodiscard]] const std::string &getKey() const { return key; }
-    BNode &getBNode() { return bNode; }
-    [[nodiscard]] const BNode &getBNode() const { return bNode; }
+// Dictionary error
+struct DictionaryError final : std::runtime_error {
+  explicit DictionaryError(const std::string &message)
+      : std::runtime_error("Dictionary Error: " + message) {}
+};
 
-  private:
-    std::string key;
-    BNode bNode{};
-  };
+// Dictionary entry
+struct DictionaryEntry {
+  DictionaryEntry(std::string key, BNode &&bNode)
+      : key(std::move(key)), bNode(std::move(bNode)) {}
+  std::string &getKey() { return key; }
+  [[nodiscard]] const std::string &getKey() const { return key; }
+  BNode &getBNode() { return bNode; }
+  [[nodiscard]] const BNode &getBNode() const { return bNode; }
+
+private:
+  std::string key;
+  BNode bNode{};
+};
+// Dictionary variant
+struct Dictionary : Variant {
+  using Error = DictionaryError;
+  using Entry = DictionaryEntry;
   // Constructors/Destructors
   Dictionary() : Variant(Type::dictionary) {}
   Dictionary(const Dictionary &other) = default;
@@ -52,13 +56,12 @@ struct Dictionary : Variant {
   [[nodiscard]] int size() const {
     return static_cast<int>(bNodeDictionary.size());
   }
+
   BNode &operator[](const std::string &key) {
-    auto it = findEntryWithKey(bNodeDictionary, key);
-    return it->getBNode();
+    return findEntryWithKey(bNodeDictionary, key)->getBNode();
   }
   const BNode &operator[](const std::string &key) const {
-    auto it = findEntryWithKey(bNodeDictionary, key);
-    return it->getBNode();
+    return findEntryWithKey(bNodeDictionary, key)->getBNode();
   }
 
   [[nodiscard]] std::vector<Entry> &value() { return bNodeDictionary; }
