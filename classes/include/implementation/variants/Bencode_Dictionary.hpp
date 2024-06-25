@@ -70,31 +70,37 @@ struct Dictionary : Variant {
   }
 
 private:
-
   template <typename T>
-  static auto findEntryByKey(T &dictionary, const std::string &key) {
-    auto it =
-        std::ranges::find_if(dictionary, [&key](auto &entry) -> bool {
-          return entry.getKey() == key;
-        });
-    if (it == dictionary.end()) {
-      throw Error("Invalid key used in dictionary.");
-    }
-    return it;
-  }
-
+  static auto findEntryByKey(T &dictionary, const std::string &key);
   [[nodiscard]] static std::vector<Entry>::const_iterator
   findEntryWithKey(const std::vector<Entry> &dictionary,
-                   const std::string &key) {
-    return findEntryByKey(dictionary, key);
-  }
-
+                   const std::string &key);
   [[nodiscard]] static std::vector<Entry>::iterator
-  findEntryWithKey(std::vector<Entry> &dictionary, const std::string &key) {
-    return findEntryByKey(dictionary, key);
-  }
+  findEntryWithKey(std::vector<Entry> &dictionary, const std::string &key);
 
   std::vector<Entry> bNodeDictionary;
 };
 
+template <typename T>
+auto Dictionary::findEntryByKey(T &dictionary, const std::string &key) {
+  auto it = std::ranges::find_if(dictionary, [&key](auto &entry) -> bool {
+    return entry.getKey() == key;
+  });
+  if (it == dictionary.end()) {
+    throw DictionaryError("Invalid key used in dictionary.");
+  }
+  return it;
+}
+
+[[nodiscard]] inline std::vector<DictionaryEntry>::const_iterator
+Dictionary::findEntryWithKey(const std::vector<DictionaryEntry> &dictionary,
+                             const std::string &key) {
+  return findEntryByKey(dictionary, key);
+}
+
+[[nodiscard]] inline std::vector<DictionaryEntry>::iterator
+Dictionary::findEntryWithKey(std::vector<DictionaryEntry> &dictionary,
+                             const std::string &key) {
+  return findEntryByKey(dictionary, key);
+}
 } // namespace Bencode_Lib
