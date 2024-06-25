@@ -18,7 +18,7 @@ struct DictionaryEntry {
   [[nodiscard]] const BNode &getBNode() const { return bNode; }
 
 private:
-  std::string key;
+  std::string key{};
   BNode bNode{};
 };
 
@@ -67,14 +67,15 @@ struct Dictionary : Variant {
 
 private:
   template <typename T>
-  static auto findEntryByKey(T &dictionary, const std::string &key);
+  [[nodiscard]] static auto findEntryByKey(T &dictionary,
+                                           const std::string &key);
   [[nodiscard]] static Dictionary::Entries::const_iterator
   findEntryWithKey(const Dictionary::Entries &dictionary,
                    const std::string &key);
   [[nodiscard]] static Dictionary::Entries::iterator
   findEntryWithKey(Dictionary::Entries &dictionary, const std::string &key);
 
-  Dictionary::Entries bNodeDictionary;
+  Dictionary::Entries bNodeDictionary{};
 };
 
 template <typename T>
@@ -88,13 +89,13 @@ auto Dictionary::findEntryByKey(T &dictionary, const std::string &key) {
   return it;
 }
 
-[[nodiscard]] inline Dictionary::Entries::const_iterator
+inline Dictionary::Entries::const_iterator
 Dictionary::findEntryWithKey(const Dictionary::Entries &dictionary,
                              const std::string &key) {
   return findEntryByKey(dictionary, key);
 }
 
-[[nodiscard]] inline Dictionary::Entries::iterator
+inline Dictionary::Entries::iterator
 Dictionary::findEntryWithKey(Dictionary::Entries &dictionary,
                              const std::string &key) {
   return findEntryByKey(dictionary, key);
