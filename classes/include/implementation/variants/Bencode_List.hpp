@@ -2,12 +2,14 @@
 
 namespace Bencode_Lib {
 
+// List Error
+struct ListError final : std::runtime_error {
+  explicit ListError(const std::string &message)
+      : std::runtime_error("List Error: " + message) {}
+};
 struct List : Variant {
-  // List Error
-  struct Error final : std::runtime_error {
-    explicit Error(const std::string &message)
-        : std::runtime_error("List Error: " + message) {}
-  };
+  using Error = ListError;
+  using ListEntries = std::vector<BNode>;
   // Constructors/Destructors
   List() : Variant(Type::list){}
   List(const List &other) = default;
@@ -24,8 +26,8 @@ struct List : Variant {
     return static_cast<int>(bNodeList.size());
   }
   // Get BNode value
-  [[nodiscard]] std::vector<BNode> &value() { return bNodeList; }
-  [[nodiscard]] const std::vector<BNode> &value() const { return bNodeList; }
+  [[nodiscard]]ListEntries &value() { return bNodeList; }
+  [[nodiscard]] const ListEntries &value() const { return bNodeList; }
   // Get BNode at index
   BNode &operator[](const int index) {
     validateIndex(index);
@@ -53,6 +55,6 @@ private:
     }
   }
 
-  std::vector<BNode> bNodeList;
+ ListEntries bNodeList;
 };
 } // namespace Bencode_Lib
