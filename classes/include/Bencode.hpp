@@ -3,6 +3,16 @@
 #include <string>
 #include <memory>
 #include <variant>
+#include <stdexcept>
+#include <type_traits>
+#include <array>
+#include <limits>
+#include <functional>
+#include <map>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
+#include <utility>
 
 #include "Bencode_Config.hpp"
 #include "Bencode_Interfaces.hpp"

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 namespace Bencode_Lib {
 
 struct List : Variant {

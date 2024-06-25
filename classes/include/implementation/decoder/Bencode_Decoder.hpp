@@ -1,11 +1,6 @@
 #pragma once
 
-#include <string>
-#include <array>
-#include <limits>
-#include <functional>
-#include <map>
-
+#include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
 namespace Bencode_Lib {

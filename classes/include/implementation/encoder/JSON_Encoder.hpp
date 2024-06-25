@@ -4,11 +4,6 @@
 #include "Bencode_Core.hpp"
 #include "JSON_Translator.hpp"
 
-#pragma once
-#include "Bencode.hpp"
-#include "Bencode_Core.hpp"
-#include "JSON_Translator.hpp"
-
 namespace Bencode_Lib {
 
 class JSON_Encoder final : public IEncoder {
