@@ -3,7 +3,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <utility>
 #include <algorithm>
 
 namespace Bencode_Lib {
@@ -31,6 +30,7 @@ private:
 struct Dictionary : Variant {
   using Error = DictionaryError;
   using Entry = DictionaryEntry;
+  using Entires = std::vector<Entry>;
   // Constructors/Destructors
   Dictionary() : Variant(Type::dictionary) {}
   Dictionary(const Dictionary &other) = default;
@@ -64,21 +64,18 @@ struct Dictionary : Variant {
     return findEntryWithKey(bNodeDictionary, key)->getBNode();
   }
 
-  [[nodiscard]] std::vector<Entry> &value() { return bNodeDictionary; }
-  [[nodiscard]] const std::vector<Entry> &value() const {
-    return bNodeDictionary;
-  }
+  [[nodiscard]] Dictionary::Entires &value() { return bNodeDictionary; }
+  [[nodiscard]] const Dictionary::Entires &value() const { return bNodeDictionary; }
 
 private:
   template <typename T>
   static auto findEntryByKey(T &dictionary, const std::string &key);
-  [[nodiscard]] static std::vector<Entry>::const_iterator
-  findEntryWithKey(const std::vector<Entry> &dictionary,
-                   const std::string &key);
-  [[nodiscard]] static std::vector<Entry>::iterator
-  findEntryWithKey(std::vector<Entry> &dictionary, const std::string &key);
+  [[nodiscard]] static Dictionary::Entires::const_iterator
+  findEntryWithKey(const Dictionary::Entires &dictionary, const std::string &key);
+  [[nodiscard]] static Dictionary::Entires::iterator
+  findEntryWithKey(Dictionary::Entires &dictionary, const std::string &key);
 
-  std::vector<Entry> bNodeDictionary;
+  Dictionary::Entires bNodeDictionary;
 };
 
 template <typename T>
@@ -92,14 +89,14 @@ auto Dictionary::findEntryByKey(T &dictionary, const std::string &key) {
   return it;
 }
 
-[[nodiscard]] inline std::vector<DictionaryEntry>::const_iterator
-Dictionary::findEntryWithKey(const std::vector<DictionaryEntry> &dictionary,
+[[nodiscard]] inline Dictionary::Entires::const_iterator
+Dictionary::findEntryWithKey(const Dictionary::Entires &dictionary,
                              const std::string &key) {
   return findEntryByKey(dictionary, key);
 }
 
-[[nodiscard]] inline std::vector<DictionaryEntry>::iterator
-Dictionary::findEntryWithKey(std::vector<DictionaryEntry> &dictionary,
+[[nodiscard]] inline Dictionary::Entires::iterator
+Dictionary::findEntryWithKey(Dictionary::Entires &dictionary,
                              const std::string &key) {
   return findEntryByKey(dictionary, key);
 }
