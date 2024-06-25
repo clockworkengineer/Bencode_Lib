@@ -21,11 +21,12 @@ private:
   std::string key;
   BNode bNode{};
 };
+
 // Dictionary variant
 struct Dictionary : Variant {
   using Error = DictionaryError;
   using Entry = DictionaryEntry;
-  using Entires = std::vector<Entry>;
+  using Entries = std::vector<Entry>;
   // Constructors/Destructors
   Dictionary() : Variant(Type::dictionary) {}
   Dictionary(const Dictionary &other) = default;
@@ -59,18 +60,21 @@ struct Dictionary : Variant {
     return findEntryWithKey(bNodeDictionary, key)->getBNode();
   }
 
-  [[nodiscard]] Dictionary::Entires &value() { return bNodeDictionary; }
-  [[nodiscard]] const Dictionary::Entires &value() const { return bNodeDictionary; }
+  [[nodiscard]] Dictionary::Entries &value() { return bNodeDictionary; }
+  [[nodiscard]] const Dictionary::Entries &value() const {
+    return bNodeDictionary;
+  }
 
 private:
   template <typename T>
   static auto findEntryByKey(T &dictionary, const std::string &key);
-  [[nodiscard]] static Dictionary::Entires::const_iterator
-  findEntryWithKey(const Dictionary::Entires &dictionary, const std::string &key);
-  [[nodiscard]] static Dictionary::Entires::iterator
-  findEntryWithKey(Dictionary::Entires &dictionary, const std::string &key);
+  [[nodiscard]] static Dictionary::Entries::const_iterator
+  findEntryWithKey(const Dictionary::Entries &dictionary,
+                   const std::string &key);
+  [[nodiscard]] static Dictionary::Entries::iterator
+  findEntryWithKey(Dictionary::Entries &dictionary, const std::string &key);
 
-  Dictionary::Entires bNodeDictionary;
+  Dictionary::Entries bNodeDictionary;
 };
 
 template <typename T>
@@ -84,14 +88,14 @@ auto Dictionary::findEntryByKey(T &dictionary, const std::string &key) {
   return it;
 }
 
-[[nodiscard]] inline Dictionary::Entires::const_iterator
-Dictionary::findEntryWithKey(const Dictionary::Entires &dictionary,
+[[nodiscard]] inline Dictionary::Entries::const_iterator
+Dictionary::findEntryWithKey(const Dictionary::Entries &dictionary,
                              const std::string &key) {
   return findEntryByKey(dictionary, key);
 }
 
-[[nodiscard]] inline Dictionary::Entires::iterator
-Dictionary::findEntryWithKey(Dictionary::Entires &dictionary,
+[[nodiscard]] inline Dictionary::Entries::iterator
+Dictionary::findEntryWithKey(Dictionary::Entries &dictionary,
                              const std::string &key) {
   return findEntryByKey(dictionary, key);
 }
