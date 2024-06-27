@@ -9,7 +9,8 @@ struct ListError final : std::runtime_error {
 };
 struct List : Variant {
   using Error = ListError;
-  using ListEntries = std::vector<BNode>;
+  using Entry = BNode;
+  using ListEntries = std::vector<Entry>;
   // Constructors/Destructors
   List() : Variant(Type::list){}
   List(const List &other) = default;
@@ -18,7 +19,7 @@ struct List : Variant {
   List &operator=(List &&other) = default;
   ~List() = default;
   // Add array element
-  void add(BNode bNode) {
+  void add(Entry bNode) {
     bNodeList.emplace_back(std::move(bNode));
   }
   // Get BNode size
