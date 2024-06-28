@@ -67,7 +67,7 @@ struct Dictionary : Variant {
 
 private:
   template <typename T>
-  [[nodiscard]] static auto findEntryByKey(T &dictionary,
+  [[nodiscard]] static auto findEntry(T &dictionary,
                                            const std::string &key);
   [[nodiscard]] static Dictionary::Entries::const_iterator
   findEntryWithKey(const Dictionary::Entries &dictionary,
@@ -79,7 +79,7 @@ private:
 };
 
 template <typename T>
-auto Dictionary::findEntryByKey(T &dictionary, const std::string &key) {
+auto Dictionary::findEntry(T &dictionary, const std::string &key) {
   auto it = std::ranges::find_if(dictionary, [&key](auto &entry) -> bool {
     return entry.getKey() == key;
   });
@@ -92,12 +92,12 @@ auto Dictionary::findEntryByKey(T &dictionary, const std::string &key) {
 inline Dictionary::Entries::const_iterator
 Dictionary::findEntryWithKey(const Dictionary::Entries &dictionary,
                              const std::string &key) {
-  return findEntryByKey(dictionary, key);
+  return findEntry(dictionary, key);
 }
 
 inline Dictionary::Entries::iterator
 Dictionary::findEntryWithKey(Dictionary::Entries &dictionary,
                              const std::string &key) {
-  return findEntryByKey(dictionary, key);
+  return findEntry(dictionary, key);
 }
 } // namespace Bencode_Lib

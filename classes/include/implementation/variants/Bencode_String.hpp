@@ -17,6 +17,6 @@ struct String : Variant {
   [[nodiscard]] const std::string &value() const { return bNodeString; }
 
 private:
-  std::string bNodeString;
+  std::string bNodeString{};
 };
 } // namespace Bencode_Lib

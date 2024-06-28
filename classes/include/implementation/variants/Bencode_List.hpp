@@ -56,6 +56,6 @@ private:
     }
   }
 
- ListEntries bNodeList;
+ ListEntries bNodeList {};
 };
 } // namespace Bencode_Lib
