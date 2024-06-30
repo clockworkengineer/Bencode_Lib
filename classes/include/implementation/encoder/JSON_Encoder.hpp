@@ -16,13 +16,13 @@ public:
   JSON_Encoder &operator=(JSON_Encoder &&other) = delete;
   ~JSON_Encoder() override = default;
   void encode(const BNode &bNode, IDestination &destination) const override {
-    if (bNode.isDictionary()) {
+    if (isA<Dictionary>(bNode)) {
       encodeDictionary(bNode, destination);
-    } else if (bNode.isList()) {
+    } else if (isA<List>(bNode)) {
       encodeList(bNode, destination);
-    } else if (bNode.isInteger()) {
+    } else if (isA<Integer>(bNode)) {
       encodeInteger(bNode, destination);
-    } else if (bNode.isString()) {
+    } else if (isA<String>(bNode)) {
       encodeString(bNode, destination);
     }
   }

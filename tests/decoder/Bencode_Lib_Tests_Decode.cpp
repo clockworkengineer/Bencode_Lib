@@ -15,7 +15,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
   SECTION("Decode an integer", "[Bencode][Decode][Integer]") {
     BufferSource source{"i266e"};
     bEncode.decode(source);
-    REQUIRE((bEncode.root()).isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bEncode.root()));
   }
   SECTION("Decode an integer (266).", "[Bencode][Decode][Integer]") {
     BufferSource source{"i266e"};
@@ -76,7 +76,7 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
   SECTION("Decode an string", "[Bencode][Decode][String]") {
     BufferSource source{"12:qwertyuiopas"};
     bEncode.decode(source);
-    REQUIRE((bEncode.root()).isString());
+    REQUIRE_FALSE(!isA<String>(bEncode.root()));
   }
   SECTION("Decode a string ('qwertyuiopas').", "[Bencode][Decode][String]") {
     BufferSource source{"12:qwertyuiopas"};
@@ -130,11 +130,10 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
   SECTION("Decode an List", "[Bencode][Decode]") {
     BufferSource source{"li266ei6780ei88e5:threee"};
     bEncode.decode(source);
-    REQUIRE((bEncode.root()).isList());
-    REQUIRE((bEncode.root())[0].isInteger());
-    REQUIRE((bEncode.root())[1].isInteger());
-    REQUIRE((bEncode.root())[2].isInteger());
-    REQUIRE((bEncode.root())[3].isString());
+    REQUIRE_FALSE(!isA<List>(bEncode.root()));
+    REQUIRE_FALSE(!isA<Integer>(bEncode.root()[1]));
+    REQUIRE_FALSE(!isA<Integer>(bEncode.root()[2]));
+    REQUIRE_FALSE(!isA<String>(bEncode.root()[3]));
     REQUIRE(BRef<Integer>((bEncode.root())[0]).value() == 266);
     REQUIRE(BRef<Integer>((bEncode.root())[1]).value() == 6780);
     REQUIRE(BRef<Integer>((bEncode.root())[2]).value() == 88);
@@ -163,10 +162,10 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
   SECTION("Decode an Dictionary", "[Bencode][Decode][Dictionary]") {
     BufferSource source{"d3:onei1e5:threei3e3:twoi2ee"};
     bEncode.decode(source);
-    REQUIRE((bEncode.root()).isDictionary());
-    REQUIRE((bEncode.root())["one"].isInteger());
-    REQUIRE((bEncode.root())["two"].isInteger());
-    REQUIRE((bEncode.root())["three"].isInteger());
+    REQUIRE_FALSE(!isA<Dictionary>(bEncode.root()));
+    REQUIRE_FALSE(!isA<Integer>(bEncode.root())["one"]);
+    REQUIRE_FALSE(!isA<Integer>(bEncode.root())["two"]);
+    REQUIRE_FALSE(!isA<Integer>(bEncode.root())["three"]);
     REQUIRE(BRef<Integer>((bEncode.root())["one"]).value() == 1);
     REQUIRE(BRef<Integer>((bEncode.root())["two"]).value() == 2);
     REQUIRE(BRef<Integer>((bEncode.root())["three"]).value() == 3);
@@ -243,7 +242,7 @@ TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
   SECTION("Decode singlefile.torrent", "[Bencode][Decode][Torrents]") {
     FileSource source{prefixTestDataPath(kSingleFileTorrent)};
     bEncode.decode(source);
-    REQUIRE((bEncode.root()).isDictionary());
+    REQUIRE(isA<Dictionary>(bEncode.root()));
   }
   SECTION("Decode singlefile.torrent. ", "[Bencode][Decode][Torrents]") {
     FileSource source{prefixTestDataPath(kSingleFileTorrent)};
@@ -256,7 +255,7 @@ TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
   SECTION("Decode multifile.torrent", "[Bencode][Decode][Torrents]") {
     FileSource source{prefixTestDataPath(kMultiFileTorrent)};
     bEncode.decode(source);
-    REQUIRE((bEncode.root()).isDictionary());
+    REQUIRE_FALSE(!isA<Dictionary>(bEncode.root()));
   }
   SECTION("Decode multifile.torrent. ", "[Bencode][Decode][Torrents]") {
     FileSource source{prefixTestDataPath(kMultiFileTorrent)};

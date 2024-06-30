@@ -23,8 +23,8 @@ TEST_CASE("Check Bencode dictionary creation api.",
           "and validate.",
           "[Bencode][Create][Constructor][Validate]") {
     const Bencode bencode(R"(d2:pii3ee)");
-    REQUIRE_FALSE(!bencode.root().isDictionary());
-    REQUIRE_FALSE(!bencode["pi"].isInteger());
+    REQUIRE_FALSE(!isA<Dictionary>(bencode.root()));
+    REQUIRE_FALSE(!isA<Integer>(bencode["pi"]));
     REQUIRE(BRef<Integer>(bencode["pi"]).value() == 3);
   }
   SECTION("Initialise root Bencode BNode dictionary with one entry containing "
@@ -32,7 +32,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
           "[Bencode][Create][Dictionary][Integer]") {
     Bencode bencode;
     bencode["integer"] = 300;
-    REQUIRE_FALSE(!bencode["integer"].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode["integer"]));
     REQUIRE(BRef<Integer>(bencode["integer"]).value() == 300);
   }
   SECTION("Initialise root Bencode BNode dictionary with one entry containing "
@@ -41,7 +41,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
           "[Bencode][Create][Dictionary][Integer]") {
     Bencode bencode;
     bencode["integer"] = 30000l;
-    REQUIRE_FALSE(!bencode["integer"].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode["integer"]));
     REQUIRE(BRef<Integer>(bencode["integer"]).value() == 30000);
   }
   SECTION("Initialise root Bencode BNode dictionary with one entry containing "
@@ -49,7 +49,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
           "[Bencode][Create][Dictionary][Integer]") {
     Bencode bencode;
     bencode["pi"] = 3.141f;
-    REQUIRE_FALSE(!bencode["pi"].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode["pi"]));
     REQUIRE(BRef<Integer>(bencode["pi"]).value() == 3);
   }
   SECTION("Initialise root Bencode BNode dictionary with one entry containing "
@@ -57,7 +57,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
           "[Bencode][Create][Dictionary][Integer]") {
     Bencode bencode;
     bencode["pi"] = 3.141;
-    REQUIRE_FALSE(!bencode["pi"].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode["pi"]));
     REQUIRE(BRef<Integer>(bencode["pi"]).value() == 3);
   }
   SECTION("Initialise root Bencode BNode dictionary with one entry containing "
@@ -65,7 +65,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
           "[Bencode][Create][Dictionary][String]") {
     Bencode bencode;
     bencode["name"] = "robert";
-    REQUIRE_FALSE(!bencode["name"].isString());
+    REQUIRE_FALSE(!isA<String>(bencode["name"]));
     REQUIRE(BRef<String>(bencode["name"]).value() == "robert");
   }
   SECTION("Initialise root Bencode BNode dictionary with one entry containing "
@@ -73,7 +73,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
           "[Bencode][Create][Dictionary][String]") {
     Bencode bencode;
     bencode["name"] = std::string{"robert"};
-    REQUIRE_FALSE(!bencode["name"].isString());
+    REQUIRE_FALSE(!isA<String>(bencode["name"]));
     REQUIRE(BRef<String>(bencode["name"]).value() == "robert");
   }
   SECTION("Initialise root Bencode BNode dictionary with one entry containing "
@@ -81,7 +81,7 @@ TEST_CASE("Check Bencode dictionary creation api.",
           "[Bencode][Create][Dictionary][Boolean]") {
     Bencode bencode;
     bencode["flag"] = true;
-    REQUIRE_FALSE(!bencode["flag"].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode["flag"]));
     REQUIRE(BRef<Integer>(bencode["flag"]).value() == 1);
   }
   SECTION("Initialise root Bencode BNode dictionary with one entry containing "
@@ -89,21 +89,21 @@ TEST_CASE("Check Bencode dictionary creation api.",
           "[Bencode][Create][Dictionary][null]") {
     Bencode bencode;
     bencode["nothing"] = nullptr;
-    REQUIRE_FALSE(!bencode["nothing"].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode["nothing"]));
     REQUIRE(BRef<Integer>(bencode["nothing"]).value() == 0);
   }
   SECTION("Create two level dictionary and null at base.",
           "[Bencode][Create][Dictionary][Integer]") {
     Bencode bencode;
     bencode["nothing"]["extra"] = 3;
-    REQUIRE_FALSE(!bencode["nothing"]["extra"].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode["nothing"]["extra"]));
     REQUIRE(BRef<Integer>(bencode["nothing"]["extra"]).value() == 3);
   }
   SECTION("Create three level dictionary and null at base and encode.",
           "[Bencode][Create][Dictionary][Integer]") {
     Bencode bencode;
     bencode["nothing"]["extra"]["more"] = nullptr;
-    REQUIRE_FALSE(!bencode["nothing"]["extra"]["more"].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode["nothing"]["extra"]["more"]));
     REQUIRE(BRef<Integer>(bencode["nothing"]["extra"]["more"]).value() == 0);
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.encode(destination));
@@ -119,9 +119,9 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
   SECTION("Initialise Bencode with  list passed to constructor and validate.",
           "[Bencode][Create][Constructor][Validate]") {
     const Bencode bencode(R"(l2:pii3ee)");
-    REQUIRE_FALSE(!bencode.root().isList());
-    REQUIRE_FALSE(!bencode[0].isString());
-    REQUIRE_FALSE(!bencode[1].isInteger());
+    REQUIRE_FALSE(!isA<List>(bencode.root()));
+    REQUIRE_FALSE(!isA<String>(bencode[0]));
+    REQUIRE_FALSE(!isA<Integer>(bencode[1]));
     REQUIRE(BRef<String>(bencode[0]).value() == "pi");
     REQUIRE(BRef<Integer>(bencode[1]).value() == 3);
   }
@@ -130,7 +130,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0] = 300;
-    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[0]));
     REQUIRE(BRef<Integer>(bencode[0]).value() == 300);
   }
 
@@ -138,7 +138,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0] = 30000l;
-    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[0]));
     REQUIRE(BRef<Integer>(bencode[0]).value() == 30000);
   }
 
@@ -146,7 +146,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0] = 30000ll;
-    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[0]));
     REQUIRE(BRef<Integer>(bencode[0]).value() == 30000);
   }
 
@@ -154,7 +154,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0] = 3.141f;
-    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[0]));
     REQUIRE(BRef<Integer>(bencode[0]).value() == 3);
   }
 
@@ -162,7 +162,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0] = 3.141;
-    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[0]));
     REQUIRE(BRef<Integer>(bencode[0]).value() == 3);
   }
   SECTION(
@@ -170,7 +170,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
       "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0] = 3.141l;
-    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[0]));
     REQUIRE(BRef<Integer>(bencode[0]).value() == 3);
   }
 
@@ -179,7 +179,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
       "[Bencode][Create][List][String]") {
     Bencode bencode;
     bencode[0] = "robert";
-    REQUIRE_FALSE(!bencode[0].isString());
+    REQUIRE_FALSE(!isA<String>(bencode[0]));
     REQUIRE(BRef<String>(bencode[0]).value() == "robert");
   }
   SECTION(
@@ -187,28 +187,28 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
       "[Bencode][Create][List][String]") {
     Bencode bencode;
     bencode[0] = std::string{"robert"};
-    REQUIRE_FALSE(!bencode[0].isString());
+    REQUIRE_FALSE(!isA<String>(bencode[0]));
     REQUIRE(BRef<String>(bencode[0]).value() == "robert");
   }
   SECTION("Initialise root Bencode list with one entry containing a boolean.",
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0] = true;
-    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[0]));
     REQUIRE(BRef<Integer>(bencode[0]).value() == 1);
   }
   SECTION("Initialise root Bencode list with one entry containing a nullptr.",
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0] = nullptr;
-    REQUIRE_FALSE(!bencode[0].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[0]));
     REQUIRE(BRef<Integer>(bencode[0]).value() == 0);
   }
   SECTION("Create two level list with an integer at the base and encode it.",
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0][0] = 3000;
-    REQUIRE_FALSE(!bencode[0][0].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[0][0]));
     REQUIRE(BRef<Integer>(bencode[0][0]).value() == 3000);
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.encode(destination));
@@ -218,7 +218,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
           "[Bencode][Create][List][String]") {
     Bencode bencode;
     bencode[5] = "test";
-    REQUIRE_FALSE(!bencode[5].isString());
+    REQUIRE_FALSE(!isA<String>(bencode[5]));
     REQUIRE(BRef<String>(bencode[5]).value() == "test");
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.encode(destination));
@@ -228,10 +228,10 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[5] = "test";
-    REQUIRE_FALSE(!bencode[5].isString());
+    REQUIRE_FALSE(!isA<String>(bencode[5]));
     REQUIRE(BRef<String>(bencode[5]).value() == "test");
     bencode[3] = 15;
-    REQUIRE_FALSE(!bencode[3].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[3]));
     REQUIRE(BRef<Integer>(bencode[3]).value() == 15);
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.encode(destination));
@@ -243,14 +243,14 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     Bencode bencode;
     bencode[5] = {1.0,  2.0,    3, 4.333, "5.0", "test test test test",
                   true, nullptr};
-    REQUIRE_FALSE(!bencode[5][0].isInteger());
-    REQUIRE_FALSE(!bencode[5][1].isInteger());
-    REQUIRE_FALSE(!bencode[5][2].isInteger());
-    REQUIRE_FALSE(!bencode[5][3].isInteger());
-    REQUIRE_FALSE(!bencode[5][4].isString());
-    REQUIRE_FALSE(!bencode[5][5].isString());
-    REQUIRE_FALSE(!bencode[5][6].isInteger());
-    REQUIRE_FALSE(!bencode[5][7].isInteger());
+    REQUIRE_FALSE(!isA<Integer>(bencode[5][0]));
+    REQUIRE_FALSE(!isA<Integer>(bencode[5][1]));
+    REQUIRE_FALSE(!isA<Integer>(bencode[5][2]));
+    REQUIRE_FALSE(!isA<Integer>(bencode[5][3]));
+    REQUIRE_FALSE(!isA<String>(bencode[5][4]));
+    REQUIRE_FALSE(!isA<String>(bencode[5][5]));
+    REQUIRE_FALSE(!isA<Integer>(bencode[5][6]));
+    REQUIRE_FALSE(!isA<Integer>(bencode[5][7]));
     REQUIRE(BRef<List>(bencode[5]).size() == 8);
     REQUIRE(BRef<Integer>(bencode[5][0]).value() == 1);
     REQUIRE(BRef<Integer>(bencode[5][1]).value() == 2);

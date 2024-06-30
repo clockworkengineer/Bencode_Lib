@@ -29,13 +29,6 @@ struct BNode {
   const BNode &operator[](int index) const;
   // Interrogate variant
   [[nodiscard]] bool isEmpty() const { return bNodeVariant == nullptr; }
-  [[nodiscard]] bool isString() const { return bNodeVariant->isString(); }
-  [[nodiscard]] bool isInteger() const { return bNodeVariant->isInteger(); }
-  [[nodiscard]] bool isList() const { return bNodeVariant->isList(); }
-  [[nodiscard]] bool isDictionary() const {
-    return bNodeVariant->isDictionary();
-  }
-  [[nodiscard]] bool isHole() const { return bNodeVariant->isHole(); }
   // Get reference to BNode variant
   [[nodiscard]] Variant &getVariant() {
     return *bNodeVariant;

@@ -11,21 +11,9 @@ struct Variant {
   Variant(Variant &&other) = default;
   Variant &operator=(Variant &&other) = default;
   ~Variant() = default;
-  // Determine BNode type
-  [[nodiscard]] bool isString() const {
-    return nodeType == Type::string;
-  }
-  [[nodiscard]] bool isInteger() const {
-    return nodeType == Type::integer;
-  }
-  [[nodiscard]] bool isList() const {
-    return nodeType == Type::list;
-  }
-  [[nodiscard]] bool isDictionary() const {
-    return nodeType == Type::dictionary;
-  }
-  [[nodiscard]] bool isHole() const {
-    return nodeType == Type::hole;
+  // Get BNode type
+  [[nodiscard]] Type getNodeType() const {
+    return(nodeType);
   }
 private:
   Type nodeType;

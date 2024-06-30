@@ -25,13 +25,13 @@ public:
 
 private:
   void encodeXML(const BNode &bNode, IDestination &destination) const {
-    if (bNode.isDictionary()) {
+    if (isA<Dictionary>(bNode)) {
       encodeDictionary(bNode, destination);
-    } else if (bNode.isList()) {
+    } else if (isA<List>(bNode)) {
       encodeList(bNode, destination);
-    } else if (bNode.isInteger()) {
+    } else if (isA<Integer>(bNode)) {
       encodeInteger(bNode, destination);
-    } else if (bNode.isString()) {
+    } else if (isA<String>(bNode)) {
       encodeString(bNode, destination);
     }
   }
