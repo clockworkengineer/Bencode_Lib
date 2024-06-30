@@ -2,9 +2,9 @@
 
 namespace Bencode_Lib {
 
-// =====================
-// What is BNode variant
-// =====================
+// =======================
+// What is BNode variant ?
+// =======================
 template <typename T> bool isA(const BNode &bNode) {
   if constexpr (std::is_same_v<T, String>) {
     return bNode.getVariant().getNodeType() == Variant::Type::string;
