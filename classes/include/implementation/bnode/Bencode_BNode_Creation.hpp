@@ -1,10 +1,8 @@
 #pragma once
 
 namespace Bencode_Lib {
-
 // Construct BNode from raw values
 template <typename T> BNode::BNode(T value) {
-
   if constexpr (std::is_integral_v<T>) {
     *this = make<Integer>(value);
   } else if constexpr (std::is_floating_point_v<T>) {
@@ -18,8 +16,8 @@ template <typename T> BNode::BNode(T value) {
     bNodeVariant = std::move(value);
   }
 }
-// Convert initializer list type to BNode
-inline BNode BNode::typeToBNode(const Bencode::intializerListTypes &type) {
+// Convert initializer list to BNode
+inline static BNode typeToBNode(const Bencode::IntializerListTypes &type) {
   if (const auto pValue = std::get_if<int>(&type)) {
     return BNode(*pValue);
   }
@@ -50,7 +48,7 @@ inline BNode BNode::typeToBNode(const Bencode::intializerListTypes &type) {
   if (const auto pValue = std::get_if<BNode>(&type)) {
     return std::move(*const_cast<BNode *>(pValue));
   }
-  throw Error("BNode of unsupported type could not be created.");
+  throw BNode::Error("BNode of unsupported type could not be created.");
 }
 // Construct BNode Array from initializer list
 inline BNode::BNode(const Bencode::ListInitializer &list) {

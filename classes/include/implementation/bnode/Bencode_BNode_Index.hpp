@@ -1,7 +1,6 @@
 #pragma once
 
 namespace Bencode_Lib {
-
 // List
 inline BNode &BNode::operator[](const int index) {
   try {
@@ -29,5 +28,4 @@ inline BNode &BNode::operator[](const std::string &key) {
 inline const BNode &BNode::operator[](const std::string &key) const {
   return BRef<const Dictionary>(*this)[key];
 }
-
 } // namespace Bencode_Lib

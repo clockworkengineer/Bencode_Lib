@@ -1,10 +1,7 @@
 #pragma once
 
 namespace Bencode_Lib {
-
-// =======================
 // What is BNode variant ?
-// =======================
 template <typename T> bool isA(const BNode &bNode) {
   if constexpr (std::is_same_v<T, String>) {
     return bNode.getVariant().getNodeType() == Variant::Type::string;
@@ -20,9 +17,7 @@ template <typename T> bool isA(const BNode &bNode) {
     static_assert(false, "Not a valid BNode variant.");
   }
 }
-// ==============================
 // BNode base reference converter
-// ==============================
 template <typename T> void CheckBNodeType(const BNode &bNode) {
   if constexpr (std::is_same_v<T, String>) {
     if (!isA<T>(bNode)) {

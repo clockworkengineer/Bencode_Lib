@@ -15,7 +15,7 @@ public:
   Bencode_Impl(Bencode_Impl &&other) = delete;
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
   ~Bencode_Impl();
-  // Decode Bencoded file into BNode tree
+  // Decode Bencoded source into BNode tree
   void decode(ISource &source);
   // Encode BNode tree
   void encode(IDestination &destination) const;

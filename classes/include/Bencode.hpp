@@ -29,14 +29,14 @@ class Bencode {
 
 public:
   // Possible Bencode BNode initializer types
-  using intializerListTypes =
+  using IntializerListTypes =
       std::variant<int, long, long long, float, double, long double, bool,
                    std::string, std::nullptr_t, BNode>;
   // List initializer list
-  using ListInitializer = std::initializer_list<intializerListTypes>;
+  using ListInitializer = std::initializer_list<IntializerListTypes>;
   // Dictionary initializer list
   using DictionaryInitializer =
-      std::initializer_list<std::pair<std::string, intializerListTypes>>;
+      std::initializer_list<std::pair<std::string, IntializerListTypes>>;
   // Constructors/Destructors
   explicit Bencode([[maybe_unused]] IEncoder *encoder = nullptr,
                    [[maybe_unused]] IDecoder *decoder = nullptr);
