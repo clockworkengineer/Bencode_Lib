@@ -125,7 +125,7 @@ private:
 /// Load torrent file meta information into a structure for processing.
 /// </summary>
 inline void TorrentInfo::populate() {
-  if (!bEncode.root().isDictionary()) {
+  if (!isA<Dictionary>(bEncode.root())) {
     throw Bencode_Lib::Error("Valid torrent file not found.");
   }
   auto &bNodeTop = BRef<Dictionary>(bEncode.root());
