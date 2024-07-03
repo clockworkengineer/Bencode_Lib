@@ -2,6 +2,8 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "Bencode_Decoder.hpp"
+#include "Bencode_Encoder.hpp"
 
 namespace Bencode_Lib {
 

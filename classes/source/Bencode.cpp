@@ -13,7 +13,6 @@
 // Dependencies: C++20 - Language standard features used.
 //
 
-#include "Bencode.hpp"
 #include "Bencode_Impl.hpp"
 
 namespace Bencode_Lib {
