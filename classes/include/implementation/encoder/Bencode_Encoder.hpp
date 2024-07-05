@@ -33,8 +33,8 @@ private:
     destination.add('d');
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       destination.add(
-          std::to_string(BRef<String>(bNodeNext.getKey()).value().length()) +
-          ":" + BRef<String>(bNodeNext.getKey()).value());
+          std::to_string(bNodeNext.getKey().length()) +
+          ":" + bNodeNext.getKey());
       encode(bNodeNext.getBNode(), destination);
     }
     destination.add('e');

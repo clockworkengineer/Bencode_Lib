@@ -175,7 +175,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
     bEncode.decode(source);
     std::map<std::string, int64_t> entries;
     for (const auto &bNode : BRef<Dictionary>(bEncode.root()).value()) {
-      entries[BRef<String>(bNode.getKey()).value()] = BRef<Integer>(bNode.getBNode()).value();
+      entries[bNode.getKey()] = BRef<Integer>(bNode.getBNode()).value();
     }
     REQUIRE(entries == std::map<std::string, int64_t>{
                            {"one", 1}, {"two", 2}, {"three", 3}});
@@ -185,7 +185,7 @@ TEST_CASE("Bencode for decode of collection types (list, dictionary) ",
     bEncode.decode(source);
     std::map<std::string, std::string> entries;
     for (const auto &bNode : BRef<Dictionary>(bEncode.root()).value()) {
-      entries[BRef<String>(bNode.getKey()).value()] = BRef<String>(bNode.getBNode()).value();
+      entries[bNode.getKey()] = BRef<String>(bNode.getBNode()).value();
     }
     REQUIRE(entries == std::map<std::string, std::string>{{"one", "0123456789"},
                                                           {"two", "asdfghjkl"},
