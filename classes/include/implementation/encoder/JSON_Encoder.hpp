@@ -32,7 +32,7 @@ private:
     destination.add('{');
     int commas = BRef<Dictionary>(bNode).value().size();
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
-      destination.add("\"" + bNodeNext.getKey() + "\"" + " : ");
+      destination.add("\"" + BRef<String>(bNodeNext.getKey()).value() + "\"" + " : ");
       encode(bNodeNext.getBNode(), destination);
       if (--commas > 0)
         destination.add(",");

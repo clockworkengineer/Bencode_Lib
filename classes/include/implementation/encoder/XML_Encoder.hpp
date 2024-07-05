@@ -38,7 +38,7 @@ private:
 
   void encodeDictionary(const BNode &bNode, IDestination &destination) const {
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
-      auto elementName = bNodeNext.getKey();
+      auto elementName = BRef<String>(bNodeNext.getKey()).value();
       std::ranges::replace(elementName, ' ', '-');
       destination.add("<" + elementName + ">");
       encodeXML(bNodeNext.getBNode(), destination);

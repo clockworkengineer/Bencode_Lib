@@ -19,11 +19,11 @@ public:
   void encode(const BNode &bNode, IDestination &destination) const override {
     if (isA<Dictionary>(bNode)) {
       encodeDictionary(bNode, destination);
-    }else if (isA<List>(bNode)) {
+    } else if (isA<List>(bNode)) {
       encodeList(bNode, destination);
-    }else if (isA<Integer>(bNode)) {
+    } else if (isA<Integer>(bNode)) {
       encodeInteger(bNode, destination);
-    }else if (isA<String>(bNode)) {
+    } else if (isA<String>(bNode)) {
       encodeString(bNode, destination);
     }
   }
@@ -32,8 +32,9 @@ private:
   void encodeDictionary(const BNode &bNode, IDestination &destination) const {
     destination.add('d');
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
-      destination.add(std::to_string(bNodeNext.getKey().length()) + ":" +
-                      bNodeNext.getKey());
+      destination.add(
+          std::to_string(BRef<String>(bNodeNext.getKey()).value().length()) +
+          ":" + BRef<String>(bNodeNext.getKey()).value());
       encode(bNodeNext.getBNode(), destination);
     }
     destination.add('e');

@@ -11,14 +11,14 @@ struct DictionaryError final : std::runtime_error {
 // Dictionary entry
 struct DictionaryEntry {
   DictionaryEntry(std::string key, BNode &&bNode)
-      : key(std::move(key)), bNode(std::move(bNode)) {}
-  std::string &getKey() { return key; }
-  [[nodiscard]] const std::string &getKey() const { return key; }
+      : key(BNode::make<String>(key)), bNode(std::move(bNode)) {}
+  BNode &getKey() { return key; }
+  [[nodiscard]] const BNode &getKey() const { return key; }
   BNode &getBNode() { return bNode; }
   [[nodiscard]] const BNode &getBNode() const { return bNode; }
 
 private:
-  std::string key{};
+  BNode key{};
   BNode bNode{};
 };
 
@@ -37,8 +37,8 @@ struct Dictionary : Variant {
   // Add Entry to Dictionary
   template <typename T> void add(T &&entry) {
     bNodeDictionary.emplace_back(std::forward<T>(entry));
-    std::ranges::sort(bNodeDictionary, [](const Entry &a, const Entry &b) {
-      return a.getKey() < b.getKey();
+    std::ranges::sort(bNodeDictionary, []( Entry &a, Entry &b) {
+      return static_cast<String &>(a.getKey().getVariant()).value() < static_cast<String &>(b.getKey().getVariant()).value();
     });
   }
   [[nodiscard]] bool contains(const std::string &key) const {
@@ -68,7 +68,7 @@ struct Dictionary : Variant {
 private:
   template <typename T> static auto findEntry(T &dictionary, const std::string &key) {
     auto it = std::ranges::find_if(dictionary, [&key](auto &entry) -> bool {
-      return entry.getKey() == key;
+      return static_cast<const String &>(entry.getKey().getVariant()).value() == key;
     });
     if (it == dictionary.end()) {
       throw DictionaryError("Invalid key used in dictionary.");
