@@ -2,24 +2,20 @@
 
 namespace Bencode_Lib {
 
-struct STR {
-  STR(const std::string &str) {
-    pStr.reset(static_cast<char *>(malloc(str.size())));
-    for (std::size_t i = 0; i < str.size(); i++) {
-      pStr[i] = str[i];
-    }
-    len = str.size();
-  }
-  std::string value() {
-    return std::string(pStr.get(), len);
+struct BencodeString {
+  BencodeString(const std::string &str) {
+    bencodeString.reset(static_cast<char *>(malloc(str.size())));
+    BencodeStringLength = str.size();
+    std::memcpy(&bencodeString[0], str.c_str(), BencodeStringLength);
   }
   const std::string value() const {
-    return std::string(pStr.get(), len);
+    return std::string(bencodeString.get(), BencodeStringLength);
   }
 private:
-  std::unique_ptr<char[]> pStr;
-  std::size_t  len {};
+  std::unique_ptr<char[]> bencodeString;
+  std::size_t  BencodeStringLength {};
 };
+
 struct String : Variant {
   // Constructors/Destructors
   String() : Variant(Type::string) , bNodeString(""){}
@@ -35,6 +31,6 @@ struct String : Variant {
   [[nodiscard]] const std::string value() const { return bNodeString.value(); }
 
 private:
-  STR bNodeString;
+  BencodeString bNodeString;
 };
 } // namespace Bencode_Lib

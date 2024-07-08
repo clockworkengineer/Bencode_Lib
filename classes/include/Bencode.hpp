@@ -13,6 +13,7 @@
 #include <fstream>
 #include <sstream>
 #include <utility>
+#include <cstring>
 
 #include "Bencode_Config.hpp"
 #include "Bencode_Interfaces.hpp"
