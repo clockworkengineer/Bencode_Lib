@@ -10,7 +10,7 @@ struct DictionaryError final : std::runtime_error {
 
 // Dictionary entry
 struct DictionaryEntry {
-  DictionaryEntry(std::string key, BNode &&bNode)
+  DictionaryEntry(const std::string &key, BNode &&bNode)
       : key(BNode::make<String>(key)), bNode(std::move(bNode)) {}
   [[nodiscard]] std::string getKey() {
     return static_cast<String &>(key.getVariant()).value();
