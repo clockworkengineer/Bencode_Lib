@@ -6,7 +6,7 @@ pipeline {
                 sh 'echo "Building..."'
                 sh 'chmod -x scripts/Linx-Build.sh'
                 sh 'scripts/Linux-Build.sh'
-                sh archiveArtifacts artifacts: 'build/tests/Bencode_Lib_Unit_Tests', fingerprint: true
+                archiveArtifacts artifacts: 'build/tests/Bencode_Lib_Unit_Tests', fingerprint: true
             }
         }
         stage ('Run'){
