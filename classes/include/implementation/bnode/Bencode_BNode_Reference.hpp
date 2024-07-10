@@ -14,7 +14,7 @@ template <typename T> bool isA(const BNode &bNode) {
   } else if constexpr (std::is_same_v<T, Hole>) {
     return bNode.getVariant().getNodeType() == Variant::Type::hole;
   } else {
-    // static_assert(false, "Not a valid BNode variant.");
+    return false;
   }
 }
 // BNode base reference converter
