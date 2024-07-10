@@ -4,7 +4,6 @@ pipeline {
         stage ('Build') {
             steps {
                 sh 'echo "Building..."'
-                sh 'apt install cmake'
                 sh 'chmod +x ./scripts/Linux-Build.sh'
                 sh './scripts/Linux-Build.sh'
                 archiveArtifacts artifacts: 'build/tests/Bencode_Lib_Unit_Tests', fingerprint: true
