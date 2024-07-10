@@ -12,6 +12,8 @@ pipeline {
         stage ('Run'){
             steps {
                 sh 'echo "Running..."'
+                sh 'chmod +x ./scripts/Linux-Run.sh'
+                sh './scripts/Linux-Run.sh'
             }
         }
     }
