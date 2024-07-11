@@ -9,9 +9,9 @@ pipeline {
                 archiveArtifacts artifacts: 'build/tests/Bencode_Lib_Unit_Tests', fingerprint: true
             }
         }
-        stage ('Run'){
+        stage ('Test'){
             steps {
-                sh 'echo "Running..."'
+                sh 'echo "Testing..."'
                 sh 'chmod +x ./scripts/Linux-Run.sh'
                 sh './scripts/Linux-Run.sh'
             }
