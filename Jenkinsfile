@@ -12,8 +12,8 @@ pipeline {
         stage ('Test'){
             steps {
                 sh 'echo "Testing..."'
-                sh 'chmod +x ./scripts/Linux-Run.sh'
-                sh './scripts/Linux-Run.sh'
+                sh 'chmod +x ./scripts/Linux-Run-Tests.sh'
+                sh './scripts/Linux-Run-Tests.sh'
             }
         }
     }
