@@ -19,17 +19,17 @@ enable_testing()
 set(TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Unit_Tests)
 
 set(TEST_SOURCES
-  ./bnode/Bencode_Lib_Tests_BNode.cpp
-  ./bencode/Bencode_Lib_Tests_Bencode.cpp
-  ./decoder/Bencode_Lib_Tests_Decode.cpp
-  ./encoder/Bencode_Lib_Tests_Encode.cpp
-  ./encoder/Bencode_Lib_Tests_JSON_Encode.cpp
-  ./encoder/Bencode_Lib_Tests_XML_Encode.cpp
-  ./io/Bencode_Lib_Tests_ISource.cpp
-  ./io/Bencode_Lib_Tests_IDestination.cpp
-  ./misc/Bencode_Lib_Tests_Helper.cpp
-  ./misc/Bencode_Lib_Tests_Misc.cpp
-  ./traverse/Bencode_lib_Tests_Traverse.cpp)
+        source/bnode/Bencode_Lib_Tests_BNode.cpp
+        source/bencode/Bencode_Lib_Tests_Bencode.cpp
+        source/decoder/Bencode_Lib_Tests_Decode.cpp
+        source/encoder/Bencode_Lib_Tests_Encode.cpp
+        source/encoder/Bencode_Lib_Tests_JSON_Encode.cpp
+        source/encoder/Bencode_Lib_Tests_XML_Encode.cpp
+        source/io/Bencode_Lib_Tests_ISource.cpp
+        source/io/Bencode_Lib_Tests_IDestination.cpp
+        source/misc/Bencode_Lib_Tests_Helper.cpp
+        source/misc/Bencode_Lib_Tests_Misc.cpp
+        source/traverse/Bencode_lib_Tests_Traverse.cpp)
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
