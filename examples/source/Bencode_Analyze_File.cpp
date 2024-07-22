@@ -1,8 +1,8 @@
 //
 // Program: Bencode_Analyze_File
 //
-// Description: For a each Bencode file (torrent) in a directory parse it, then analyze its
-// Bencode tree and produce a output report of the analysis.
+// Description: For a each Bencode file (torrent) in a directory parse it, analyze its
+// Bencode tree and produce an output report of the analysis.
 //
 // Dependencies: C++20, PLOG, Bencode_Lib.
 //

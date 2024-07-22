@@ -1,16 +1,14 @@
 //
 // Program: Bencode_Create_At_Runtime
 //
-// Description: Create Bencode programatically at runtime using a combination
-// of the Bencode class, indexing/key operators plus the use of intializer
+// Description: Create Bencode programmatically at runtime using a combination
+// of the Bencode class, indexing/key operators plus the use of initializer
 // lists.
 //
 // Dependencies: C++20, PLOG, Bencode_Lib.
 //
 
 #include "Bencode_Utility.hpp"
-#include "Bencode.hpp"
-#include "Bencode_Core.hpp"
 
 namespace be = Bencode_Lib;
 
@@ -45,7 +43,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     bEncode.encode(destination);
     PLOG_INFO << destination.toString();
     destination.clear();
-    // create Bencode using an intialiser list and nesting array/objects using
+    // create Bencode using an initializer list and nesting array/objects using
     // BNode{}.
     const be::Bencode bEncode2 = {
         {"pi", 3.141},

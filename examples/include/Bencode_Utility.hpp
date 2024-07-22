@@ -9,6 +9,9 @@
 #include "plog/Initializers/RollingFileInitializer.h"
 #include "plog/Log.h"
 
+#include "Bencode.hpp"
+#include "Bencode_Core.hpp"
+
 class Utility {
 public:
   static std::vector<std::string> createTorrentFileList() {
