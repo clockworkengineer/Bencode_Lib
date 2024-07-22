@@ -7,8 +7,6 @@
 
 #include "Bencode_Lib_Tests.hpp"
 
-using namespace Bencode_Lib;
-
 class Bencode_Analyzer final : public IAction {
 public:
   Bencode_Analyzer() = default;

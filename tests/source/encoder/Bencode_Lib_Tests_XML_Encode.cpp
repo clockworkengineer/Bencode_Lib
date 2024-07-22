@@ -8,8 +8,6 @@
 #include "Bencode_Lib_Tests.hpp"
 #include "XML_Encoder.hpp"
 
-using namespace Bencode_Lib;
-
 TEST_CASE("XML encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
   const Bencode bEncode(makeEncoder<XML_Encoder>());

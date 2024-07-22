@@ -7,7 +7,6 @@
 
 #include "Bencode_Lib_Tests.hpp"
 
-using namespace Bencode_Lib;
 // ==================
 // BNode constructors
 // ==================

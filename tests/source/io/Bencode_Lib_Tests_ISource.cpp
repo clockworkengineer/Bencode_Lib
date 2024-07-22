@@ -7,8 +7,6 @@
 
 #include "Bencode_Lib_Tests.hpp"
 
-using namespace Bencode_Lib;
-
 TEST_CASE("ISource (Buffer interface). Contains file singlefile.torrent.",
           "[Bencode][ISource]") {
   std::string bencodedBuffer{

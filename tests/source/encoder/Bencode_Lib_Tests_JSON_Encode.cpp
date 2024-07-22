@@ -8,8 +8,6 @@
 #include "Bencode_Lib_Tests.hpp"
 #include "JSON_Encoder.hpp"
 
-using namespace Bencode_Lib;
-
 TEST_CASE("JSON encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
   const Bencode bEncode(makeEncoder<JSON_Encoder>());

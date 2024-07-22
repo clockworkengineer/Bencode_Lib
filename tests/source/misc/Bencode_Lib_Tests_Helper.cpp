@@ -6,8 +6,6 @@
 
 #include "Bencode_Lib_Tests.hpp"
 
-using namespace Bencode_Lib;
-
 /// <summary>
 /// Prefix path to test data file name.
 /// </summary>

@@ -7,8 +7,6 @@
 
 #include "Bencode_Lib_Tests.hpp"
 
-using namespace Bencode_Lib;
-
 TEST_CASE("Bencode for encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
   const Bencode bEncode;

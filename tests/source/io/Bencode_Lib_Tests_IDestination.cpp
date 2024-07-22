@@ -7,8 +7,6 @@
 
 #include "Bencode_Lib_Tests.hpp"
 
-using namespace Bencode_Lib;
-
 TEST_CASE("IDestination (Buffer interface).", "[Bencode][IDestination]") {
   SECTION("Create BufferDestinations.", "[Bencode][IDestination]") {
     REQUIRE_NOTHROW(BufferDestination());

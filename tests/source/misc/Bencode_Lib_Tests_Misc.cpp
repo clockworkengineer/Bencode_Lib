@@ -7,8 +7,6 @@
 
 #include "Bencode_Lib_Tests.hpp"
 
-using namespace Bencode_Lib;
-
 TEST_CASE("Check R-Value reference encode/decode.",
           "[Bencode][BNode][Reference]") {
   const Bencode bEncode;
