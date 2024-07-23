@@ -19,7 +19,10 @@ enable_testing()
 set(TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Unit_Tests)
 
 set(TEST_SOURCES
-        source/bnode/Bencode_Lib_Tests_BNode.cpp
+        source/bnode/Bencode_Lib_Tests_BNode_Assignment.cpp
+        source/bnode/Bencode_Lib_Tests_BNode_Constructor.cpp
+        source/bnode/Bencode_Lib_Tests_BNode_Indexing.cpp
+        source/bnode/Bencode_Lib_Tests_BNode_Reference.cpp
         source/bencode/Bencode_Lib_Tests_Bencode_Complex.cpp
         source/bencode/Bencode_Lib_Tests_Bencode_Dictionary.cpp
         source/bencode/Bencode_Lib_Tests_Bencode_List.cpp
