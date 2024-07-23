@@ -27,6 +27,8 @@ set(TEST_SOURCES
         source/bencode/Bencode_Lib_Tests_Bencode_Dictionary.cpp
         source/bencode/Bencode_Lib_Tests_Bencode_List.cpp
         source/decoder/Bencode_Lib_Tests_Decode.cpp
+        source/decoder/Bencode_Lib_Tests_Decode_Collection.cpp
+        source/decoder/Bencode_Lib_Tests_Decode_Simple.cpp
         source/encoder/Bencode_Lib_Tests_Encode.cpp
         source/encoder/Bencode_Lib_Tests_JSON_Encode.cpp
         source/encoder/Bencode_Lib_Tests_XML_Encode.cpp
