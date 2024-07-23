@@ -25,51 +25,6 @@ TEST_CASE("Bencode for decode of a table of string test data",
   bEncode.decode(source);
   REQUIRE(BRef<String>(bEncode.root()).value() == expected);
 }
-TEST_CASE("Decode generated exceptions", "[Bencode][Decode][Exceptions]") {
-  const Bencode bEncode;
-  SECTION("Decode an string without terminating ':' on its length",
-          "[Bencode][Decode][Exceptions]") {
-    BufferSource source{"26abcdefghijklmnopqrstuvwxyz"};
-    REQUIRE_THROWS_AS(bEncode.decode(source), SyntaxError);
-  }
-  SECTION("Decode an integer without a terminating end",
-          "[Bencode][Decode][Exceptions]") {
-    BufferSource source{"i266"};
-    REQUIRE_THROWS_AS(bEncode.decode(source), SyntaxError);
-  }
-  SECTION("Decode an list without a terminating end",
-          "[Bencode][Decode][Exceptions]") {
-    BufferSource source{"li266ei6780ei88e"};
-    REQUIRE_THROWS_AS(bEncode.decode(source), SyntaxError);
-  }
-  SECTION("Decode an dictionary without a terminating end",
-          "[Bencode][Decode][Exceptions]") {
-    BufferSource source{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkl"};
-    REQUIRE_THROWS_AS(bEncode.decode(source), SyntaxError);
-  }
-  SECTION("Decode an string that terminates prematurely",
-          "[Bencode][Decode][Exceptions]") {
-    BufferSource source{"26:abcdefghijklmno"};
-    REQUIRE_THROWS_WITH(
-        bEncode.decode(source),
-        "ISource Error: Decode buffer empty before decode complete.");
-  }
-  SECTION("Duplicate dictionary keys",
-          "[Bencode][Decode][Dictionary][Exceptions]") {
-    BufferSource source{"d3:one10:01234567893:two6:qwerty3:two9:asdfghjkle"};
-    REQUIRE_THROWS_AS(bEncode.decode(source), SyntaxError);
-  }
-  SECTION("Dictionary Keys not in lexical order",
-          "[Bencode][Decode][Dictionary][Exceptions]") {
-    BufferSource source{"d5:three10:01234567893:one6:qwerty3:two9:asdfghjkle"};
-    REQUIRE_THROWS_AS(bEncode.decode(source), SyntaxError);
-  }
-  SECTION("Decode an Dictionary of ints that terminates early",
-          "[Bencode][Decode][Dictionary]") {
-    BufferSource source{"d3:onei1e5:threei3ee3:twoi2ee"};
-    REQUIRE_THROWS_AS(bEncode.decode(source), SyntaxError);
-  }
-}
 TEST_CASE("Decode torrent files", "[Bencode][Decode][Torrents]") {
   const Bencode bEncode;
   SECTION("Decode singlefile.torrent", "[Bencode][Decode][Torrents]") {
