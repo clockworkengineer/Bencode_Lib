@@ -1,10 +1,3 @@
-//
-// Unit Tests: Bencode_Lib_Tests_ISource
-//
-// Description: Miscellaneous unit tests for Bencode class
-// using the Catch2 test framework.
-//
-
 #include "Bencode_Lib_Tests.hpp"
 
 TEST_CASE("Check R-Value reference encode/decode.",

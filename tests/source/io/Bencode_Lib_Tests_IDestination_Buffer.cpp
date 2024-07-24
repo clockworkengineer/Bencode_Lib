@@ -1,10 +1,3 @@
-//
-// Unit Tests: Bencode_Lib_Tests_IDestination
-//
-// Description: IDestination unit tests for Bencode class
-// using the Catch2 test framework.
-//
-
 #include "Bencode_Lib_Tests.hpp"
 
 TEST_CASE("IDestination (Buffer interface).", "[Bencode][IDestination]") {

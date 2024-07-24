@@ -1,10 +1,3 @@
-//
-// Unit Tests: Bencode_Lib_Tests_JSON_Encode
-//
-// Description: XML encode unit tests for Bencode class
-// using the Catch2 test framework.
-//
-
 #include "Bencode_Lib_Tests.hpp"
 #include "XML_Encoder.hpp"
 

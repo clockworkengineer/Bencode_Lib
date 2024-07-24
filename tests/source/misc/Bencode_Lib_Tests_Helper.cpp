@@ -1,9 +1,3 @@
-//
-// Unit Tests: Bencode
-//
-// Description: Bencode unit test helper functions.
-//
-
 #include "Bencode_Lib_Tests.hpp"
 
 /// <summary>

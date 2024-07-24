@@ -1,10 +1,3 @@
-//
-// Unit Tests: Bencode_Lib_Tests_Decode_Collection
-//
-// Description: Decode unit tests for Bencode class
-// using the Catch2 test framework.
-//
-
 #include "Bencode_Lib_Tests.hpp"
 
 TEST_CASE("Bencode for decode of collection types (list, dictionary) ",

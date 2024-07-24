@@ -1,10 +1,3 @@
-//
-// Unit Tests: Bencode_Lib_Tests_Bencode_Complex
-//
-// Description: Bencode creation API(s) unit tests for Bencode class
-// using the Catch2 test framework.
-//
-
 #include "Bencode_Lib_Tests.hpp"
 
 TEST_CASE("Check Bencode create complex Bencode structures.",

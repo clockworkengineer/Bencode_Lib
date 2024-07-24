@@ -1,10 +1,3 @@
-//
-// Unit Tests: Bencode_Lib_Tests_BNode_Indexing
-//
-// Description: BNode unit tests for Bencode class
-// using the Catch2 test framework.
-//
-
 #include "Bencode_Lib_Tests.hpp"
 
 TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {

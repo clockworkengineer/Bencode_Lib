@@ -1,10 +1,3 @@
-//
-// Unit Tests: Bencode_Lib_Tests_ISource_Buffer
-//
-// Description: ISource unit tests for Bencode class
-// using the Catch2 test framework.
-//
-
 #include "Bencode_Lib_Tests.hpp"
 
 TEST_CASE("ISource (Buffer interface). Contains file singlefile.torrent.",
