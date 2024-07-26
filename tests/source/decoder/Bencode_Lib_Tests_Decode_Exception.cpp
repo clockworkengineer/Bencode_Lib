@@ -40,8 +40,19 @@ TEST_CASE("Decode generated Exception", "[Bencode][Decode][Exception]") {
     REQUIRE_THROWS_AS(bEncode.decode(source), SyntaxError);
   }
   SECTION("Decode an Dictionary of ints that terminates early",
-          "[Bencode][Decode][Dictionary]") {
+          "[Bencode][Decode][Dictionary][Exception]") {
     BufferSource source{"d3:onei1e5:threei3ee3:twoi2ee"};
     REQUIRE_THROWS_AS(bEncode.decode(source), SyntaxError);
+  }
+    SECTION("Decode a string with no length", "[Bencode][Decode][String][Exception]") {
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{":"}), SyntaxError);
+  }
+  SECTION("Decode a string with negative length", "[Bencode][Decode][String][Exception]") {
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"-2:ww"}), SyntaxError);
+  }
+  SECTION("Decode a string with max length (buffer overflow attempt)",
+          "[Bencode][Decode][String][Exception]") {
+    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"9223372036854775807:ww"}),
+                      std::runtime_error);
   }
 }

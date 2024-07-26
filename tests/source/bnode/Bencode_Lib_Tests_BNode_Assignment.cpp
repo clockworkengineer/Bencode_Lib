@@ -14,7 +14,7 @@ TEST_CASE("Check use of BNode assigment operators.",
     REQUIRE(BRef<Integer>(bNode).value() == 99988899l);
   }
   SECTION("Assign long long to BNode.",
-          "[Bencode][BNode][Assignment][Long\\ Long]") {
+          "[Bencode][BNode][Assignment][Long Long]") {
     bNode = 99988899ll;
     REQUIRE_FALSE(!isA<Integer>(bNode));
     REQUIRE(BRef<Integer>(bNode).value() == 99988899ll);

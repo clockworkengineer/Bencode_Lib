@@ -85,15 +85,13 @@ TEST_CASE("Bencode for decode of simple types (integer, string) ",
     REQUIRE_NOTHROW(bEncode.decode(BufferSource{"0:"}));
     REQUIRE(BRef<String>(bEncode.root()).value().empty());
   }
-  SECTION("Decode a string with no length", "[Bencode][Decode][String]") {
-    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{":"}), SyntaxError);
-  }
-  SECTION("Decode a string with negative length", "[Bencode][Decode][String]") {
-    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"-2:ww"}), SyntaxError);
-  }
-  SECTION("Decode a string with max length (buffer overflow attempt)",
+  SECTION("Decode a string with all possible 256 characters.",
           "[Bencode][Decode][String]") {
-    REQUIRE_THROWS_AS(bEncode.decode(BufferSource{"9223372036854775807:ww"}),
-                      std::runtime_error);
+    std::string str{};
+    for (int i = 0; i < 256; i++) {
+      str.push_back(static_cast<char>(i));
+    }
+    bEncode.decode(BufferSource("256:" + str));
+    REQUIRE(BRef<String>(bEncode.root()).value() == str);
   }
 }
