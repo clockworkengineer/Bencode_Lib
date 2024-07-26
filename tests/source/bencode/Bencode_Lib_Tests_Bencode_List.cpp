@@ -1,13 +1,14 @@
 #include "Bencode_Lib_Tests.hpp"
 
 TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
-  SECTION("Initialise Bencode with Bencode list  passed to constructor.",
+  SECTION("Initialise Bencode with Bencode list  passed to string constructor.",
           "[Bencode][Create][Constructor]") {
     REQUIRE_NOTHROW(Bencode(R"(l2:pii3ee)"));
   }
 
-  SECTION("Initialise Bencode with strinlistg passed to constructor and validate.",
-          "[Bencode][Create][Constructor][Validate]") {
+  SECTION(
+      "Initialise Bencode with list passed to string constructor and validate.",
+      "[Bencode][Create][Constructor][Validate]") {
     const Bencode bencode(R"(l2:pii3ee)");
     REQUIRE_FALSE(!isA<List>(bencode.root()));
     REQUIRE_FALSE(!isA<String>(bencode[0]));
@@ -104,7 +105,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(destination.toString() == R"(lli3000eee)");
   }
-  SECTION("Create list with free spaces string at the base and encode.",
+  SECTION("Create list with free spaces and a string at the base and encode.",
           "[Bencode][Create][List][String]") {
     Bencode bencode;
     bencode[5] = "test";
@@ -114,7 +115,8 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE_NOTHROW(bencode.encode(destination));
     REQUIRE(destination.toString() == R"(l4:teste)");
   }
-  SECTION("Create list with free spaces add an integer at the base andencode.",
+  SECTION("Create list with 5 free spaces, add an string to the last entry, "
+          "add an integer at element 3 and encode.",
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[5] = "test";
