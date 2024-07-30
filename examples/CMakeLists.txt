@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.18.1)
 
-project("Bencode_Lib Examples" VERSION 1.1.1 DESCRIPTION "Bencode_Lib example programs")
+project("Bencode_Lib Examples" VERSION 1.1.0 DESCRIPTION "Bencode_Lib example programs")
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -8,8 +8,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(MSVC)
   add_compile_options(/W4)
+  set(PLATFORM "windows")
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   add_compile_options(-Wall -Werror -pedantic)
+  set(PLATFORM "linux")
+else()
+  add_compile_options(-Wall -Werror -pedantic)
+  set(PLATFORM "linux")
 endif()
 
 # Get example program list
