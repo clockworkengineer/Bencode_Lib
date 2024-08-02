@@ -4,7 +4,7 @@
 // Description: Use Bencode_Lib to read in torrent file then write
 // it out as XML using a custom encoder.
 //
-// Dependencies: C++20, Bencode_Lib.
+// Dependencies: C++20, PLOG,  Bencode_Lib.
 //
 
 #include "Bencode_Utility.hpp"

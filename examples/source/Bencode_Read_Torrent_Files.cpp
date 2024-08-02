@@ -5,7 +5,7 @@
 // Details on the torrent file format can be found at the wiki page
 // https://en.wikipedia.org/wiki/Torrent_file.
 //
-// Dependencies: C++20, Bencode_Lib.
+// Dependencies: C++20, PLOG,  Bencode_Lib.
 //
 
 #include "Bencode_Utility.hpp"
