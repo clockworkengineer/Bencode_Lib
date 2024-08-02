@@ -2,10 +2,12 @@ cmake_minimum_required(VERSION 3.18.1)
 
 project("Bencode_Lib" VERSION 1.1.0 DESCRIPTION "Bencode C++ Library" LANGUAGES CXX)
 
+# C++ options
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Compiler options
 if(MSVC)
   add_compile_options(/W4)
   set(PLATFORM "windows")
@@ -14,10 +16,13 @@ else()
   set(PLATFORM "linux")
 endif()
 
+# Setup library version
 configure_file(Bencode_Config.h.in Bencode_Config.hpp)
 
+# Library name
 set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
 
+# Bencode sources and includes
 set(BENCODE_SOURCES
   ./classes/source/Bencode.cpp
   ./classes/source/implementation/Bencode_Impl.cpp
