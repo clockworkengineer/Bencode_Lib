@@ -97,7 +97,8 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
     lastKey = key;
     // Check key not duplicate and insert
     if (!BRef<Dictionary>(dictionary).contains(key)) {
-      BRef<Dictionary>(dictionary).add(Dictionary::Entry(key, decodeTree(source)));
+      BRef<Dictionary>(dictionary)
+          .add(Dictionary::Entry(key, decodeTree(source)));
     } else {
       throw SyntaxError("Duplicate dictionary key.");
     }
@@ -123,7 +124,8 @@ BNode Bencode_Decoder::decodeList(ISource &source) {
 
 void Bencode_Decoder::confirmBoundary(ISource &source, char expectedBoundary) {
   if (source.current() != expectedBoundary) {
-    throw SyntaxError(std::string("Missing end terminator on ") + expectedBoundary);
+    throw SyntaxError(std::string("Missing end terminator on ") +
+                      expectedBoundary);
   }
   source.next();
 }
@@ -133,28 +135,12 @@ void Bencode_Decoder::confirmBoundary(ISource &source, char expectedBoundary) {
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
 BNode Bencode_Decoder::decodeTree(ISource &source) {
-  using DecoderFunc = std::function<BNode(void)>;
-  std::map<char, DecoderFunc> decoders = {
-      {'d', [&source]{ return decodeDictionary(source); }},
-      {'l', [&source]{ return decodeList(source); }},
-      {'i', [&source]{ return decodeInteger(source); }},
-      {'0', [&source]{ return decodeString(source); }},
-      {'1', [&source]{ return decodeString(source); }},
-      {'2', [&source]{ return decodeString(source); }},
-      {'3', [&source]{ return decodeString(source); }},
-      {'4', [&source]{ return decodeString(source); }},
-      {'5', [&source]{ return decodeString(source); }},
-      {'6', [&source]{ return decodeString(source); }},
-      {'7', [&source]{ return decodeString(source); }},
-      {'8', [&source]{ return decodeString(source); }},
-      {'9', [&source]{ return decodeString(source); }}
-  };
-
   auto it = decoders.find(source.current());
   if (it == decoders.end()) {
-    throw SyntaxError("Expected integer, string, list or dictionary not present.");
+    throw SyntaxError(
+        "Expected integer, string, list or dictionary not present.");
   }
-  return it->second();
+  return it->second(source);
 }
 
 /// <summary>
@@ -164,8 +150,6 @@ BNode Bencode_Decoder::decodeTree(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Bencode_Decoder::decode(ISource &source) {
-  return decodeTree(source);
-}
+BNode Bencode_Decoder::decode(ISource &source) { return decodeTree(source); }
 
 } // namespace Bencode_Lib
