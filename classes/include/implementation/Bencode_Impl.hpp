@@ -23,7 +23,7 @@ public:
   void encode(IDestination &destination) const;
   // Bencode version
   static std::string version();
-  // Return root BNode of tree
+  // Return root BNode of the tree
   [[nodiscard]] BNode &root() { return bNodeRoot; }
   [[nodiscard]] const BNode &root() const { return bNodeRoot; }
   // Traverse BNode tree

@@ -43,7 +43,7 @@ public:
                    [[maybe_unused]] IDecoder *decoder = nullptr);
   // Pass in default JSON to parse
   explicit Bencode(const std::string &bencodeString);
-  // Construct array
+  // Construct an array
   Bencode(const ListInitializer &list);
   // Construct object
   Bencode(const DictionaryInitializer &dictionary);

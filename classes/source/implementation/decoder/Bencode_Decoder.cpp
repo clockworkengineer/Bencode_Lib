@@ -25,7 +25,7 @@ int64_t Bencode_Decoder::extractInteger(ISource &source) {
     number[digits++] = source.current();
     source.next();
   }
-  // Check integer has no leading zero and is not empty ('ie')
+  // Check integer has no leading zero and is not empty ('i.e.')
   if ((number[0] == '0' && digits > 1) || digits == 0) {
     throw SyntaxError("Empty Integer or has leading zero.");
   }

@@ -16,7 +16,7 @@ template <typename T> BNode::BNode(T value) {
     bNodeVariant = std::move(value);
   }
 }
-// Convert initializer list to BNode
+// Convert the initializer list to BNode
 inline static BNode typeToBNode(const Bencode::IntializerListTypes &type) {
   if (const auto pValue = std::get_if<int>(&type)) {
     return BNode(*pValue);
@@ -50,14 +50,14 @@ inline static BNode typeToBNode(const Bencode::IntializerListTypes &type) {
   }
   throw BNode::Error("BNode of unsupported type could not be created.");
 }
-// Construct BNode Array from initializer list
+// Construct BNode Array from the initializer list
 inline BNode::BNode(const Bencode::ListInitializer &list) {
   *this = make<List>();
   for (const auto &entry : list) {
     BRef<List>(*this).add(typeToBNode(entry));
   }
 }
-// Construct BNode Dictionary from initializer list
+// Construct BNode Dictionary from the initializer list
 inline BNode::BNode(const Bencode::DictionaryInitializer &dictionary) {
   *this = make<Dictionary>();
   for (const auto &[fst, snd] : dictionary) {

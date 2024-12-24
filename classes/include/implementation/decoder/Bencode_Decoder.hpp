@@ -28,7 +28,7 @@ private:
   [[nodiscard]] static BNode decodeList(ISource &source);
   void static confirmBoundary(ISource &source, char expectedBoundary);
   [[nodiscard]] static BNode decodeTree(ISource &source);
-  // Decoder routing tabke
+  // Decoder routing table
   using DecoderFunc = std::function<BNode(ISource &)>;
   inline static std::map<char, DecoderFunc> decoders = {
       {'d', decodeDictionary}, {'l', decodeList},   {'i', decodeInteger},

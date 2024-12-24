@@ -29,7 +29,8 @@ public:
   // =====================================
   virtual void encode(const BNode &bNode, IDestination &destination) const = 0;
 };
-// Make custom encoder to pass to Bencode constructor: Note pointer is tidied up internally.
+// Make custom encoder
+// to pass to Bencode constructor:The note pointer is tidied up internally.
 template <typename T> IEncoder *makeEncoder() {
   return std::make_unique<T>().release();
 }
