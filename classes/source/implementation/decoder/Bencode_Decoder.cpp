@@ -5,7 +5,7 @@
 namespace Bencode_Lib {
 
 /// <summary>
-/// Extract a Integer from the input stream of characters referenced by ISource.
+/// Extract an Integer from the input stream of characters referenced by ISource.
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Positive integers value.</returns>
@@ -110,8 +110,8 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
 /// <summary>
 /// Decode a list from the input stream of characters referenced by ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
-/// stream.</param> <returns>List BNode.</returns>
+/// <param name="source">Reference to input interface used to decode Bencoded stream.</param>
+/// <returns>List BNode.</returns>
 BNode Bencode_Decoder::decodeList(ISource &source) {
   BNode list = BNode::make<List>();
   source.next();
@@ -144,8 +144,8 @@ BNode Bencode_Decoder::decodeTree(ISource &source) {
 }
 
 /// <summary>
-/// Decode a BNode from the input stream of characters referenced by ISource.In
-/// order to traverse and decode complex encodings this method is called
+/// Decode a BNode from the input stream of characters referenced by ISource to
+/// traverse and decode complex encodings. This method is called
 /// recursively to build up a BNode structure.
 /// </summary>
 /// <param name="source">Reference to input interface used to decode Bencoded
