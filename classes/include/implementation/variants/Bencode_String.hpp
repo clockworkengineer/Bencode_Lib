@@ -3,7 +3,7 @@
 namespace Bencode_Lib {
 
 struct BencodeString {
-  BencodeString(const std::string &str) {
+  explicit BencodeString(const std::string &str) {
     bencodeString.reset(static_cast<char *>(malloc(str.size())));
     BencodeStringLength = str.size();
     std::memcpy(&bencodeString[0], str.c_str(), BencodeStringLength);

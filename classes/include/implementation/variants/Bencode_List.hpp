@@ -50,7 +50,7 @@ struct List : Variant {
 
 private:
   // ensure the index is within the bounds
-  void validateIndex(int index) const {
+  void validateIndex(const int index) const {
     if (!(index >= 0 && index < static_cast<int>(bNodeList.size()))) {
       throw Error("Invalid index used in list.");
     }

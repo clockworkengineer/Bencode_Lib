@@ -122,7 +122,7 @@ BNode Bencode_Decoder::decodeList(ISource &source) {
   return list;
 }
 
-void Bencode_Decoder::confirmBoundary(ISource &source, char expectedBoundary) {
+void Bencode_Decoder::confirmBoundary(ISource &source, const char expectedBoundary) {
   if (source.current() != expectedBoundary) {
     throw SyntaxError(std::string("Missing end terminator on ") +
                       expectedBoundary);
