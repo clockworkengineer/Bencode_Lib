@@ -51,7 +51,7 @@ struct Dictionary : Variant {
     try {
       findEntryWithKey(bNodeDictionary, key);
     } catch (const Error &error) {
-      return (false);
+      return false;
     }
     return (true);
   }
