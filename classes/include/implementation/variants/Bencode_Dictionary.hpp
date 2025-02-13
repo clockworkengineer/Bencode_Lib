@@ -66,8 +66,8 @@ struct Dictionary : Variant {
     return findEntryWithKey(bNodeDictionary, key)->getBNode();
   }
 
-  [[nodiscard]] Dictionary::Entries &value() { return bNodeDictionary; }
-  [[nodiscard]] const Dictionary::Entries &value() const {
+  [[nodiscard]] Entries &value() { return bNodeDictionary; }
+  [[nodiscard]] const Entries &value() const {
     return bNodeDictionary;
   }
 
@@ -84,18 +84,18 @@ private:
     return it;
   }
 
-  static Dictionary::Entries::const_iterator
-  findEntryWithKey(const Dictionary::Entries &dictionary,
+  static Entries::const_iterator
+  findEntryWithKey(const Entries &dictionary,
                    const std::string &key) {
     return findEntry(dictionary, key);
   }
 
-  static Dictionary::Entries::iterator
-  findEntryWithKey(Dictionary::Entries &dictionary, const std::string &key) {
+  static Entries::iterator
+  findEntryWithKey(Entries &dictionary, const std::string &key) {
     return findEntry(dictionary, key);
   }
 
-  Dictionary::Entries bNodeDictionary{};
+  Entries bNodeDictionary{};
 };
 
 } // namespace Bencode_Lib
