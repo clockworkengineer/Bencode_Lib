@@ -50,7 +50,7 @@ struct Dictionary : Variant {
   [[nodiscard]] bool contains(const std::string &key) const {
     try {
       findEntryWithKey(bNodeDictionary, key);
-    } catch (const Error &error) {
+    } catch ([[maybe_unused]] const Error &error) {
       return false;
     }
     return true;
