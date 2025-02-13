@@ -51,7 +51,7 @@ private:
     destination.add(']');
   }
 
-  void encodeInteger(const BNode &bNode, IDestination &destination) const {
+  static void encodeInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
 

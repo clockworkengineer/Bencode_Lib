@@ -46,12 +46,14 @@ private:
     }
     destination.add('e');
   }
-  void encodeInteger(const BNode &bNode, IDestination &destination) const {
+
+  static void encodeInteger(const BNode &bNode, IDestination &destination) {
     destination.add('i');
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
     destination.add('e');
   }
-  void encodeString(const BNode &bNode, IDestination &destination) const {
+
+  static void encodeString(const BNode &bNode, IDestination &destination) {
     destination.add(
         std::to_string(static_cast<int>(BRef<String>(bNode).value().length())) +
         ":" + BRef<String>(bNode).value());

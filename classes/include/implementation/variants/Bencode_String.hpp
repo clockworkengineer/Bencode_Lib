@@ -8,7 +8,8 @@ struct BencodeString {
     BencodeStringLength = str.size();
     std::memcpy(&bencodeString[0], str.c_str(), BencodeStringLength);
   }
-  const std::string value() const {
+
+  std::string value() const {
     return std::string(bencodeString.get(), BencodeStringLength);
   }
 private:
@@ -28,7 +29,7 @@ struct String : Variant {
   ~String() = default;
   // Get BNode value
   [[nodiscard]] std::string value() { return bNodeString.value(); }
-  [[nodiscard]] const std::string value() const { return bNodeString.value(); }
+  [[nodiscard]] std::string value() const { return bNodeString.value(); }
 
 private:
   BencodeString bNodeString;

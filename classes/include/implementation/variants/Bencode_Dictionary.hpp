@@ -15,7 +15,7 @@ struct DictionaryEntry {
   [[nodiscard]] std::string getKey() {
     return static_cast<String &>(key.getVariant()).value();
   }
-  [[nodiscard]] const std::string getKey() const {
+  [[nodiscard]] std::string getKey() const {
     return static_cast<const String &>(key.getVariant()).value();
   }
   [[nodiscard]] BNode &getKeyBNode() { return key; }

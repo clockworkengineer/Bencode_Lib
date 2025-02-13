@@ -135,7 +135,7 @@ void Bencode_Decoder::confirmBoundary(ISource &source, char expectedBoundary) {
 /// <param name="source">Reference to input interface used to decode Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
 BNode Bencode_Decoder::decodeTree(ISource &source) {
-  auto it = decoders.find(source.current());
+  const auto it = decoders.find(source.current());
   if (it == decoders.end()) {
     throw SyntaxError(
         "Expected integer, string, list or dictionary not present.");
