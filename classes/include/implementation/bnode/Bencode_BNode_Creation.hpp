@@ -17,7 +17,7 @@ template <typename T> BNode::BNode(T value) {
   }
 }
 // Convert the initializer list to BNode
-inline static BNode typeToBNode(const Bencode::IntializerListTypes &type) {
+static BNode typeToBNode(const Bencode::IntializerListTypes &type) {
   if (const auto pValue = std::get_if<int>(&type)) {
     return BNode(*pValue);
   }
