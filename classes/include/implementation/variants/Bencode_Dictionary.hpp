@@ -53,7 +53,7 @@ struct Dictionary : Variant {
     } catch (const Error &error) {
       return false;
     }
-    return (true);
+    return true;
   }
   [[nodiscard]] int size() const {
     return static_cast<int>(bNodeDictionary.size());

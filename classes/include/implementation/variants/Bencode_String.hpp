@@ -20,7 +20,7 @@ private:
 struct String : Variant {
   // Constructors/Destructors
   String() : Variant(Type::string) , bNodeString(""){}
-  explicit String(std::string string)
+  explicit String(const std::string &string)
       : Variant(Type::string), bNodeString(string) {}
   String(const String &other) = delete;
   String &operator=(const String &other) = delete;
