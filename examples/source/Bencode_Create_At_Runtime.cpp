@@ -18,7 +18,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     init(plog::debug, "Bencode_Create_At_Runtime.log");
     PLOG_INFO << "Bencode_Create_At_Runtime started ...";
     // Log version
-    PLOG_INFO << be::Bencode().version();
+    PLOG_INFO << be::Bencode::version();
     // create an empty structure (null)
     be::Bencode bEncode;
     // add a number that is stored as double (note the implicit conversion of

@@ -1,5 +1,5 @@
 //
-// Program:  Bencode_Torrent_Files_To_JSON
+// Program:  Bencode_Files_To_JSON
 //
 // Description: Use Bencode_Lib to read in torrent file then write
 // it out as JSON using a custom encoder.
@@ -16,20 +16,20 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     const be::Bencode bEncode(be::makeEncoder<be::JSON_Encoder>());
     // Initialise logging.
-    init(plog::debug, "BencodeTorrent_Files_To_JSON.log");
-    PLOG_INFO << "BencodeTorrent_Files_To_JSON started ...";
-    PLOG_INFO << be::Bencode().version();
-    for (const auto &torrentFileName : Utility::createTorrentFileList()) {
-      bEncode.decode(be::FileSource(torrentFileName));
+    init(plog::debug, "Bencode_Files_To_JSON.log");
+    PLOG_INFO << "Bencode_Files_To_JSON started ...";
+    PLOG_INFO << be::Bencode::version();
+    for (const auto &fileName : Utility::createTorrentFileList()) {
+      bEncode.decode(be::FileSource(fileName));
       bEncode.encode(be::FileDestination(
-          Utility::createFileName(torrentFileName, ".json")));
+          Utility::createFileName(fileName, ".json")));
       PLOG_INFO << "Created file "
-                << Utility::createFileName(torrentFileName, ".json") << " from "
-                << torrentFileName;
+                << Utility::createFileName(fileName, ".json") << " from "
+                << fileName;
     }
   } catch (const std::exception &ex) {
-    PLOG_ERROR << "Error Processing Torrent File: [" << ex.what() << "]\n";
+    PLOG_ERROR << "Error Processing Bencode File: [" << ex.what() << "]\n";
   }
-  PLOG_INFO << "BencodeTorrent_Files_To_JSON exited.";
+  PLOG_INFO << "Bencode_Files_To_JSON exited.";
   exit(EXIT_SUCCESS);
 }

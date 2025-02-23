@@ -18,7 +18,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     // Initialise logging.
     init(plog::debug, "Bencode_Read_Torrent_Files.log");
     PLOG_INFO << "Read_Torrent_File started ...";
-    PLOG_INFO << be::Bencode().version();
+    PLOG_INFO << be::Bencode::version();
     // For each torrent file extract its information and display
     for (const auto &fileName : Utility::createTorrentFileList()) {
       TorrentInfo torrentFile{fileName};

@@ -53,7 +53,7 @@ Bencode::Bencode(const DictionaryInitializer &dictionary) : Bencode() {
 /// <summary>
 ///  Get Bencode_Lib version.
 /// </summary>
-std::string Bencode::version() const { return implementation->version(); }
+std::string Bencode::version() { return Bencode_Impl::version(); }
 
 /// <summary>
 /// Decode Bencoded byte string pointed to by source stream into BNode(s).

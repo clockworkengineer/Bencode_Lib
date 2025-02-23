@@ -49,7 +49,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     init(plog::debug, "Bencode_Fibonacci.log");
     PLOG_INFO << "Bencode_Fibonacci started ...";
     // Log version
-    PLOG_INFO << be::Bencode().version();
+    PLOG_INFO << be::Bencode::version();
     // Update current sequence
     nextFibonacci();
   } catch (std::exception &ex) {

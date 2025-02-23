@@ -59,7 +59,7 @@ public:
   void encode(IDestination &destination) const;
   void encode(IDestination &&destination) const;
   // Return Bencode_Lib version
-  [[nodiscard]] std::string version() const;
+  [[nodiscard]] static std::string version();
   // Return BNode tree root
   [[nodiscard]] BNode &root();
   [[nodiscard]] const BNode &root() const;

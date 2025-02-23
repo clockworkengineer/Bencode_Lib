@@ -1,5 +1,5 @@
 //
-// Program:  Bencode_Bencode_Torrent_Files_To_XML
+// Program:  Bencode_Bencode_Files_To_XML
 //
 // Description: Use Bencode_Lib to read in torrent file then write
 // it out as XML using a custom encoder.
@@ -16,20 +16,20 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     const be::Bencode bEncode(be::makeEncoder<be::XML_Encoder>());
     // Initialise logging.
-    init(plog::debug, "Bencode_Torrent_Files_To_XML.log");
-    PLOG_INFO << "Bencode_Torrent_Files_To_XML started ...";
-    PLOG_INFO << be::Bencode().version();
-    for (const auto &torrentFileName : Utility::createTorrentFileList()) {
-      bEncode.decode(be::FileSource(torrentFileName));
+    init(plog::debug, "Bencode_Files_To_XML.log");
+    PLOG_INFO << "Bencode_Files_To_XML started ...";
+    PLOG_INFO << be::Bencode::version();
+    for (const auto &fileName : Utility::createTorrentFileList()) {
+      bEncode.decode(be::FileSource(fileName));
       bEncode.encode(be::FileDestination(
-          Utility::createFileName(torrentFileName, ".xml")));
+          Utility::createFileName(fileName, ".xml")));
       PLOG_INFO << "Created file "
-                << Utility::createFileName(torrentFileName, ".xml") << " from "
-                << torrentFileName;
+                << Utility::createFileName(fileName, ".xml") << " from "
+                << fileName;
     }
   } catch (const std::exception &ex) {
-    PLOG_ERROR << "Error Processing Torrent File: [" << ex.what() << "]\n";
+    PLOG_ERROR << "Error Processing Bencode File: [" << ex.what() << "]\n";
   }
-  PLOG_INFO << "Bencode_Torrent_Files_To_XML exited.";
+  PLOG_INFO << "Bencode_Files_To_XML exited.";
   exit(EXIT_SUCCESS);
 }
