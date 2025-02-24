@@ -20,15 +20,16 @@ public:
   void encode(const BNode &bNode, IDestination &destination) const override {
     destination.add("---\n");
     encodeYAML(bNode, destination, 0);
-    destination.add("\n...\n");
+    destination.add("...\n");
   }
 
 private:
-  void encodeYAML(const BNode &bNode, IDestination &destination, const unsigned long indent) const {
+  void encodeYAML(const BNode &bNode, IDestination &destination,
+                  const unsigned long indent) const {
     if (isA<Dictionary>(bNode)) {
-      encodeDictionary(bNode, destination, indent+2);
+      encodeDictionary(bNode, destination, indent + 2);
     } else if (isA<List>(bNode)) {
-      encodeList(bNode, destination, indent+2);
+      encodeList(bNode, destination, indent + 2);
     } else if (isA<Integer>(bNode)) {
       encodeInteger(bNode, destination);
     } else if (isA<String>(bNode)) {
@@ -36,37 +37,31 @@ private:
     }
   }
 
-  void encodeDictionary(const BNode &bNode, IDestination &destination,  const unsigned long indent) const {
+  void encodeDictionary(const BNode &bNode, IDestination &destination,
+                        const unsigned long indent) const {
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       auto elementName = bNodeNext.getKey();
-      std::ranges::replace(elementName, ' ', '-');
-      destination.add("<" + elementName + ">");
+      destination.add(elementName + ": ");
       encodeYAML(bNodeNext.getBNode(), destination, indent);
-      destination.add("</" + elementName + ">");
     }
   }
 
-  void encodeList(const BNode &bNode, IDestination &destination,  const unsigned long indent) const {
-    if (BRef<List>(bNode).value().size() > 1) {
-      for (const auto &bNodeNext : BRef<List>(bNode).value()) {
-        destination.add("<Row>");
-        encodeYAML(bNodeNext, destination, indent);
-        destination.add("</Row>");
-      }
-    } else {
-      destination.add("<Row>");
-      destination.add("</Row>");
+  void encodeList(const BNode &bNode, IDestination &destination,
+                  const unsigned long indent) const {
+    for (const auto &bNodeNext : BRef<List>(bNode).value()) {
+      destination.add("- ");
+      encodeYAML(bNodeNext, destination, indent);
     }
   }
 
   static void encodeInteger(const BNode &bNode, IDestination &destination) {
-    destination.add(std::to_string(BRef<Integer>(bNode).value()));
+    destination.add(std::to_string(BRef<Integer>(bNode).value())+"\n");
   }
 
   void encodeString(const BNode &bNode, IDestination &destination) const {
-    destination.add(xmlTranslator.to(BRef<String>(bNode).value()));
+    destination.add(yamlTranslator.to(BRef<String>(bNode).value())+"\n");
   }
 
-  YAML_Translator xmlTranslator;
+  YAML_Translator yamlTranslator;
 };
 } // namespace Bencode_Lib
