@@ -41,7 +41,9 @@ set(TEST_SOURCES
         source/io/Bencode_Lib_Tests_IDestination_File.cpp
         source/misc/Bencode_Lib_Tests_Helper.cpp
         source/misc/Bencode_Lib_Tests_Misc.cpp
-        source/traverse/Bencode_lib_Tests_Traverse.cpp)
+        source/traverse/Bencode_lib_Tests_Traverse.cpp
+        ../classes/include/implementation/translator/YAML_Translator.hpp
+        source/encoder/Bencode_Lib_Tests_YAML_Encode.cpp)
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)

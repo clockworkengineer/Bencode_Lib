@@ -48,9 +48,11 @@ set(BENCODE_INCLUDES
   ./classes/include/implementation/encoder/Bencode_Encoder.hpp
   ./classes/include/implementation/encoder/JSON_Encoder.hpp
   ./classes/include/implementation/encoder/XML_Encoder.hpp
+  ./classes/include/implementation/encoder/YAML_Encoder.hpp
   ./classes/include/implementation/translator/Bencode_Translator.hpp
   ./classes/include/implementation/translator/JSON_Translator.hpp
   ./classes/include/implementation/translator/XML_Translator.hpp
+  ./classes/include/implementation/translator/YAML_Translator.hpp
   ./classes/include/implementation/io/Bencode_Sources.hpp
   ./classes/include/implementation/io/Bencode_BufferSource.hpp
   ./classes/include/implementation/io/Bencode_FileSource.hpp

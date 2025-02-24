@@ -60,7 +60,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
   }
   SECTION("XML encode an string with unprintable characters "
           "('abcdefghijklmnopqrstuvwxyz').",
-          "[Bencode][Encode][JSON][String]") {
+          "[Bencode][Encode][XML][String]") {
     std::string escaped{"29:abcdefghijklmnopqrstuvwxyz"};
     escaped += static_cast<char>(0);
     escaped += static_cast<char>(1);
@@ -75,7 +75,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
   }
   SECTION("XML encode an string with escaped XML characters "
           "('abcdefghijklmnopqrstuvwxyz&<>'\"').",
-          "[Bencode][Encode][JSON][String]") {
+          "[Bencode][Encode][XML][String]") {
     std::string escaped{R"(32:abcdefghijklmnopqrstuvwxyz &<>'")"};
     BufferSource source{escaped};
     BufferDestination destination;
@@ -158,8 +158,8 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
     REQUIRE(destination.toString() ==
             R"(<?xml version="1.0" encoding="UTF-8"?><root></root>)");
   }
-  SECTION("JSON encode an empty List of empty Dictionaries.",
-          "[Bencode][Encode][JSON][Dictionary]") {
+  SECTION("XML encode an empty List of empty Dictionaries.",
+          "[Bencode][Encode][XML][Dictionary]") {
     BufferSource source{"ldededededee"};
     BufferDestination destination;
     bEncode.decode(source);
