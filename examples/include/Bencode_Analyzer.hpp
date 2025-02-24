@@ -49,7 +49,7 @@ public:
     maxDictionarySize =
         std::max(bNodeDictionary.value().size(), maxDictionarySize);
     for (auto &entry : bNodeDictionary.value()) {
-      auto &key = entry.getKey();
+      const auto &key = entry.getKey();
       uniqueKeys.insert(key);
       maxKeySize = std::max(key.size(), maxKeySize);
       sizeInBytes += key.size();
