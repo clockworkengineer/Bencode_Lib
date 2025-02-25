@@ -59,10 +59,10 @@ private:
                   const unsigned long indent) const {
     std::string spaces(indent, ' ');
     if (!BRef<List>(bNode).value().empty()) {
-    for (const auto &bNodeNext : BRef<List>(bNode).value()) {
-      destination.add(spaces + "- ");
-      encodeYAML(bNodeNext, destination, indent + 2);
-    }
+      for (const auto &bNodeNext : BRef<List>(bNode).value()) {
+        destination.add(spaces + "- ");
+        encodeYAML(bNodeNext, destination, indent + 2);
+      }
     } else {
       destination.add("[]\n");
     }
