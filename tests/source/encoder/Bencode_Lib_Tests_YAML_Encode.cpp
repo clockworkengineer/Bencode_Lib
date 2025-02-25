@@ -102,7 +102,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
     BufferDestination destination;
     bEncode.decode(source);
     bEncode.encode(destination);
-    REQUIRE(destination.toString() == "---\n...\n");
+    REQUIRE(destination.toString() == "---\n[]\n...\n");
   }
   SECTION("YAML encode an Dictionary of integers.",
           "[Bencode][Encode][YAML][Dictionary]") {
@@ -112,54 +112,48 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\none: 1\nthree: 3\ntwo: 2\n...\n");
   }
-  // SECTION("YAML encode an Dictionary of strings.",
-  //         "[Bencode][Encode][YAML][Dictionary]") {
-  //   BufferSource source{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
-  //   BufferDestination destination;
-  //   bEncode.decode(source);
-  //   bEncode.encode(destination);
-  //   REQUIRE(destination.toString() == "");
-  // }
-  //   SECTION("YAML encode an Dictionary of arrays.",
-  //           "[Bencode][Encode][YAML][Dictionary]") {
-  //     BufferSource source{"d3:oneli1ei2ei3ee3:twoli5555e4:fouree"};
-  //     BufferDestination destination;
-  //     bEncode.decode(source);
-  //     bEncode.encode(destination);
-  //     REQUIRE(
-  //         destination.toString() ==
-  //         R"(<?xml version="1.0"
-  //         encoding="UTF-8"?><root><one><Row>1</Row><Row>2</Row><Row>3</Row></one><two><Row>5555</Row><Row>four</Row></two></root>)");
-  //   }
-  //   SECTION("YAML encode an empty Dictionary.",
-  //           "[Bencode][Encode][YAML][Dictionary]") {
-  //     BufferSource source{"de"};
-  //     BufferDestination destination;
-  //     bEncode.decode(source);
-  //     bEncode.encode(destination);
-  //     REQUIRE(destination.toString() ==
-  //             R"(<?xml version="1.0" encoding="UTF-8"?><root></root>)");
-  //   }
-  //   SECTION("YAML encode an empty List of empty Dictionaries.",
-  //           "[Bencode][Encode][YAML][Dictionary]") {
-  //     BufferSource source{"ldededededee"};
-  //     BufferDestination destination;
-  //     bEncode.decode(source);
-  //     bEncode.encode(destination);
-  //     REQUIRE(
-  //         destination.toString() ==
-  //         R"(<?xml version="1.0"
-  //         encoding="UTF-8"?><root><Row></Row><Row></Row><Row></Row><Row></Row><Row></Row></root>)");
-  //   }
-  //   SECTION("YAML encode an list of empty lists.",
-  //           "[Bencode][Encode][YAML][Dictionary]") {
-  //     BufferSource source{"llelelelelee"};
-  //     BufferDestination destination;
-  //     bEncode.decode(source);
-  //     bEncode.encode(destination);
-  //     REQUIRE(
-  //         destination.toString() ==
-  //         R"(<?xml version="1.0"
-  //         encoding="UTF-8"?><root><Row><Row></Row></Row><Row><Row></Row></Row><Row><Row></Row></Row><Row><Row></Row></Row><Row><Row></Row></Row></root>)");
-  //   }
+  SECTION("YAML encode an Dictionary of strings.",
+          "[Bencode][Encode][YAML][Dictionary]") {
+    BufferSource source{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() ==
+            "---\none: 0123456789\nthree: qwerty\ntwo: asdfghjkl\n...\n");
+  }
+  SECTION("YAML encode an Dictionary of arrays.",
+          "[Bencode][Encode][YAML][Dictionary]") {
+    BufferSource source{"d3:oneli1ei2ei3ee3:twoli5555e4:fouree"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(
+        destination.toString() ==
+        "---\none: \n  - 1\n  - 2\n  - 3\ntwo: \n  - 5555\n  - four\n...\n");
+  }
+  SECTION("YAML encode an empty Dictionary.",
+          "[Bencode][Encode][YAML][Dictionary]") {
+    BufferSource source{"de"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == "---\n{}\n...\n");
+  }
+  SECTION("YAML encode an empty List of empty Dictionaries.",
+          "[Bencode][Encode][YAML][Dictionary]") {
+    BufferSource source{"ldededededee"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() ==
+            "---\n- {}\n- {}\n- {}\n- {}\n- {}\n...\n");
+  }
+  SECTION("YAML encode an list of empty lists.",
+          "[Bencode][Encode][YAML][Dictionary]") {
+    BufferSource source{"llelelelelee"};
+    BufferDestination destination;
+    bEncode.decode(source);
+    bEncode.encode(destination);
+    REQUIRE(destination.toString() == "---\n- []\n- []\n- []\n- []\n- []\n...\n");
+  }
 }

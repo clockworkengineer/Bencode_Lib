@@ -27,9 +27,9 @@ private:
   void encodeYAML(const BNode &bNode, IDestination &destination,
                   const unsigned long indent) const {
     if (isA<Dictionary>(bNode)) {
-      encodeDictionary(bNode, destination, indent + 2);
+      encodeDictionary(bNode, destination, indent);
     } else if (isA<List>(bNode)) {
-      encodeList(bNode, destination, indent + 2);
+      encodeList(bNode, destination, indent);
     } else if (isA<Integer>(bNode)) {
       encodeInteger(bNode, destination);
     } else if (isA<String>(bNode)) {
@@ -39,27 +39,41 @@ private:
 
   void encodeDictionary(const BNode &bNode, IDestination &destination,
                         const unsigned long indent) const {
-    for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
-      auto elementName = bNodeNext.getKey();
-      destination.add(elementName + ": ");
-      encodeYAML(bNodeNext.getBNode(), destination, indent);
+    std::string spaces(indent, indent);
+    if (!BRef<Dictionary>(bNode).value().empty()) {
+      for (const auto &entryBNode : BRef<Dictionary>(bNode).value()) {
+        destination.add(BRef<String>(entryBNode.getKeyBNode()).value());
+        destination.add(": ");
+        if (isA<List>(entryBNode.getBNode()) ||
+            isA<Dictionary>(entryBNode.getBNode())) {
+          destination.add('\n');
+        }
+        encodeYAML(entryBNode.getBNode(), destination, indent + 2);
+      }
+    } else {
+      destination.add("{}\n");
     }
   }
 
   void encodeList(const BNode &bNode, IDestination &destination,
                   const unsigned long indent) const {
+    std::string spaces(indent, ' ');
+    if (!BRef<List>(bNode).value().empty()) {
     for (const auto &bNodeNext : BRef<List>(bNode).value()) {
-      destination.add("- ");
-      encodeYAML(bNodeNext, destination, indent);
+      destination.add(spaces + "- ");
+      encodeYAML(bNodeNext, destination, indent + 2);
+    }
+    } else {
+      destination.add("[]\n");
     }
   }
 
   static void encodeInteger(const BNode &bNode, IDestination &destination) {
-    destination.add(std::to_string(BRef<Integer>(bNode).value())+"\n");
+    destination.add(std::to_string(BRef<Integer>(bNode).value()) + "\n");
   }
 
   void encodeString(const BNode &bNode, IDestination &destination) const {
-    destination.add(yamlTranslator.to(BRef<String>(bNode).value())+"\n");
+    destination.add(yamlTranslator.to(BRef<String>(bNode).value()) + "\n");
   }
 
   YAML_Translator yamlTranslator;
