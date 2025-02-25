@@ -15,6 +15,7 @@ public:
   JSON_Encoder(JSON_Encoder &&other) = delete;
   JSON_Encoder &operator=(JSON_Encoder &&other) = delete;
   ~JSON_Encoder() override = default;
+  
   void encode(const BNode &bNode, IDestination &destination) const override {
     if (isA<Dictionary>(bNode)) {
       encodeDictionary(bNode, destination);
