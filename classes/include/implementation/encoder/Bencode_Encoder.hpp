@@ -16,6 +16,13 @@ public:
   Bencode_Encoder &operator=(Bencode_Encoder &&other) = delete;
   ~Bencode_Encoder() override = default;
 
+  /// <summary>
+  /// Recursively traverse BNode structure encoding it into Bencode string on
+  /// the destination stream passed in.
+  /// </summary>
+  /// <param name="bNode">BNode structure to be traversed.</param>
+  /// <param name="destination">Destination stream for stringified Bencode.</param>
+  /// <param name="indent">Current print indentation.</param>
   void encode(const BNode &bNode, IDestination &destination) const override {
     if (isA<Dictionary>(bNode)) {
       encodeDictionary(bNode, destination);

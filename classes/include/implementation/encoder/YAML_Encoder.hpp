@@ -17,6 +17,13 @@ public:
   YAML_Encoder &operator=(YAML_Encoder &&other) = delete;
   ~YAML_Encoder() override = default;
 
+  /// <summary>
+  /// Recursively traverse BNode structure encoding it into YAML string on
+  /// the destination stream passed in.
+  /// </summary>
+  /// <param name="bNode">BNode structure to be traversed.</param>
+  /// <param name="destination">Destination stream for stringified YAML.</param>
+  /// <param name="indent">Current print indentation.</param>
   void encode(const BNode &bNode, IDestination &destination) const override {
     destination.add("---\n");
     encodeYAML(bNode, destination, 0);
