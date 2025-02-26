@@ -46,9 +46,10 @@ private:
 
   void encodeDictionary(const BNode &bNode, IDestination &destination,
                         const unsigned long indent) const {
-    std::string spaces(indent, indent);
+    std::string spaces(indent, ' ');
     if (!BRef<Dictionary>(bNode).value().empty()) {
       for (const auto &entryBNode : BRef<Dictionary>(bNode).value()) {
+        destination.add(spaces);
         destination.add(BRef<String>(entryBNode.getKeyBNode()).value());
         destination.add(": ");
         if (isA<List>(entryBNode.getBNode()) ||
