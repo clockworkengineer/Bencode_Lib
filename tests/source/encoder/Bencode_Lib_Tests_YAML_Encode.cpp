@@ -33,7 +33,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
     BufferDestination destination;
     bEncode.decode(source);
     bEncode.encode(destination);
-    REQUIRE(destination.toString() == "---\nqwertyuiopas\n...\n");
+    REQUIRE(destination.toString() == "---\n\"qwertyuiopas\"\n...\n");
   }
   SECTION("YAML encode an string ('abcdefghijklmnopqrstuvwxyz')."
           "[Bencode][Encode][YAML][String]") {
@@ -41,7 +41,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
     BufferDestination destination;
     bEncode.decode(source);
     bEncode.encode(destination);
-    REQUIRE(destination.toString() == "---\nabcdefghijklmnopqrstuvwxyz\n...\n");
+    REQUIRE(destination.toString() == "---\n\"abcdefghijklmnopqrstuvwxyz\"\n...\n");
   }
   SECTION("YAML encode an empty string."
           "[Bencode][Encode][YAML][String]") {
@@ -49,7 +49,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
     BufferDestination destination;
     bEncode.decode(source);
     bEncode.encode(destination);
-    REQUIRE(destination.toString() == "---\n\n...\n");
+    REQUIRE(destination.toString() == "---\n\"\"\n...\n");
   }
   SECTION("YAML encode an string with unprintable characters "
           "('abcdefghijklmnopqrstuvwxyz').",
@@ -63,7 +63,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
     bEncode.decode(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
-            "---\nabcdefghijklmnopqrstuvwxyz\\u0000\\u0001\\u0002\n...\n");
+            "---\n\"abcdefghijklmnopqrstuvwxyz\\u0000\\u0001\\u0002\"\n...\n");
   }
   // SECTION("YAML encode an string with escaped YAML characters "
   //         "('abcdefghijklmnopqrstuvwxyz&<>'\"').",
@@ -95,7 +95,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
     bEncode.decode(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
-            "---\n- 266\n- five\n- 6780\n- one\n- 88\n...\n");
+            "---\n- 266\n- \"five\"\n- 6780\n- \"one\"\n- 88\n...\n");
   }
   SECTION("YAML encode an empty List.", "[Bencode][Encode][YAML][List]") {
     BufferSource source{"le"};
@@ -119,7 +119,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
     bEncode.decode(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
-            "---\none: 0123456789\nthree: qwerty\ntwo: asdfghjkl\n...\n");
+            "---\none: \"0123456789\"\nthree: \"qwerty\"\ntwo: \"asdfghjkl\"\n...\n");
   }
   SECTION("YAML encode an Dictionary of arrays.",
           "[Bencode][Encode][YAML][Dictionary]") {
@@ -129,7 +129,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        "---\none: \n  - 1\n  - 2\n  - 3\ntwo: \n  - 5555\n  - four\n...\n");
+        "---\none: \n  - 1\n  - 2\n  - 3\ntwo: \n  - 5555\n  - \"four\"\n...\n");
   }
   SECTION("YAML encode an empty Dictionary.",
           "[Bencode][Encode][YAML][Dictionary]") {

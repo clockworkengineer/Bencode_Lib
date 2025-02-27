@@ -33,7 +33,8 @@ public:
     }
     return destination;
   }
-
+  [[nodiscard]] char last() override { return static_cast<char>(encodeBuffer.back()); }
+  
 private:
   std::vector<std::byte> encodeBuffer;
 };

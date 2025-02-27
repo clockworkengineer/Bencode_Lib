@@ -30,5 +30,9 @@ public:
   // Clear the current destination
   // ==============================
   virtual void clear() = 0;
+  // =================================
+  // Return the last character written
+  // =================================
+  virtual char last() = 0;
 };
 } // namespace Bencode_Lib

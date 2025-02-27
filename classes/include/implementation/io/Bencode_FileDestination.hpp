@@ -26,11 +26,13 @@ public:
     destination.write(bytes.c_str(), bytes.length());
     destination.flush();
     length += bytes.length();
+        lastChar = bytes.back();
   }
   void add(const char ch) override {
     destination.put(ch);
     destination.flush();
     length++;
+        lastChar = ch;
   }
 
   void clear() override {
@@ -43,14 +45,17 @@ public:
       throw Error("File output stream failed to open or could not be created.");
     }
     length = 0;
+        lastChar = 0;
   }
 
   std::size_t size() const { return length; }
+    [[nodiscard]] char last() override { return lastChar; }
 
 private:
   std::ofstream destination;
   std::string filename;
   std::size_t length{};
+    char lastChar{};
 };
 
 } // namespace Bencode_Lib

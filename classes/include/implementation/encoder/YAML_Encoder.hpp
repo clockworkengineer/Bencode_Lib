@@ -81,7 +81,7 @@ private:
   }
 
   void encodeString(const BNode &bNode, IDestination &destination) const {
-    destination.add(yamlTranslator.to(BRef<String>(bNode).value()) + "\n");
+    destination.add("\""+yamlTranslator.to(BRef<String>(bNode).value()) + "\""+"\n");
   }
 
   YAML_Translator yamlTranslator;

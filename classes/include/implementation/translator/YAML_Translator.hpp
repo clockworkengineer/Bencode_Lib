@@ -28,6 +28,9 @@ namespace Bencode_Lib {
                     translated += digits[ch >> 4 & 0x0f];
                     translated += digits[ch&0x0f];
                 } else {
+                    if (ch=='\"') {
+                        translated += "\\";
+                    }
                     translated += ch;
                 }
             }

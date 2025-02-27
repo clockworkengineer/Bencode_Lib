@@ -1,5 +1,5 @@
 //
-// Program:  Bencode_Bencode_Files_To_YAML
+// Program:  Bencode_Files_To_YAML
 //
 // Description: Use Bencode_Lib to read in torrent file then write
 // it out as YAML using a custom encoder.
