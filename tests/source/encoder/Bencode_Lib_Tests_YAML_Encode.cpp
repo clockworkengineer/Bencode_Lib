@@ -110,7 +110,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
     BufferDestination destination;
     bEncode.decode(source);
     bEncode.encode(destination);
-    REQUIRE(destination.toString() == "---\none: 1\nthree: 3\ntwo: 2\n...\n");
+    REQUIRE(destination.toString() == "---\n\"one\": 1\n\"three\": 3\n\"two\": 2\n...\n");
   }
   SECTION("YAML encode an Dictionary of strings.",
           "[Bencode][Encode][YAML][Dictionary]") {
@@ -119,7 +119,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
     bEncode.decode(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
-            "---\none: \"0123456789\"\nthree: \"qwerty\"\ntwo: \"asdfghjkl\"\n...\n");
+            "---\n\"one\": \"0123456789\"\n\"three\": \"qwerty\"\n\"two\": \"asdfghjkl\"\n...\n");
   }
   SECTION("YAML encode an Dictionary of arrays.",
           "[Bencode][Encode][YAML][Dictionary]") {
@@ -129,7 +129,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
-        "---\none: \n  - 1\n  - 2\n  - 3\ntwo: \n  - 5555\n  - \"four\"\n...\n");
+        "---\n\"one\": \n  - 1\n  - 2\n  - 3\n\"two\": \n  - 5555\n  - \"four\"\n...\n");
   }
   SECTION("YAML encode an empty Dictionary.",
           "[Bencode][Encode][YAML][Dictionary]") {
