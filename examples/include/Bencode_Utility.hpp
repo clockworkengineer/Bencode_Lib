@@ -22,6 +22,7 @@ public:
         fileList.push_back(file.path().string());
       }
     }
+    sort(fileList.begin(), fileList.end());
     return (fileList);
   }
   static std::string createFileName(const std::string &torrentFileName,
