@@ -2,7 +2,6 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Bencode_Translator.hpp"
 
 namespace Bencode_Lib {
 
@@ -66,6 +65,5 @@ private:
         ":" + BRef<String>(bNode).value());
   }
 
-  Bencode_Translator bencodeTranslator;
 };
 } // namespace Bencode_Lib
