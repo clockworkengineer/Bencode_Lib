@@ -3,7 +3,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "JSON_Translator.hpp"
+#include "Default_Translator.hpp"
 
 namespace Bencode_Lib {
 
@@ -90,6 +90,6 @@ private:
                     "\"" + "\n");
   }
 
-  JSON_Translator yamlTranslator;
+  Default_Translator yamlTranslator;
 };
 } // namespace Bencode_Lib

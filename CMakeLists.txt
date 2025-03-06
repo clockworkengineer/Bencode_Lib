@@ -49,7 +49,7 @@ set(BENCODE_INCLUDES
   ./classes/include/implementation/encoder/JSON_Encoder.hpp
   ./classes/include/implementation/encoder/XML_Encoder.hpp
   ./classes/include/implementation/encoder/YAML_Encoder.hpp
-  ./classes/include/implementation/translator/JSON_Translator.hpp
+  ./classes/include/implementation/translator/Default_Translator.hpp
   ./classes/include/implementation/translator/XML_Translator.hpp
   ./classes/include/implementation/io/Bencode_Sources.hpp
   ./classes/include/implementation/io/Bencode_BufferSource.hpp
@@ -62,7 +62,7 @@ set(BENCODE_INCLUDES
   ./classes/include/implementation/variants/Bencode_Integer.hpp
   ./classes/include/implementation/variants/Bencode_List.hpp
   ./classes/include/implementation/variants/Bencode_String.hpp
-  ./classes/include/implementation/variants/Bencode_Variant.hpp)
+  ./classes/include/implementation/variants/Bencode_Variant.hpp) 
 
 # Bencode library
 add_library(${BENCODE_LIBRARY_NAME} ${BENCODE_SOURCES} ${BENCODE_INCLUDES})

@@ -2,7 +2,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "JSON_Translator.hpp"
+#include "Default_Translator.hpp"
 
 namespace Bencode_Lib {
 
@@ -69,6 +69,6 @@ private:
     destination.add("\"");
   }
 
-  JSON_Translator jsonTranslator;
+  Default_Translator jsonTranslator;
 };
 } // namespace Bencode_Lib

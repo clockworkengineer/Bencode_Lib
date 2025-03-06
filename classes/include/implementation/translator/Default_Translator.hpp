@@ -4,7 +4,7 @@
 
 namespace Bencode_Lib {
 
-class JSON_Translator final : public ITranslator {
+class Default_Translator final : public ITranslator {
 public:
   // ==============
   // Translator Error
