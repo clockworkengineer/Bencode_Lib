@@ -69,7 +69,6 @@ private:
 
   void encodeList(const BNode &bNode, IDestination &destination,
                   const unsigned long indent) const {
-    std::string spaces(indent, ' ');
     if (!BRef<List>(bNode).value().empty()) {
       for (const auto &bNodeNext : BRef<List>(bNode).value()) {
         destination.add(calculateIndent(destination, indent) + "- ");
