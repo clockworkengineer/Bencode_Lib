@@ -23,7 +23,6 @@ public:
   /// </summary>
   /// <param name="bNode">BNode structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified YAML.</param>
-  /// <param name="indent">Current print indentation.</param>
   void encode(const BNode &bNode, IDestination &destination) const override {
     destination.add("---\n");
     encodeYAML(bNode, destination, 0);
@@ -31,7 +30,7 @@ public:
   }
 
 private:
-  auto calculateIndent(IDestination &destination, const unsigned long indent) const {
+  static auto calculateIndent(IDestination &destination, const unsigned long indent) {
     if (destination.last() == '\n') {
       return std::string(indent, ' ');
     }

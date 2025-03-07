@@ -22,7 +22,6 @@ public:
   /// </summary>
   /// <param name="bNode">BNode structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified JSON.</param>
-  /// <param name="indent">Current print indentation.</param>
   void encode(const BNode &bNode, IDestination &destination) const override {
     if (isA<Dictionary>(bNode)) {
       encodeDictionary(bNode, destination);

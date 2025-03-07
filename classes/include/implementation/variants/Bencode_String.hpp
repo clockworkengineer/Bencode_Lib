@@ -9,8 +9,8 @@ struct BencodeString {
     std::memcpy(&bencodeString[0], str.c_str(), BencodeStringLength);
   }
 
-  std::string value() const {
-    return std::string(bencodeString.get(), BencodeStringLength);
+  [[nodiscard]] std::string value() const {
+    return { bencodeString.get(), BencodeStringLength};
   }
 private:
   std::unique_ptr<char[]> bencodeString;

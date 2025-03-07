@@ -55,7 +55,7 @@ private:
   std::ofstream destination;
   std::string filename;
   std::size_t length{};
-    char lastChar{};
+  char lastChar{};
 };
 
 } // namespace Bencode_Lib
