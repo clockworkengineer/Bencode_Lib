@@ -9,7 +9,7 @@ namespace Bencode_Lib {
 class JSON_Encoder final : public IEncoder {
 public:
   // Constructors/destructors
-  JSON_Encoder() = default;
+  explicit JSON_Encoder(std::unique_ptr<ITranslator> translator = std::make_unique<Default_Translator>()): jsonTranslator(std::move(translator)) {};
   JSON_Encoder(const JSON_Encoder &other) = delete;
   JSON_Encoder &operator=(const JSON_Encoder &other) = delete;
   JSON_Encoder(JSON_Encoder &&other) = delete;
@@ -68,10 +68,10 @@ private:
 
   void encodeString(const BNode &bNode, IDestination &destination) const {
     destination.add("\"");
-    destination.add(jsonTranslator.to(BRef<String>(bNode).value()));
+    destination.add(jsonTranslator->to(BRef<String>(bNode).value()));
     destination.add("\"");
   }
 
-  Default_Translator jsonTranslator;
+  std::unique_ptr<ITranslator> jsonTranslator;
 };
 } // namespace Bencode_Lib

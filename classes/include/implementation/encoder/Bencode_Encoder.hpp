@@ -2,13 +2,14 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "Default_Translator.hpp"
 
 namespace Bencode_Lib {
 
 class Bencode_Encoder final : public IEncoder {
 public:
   // Constructors/Destructors
-  Bencode_Encoder() = default;
+  explicit Bencode_Encoder(std::unique_ptr<ITranslator> translator = std::make_unique<Default_Translator>()): bencodeTranslator(std::move(translator)) {};
   Bencode_Encoder(const Bencode_Encoder &other) = delete;
   Bencode_Encoder &operator=(const Bencode_Encoder &other) = delete;
   Bencode_Encoder(Bencode_Encoder &&other) = delete;
@@ -47,6 +48,7 @@ private:
     }
     destination.add('e');
   }
+
   void encodeList(const BNode &bNode, IDestination &destination) const {
     destination.add('l');
     for (const auto &bNodeNext : BRef<List>(bNode).value()) {
@@ -67,5 +69,6 @@ private:
         ":" + BRef<String>(bNode).value());
   }
 
+  [[maybe_unused]] std::unique_ptr<ITranslator> bencodeTranslator;
 };
 } // namespace Bencode_Lib

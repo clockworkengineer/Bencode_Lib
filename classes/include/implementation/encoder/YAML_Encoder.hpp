@@ -10,7 +10,7 @@ namespace Bencode_Lib {
 class YAML_Encoder final : public IEncoder {
 public:
   // Constructors/destructors
-  YAML_Encoder() = default;
+  explicit YAML_Encoder(std::unique_ptr<ITranslator> translator = std::make_unique<Default_Translator>()): yamlTranslator(std::move(translator)) {};
   YAML_Encoder(const YAML_Encoder &other) = delete;
   YAML_Encoder &operator=(const YAML_Encoder &other) = delete;
   YAML_Encoder(YAML_Encoder &&other) = delete;
@@ -88,10 +88,10 @@ private:
   }
 
   void encodeString(const BNode &bNode, IDestination &destination) const {
-    destination.add("\"" + yamlTranslator.to(BRef<String>(bNode).value()) +
+    destination.add("\"" + yamlTranslator->to(BRef<String>(bNode).value()) +
                     "\"" + "\n");
   }
 
-  Default_Translator yamlTranslator;
+  std::unique_ptr<ITranslator> yamlTranslator;
 };
 } // namespace Bencode_Lib

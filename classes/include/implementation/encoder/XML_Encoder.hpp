@@ -9,7 +9,7 @@ namespace Bencode_Lib {
 class XML_Encoder final : public IEncoder {
 public:
   // Constructors/destructors
-  XML_Encoder() = default;
+  explicit XML_Encoder(std::unique_ptr<ITranslator> translator = std::make_unique<XML_Translator>()): xmlTranslator(std::move(translator)) {};
   XML_Encoder(const XML_Encoder &other) = delete;
   XML_Encoder &operator=(const XML_Encoder &other) = delete;
   XML_Encoder(XML_Encoder &&other) = delete;
@@ -74,9 +74,9 @@ private:
   }
 
   void encodeString(const BNode &bNode, IDestination &destination) const {
-    destination.add(xmlTranslator.to(BRef<String>(bNode).value()));
+    destination.add(xmlTranslator->to(BRef<String>(bNode).value()));
   }
 
-  XML_Translator xmlTranslator;
+  std::unique_ptr<ITranslator> xmlTranslator;
 };
 } // namespace Bencode_Lib
