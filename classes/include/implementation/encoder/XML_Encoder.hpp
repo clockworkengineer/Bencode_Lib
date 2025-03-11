@@ -39,7 +39,11 @@ private:
       encodeInteger(bNode, destination);
     } else if (isA<String>(bNode)) {
       encodeString(bNode, destination);
+    } else if (isA<Hole>(bNode)) {
+    }else {
+      throw Error("Unknown BNode type encountered during encoding.");
     }
+
   }
 
   void encodeDictionary(const BNode &bNode, IDestination &destination) const {
@@ -65,7 +69,7 @@ private:
     }
   }
 
-  static void encodeInteger(const BNode &bNode, IDestination &destination) {
+   void encodeInteger(const BNode &bNode, IDestination &destination) const {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
 

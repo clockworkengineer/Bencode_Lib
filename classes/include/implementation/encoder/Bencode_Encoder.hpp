@@ -30,11 +30,14 @@ public:
       encodeInteger(bNode, destination);
     } else if (isA<String>(bNode)) {
       encodeString(bNode, destination);
+    } else if (isA<Hole>(bNode)) {
+    }else {
+      throw Error("Unknown BNode type encountered during encoding.");
     }
   }
 
 private:
-  void encodeDictionary(const BNode &bNode, IDestination &destination) const {
+   void encodeDictionary(const BNode &bNode, IDestination &destination) const {
     destination.add('d');
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       destination.add(
@@ -52,13 +55,13 @@ private:
     destination.add('e');
   }
 
-  static void encodeInteger(const BNode &bNode, IDestination &destination) {
+   void encodeInteger(const BNode &bNode, IDestination &destination) const{
     destination.add('i');
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
     destination.add('e');
   }
 
-  static void encodeString(const BNode &bNode, IDestination &destination) {
+   void encodeString(const BNode &bNode, IDestination &destination) const{
     destination.add(
         std::to_string(static_cast<int>(BRef<String>(bNode).value().length())) +
         ":" + BRef<String>(bNode).value());
