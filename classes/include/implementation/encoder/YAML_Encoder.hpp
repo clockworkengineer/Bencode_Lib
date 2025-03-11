@@ -10,7 +10,9 @@ namespace Bencode_Lib {
 class YAML_Encoder final : public IEncoder {
 public:
   // Constructors/destructors
-  explicit YAML_Encoder(std::unique_ptr<ITranslator> translator = std::make_unique<Default_Translator>()): yamlTranslator(std::move(translator)) {};
+  explicit YAML_Encoder(std::unique_ptr<ITranslator> translator =
+                            std::make_unique<Default_Translator>())
+      : yamlTranslator(std::move(translator)) {};
   YAML_Encoder(const YAML_Encoder &other) = delete;
   YAML_Encoder &operator=(const YAML_Encoder &other) = delete;
   YAML_Encoder(YAML_Encoder &&other) = delete;
@@ -30,7 +32,8 @@ public:
   }
 
 private:
-  static auto calculateIndent(IDestination &destination, const unsigned long indent) {
+  static auto calculateIndent(IDestination &destination,
+                              const unsigned long indent) {
     if (destination.last() == '\n') {
       return std::string(indent, ' ');
     }
@@ -47,10 +50,9 @@ private:
     } else if (isA<String>(bNode)) {
       encodeString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
-    }else {
+    } else {
       throw Error("Unknown BNode type encountered during encoding.");
     }
-
   }
 
   void encodeDictionary(const BNode &bNode, IDestination &destination,
@@ -58,7 +60,8 @@ private:
     if (!BRef<Dictionary>(bNode).value().empty()) {
       for (const auto &entryBNode : BRef<Dictionary>(bNode).value()) {
         destination.add(calculateIndent(destination, indent));
-        destination.add("\""+BRef<String>(entryBNode.getKeyBNode()).value()+"\"");
+        destination.add("\"" + BRef<String>(entryBNode.getKeyBNode()).value() +
+                        "\"");
         destination.add(": ");
         if (isA<List>(entryBNode.getBNode()) ||
             isA<Dictionary>(entryBNode.getBNode())) {
@@ -83,7 +86,7 @@ private:
     }
   }
 
-  void encodeInteger(const BNode &bNode, IDestination &destination) const  {
+  void encodeInteger(const BNode &bNode, IDestination &destination) const {
     destination.add(std::to_string(BRef<Integer>(bNode).value()) + "\n");
   }
 
