@@ -9,7 +9,9 @@ namespace Bencode_Lib {
 class JSON_Encoder final : public IEncoder {
 public:
   // Constructors/destructors
-  explicit JSON_Encoder(std::unique_ptr<ITranslator> translator = std::make_unique<Default_Translator>()): jsonTranslator(std::move(translator)) {};
+  explicit JSON_Encoder(std::unique_ptr<ITranslator> translator =
+                            std::make_unique<Default_Translator>())
+      : jsonTranslator(std::move(translator)) {};
   JSON_Encoder(const JSON_Encoder &other) = delete;
   JSON_Encoder &operator=(const JSON_Encoder &other) = delete;
   JSON_Encoder(JSON_Encoder &&other) = delete;
@@ -32,10 +34,9 @@ public:
     } else if (isA<String>(bNode)) {
       encodeString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
-    }else {
+    } else {
       throw Error("Unknown BNode type encountered during encoding.");
     }
-
   }
 
 private:
@@ -62,7 +63,7 @@ private:
     destination.add(']');
   }
 
-   void encodeInteger(const BNode &bNode, IDestination &destination) const {
+  void encodeInteger(const BNode &bNode, IDestination &destination) const {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
 

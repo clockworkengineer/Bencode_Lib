@@ -9,7 +9,9 @@ namespace Bencode_Lib {
 class Bencode_Encoder final : public IEncoder {
 public:
   // Constructors/Destructors
-  explicit Bencode_Encoder(std::unique_ptr<ITranslator> translator = std::make_unique<Default_Translator>()): bencodeTranslator(std::move(translator)) {};
+  explicit Bencode_Encoder(std::unique_ptr<ITranslator> translator =
+                               std::make_unique<Default_Translator>())
+      : bencodeTranslator(std::move(translator)) {};
   Bencode_Encoder(const Bencode_Encoder &other) = delete;
   Bencode_Encoder &operator=(const Bencode_Encoder &other) = delete;
   Bencode_Encoder(Bencode_Encoder &&other) = delete;
@@ -21,7 +23,8 @@ public:
   /// the destination stream passed in.
   /// </summary>
   /// <param name="bNode">BNode structure to be traversed.</param>
-  /// <param name="destination">Destination stream for stringified Bencode.</param>
+  /// <param name="destination">Destination stream for stringified
+  /// Bencode.</param>
   void encode(const BNode &bNode, IDestination &destination) const override {
     if (isA<Dictionary>(bNode)) {
       encodeDictionary(bNode, destination);
@@ -32,18 +35,17 @@ public:
     } else if (isA<String>(bNode)) {
       encodeString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
-    }else {
+    } else {
       throw Error("Unknown BNode type encountered during encoding.");
     }
   }
 
 private:
-   void encodeDictionary(const BNode &bNode, IDestination &destination) const {
+  void encodeDictionary(const BNode &bNode, IDestination &destination) const {
     destination.add('d');
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
-      destination.add(
-          std::to_string(bNodeNext.getKey().length()) +
-          ":" + bNodeNext.getKey());
+      destination.add(std::to_string(bNodeNext.getKey().length()) + ":" +
+                      bNodeNext.getKey());
       encode(bNodeNext.getBNode(), destination);
     }
     destination.add('e');
@@ -57,13 +59,13 @@ private:
     destination.add('e');
   }
 
-   void encodeInteger(const BNode &bNode, IDestination &destination) const{
+  void encodeInteger(const BNode &bNode, IDestination &destination) const {
     destination.add('i');
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
     destination.add('e');
   }
 
-   void encodeString(const BNode &bNode, IDestination &destination) const{
+  void encodeString(const BNode &bNode, IDestination &destination) const {
     destination.add(
         std::to_string(static_cast<int>(BRef<String>(bNode).value().length())) +
         ":" + BRef<String>(bNode).value());

@@ -9,7 +9,9 @@ namespace Bencode_Lib {
 class XML_Encoder final : public IEncoder {
 public:
   // Constructors/destructors
-  explicit XML_Encoder(std::unique_ptr<ITranslator> translator = std::make_unique<XML_Translator>()): xmlTranslator(std::move(translator)) {};
+  explicit XML_Encoder(std::unique_ptr<ITranslator> translator =
+                           std::make_unique<XML_Translator>())
+      : xmlTranslator(std::move(translator)) {};
   XML_Encoder(const XML_Encoder &other) = delete;
   XML_Encoder &operator=(const XML_Encoder &other) = delete;
   XML_Encoder(XML_Encoder &&other) = delete;
@@ -40,10 +42,9 @@ private:
     } else if (isA<String>(bNode)) {
       encodeString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
-    }else {
+    } else {
       throw Error("Unknown BNode type encountered during encoding.");
     }
-
   }
 
   void encodeDictionary(const BNode &bNode, IDestination &destination) const {
@@ -69,7 +70,7 @@ private:
     }
   }
 
-   void encodeInteger(const BNode &bNode, IDestination &destination) const {
+  void encodeInteger(const BNode &bNode, IDestination &destination) const {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
 
