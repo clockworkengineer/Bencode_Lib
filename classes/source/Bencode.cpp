@@ -117,4 +117,23 @@ const BNode &Bencode::operator[](const std::size_t index) const {
   return (*implementation)[index];
 }
 
+
+/// <summary>
+/// Create an Bencode file and write Bencode string to it.
+/// </summary>
+/// <param name="fileName">Bencode file name</param>
+/// <param name="bencodeString">Bencode string</param>
+void Bencode::toFile(const std::string &fileName, const std::string &bencodeString)
+{
+  Bencode_Impl::toFile(fileName, bencodeString);
+}
+
+/// <summary>
+/// Open a Bencode file, read its contents into a string buffer and return
+/// the buffer.
+/// </summary>
+/// <param name="fileName">Bencode file name</param>
+/// <returns>Bencode string.</returns>
+std::string Bencode::fromFile(const std::string &fileName) { return Bencode_Impl::fromFile(fileName); }
+
 } // namespace Bencode_Lib

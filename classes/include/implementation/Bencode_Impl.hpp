@@ -35,6 +35,9 @@ public:
   // Get Bencode list element at index
   BNode &operator[](std::size_t index);
   const BNode &operator[](std::size_t index) const;
+  // Read/Write Bencode from a file
+  static std::string fromFile(const std::string &fileName);
+  static void toFile(const std::string &fileName, const std::string &bencodeString);
 
 private:
   // Traverse Bencode BNode tree

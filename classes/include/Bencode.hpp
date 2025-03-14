@@ -72,6 +72,9 @@ public:
   // Get Bencode list entry at index
   BNode &operator[](std::size_t index);
   const BNode &operator[](std::size_t index) const;
+  // Read/Write Bencode from the file
+  static std::string fromFile(const std::string &fileName);
+  static void toFile(const std::string &fileName, const std::string &bencodeString);
 
 private:
   const std::unique_ptr<Bencode_Impl> implementation;

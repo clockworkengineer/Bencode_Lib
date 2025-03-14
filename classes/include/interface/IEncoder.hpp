@@ -34,4 +34,7 @@ public:
 template <typename T> IEncoder *makeEncoder() {
   return std::make_unique<T>().release();
 }
+template <typename T> IEncoder *makeNewEncoder() {
+  return std::make_unique<T>().release();
+}
 } // namespace Bencode_Lib

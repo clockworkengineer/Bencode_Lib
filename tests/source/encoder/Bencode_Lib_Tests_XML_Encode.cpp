@@ -3,7 +3,7 @@
 
 TEST_CASE("XML encode of simple types (integer, string) ",
           "[Bencode][Encode]") {
-  const Bencode bEncode(makeEncoder<XML_Encoder>());
+  const Bencode bEncode(makeNewEncoder<XML_Encoder>());
   SECTION("XML encode an integer (266).", "[Bencode][Encode][XML][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
