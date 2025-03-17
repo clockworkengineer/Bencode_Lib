@@ -11,7 +11,7 @@ public:
   // Constructors/destructors
   explicit XML_Encoder(std::unique_ptr<ITranslator> translator =
                            std::make_unique<XML_Translator>())
-      : xmlTranslator(std::move(translator)) {};
+      : xmlTranslator(std::move(translator)) {}
   XML_Encoder(const XML_Encoder &other) = delete;
   XML_Encoder &operator=(const XML_Encoder &other) = delete;
   XML_Encoder(XML_Encoder &&other) = delete;
@@ -70,7 +70,7 @@ private:
     }
   }
 
-  void encodeInteger(const BNode &bNode, IDestination &destination) const {
+  static void encodeInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
 

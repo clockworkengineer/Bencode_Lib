@@ -43,7 +43,7 @@ std::string readBencodeString(const std::ifstream &bencodeFile)
 std::string Bencode_Impl::fromFile(const std::string &fileName)
 {
   // Read in Bencode
-  std::ifstream bencodeFile{ fileName, std::ios_base::binary };
+  const std::ifstream bencodeFile{ fileName, std::ios_base::binary };
   return readBencodeString(bencodeFile);
 }
 

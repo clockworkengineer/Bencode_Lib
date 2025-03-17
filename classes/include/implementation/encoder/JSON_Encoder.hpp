@@ -11,7 +11,7 @@ public:
   // Constructors/destructors
   explicit JSON_Encoder(std::unique_ptr<ITranslator> translator =
                             std::make_unique<Default_Translator>())
-      : jsonTranslator(std::move(translator)) {};
+      : jsonTranslator(std::move(translator)) {}
   JSON_Encoder(const JSON_Encoder &other) = delete;
   JSON_Encoder &operator=(const JSON_Encoder &other) = delete;
   JSON_Encoder(JSON_Encoder &&other) = delete;
@@ -63,7 +63,7 @@ private:
     destination.add(']');
   }
 
-  void encodeInteger(const BNode &bNode, IDestination &destination) const {
+  static void encodeInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
 

@@ -12,7 +12,7 @@ public:
   // Constructors/destructors
   explicit YAML_Encoder(std::unique_ptr<ITranslator> translator =
                             std::make_unique<Default_Translator>())
-      : yamlTranslator(std::move(translator)) {};
+      : yamlTranslator(std::move(translator)) {}
   YAML_Encoder(const YAML_Encoder &other) = delete;
   YAML_Encoder &operator=(const YAML_Encoder &other) = delete;
   YAML_Encoder(YAML_Encoder &&other) = delete;
@@ -86,7 +86,7 @@ private:
     }
   }
 
-  void encodeInteger(const BNode &bNode, IDestination &destination) const {
+  static void encodeInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()) + "\n");
   }
 

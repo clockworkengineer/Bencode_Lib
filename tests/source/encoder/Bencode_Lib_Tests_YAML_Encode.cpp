@@ -56,8 +56,8 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
           "[Bencode][Encode][YAML][String]") {
     std::string escaped{"29:abcdefghijklmnopqrstuvwxyz"};
     escaped += static_cast<char>(0);
-    escaped += (static_cast<char>(1));
-    escaped += static_cast<char>(2);
+    escaped += 1;
+    escaped += 2;
     BufferSource source{escaped};
     BufferDestination destination;
     bEncode.decode(source);
@@ -65,16 +65,6 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
     REQUIRE(destination.toString() ==
             "---\n\"abcdefghijklmnopqrstuvwxyz\\u0000\\u0001\\u0002\"\n...\n");
   }
-  // SECTION("YAML encode an string with escaped YAML characters "
-  //         "('abcdefghijklmnopqrstuvwxyz&<>'\"').",
-  //         "[Bencode][Encode][YAML][String]") {
-  //   std::string escaped{R"(32:abcdefghijklmnopqrstuvwxyz &<>'")"};
-  //   BufferSource source{escaped};
-  //   BufferDestination destination;
-  //   bEncode.decode(source);
-  //   bEncode.encode(destination);
-  //   REQUIRE(destination.toString() == "---\n\n...\n");
-  // }
 }
 TEST_CASE("YAML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][YAML]") {

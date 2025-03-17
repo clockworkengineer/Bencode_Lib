@@ -63,8 +63,8 @@ TEST_CASE("XML encode of simple types (integer, string) ",
           "[Bencode][Encode][XML][String]") {
     std::string escaped{"29:abcdefghijklmnopqrstuvwxyz"};
     escaped += static_cast<char>(0);
-    escaped += static_cast<char>(1);
-    escaped += static_cast<char>(2);
+    escaped += 1;
+    escaped += 2;
     BufferSource source{escaped};
     BufferDestination destination;
     bEncode.decode(source);
