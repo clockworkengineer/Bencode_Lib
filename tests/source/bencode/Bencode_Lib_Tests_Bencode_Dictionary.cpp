@@ -85,14 +85,14 @@ TEST_CASE("Check Bencode dictionary creation api.",
     REQUIRE_FALSE(!isA<Integer>(bencode["nothing"]["extra"]));
     REQUIRE(BRef<Integer>(bencode["nothing"]["extra"]).value() == 3);
   }
-  SECTION("Create three level dictionary and null at base and encode.",
+  SECTION("Create three level dictionary and null at base and stringify.",
           "[Bencode][Create][Dictionary][Integer]") {
     Bencode bencode;
     bencode["nothing"]["extra"]["more"] = nullptr;
     REQUIRE_FALSE(!isA<Integer>(bencode["nothing"]["extra"]["more"]));
     REQUIRE(BRef<Integer>(bencode["nothing"]["extra"]["more"]).value() == 0);
     BufferDestination destination;
-    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(destination.toString() == R"(d7:nothingd5:extrad4:morei0eeee)");
   }
 }

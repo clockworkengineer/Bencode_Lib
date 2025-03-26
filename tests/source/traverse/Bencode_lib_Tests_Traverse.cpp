@@ -27,12 +27,12 @@ public:
   int64_t totalIntegers{};
 };
 TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
-  const Bencode bEncode;
+  const Bencode bStringify;
   SECTION("Parse an Integer and traverse", "[Bencode][Traverse][Integer]") {
     BufferSource source{"i266e"};
-    bEncode.parse(source);
+    bStringify.parse(source);
     Bencode_Analyzer analyzer;
-    bEncode.traverse(analyzer);
+    bStringify.traverse(analyzer);
     REQUIRE(analyzer.totalNodes == 1);
     REQUIRE(analyzer.totalIntegers == 1);
     REQUIRE(analyzer.totalDictionarys == 0);
@@ -41,9 +41,9 @@ TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
   }
   SECTION("Parse an String and traverse", "[Bencode][Traverse][String]") {
     BufferSource source{"11:Test String"};
-    bEncode.parse(source);
+    bStringify.parse(source);
     Bencode_Analyzer analyzer;
-    bEncode.traverse(analyzer);
+    bStringify.traverse(analyzer);
     REQUIRE(analyzer.totalNodes == 1);
     REQUIRE(analyzer.totalIntegers == 0);
     REQUIRE(analyzer.totalDictionarys == 0);
@@ -52,9 +52,9 @@ TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
   }
   SECTION("Parse an List and traverse", "[Bencode][Traverse][List]") {
     BufferSource source{"li1ei2ei3ei4ee"};
-    bEncode.parse(source);
+    bStringify.parse(source);
     Bencode_Analyzer analyzer;
-    bEncode.traverse(analyzer);
+    bStringify.traverse(analyzer);
     REQUIRE(analyzer.totalNodes == 5);
     REQUIRE(analyzer.totalIntegers == 4);
     REQUIRE(analyzer.totalDictionarys == 0);
@@ -64,9 +64,9 @@ TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
   SECTION("Parse an Dictionary and traverse",
           "[Bencode][Traverse][Dictionary]") {
     BufferSource source{"d3:onei1e5:threei3e3:twoi2ee"};
-    bEncode.parse(source);
+    bStringify.parse(source);
     Bencode_Analyzer analyzer;
-    bEncode.traverse(analyzer);
+    bStringify.traverse(analyzer);
     REQUIRE(analyzer.totalNodes == 4);
     REQUIRE(analyzer.totalIntegers == 3);
     REQUIRE(analyzer.totalDictionarys == 1);
@@ -77,9 +77,9 @@ TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
             "[Bencode][Traverse][Dictionary]") {
       BufferSource
       source{R"(d6:answerd10:everythingi42ee10:dictionaryd8:currency3:USD5:valuei42ee5:happyi1e4:listli1ei0ei2ee4:name5:Niels7:nothingi0e2:pii3ee)"};
-      bEncode.parse(source);
+      bStringify.parse(source);
       Bencode_Analyzer analyzer;
-      bEncode.traverse(analyzer);
+      bStringify.traverse(analyzer);
       REQUIRE(analyzer.totalNodes == 14);
       REQUIRE(analyzer.totalIntegers == 8);
       REQUIRE(analyzer.totalDictionarys == 3);

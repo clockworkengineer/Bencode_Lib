@@ -6,17 +6,17 @@
 
 namespace Bencode_Lib {
 
-class XML_Encoder final : public IEncoder {
+class XML_Stringify final : public IStringify {
 public:
   // Constructors/destructors
-  explicit XML_Encoder(std::unique_ptr<ITranslator> translator =
+  explicit XML_Stringify(std::unique_ptr<ITranslator> translator =
                            std::make_unique<XML_Translator>())
       : xmlTranslator(std::move(translator)) {}
-  XML_Encoder(const XML_Encoder &other) = delete;
-  XML_Encoder &operator=(const XML_Encoder &other) = delete;
-  XML_Encoder(XML_Encoder &&other) = delete;
-  XML_Encoder &operator=(XML_Encoder &&other) = delete;
-  ~XML_Encoder() override = default;
+  XML_Stringify(const XML_Stringify &other) = delete;
+  XML_Stringify &operator=(const XML_Stringify &other) = delete;
+  XML_Stringify(XML_Stringify &&other) = delete;
+  XML_Stringify &operator=(XML_Stringify &&other) = delete;
+  ~XML_Stringify() override = default;
 
   /// <summary>
   /// Recursively traverse BNode structure encoding it into XML string on
@@ -24,7 +24,7 @@ public:
   /// </summary>
   /// <param name="bNode">BNode structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified XML.</param>
-  void encode(const BNode &bNode, IDestination &destination) const override {
+  void stringify(const BNode &bNode, IDestination &destination) const override {
     destination.add(R"(<?xml version="1.0" encoding="UTF-8"?>)");
     destination.add("<root>");
     encodeXML(bNode, destination);

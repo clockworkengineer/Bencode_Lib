@@ -1,6 +1,6 @@
 # Bencode_Lib
 
-A library to perform Bencode encode/parse to/from
+A library to perform Bencode stringify/parse to/from
 a byte buffer, file or a custom source/destination with the
 ISource and IDestination interfaces provided. 
 
@@ -16,6 +16,6 @@ from scratch using C++ operators before saving it away (encoding).
 For an in-depth description of the Bencode specification, refer 
 to its wiki page at https://en.wikipedia.org/wiki/Bencode.
 
-Note: The parsing/stringification methods are called encode/parse (which
+Note: The parsing/stringification methods are called stringify/parse (which
 is different from my other libraries as technically bencode is not meant to be
 an editable but a binary format).

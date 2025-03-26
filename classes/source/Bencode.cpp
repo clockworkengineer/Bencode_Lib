@@ -1,7 +1,7 @@
 //
 // Class: Bencode
 //
-// Description: Perform Bencode encode/parse to/from a byte
+// Description: Perform Bencode stringify/parse to/from a byte
 // buffer or file.It is also possible to customize this with the
 // ISource and IDestination interfaces if required. Although Bencoded
 // data is treated as std::byte externally, this library uses char and
@@ -21,9 +21,9 @@ namespace Bencode_Lib {
 /// Initialise the implementation layer.
 /// </summary>
 
-Bencode::Bencode([[maybe_unused]] IEncoder *encoder,
+Bencode::Bencode([[maybe_unused]] IStringify *stringify,
                  [[maybe_unused]] IParser *parser)
-    : implementation(std::make_unique<Bencode_Impl>(encoder, parser)) {}
+    : implementation(std::make_unique<Bencode_Impl>(stringify, parser)) {}
 Bencode::~Bencode() = default;
 
 /// <summary>
@@ -69,11 +69,11 @@ void Bencode::parse(ISource &&source) const { implementation->parse(source); }
 /// </summary>
 /// <param name="destination">Reference to interface used to facilitate the
 /// output stream.</param> <returns></returns>
-void Bencode::encode(IDestination &destination) const {
-  implementation->encode(destination);
+void Bencode::stringify(IDestination &destination) const {
+  implementation->stringify(destination);
 }
-void Bencode::encode(IDestination &&destination) const {
-  implementation->encode(destination);
+void Bencode::stringify(IDestination &&destination) const {
+  implementation->stringify(destination);
 }
 
 /// <summary>

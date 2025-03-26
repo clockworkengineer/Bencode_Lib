@@ -19,11 +19,11 @@ namespace be = Bencode_Lib;
 void processBencodeFile(const std::string &fileName)
 {
   PLOG_INFO << "Analyzing " << fileName;
-  const be::Bencode bEncode;
-  Bencode_Analyzer bEncodeAnalyzer;
-  bEncode.parse(be::FileSource{ fileName });
-  bEncode.traverse(bEncodeAnalyzer);
-  PLOG_INFO << bEncodeAnalyzer.dump();
+  const be::Bencode bStringify;
+  Bencode_Analyzer bStringifyAnalyzer;
+  bStringify.parse(be::FileSource{ fileName });
+  bStringify.traverse(bStringifyAnalyzer);
+  PLOG_INFO << bStringifyAnalyzer.dump();
   PLOG_INFO << "Finished " << fileName << ".";
 }
 

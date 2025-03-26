@@ -116,7 +116,7 @@ private:
   // Source of torrent
   std::string source;
   // Bencode encoding for torrent file
-  const Bencode_Lib::Bencode bEncode;
+  const Bencode_Lib::Bencode bStringify;
   // Torrent file name
   std::string torrentFileName;
 };
@@ -125,10 +125,10 @@ private:
 /// Load torrent file meta information into a structure for processing.
 /// </summary>
 inline void TorrentInfo::populate() {
-  if (!isA<Dictionary>(bEncode.root())) {
+  if (!isA<Dictionary>(bStringify.root())) {
     throw Bencode_Lib::Error("Valid torrent file not found.");
   }
-  auto &bNodeTop = BRef<Dictionary>(bEncode.root());
+  auto &bNodeTop = BRef<Dictionary>(bStringify.root());
   announce = getString(bNodeTop, "announce");
   announceList = getAnnounceList(bNodeTop);
   encoding = getString(bNodeTop, "encoding");
@@ -181,5 +181,5 @@ inline std::string TorrentInfo::dump() {
 /// <param name="fileName">Torrent file name</param>
 inline void TorrentInfo::load(const std::string &fileName) {
   torrentFileName = fileName;
-  bEncode.parse(Bencode_Lib::FileSource{torrentFileName});
+  bStringify.parse(Bencode_Lib::FileSource{torrentFileName});
 }

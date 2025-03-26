@@ -13,8 +13,8 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 #include "Bencode_Parser.hpp"
-#include "JSON_Encoder.hpp"
-#include "XML_Encoder.hpp"
+#include "JSON_Stringify.hpp"
+#include "XML_Stringify.hpp"
 
 #define kSingleFileTorrent "singlefile.torrent"
 #define kMultiFileTorrent "multifile.torrent"

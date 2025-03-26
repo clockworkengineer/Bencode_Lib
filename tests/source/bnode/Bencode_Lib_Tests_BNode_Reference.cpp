@@ -2,34 +2,34 @@
 
 TEST_CASE("Check BNode reference functions work.",
           "[Bencode][BNode][Reference]") {
-  const Bencode bEncode;
+  const Bencode bStringify;
   SECTION("Integer reference.", "[Bencode][BNode][Reference]") {
     BufferSource source{"i45500e"};
-    bEncode.parse(source);
-    REQUIRE(BRef<Integer>((bEncode.root())).value() == 45500);
+    bStringify.parse(source);
+    REQUIRE(BRef<Integer>((bStringify.root())).value() == 45500);
   }
   SECTION("String reference.", "[Bencode][BNode][Reference]") {
     BufferSource source{"10:0123456789"};
-    bEncode.parse(source);
-    REQUIRE(BRef<String>((bEncode.root())).value() == "0123456789");
+    bStringify.parse(source);
+    REQUIRE(BRef<String>((bStringify.root())).value() == "0123456789");
   }
   SECTION("List reference.", "[Bencode][BNode][Reference]") {
     BufferSource source{
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
-    bEncode.parse(source);
-    REQUIRE(BRef<List>((bEncode.root())).size() == 3);
+    bStringify.parse(source);
+    REQUIRE(BRef<List>((bStringify.root())).size() == 3);
   }
   SECTION("Dictionary reference.", "[Bencode][BNode][Reference]") {
     BufferSource source{
         "d4:four10:01234567893:one8:123456785:three6:qwerty3:two9:asdfghjkle"};
-    bEncode.parse(source);
-    REQUIRE(BRef<Dictionary>((bEncode.root())).size() == 4);
+    bStringify.parse(source);
+    REQUIRE(BRef<Dictionary>((bStringify.root())).size() == 4);
   }
   SECTION("BRef check node type correct.", "[Bencode][BNode][Reference]") {
     BufferSource source{"i45500e"};
-    bEncode.parse(source);
-    REQUIRE_THROWS_AS(BRef<Dictionary>(bEncode.root()), BNode::Error);
-    REQUIRE_THROWS_WITH(BRef<Dictionary>(bEncode.root()),
+    bStringify.parse(source);
+    REQUIRE_THROWS_AS(BRef<Dictionary>(bStringify.root()), BNode::Error);
+    REQUIRE_THROWS_WITH(BRef<Dictionary>(bStringify.root()),
                         "BNode Error: Node not a dictionary.");
   }
 }

@@ -11,12 +11,12 @@
 namespace Bencode_Lib {
 
 // Need size information for destructor to clean up unique_ptr to
-// encoder/parser.
-Bencode_Impl::Bencode_Impl(IEncoder *encoder, IParser *parser) {
-  if (encoder == nullptr) {
-    bNodeEncoder = std::make_unique<Bencode_Encoder>();
+// stringify/parser.
+Bencode_Impl::Bencode_Impl(IStringify *stringify, IParser *parser) {
+  if (stringify == nullptr) {
+    bNodeStringify = std::make_unique<Bencode_Stringify>();
   } else {
-    bNodeEncoder.reset(encoder);
+    bNodeStringify.reset(stringify);
   }
   if (parser == nullptr) {
     bNodeParser = std::make_unique<Bencode_Parser>();
@@ -41,11 +41,11 @@ void Bencode_Impl::parse(ISource &source) {
   }
 }
 
-void Bencode_Impl::encode(IDestination &destination) const {
+void Bencode_Impl::stringify(IDestination &destination) const {
   if (bNodeRoot.isEmpty()) {
-    throw Error("No Bencoded data to encode.");
+    throw Error("No Bencoded data to stringify.");
   }
-  bNodeEncoder->encode(bNodeRoot, destination);
+  bNodeStringify->stringify(bNodeRoot, destination);
 }
 
 void Bencode_Impl::traverse(IAction &action) {

@@ -36,7 +36,7 @@ set(BENCODE_INCLUDES
   ./classes/include/interface/ISource.hpp
   ./classes/include/interface/IDestination.hpp
   ./classes/include/interface/IParser.hpp
-  ./classes/include/interface/IEncoder.hpp
+  ./classes/include/interface/IStringify.hpp
   ./classes/include/interface/ITranslator.hpp
   ./classes/include/implementation/Bencode_Core.hpp
   ./classes/include/implementation/common/Bencode_Error.hpp
@@ -46,10 +46,10 @@ set(BENCODE_INCLUDES
   ./classes/include/implementation/bnode/Bencode_BNode.hpp
   ./classes/include/implementation/Bencode_Impl.hpp
   ./classes/include/implementation/parser/Bencode_Parser.hpp
-  ./classes/include/implementation/encoder/Bencode_Encoder.hpp
-  ./classes/include/implementation/encoder/JSON_Encoder.hpp
-  ./classes/include/implementation/encoder/XML_Encoder.hpp
-  ./classes/include/implementation/encoder/YAML_Encoder.hpp
+  ./classes/include/implementation/stringify/Bencode_Stringify.hpp
+  ./classes/include/implementation/stringify/JSON_Stringify.hpp
+  ./classes/include/implementation/stringify/XML_Stringify.hpp
+  ./classes/include/implementation/stringify/YAML_Stringify.hpp
   ./classes/include/implementation/translator/Default_Translator.hpp
   ./classes/include/implementation/translator/XML_Translator.hpp
   ./classes/include/implementation/io/Bencode_Sources.hpp
@@ -74,7 +74,7 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/common
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/bnode
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/parser
-  ${PROJECT_SOURCE_DIR}/classes/include/implementation/encoder
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/io
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/variants
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/translator

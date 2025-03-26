@@ -6,17 +6,17 @@
 
 namespace Bencode_Lib {
 
-class JSON_Encoder final : public IEncoder {
+class JSON_Stringify final : public IStringify {
 public:
   // Constructors/destructors
-  explicit JSON_Encoder(std::unique_ptr<ITranslator> translator =
+  explicit JSON_Stringify(std::unique_ptr<ITranslator> translator =
                             std::make_unique<Default_Translator>())
       : jsonTranslator(std::move(translator)) {}
-  JSON_Encoder(const JSON_Encoder &other) = delete;
-  JSON_Encoder &operator=(const JSON_Encoder &other) = delete;
-  JSON_Encoder(JSON_Encoder &&other) = delete;
-  JSON_Encoder &operator=(JSON_Encoder &&other) = delete;
-  ~JSON_Encoder() override = default;
+  JSON_Stringify(const JSON_Stringify &other) = delete;
+  JSON_Stringify &operator=(const JSON_Stringify &other) = delete;
+  JSON_Stringify(JSON_Stringify &&other) = delete;
+  JSON_Stringify &operator=(JSON_Stringify &&other) = delete;
+  ~JSON_Stringify() override = default;
 
   /// <summary>
   /// Recursively traverse BNode structure encoding it into JSON string on
@@ -24,7 +24,7 @@ public:
   /// </summary>
   /// <param name="bNode">BNode structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified JSON.</param>
-  void encode(const BNode &bNode, IDestination &destination) const override {
+  void stringify(const BNode &bNode, IDestination &destination) const override {
     if (isA<Dictionary>(bNode)) {
       encodeDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
@@ -45,7 +45,7 @@ private:
     int commas = BRef<Dictionary>(bNode).value().size();
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       destination.add("\"" + bNodeNext.getKey() + "\"" + " : ");
-      encode(bNodeNext.getBNode(), destination);
+      stringify(bNodeNext.getBNode(), destination);
       if (--commas > 0)
         destination.add(",");
     }
@@ -56,7 +56,7 @@ private:
     int commas = BRef<List>(bNode).value().size();
     destination.add('[');
     for (const auto &bNodeNext : BRef<List>(bNode).value()) {
-      encode(bNodeNext, destination);
+      stringify(bNodeNext, destination);
       if (--commas > 0)
         destination.add(",");
     }

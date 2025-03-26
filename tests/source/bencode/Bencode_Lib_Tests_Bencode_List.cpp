@@ -95,28 +95,28 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE_FALSE(!isA<Integer>(bencode[0]));
     REQUIRE(BRef<Integer>(bencode[0]).value() == 0);
   }
-  SECTION("Create two level list with an integer at the base and encode it.",
+  SECTION("Create two level list with an integer at the base and stringify it.",
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[0][0] = 3000;
     REQUIRE_FALSE(!isA<Integer>(bencode[0][0]));
     REQUIRE(BRef<Integer>(bencode[0][0]).value() == 3000);
     BufferDestination destination;
-    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(destination.toString() == R"(lli3000eee)");
   }
-  SECTION("Create list with free spaces and a string at the base and encode.",
+  SECTION("Create list with free spaces and a string at the base and stringify.",
           "[Bencode][Create][List][String]") {
     Bencode bencode;
     bencode[5] = "test";
     REQUIRE_FALSE(!isA<String>(bencode[5]));
     REQUIRE(BRef<String>(bencode[5]).value() == "test");
     BufferDestination destination;
-    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(destination.toString() == R"(l4:teste)");
   }
   SECTION("Create list with 5 free spaces, add an string to the last entry, "
-          "add an integer at element 3 and encode.",
+          "add an integer at element 3 and stringify.",
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
     bencode[5] = "test";
@@ -126,7 +126,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE_FALSE(!isA<Integer>(bencode[3]));
     REQUIRE(BRef<Integer>(bencode[3]).value() == 15);
     BufferDestination destination;
-    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(destination.toString() == R"(li15e4:teste)");
   }
 
@@ -152,7 +152,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
     REQUIRE(BRef<Integer>(bencode[5][6]).value() == 1);
     REQUIRE(BRef<Integer>(bencode[5][7]).value() == 0);
     BufferDestination destination;
-    REQUIRE_NOTHROW(bencode.encode(destination));
+    REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(destination.toString() ==
             R"(lli1ei2ei3ei4e3:5.019:test test test testi1ei0eee)");
   }

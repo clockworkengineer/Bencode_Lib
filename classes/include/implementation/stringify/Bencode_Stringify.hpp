@@ -6,17 +6,17 @@
 
 namespace Bencode_Lib {
 
-class Bencode_Encoder final : public IEncoder {
+class Bencode_Stringify final : public IStringify {
 public:
   // Constructors/Destructors
-  explicit Bencode_Encoder(std::unique_ptr<ITranslator> translator =
+  explicit Bencode_Stringify(std::unique_ptr<ITranslator> translator =
                                std::make_unique<Default_Translator>())
       : bencodeTranslator(std::move(translator)) {}
-  Bencode_Encoder(const Bencode_Encoder &other) = delete;
-  Bencode_Encoder &operator=(const Bencode_Encoder &other) = delete;
-  Bencode_Encoder(Bencode_Encoder &&other) = delete;
-  Bencode_Encoder &operator=(Bencode_Encoder &&other) = delete;
-  ~Bencode_Encoder() override = default;
+  Bencode_Stringify(const Bencode_Stringify &other) = delete;
+  Bencode_Stringify &operator=(const Bencode_Stringify &other) = delete;
+  Bencode_Stringify(Bencode_Stringify &&other) = delete;
+  Bencode_Stringify &operator=(Bencode_Stringify &&other) = delete;
+  ~Bencode_Stringify() override = default;
 
   /// <summary>
   /// Recursively traverse BNode structure encoding it into Bencode string on
@@ -25,7 +25,7 @@ public:
   /// <param name="bNode">BNode structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified
   /// Bencode.</param>
-  void encode(const BNode &bNode, IDestination &destination) const override {
+  void stringify(const BNode &bNode, IDestination &destination) const override {
     if (isA<Dictionary>(bNode)) {
       encodeDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
@@ -46,7 +46,7 @@ private:
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       destination.add(std::to_string(bNodeNext.getKey().length()) + ":" +
                       bNodeNext.getKey());
-      encode(bNodeNext.getBNode(), destination);
+      stringify(bNodeNext.getBNode(), destination);
     }
     destination.add('e');
   }
@@ -54,7 +54,7 @@ private:
   void encodeList(const BNode &bNode, IDestination &destination) const {
     destination.add('l');
     for (const auto &bNodeNext : BRef<List>(bNode).value()) {
-      encode(bNodeNext, destination);
+      stringify(bNodeNext, destination);
     }
     destination.add('e');
   }

@@ -3,7 +3,7 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 #include "Bencode_Parser.hpp"
-#include "Bencode_Encoder.hpp"
+#include "Bencode_Stringify.hpp"
 
 namespace Bencode_Lib {
 
@@ -11,7 +11,7 @@ class Bencode_Impl {
 
 public:
   // Constructors/Destructors
-  Bencode_Impl(IEncoder *encoder, IParser *parser);
+  Bencode_Impl(IStringify *stringify, IParser *parser);
   Bencode_Impl(const Bencode_Impl &other) = delete;
   Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
   Bencode_Impl(Bencode_Impl &&other) = delete;
@@ -19,8 +19,8 @@ public:
   ~Bencode_Impl();
   // Parse Bencoded source into BNode tree
   void parse(ISource &source);
-  // Encode BNode tree
-  void encode(IDestination &destination) const;
+  // Stringify BNode tree
+  void stringify(IDestination &destination) const;
   // Bencode version
   static std::string version();
   // Return root BNode of the tree
@@ -44,8 +44,8 @@ private:
   template <typename T> static void traverseBNodes(T &bNode, IAction &action);
   // Root of BNode tree
   BNode bNodeRoot;
-  // Bencode encoder
-  std::unique_ptr<IEncoder> bNodeEncoder{};
+  // Bencode stringify
+  std::unique_ptr<IStringify> bNodeStringify{};
   // Bencode parser
   std::unique_ptr<IParser> bNodeParser{};
 };

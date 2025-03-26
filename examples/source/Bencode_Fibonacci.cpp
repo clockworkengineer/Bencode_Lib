@@ -13,10 +13,10 @@
 namespace be = Bencode_Lib;
 
 /// <summary>
-/// Return Fibonaci bEncode file name.
+/// Return Fibonaci bStringify file name.
 /// </summary>
 /// <returns>Bencode settings file name.</returns>
-std::string bEncodeFibonacciFile() {
+std::string bStringifyFibonacciFile() {
   return (std::filesystem::current_path() / "files" / "fibonacci.ben").string();
 }
 /// <summary>
@@ -24,23 +24,23 @@ std::string bEncodeFibonacciFile() {
 ///  next in sequence and write back to Bencode file.
 /// </summary>
 void nextFibonacci() {
-  be::Bencode bEncode;
-  if (!std::filesystem::exists(bEncodeFibonacciFile())) {
+  be::Bencode bStringify;
+  if (!std::filesystem::exists(bStringifyFibonacciFile())) {
     // If Bencode file does not exist create intial sequence
-    bEncode.parse(be::BufferSource{"li0ei1ee"});
+    bStringify.parse(be::BufferSource{"li0ei1ee"});
   } else {
     // Parse in current sequence
-    bEncode.parse(be::FileSource{bEncodeFibonacciFile()});
+    bStringify.parse(be::FileSource{bStringifyFibonacciFile()});
     // Get index of last element
-    const auto last = be::BRef<be::List>(bEncode.root()).size() - 1;
+    const auto last = be::BRef<be::List>(bStringify.root()).size() - 1;
     // Next is sum of last two entries
-    auto next = be::BRef<be::Integer>(bEncode[last]).value();
-    next += be::BRef<be::Integer>(bEncode[last - 1]).value();
+    auto next = be::BRef<be::Integer>(bStringify[last]).value();
+    next += be::BRef<be::Integer>(bStringify[last - 1]).value();
     // Expand array by one and add next in sequence
-    bEncode[last + 1] = next;
+    bStringify[last + 1] = next;
   }
   // Write updated sequence back to file
-  bEncode.encode(be::FileDestination{bEncodeFibonacciFile()});
+  bStringify.stringify(be::FileDestination{bStringifyFibonacciFile()});
 }
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {

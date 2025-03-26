@@ -7,17 +7,17 @@
 
 namespace Bencode_Lib {
 
-class YAML_Encoder final : public IEncoder {
+class YAML_Stringify final : public IStringify {
 public:
   // Constructors/destructors
-  explicit YAML_Encoder(std::unique_ptr<ITranslator> translator =
+  explicit YAML_Stringify(std::unique_ptr<ITranslator> translator =
                             std::make_unique<Default_Translator>())
       : yamlTranslator(std::move(translator)) {}
-  YAML_Encoder(const YAML_Encoder &other) = delete;
-  YAML_Encoder &operator=(const YAML_Encoder &other) = delete;
-  YAML_Encoder(YAML_Encoder &&other) = delete;
-  YAML_Encoder &operator=(YAML_Encoder &&other) = delete;
-  ~YAML_Encoder() override = default;
+  YAML_Stringify(const YAML_Stringify &other) = delete;
+  YAML_Stringify &operator=(const YAML_Stringify &other) = delete;
+  YAML_Stringify(YAML_Stringify &&other) = delete;
+  YAML_Stringify &operator=(YAML_Stringify &&other) = delete;
+  ~YAML_Stringify() override = default;
 
   /// <summary>
   /// Recursively traverse BNode structure encoding it into YAML string on
@@ -25,7 +25,7 @@ public:
   /// </summary>
   /// <param name="bNode">BNode structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified YAML.</param>
-  void encode(const BNode &bNode, IDestination &destination) const override {
+  void stringify(const BNode &bNode, IDestination &destination) const override {
     destination.add("---\n");
     encodeYAML(bNode, destination, 0);
     destination.add("...\n");

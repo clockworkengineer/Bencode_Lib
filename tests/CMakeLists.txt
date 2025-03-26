@@ -30,11 +30,11 @@ set(TEST_SOURCES
         source/parser/Bencode_Lib_Tests_Parse_Exception.cpp
         source/parser/Bencode_Lib_Tests_Parse_Misc.cpp
         source/parser/Bencode_Lib_Tests_Parse_Simple.cpp
-        source/encoder/Bencode_Lib_Tests_Encode_Collection.cpp
-        source/encoder/Bencode_Lib_Tests_Encode_Simple.cpp
-        source/encoder/Bencode_Lib_Tests_Encode_Misc.cpp
-        source/encoder/Bencode_Lib_Tests_JSON_Encode.cpp
-        source/encoder/Bencode_Lib_Tests_XML_Encode.cpp
+        source/stringify/Bencode_Lib_Tests_Stringify_Collection.cpp
+        source/stringify/Bencode_Lib_Tests_Stringify_Simple.cpp
+        source/stringify/Bencode_Lib_Tests_Stringify_Misc.cpp
+        source/stringify/Bencode_Lib_Tests_JSON_Stringify.cpp
+        source/stringify/Bencode_Lib_Tests_XML_Stringify.cpp
         source/io/Bencode_Lib_Tests_ISource_Buffer.cpp
         source/io/Bencode_Lib_Tests_ISource_File.cpp
         source/io/Bencode_Lib_Tests_IDestination_Buffer.cpp
@@ -42,7 +42,7 @@ set(TEST_SOURCES
         source/misc/Bencode_Lib_Tests_Helper.cpp
         source/misc/Bencode_Lib_Tests_Misc.cpp
         source/traverse/Bencode_lib_Tests_Traverse.cpp
-        source/encoder/Bencode_Lib_Tests_YAML_Encode.cpp
+        source/stringify/Bencode_Lib_Tests_YAML_Stringify.cpp
         source/io/Bencode_Tests_File_FromFile.cpp
         source/io/Bencode_Lib_Tests_ToFile.cpp)
 

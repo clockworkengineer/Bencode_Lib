@@ -9,29 +9,29 @@ class IDestination;
 struct BNode;
 
 // =============================
-// Interface for Bencode encoder
+// Interface for Bencode stringify
 // =============================
-class IEncoder {
+class IStringify {
 public:
   // ==============
-  // IEncoder Error
+  // IStringify Error
   // ==============
   struct Error final : std::runtime_error {
     explicit Error(const std::string &message)
-        : std::runtime_error("IEncoder Error: " + message) {}
+        : std::runtime_error("IStringify Error: " + message) {}
   };
   // ========================
   // Constructors/destructors
   // ========================
-  virtual ~IEncoder() = default;
+  virtual ~IStringify() = default;
   // =====================================
-  // Encode to destination from BNode tree
+  // Stringify to destination from BNode tree
   // =====================================
-  virtual void encode(const BNode &bNode, IDestination &destination) const = 0;
+  virtual void stringify(const BNode &bNode, IDestination &destination) const = 0;
 };
-// Make custom encoder
+// Make custom stringify
 // to pass to Bencode constructor:The note pointer is tidied up internally.
-template <typename T> IEncoder *makeEncoder() {
+template <typename T> IStringify *makeStringify() {
   return std::make_unique<T>().release();
 }
 } // namespace Bencode_Lib

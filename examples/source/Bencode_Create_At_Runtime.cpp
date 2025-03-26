@@ -20,32 +20,32 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     // Log version
     PLOG_INFO << be::Bencode::version();
     // create an empty structure (null)
-    be::Bencode bEncode;
+    be::Bencode bStringify;
     // add a number that is stored as double (note the implicit conversion of
-    // bEncode to an object)
-    bEncode["pi"] = 3.141;
+    // bStringify to an object)
+    bStringify["pi"] = 3.141;
     // add a Boolean that is stored as bool
-    bEncode["sad"] = true;
+    bStringify["sad"] = true;
     // add a string that is stored as std::string
-    bEncode["first_name"] = "Niels";
+    bStringify["first_name"] = "Niels";
     // add another null object by passing nullptr
-    bEncode["nothing"] = nullptr;
+    bStringify["nothing"] = nullptr;
     // add an object inside the object
-    bEncode["the_answer"]["everything"] = 42;
+    bStringify["the_answer"]["everything"] = 42;
     // add an array that is stored as std::vector (using an initializer list)
-    bEncode["list"] = {1, 0, 2};
+    bStringify["list"] = {1, 0, 2};
     // add another object (using an initializer list of pairs)
-    bEncode["object"] = {{"currency", "USD"}, {"value", 42.99}};
+    bStringify["object"] = {{"currency", "USD"}, {"value", 42.99}};
     // add another object that has a nested array (BNode{})
-    bEncode["object2"] = {{"currency", "USD"},
+    bStringify["object2"] = {{"currency", "USD"},
                           {"array", be::BNode{23.22, 33, 55, 99.99}}};
     be::BufferDestination destination;
-    bEncode.encode(destination);
+    bStringify.stringify(destination);
     PLOG_INFO << destination.toString();
     destination.clear();
     // create Bencode using an initializer list and nesting array/objects using
     // BNode{}.
-    const be::Bencode bEncode2 = {
+    const be::Bencode bStringify2 = {
         {"pi", 3.141},
         {"sad", true},
         {"first_name", "Niels"},
@@ -54,7 +54,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
         {"list", be::BNode{1, 0, 2}},
         {"object", be::BNode{{"currency", "USD"},
                              {"value", be::BNode{23.22, 33, 55, 99.99}}}}};
-    bEncode2.encode(destination);
+    bStringify2.stringify(destination);
     PLOG_INFO << destination.toString();
   } catch (std::exception &ex) {
     PLOG_ERROR << "Error: " << ex.what();
