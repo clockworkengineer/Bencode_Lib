@@ -1,15 +1,15 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Bencode_Decoder.hpp"
+#include "Bencode_Parser.hpp"
 
 namespace Bencode_Lib {
 
 /// <summary>
 /// Extract an Integer from the input stream of characters referenced by ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Positive integers value.</returns>
-int64_t Bencode_Decoder::extractInteger(ISource &source) {
+int64_t Bencode_Parser::extractInteger(ISource &source) {
   // Number size of 64 bit int +2 for sign and terminating null
   std::array<char, std::numeric_limits<int64_t>::digits10 + 2> number{};
   std::size_t digits = 0;
@@ -40,9 +40,9 @@ int64_t Bencode_Decoder::extractInteger(ISource &source) {
 /// Extract a byte string from the input stream of characters referenced by
 /// ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
-/// stream.</param> <returns>String value decoded.</returns>
-std::string Bencode_Decoder::extractString(ISource &source) {
+/// <param name="source">Reference to input interface used to parse Bencoded
+/// stream.</param> <returns>String value parsed.</returns>
+std::string Bencode_Parser::extractString(ISource &source) {
   int64_t stringLength = extractInteger(source);
   if (source.current() != ':') {
     throw SyntaxError("Missing colon separator in string value.");
@@ -57,21 +57,21 @@ std::string Bencode_Decoder::extractString(ISource &source) {
 }
 
 /// <summary>
-/// Decode a byte string from the input stream of characters referenced by
+/// Parse a byte string from the input stream of characters referenced by
 /// ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>String BNode.</returns>
-BNode Bencode_Decoder::decodeString(ISource &source) {
+BNode Bencode_Parser::parseString(ISource &source) {
   return BNode::make<String>(extractString(source));
 }
 
 /// <summary>
-/// Decode an integer from the input stream of characters referenced by ISource.
+/// Parse an integer from the input stream of characters referenced by ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Integer BNode.</returns>
-BNode Bencode_Decoder::decodeInteger(ISource &source) {
+BNode Bencode_Parser::parseInteger(ISource &source) {
   source.next();
   int64_t integer = extractInteger(source);
   confirmBoundary(source, 'e');
@@ -79,12 +79,12 @@ BNode Bencode_Decoder::decodeInteger(ISource &source) {
 }
 
 /// <summary>
-/// Decode a dictionary from the input stream of characters referenced by
+/// Parse a dictionary from the input stream of characters referenced by
 /// ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Dictionary BNode.</returns>
-BNode Bencode_Decoder::decodeDictionary(ISource &source) {
+BNode Bencode_Parser::parseDictionary(ISource &source) {
   BNode dictionary = BNode::make<Dictionary>();
   std::string lastKey{};
   source.next();
@@ -98,7 +98,7 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
     // Check key not duplicate and insert
     if (!BRef<Dictionary>(dictionary).contains(key)) {
       BRef<Dictionary>(dictionary)
-          .add(Dictionary::Entry(key, decodeTree(source)));
+          .add(Dictionary::Entry(key, parseBNodes(source)));
     } else {
       throw SyntaxError("Duplicate dictionary key.");
     }
@@ -108,21 +108,21 @@ BNode Bencode_Decoder::decodeDictionary(ISource &source) {
 }
 
 /// <summary>
-/// Decode a list from the input stream of characters referenced by ISource.
+/// Parse a list from the input stream of characters referenced by ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded stream.</param>
+/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <returns>List BNode.</returns>
-BNode Bencode_Decoder::decodeList(ISource &source) {
+BNode Bencode_Parser::parseList(ISource &source) {
   BNode list = BNode::make<List>();
   source.next();
   while (source.more() && source.current() != 'e') {
-    BRef<List>(list).add(decodeTree(source));
+    BRef<List>(list).add(parseBNodes(source));
   }
   confirmBoundary(source, 'e');
   return list;
 }
 
-void Bencode_Decoder::confirmBoundary(ISource &source, const char expectedBoundary) {
+void Bencode_Parser::confirmBoundary(ISource &source, const char expectedBoundary) {
   if (source.current() != expectedBoundary) {
     throw SyntaxError(std::string("Missing end terminator on ") +
                       expectedBoundary);
@@ -130,13 +130,13 @@ void Bencode_Decoder::confirmBoundary(ISource &source, const char expectedBounda
   source.next();
 }
 /// <summary>
-/// Decode a BNode tree root.
+/// Parse a BNode tree root.
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Bencode_Decoder::decodeTree(ISource &source) {
-  const auto it = decoders.find(source.current());
-  if (it == decoders.end()) {
+BNode Bencode_Parser::parseBNodes(ISource &source) {
+  const auto it = parsers.find(source.current());
+  if (it == parsers.end()) {
     throw SyntaxError(
         "Expected integer, string, list or dictionary not present.");
   }
@@ -144,12 +144,12 @@ BNode Bencode_Decoder::decodeTree(ISource &source) {
 }
 
 /// <summary>
-/// Decode a BNode from the input stream of characters referenced by ISource to
-/// traverse and decode complex encodings. This method is called
+/// Parse a BNode from the input stream of characters referenced by ISource to
+/// traverse and parse complex encodings. This method is called
 /// recursively to build up a BNode structure.
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Bencode_Decoder::decode(ISource &source) { return decodeTree(source); }
+BNode Bencode_Parser::parse(ISource &source) { return parseBNodes(source); }
 
 } // namespace Bencode_Lib

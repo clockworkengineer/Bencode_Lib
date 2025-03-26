@@ -7,7 +7,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
   SECTION("YAML encode an integer (266).", "[Bencode][Encode][YAML][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n266\n...\n");
   }
@@ -15,7 +15,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
           "[Bencode][Encode][YAML][Integer]") {
     BufferSource source{"i10000e"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n10000\n...\n");
   }
@@ -23,7 +23,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
           "[Bencode][Encode][YAML][Integer]") {
     BufferSource source{"i-10000e"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n-10000\n...\n");
   }
@@ -31,7 +31,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
           "[Bencode][Encode][YAML][String]") {
     BufferSource source{"12:qwertyuiopas"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n\"qwertyuiopas\"\n...\n");
   }
@@ -39,7 +39,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
           "[Bencode][Encode][YAML][String]") {
     BufferSource source{"26:abcdefghijklmnopqrstuvwxyz"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n\"abcdefghijklmnopqrstuvwxyz\"\n...\n");
   }
@@ -47,7 +47,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
           "[Bencode][Encode][YAML][String]") {
     BufferSource source{"0:"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n\"\"\n...\n");
   }
@@ -60,7 +60,7 @@ TEST_CASE("YAML encode of simple types (integer, string) ",
     escaped += 2;
     BufferSource source{escaped};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             "---\n\"abcdefghijklmnopqrstuvwxyz\\u0000\\u0001\\u0002\"\n...\n");
@@ -73,7 +73,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][YAML][List]") {
     BufferSource source{"li266ei6780ei88ee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n- 266\n- 6780\n- 88\n...\n");
   }
@@ -82,7 +82,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][YAML][List]") {
     BufferSource source{"li266e4:fivei6780e3:onei88ee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             "---\n- 266\n- \"five\"\n- 6780\n- \"one\"\n- 88\n...\n");
@@ -90,7 +90,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
   SECTION("YAML encode an empty List.", "[Bencode][Encode][YAML][List]") {
     BufferSource source{"le"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n[]\n...\n");
   }
@@ -98,7 +98,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][YAML][Dictionary]") {
     BufferSource source{"d3:onei1e5:threei3e3:twoi2ee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n\"one\": 1\n\"three\": 3\n\"two\": 2\n...\n");
   }
@@ -106,7 +106,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][YAML][Dictionary]") {
     BufferSource source{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             "---\n\"one\": \"0123456789\"\n\"three\": \"qwerty\"\n\"two\": \"asdfghjkl\"\n...\n");
@@ -115,7 +115,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][YAML][Dictionary]") {
     BufferSource source{"d3:oneli1ei2ei3ee3:twoli5555e4:fouree"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -125,7 +125,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][YAML][Dictionary]") {
     BufferSource source{"de"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n{}\n...\n");
   }
@@ -133,7 +133,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][YAML][Dictionary]") {
     BufferSource source{"ldededededee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             "---\n- {}\n- {}\n- {}\n- {}\n- {}\n...\n");
@@ -142,7 +142,7 @@ TEST_CASE("YAML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][YAML][Dictionary]") {
     BufferSource source{"llelelelelee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == "---\n- []\n- []\n- []\n- []\n- []\n...\n");
   }

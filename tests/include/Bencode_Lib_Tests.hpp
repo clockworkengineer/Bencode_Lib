@@ -12,7 +12,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Bencode_Decoder.hpp"
+#include "Bencode_Parser.hpp"
 #include "JSON_Encoder.hpp"
 #include "XML_Encoder.hpp"
 

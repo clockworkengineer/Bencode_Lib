@@ -20,7 +20,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
         PLOG_INFO << "Bencode_Files_To_YAML started ...";
         PLOG_INFO << be::Bencode::version();
         for (const auto &fileName : Utility::createTorrentFileList()) {
-            bEncode.decode(be::FileSource(fileName));
+            bEncode.parse(be::FileSource(fileName));
             bEncode.encode(be::FileDestination(
                 Utility::createFileName(fileName, ".yaml")));
             PLOG_INFO << "Created file "

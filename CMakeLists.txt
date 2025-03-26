@@ -27,7 +27,7 @@ set(BENCODE_SOURCES
   ./classes/source/Bencode.cpp
   ./classes/source/implementation/Bencode_Impl.cpp
   ./classes/source/implementation/file/Bencode_File.cpp
-  ./classes/source/implementation/decoder/Bencode_Decoder.cpp)
+  ./classes/source/implementation/parser/Bencode_Parser.cpp)
 
 set(BENCODE_INCLUDES
   ./classes/include/Bencode.hpp
@@ -35,7 +35,7 @@ set(BENCODE_INCLUDES
   ./classes/include/interface/IAction.hpp
   ./classes/include/interface/ISource.hpp
   ./classes/include/interface/IDestination.hpp
-  ./classes/include/interface/IDecoder.hpp
+  ./classes/include/interface/IParser.hpp
   ./classes/include/interface/IEncoder.hpp
   ./classes/include/interface/ITranslator.hpp
   ./classes/include/implementation/Bencode_Core.hpp
@@ -45,7 +45,7 @@ set(BENCODE_INCLUDES
   ./classes/include/implementation/bnode/Bencode_BNode_Reference.hpp
   ./classes/include/implementation/bnode/Bencode_BNode.hpp
   ./classes/include/implementation/Bencode_Impl.hpp
-  ./classes/include/implementation/decoder/Bencode_Decoder.hpp
+  ./classes/include/implementation/parser/Bencode_Parser.hpp
   ./classes/include/implementation/encoder/Bencode_Encoder.hpp
   ./classes/include/implementation/encoder/JSON_Encoder.hpp
   ./classes/include/implementation/encoder/XML_Encoder.hpp
@@ -73,7 +73,7 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
   ${PROJECT_SOURCE_DIR}/classes/include/implementation
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/common
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/bnode
-  ${PROJECT_SOURCE_DIR}/classes/include/implementation/decoder
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/parser
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/encoder
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/io
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/variants

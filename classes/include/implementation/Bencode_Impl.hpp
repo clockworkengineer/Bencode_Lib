@@ -2,7 +2,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Bencode_Decoder.hpp"
+#include "Bencode_Parser.hpp"
 #include "Bencode_Encoder.hpp"
 
 namespace Bencode_Lib {
@@ -11,14 +11,14 @@ class Bencode_Impl {
 
 public:
   // Constructors/Destructors
-  Bencode_Impl(IEncoder *encoder, IDecoder *decoder);
+  Bencode_Impl(IEncoder *encoder, IParser *parser);
   Bencode_Impl(const Bencode_Impl &other) = delete;
   Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
   Bencode_Impl(Bencode_Impl &&other) = delete;
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
   ~Bencode_Impl();
-  // Decode Bencoded source into BNode tree
-  void decode(ISource &source);
+  // Parse Bencoded source into BNode tree
+  void parse(ISource &source);
   // Encode BNode tree
   void encode(IDestination &destination) const;
   // Bencode version
@@ -46,8 +46,8 @@ private:
   BNode bNodeRoot;
   // Bencode encoder
   std::unique_ptr<IEncoder> bNodeEncoder{};
-  // Bencode decoder
-  std::unique_ptr<IDecoder> bNodeDecoder{};
+  // Bencode parser
+  std::unique_ptr<IParser> bNodeParser{};
 };
 
 /// <summary>

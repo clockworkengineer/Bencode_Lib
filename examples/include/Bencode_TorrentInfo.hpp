@@ -181,5 +181,5 @@ inline std::string TorrentInfo::dump() {
 /// <param name="fileName">Torrent file name</param>
 inline void TorrentInfo::load(const std::string &fileName) {
   torrentFileName = fileName;
-  bEncode.decode(Bencode_Lib::FileSource{torrentFileName});
+  bEncode.parse(Bencode_Lib::FileSource{torrentFileName});
 }

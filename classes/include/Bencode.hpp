@@ -40,7 +40,7 @@ public:
       std::initializer_list<std::pair<std::string, InitializerListTypes>>;
   // Constructors/Destructors
   explicit Bencode([[maybe_unused]] IEncoder *encoder = nullptr,
-                   [[maybe_unused]] IDecoder *decoder = nullptr);
+                   [[maybe_unused]] IParser *parser = nullptr);
   // Pass in default JSON to parse
   explicit Bencode(const std::string &bencodeString);
   // Construct an array
@@ -52,9 +52,9 @@ public:
   Bencode(Bencode &&other) = delete;
   Bencode &operator=(Bencode &&other) = delete;
   ~Bencode();
-  // Decode Bencode into BNode tree
-  void decode(ISource &source) const;
-  void decode(ISource &&source) const;
+  // Parse Bencode into BNode tree
+  void parse(ISource &source) const;
+  void parse(ISource &&source) const;
   // Encode Bencode from BNode tree
   void encode(IDestination &destination) const;
   void encode(IDestination &&destination) const;

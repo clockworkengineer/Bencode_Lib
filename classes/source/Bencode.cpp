@@ -1,7 +1,7 @@
 //
 // Class: Bencode
 //
-// Description: Perform Bencode encode/decode to/from a byte
+// Description: Perform Bencode encode/parse to/from a byte
 // buffer or file.It is also possible to customize this with the
 // ISource and IDestination interfaces if required. Although Bencoded
 // data is treated as std::byte externally, this library uses char and
@@ -22,8 +22,8 @@ namespace Bencode_Lib {
 /// </summary>
 
 Bencode::Bencode([[maybe_unused]] IEncoder *encoder,
-                 [[maybe_unused]] IDecoder *decoder)
-    : implementation(std::make_unique<Bencode_Impl>(encoder, decoder)) {}
+                 [[maybe_unused]] IParser *parser)
+    : implementation(std::make_unique<Bencode_Impl>(encoder, parser)) {}
 Bencode::~Bencode() = default;
 
 /// <summary>
@@ -31,7 +31,7 @@ Bencode::~Bencode() = default;
 /// </summary>
 /// <param name="bencodeString">Bencode string.</param>
 Bencode::Bencode(const std::string &bencodeString) : Bencode() {
-  decode(BufferSource{bencodeString});
+  parse(BufferSource{bencodeString});
 }
 
 /// <summary>
@@ -56,12 +56,12 @@ Bencode::Bencode(const DictionaryInitializer &dictionary) : Bencode() {
 std::string Bencode::version() { return Bencode_Impl::version(); }
 
 /// <summary>
-/// Decode Bencoded byte string pointed to by source stream into BNode(s).
+/// Parse Bencoded byte string pointed to by source stream into BNode(s).
 /// </summary>
-/// <param name="source">Reference to input interface used to decode Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns></returns>
-void Bencode::decode(ISource &source) const { implementation->decode(source); }
-void Bencode::decode(ISource &&source) const { implementation->decode(source); }
+void Bencode::parse(ISource &source) const { implementation->parse(source); }
+void Bencode::parse(ISource &&source) const { implementation->parse(source); }
 
 /// <summary>
 /// Take BNode structure and create an Bencode encoding for it in the

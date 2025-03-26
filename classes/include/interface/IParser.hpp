@@ -9,24 +9,24 @@ class ISource;
 struct BNode;
 
 // =============================
-// Interface for Bencode decoder
+// Interface for Bencode parser
 // =============================
-class IDecoder {
+class IParser {
 public:
   // ==============
-  // IDecoder Error
+  // IParser Error
   // ==============
   struct Error final : std::runtime_error {
     explicit Error(const std::string &message)
-        : std::runtime_error("IDecoder Error: " + message) {}
+        : std::runtime_error("IParser Error: " + message) {}
   };
   // ========================
   // Constructors/destructors
   // ========================
-  virtual ~IDecoder() = default;
+  virtual ~IParser() = default;
   // ==========================================
-  // Decode Bencode into BNode tree from source
+  // Parse Bencode into BNode tree from source
   // ==========================================
-  virtual BNode decode(ISource &source) = 0;
+  virtual BNode parse(ISource &source) = 0;
 };
 } // namespace Bencode_Lib

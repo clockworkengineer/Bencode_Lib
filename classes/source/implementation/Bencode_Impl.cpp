@@ -11,17 +11,17 @@
 namespace Bencode_Lib {
 
 // Need size information for destructor to clean up unique_ptr to
-// encoder/decoder.
-Bencode_Impl::Bencode_Impl(IEncoder *encoder, IDecoder *decoder) {
+// encoder/parser.
+Bencode_Impl::Bencode_Impl(IEncoder *encoder, IParser *parser) {
   if (encoder == nullptr) {
     bNodeEncoder = std::make_unique<Bencode_Encoder>();
   } else {
     bNodeEncoder.reset(encoder);
   }
-  if (decoder == nullptr) {
-    bNodeDecoder = std::make_unique<Bencode_Decoder>();
+  if (parser == nullptr) {
+    bNodeParser = std::make_unique<Bencode_Parser>();
   } else {
-    bNodeDecoder.reset(decoder);
+    bNodeParser.reset(parser);
   }
 }
 
@@ -34,8 +34,8 @@ std::string Bencode_Impl::version() {
   return versionString.str();
 }
 
-void Bencode_Impl::decode(ISource &source) {
-  bNodeRoot = bNodeDecoder->decode(source);
+void Bencode_Impl::parse(ISource &source) {
+  bNodeRoot = bNodeParser->parse(source);
   if (source.more()) {
     throw SyntaxError("Source stream terminated early.");
   }

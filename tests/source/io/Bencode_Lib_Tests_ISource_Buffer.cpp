@@ -11,7 +11,7 @@ TEST_CASE("ISource (Buffer interface). Contains file singlefile.torrent.",
     REQUIRE_THROWS_AS(BufferSource(""), ISource::Error);
     REQUIRE_THROWS_WITH(
         BufferSource(""),
-        "ISource Error: Empty source buffer passed to be decoded.");
+        "ISource Error: Empty source buffer passed to be parsed.");
   }
   SECTION("Create BufferSource with singlefile.torrent and that it is "
           "positioned on the correct first character",

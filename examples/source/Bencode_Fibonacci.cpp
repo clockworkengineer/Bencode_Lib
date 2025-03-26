@@ -27,10 +27,10 @@ void nextFibonacci() {
   be::Bencode bEncode;
   if (!std::filesystem::exists(bEncodeFibonacciFile())) {
     // If Bencode file does not exist create intial sequence
-    bEncode.decode(be::BufferSource{"li0ei1ee"});
+    bEncode.parse(be::BufferSource{"li0ei1ee"});
   } else {
     // Parse in current sequence
-    bEncode.decode(be::FileSource{bEncodeFibonacciFile()});
+    bEncode.parse(be::FileSource{bEncodeFibonacciFile()});
     // Get index of last element
     const auto last = be::BRef<be::List>(bEncode.root()).size() - 1;
     // Next is sum of last two entries

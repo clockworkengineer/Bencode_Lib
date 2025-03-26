@@ -7,7 +7,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
   SECTION("XML encode an integer (266).", "[Bencode][Encode][XML][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             R"(<?xml version="1.0" encoding="UTF-8"?><root>266</root>)");
@@ -15,7 +15,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
   SECTION("XML encode an integer (10000).", "[Bencode][Encode][XML][Integer]") {
     BufferSource source{"i10000e"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             R"(<?xml version="1.0" encoding="UTF-8"?><root>10000</root>)");
@@ -24,7 +24,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
           "[Bencode][Encode][XML][Integer]") {
     BufferSource source{"i-10000e"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             R"(<?xml version="1.0" encoding="UTF-8"?><root>-10000</root>)");
@@ -33,7 +33,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
           "[Bencode][Encode][XML][String]") {
     BufferSource source{"12:qwertyuiopas"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -43,7 +43,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
           "[Bencode][Encode][XML][String]") {
     BufferSource source{"26:abcdefghijklmnopqrstuvwxyz"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -53,7 +53,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
           "[Bencode][Encode][XML][String]") {
     BufferSource source{"0:"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             R"(<?xml version="1.0" encoding="UTF-8"?><root></root>)");
@@ -67,7 +67,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
     escaped += 2;
     BufferSource source{escaped};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -79,7 +79,7 @@ TEST_CASE("XML encode of simple types (integer, string) ",
     std::string escaped{R"(32:abcdefghijklmnopqrstuvwxyz &<>'")"};
     BufferSource source{escaped};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -93,7 +93,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML][List]") {
     BufferSource source{"li266ei6780ei88ee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -104,7 +104,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML][List]") {
     BufferSource source{"li266e4:fivei6780e3:onei88ee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -113,7 +113,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
   SECTION("XML encode an empty List.", "[Bencode][Encode][XML][List]") {
     BufferSource source{"le"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -123,7 +123,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML][Dictionary]") {
     BufferSource source{"d3:onei1e5:threei3e3:twoi2ee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -133,7 +133,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML][Dictionary]") {
     BufferSource source{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -143,7 +143,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML][Dictionary]") {
     BufferSource source{"d3:oneli1ei2ei3ee3:twoli5555e4:fouree"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -153,7 +153,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML][Dictionary]") {
     BufferSource source{"de"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() ==
             R"(<?xml version="1.0" encoding="UTF-8"?><root></root>)");
@@ -162,7 +162,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML][Dictionary]") {
     BufferSource source{"ldededededee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==
@@ -172,7 +172,7 @@ TEST_CASE("XML encode of collection types (list, dictionary) ",
           "[Bencode][Encode][XML][Dictionary]") {
     BufferSource source{"llelelelelee"};
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(
         destination.toString() ==

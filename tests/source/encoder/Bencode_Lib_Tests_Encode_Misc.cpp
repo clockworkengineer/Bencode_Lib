@@ -17,7 +17,7 @@ TEST_CASE("Encode torrent files using encodeToFile",
     std::filesystem::remove(prefixTestDataPath(kGeneratedTorrentFile));
     FileSource source{prefixTestDataPath(kSingleFileTorrent)};
     FileDestination destination{prefixTestDataPath(kGeneratedTorrentFile)};
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE_FALSE(!compareFiles(prefixTestDataPath(kSingleFileTorrent),
                                 prefixTestDataPath(kGeneratedTorrentFile)));
@@ -26,7 +26,7 @@ TEST_CASE("Encode torrent files using encodeToFile",
     std::filesystem::remove(prefixTestDataPath(kGeneratedTorrentFile));
     FileSource source{prefixTestDataPath(kMultiFileTorrent)};
     FileDestination destination{prefixTestDataPath(kGeneratedTorrentFile)};
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE_FALSE(!compareFiles(prefixTestDataPath(kMultiFileTorrent),
                                 prefixTestDataPath(kGeneratedTorrentFile)));

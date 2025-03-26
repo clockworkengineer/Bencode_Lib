@@ -8,7 +8,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     std::string expected{"li266ei6780ei88ee"};
     BufferSource source(expected);
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == expected);
   }
@@ -19,7 +19,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     BufferSource source(expected);
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == expected);
   }
@@ -28,7 +28,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     std::string expected{"le"};
     BufferSource source(expected);
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == expected);
   }
@@ -37,7 +37,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     std::string expected{"d3:onei1e5:threei3e3:twoi2ee"};
     BufferSource source(expected);
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == expected);
   }
@@ -45,7 +45,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     std::string expected{"d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     BufferSource source(expected);
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == expected);
   }
@@ -53,7 +53,7 @@ TEST_CASE("Bencode for encode of collection types (list, dictionary) ",
     std::string expected{"de"};
     BufferSource source(expected);
     BufferDestination destination;
-    bEncode.decode(source);
+    bEncode.parse(source);
     bEncode.encode(destination);
     REQUIRE(destination.toString() == expected);
   }

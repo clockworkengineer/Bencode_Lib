@@ -26,10 +26,10 @@ set(TEST_SOURCES
         source/bencode/Bencode_Lib_Tests_Bencode_Complex.cpp
         source/bencode/Bencode_Lib_Tests_Bencode_Dictionary.cpp
         source/bencode/Bencode_Lib_Tests_Bencode_List.cpp
-        source/decoder/Bencode_Lib_Tests_Decode_Collection.cpp
-        source/decoder/Bencode_Lib_Tests_Decode_Exception.cpp
-        source/decoder/Bencode_Lib_Tests_Decode_Misc.cpp
-        source/decoder/Bencode_Lib_Tests_Decode_Simple.cpp
+        source/parser/Bencode_Lib_Tests_Parse_Collection.cpp
+        source/parser/Bencode_Lib_Tests_Parse_Exception.cpp
+        source/parser/Bencode_Lib_Tests_Parse_Misc.cpp
+        source/parser/Bencode_Lib_Tests_Parse_Simple.cpp
         source/encoder/Bencode_Lib_Tests_Encode_Collection.cpp
         source/encoder/Bencode_Lib_Tests_Encode_Simple.cpp
         source/encoder/Bencode_Lib_Tests_Encode_Misc.cpp
