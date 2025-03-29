@@ -15,7 +15,3 @@ from scratch using C++ operators before saving it away (encoding).
 
 For an in-depth description of the Bencode specification, refer 
 to its wiki page at https://en.wikipedia.org/wiki/Bencode.
-
-Note: The parsing/stringification methods are called stringify/parse (which
-is different from my other libraries as technically bencode is not meant to be
-an editable but a binary format).
