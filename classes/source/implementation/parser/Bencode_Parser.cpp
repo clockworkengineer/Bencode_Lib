@@ -122,6 +122,11 @@ BNode Bencode_Parser::parseList(ISource &source) {
   return list;
 }
 
+/// <summary>
+/// Generate SyntaxError if the expected boundary character is not found.
+/// </summary>
+/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
+/// <param name="expectedBoundary">Expected boundary character.</param>
 void Bencode_Parser::confirmBoundary(ISource &source, const char expectedBoundary) {
   if (source.current() != expectedBoundary) {
     throw SyntaxError(std::string("Missing end terminator on ") +
@@ -129,6 +134,7 @@ void Bencode_Parser::confirmBoundary(ISource &source, const char expectedBoundar
   }
   source.next();
 }
+
 /// <summary>
 /// Parse a BNode tree root.
 /// </summary>
