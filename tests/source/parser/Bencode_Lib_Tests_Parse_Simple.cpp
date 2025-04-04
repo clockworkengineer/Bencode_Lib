@@ -98,6 +98,11 @@ TEST_CASE("Bencode for parse of simple types (integer, string) ",
     REQUIRE_THROWS_WITH(bStringify.parse(BufferSource{"-666:"}), "Bencode Syntax Error: Negative string length.");;
   }
   SECTION("Parse a string larger than the max allowed length", "[Bencode][Parse][String]") {
-    REQUIRE_THROWS_WITH(bStringify.parse(BufferSource{std::to_string(String::kMaxLength+1)+":"}), "Bencode Syntax Error: String size exceeds maximum allowed size.");
+    REQUIRE_THROWS_WITH(bStringify.parse(BufferSource{std::to_string(String::getMaxStringLength()+1)+":"}), "Bencode Syntax Error: String size exceeds maximum allowed size.");
+  }
+  SECTION("Parse a string larger than the max allowed length of 1M", "[Bencode][Parse][String]") {
+    String::setMaxStringLength(1024*1024);
+    REQUIRE(String::getMaxStringLength()==1024*1024);
+    REQUIRE_THROWS_WITH(bStringify.parse(BufferSource{std::to_string(String::getMaxStringLength()+1)+":"}), "Bencode Syntax Error: String size exceeds maximum allowed size.");
   }
 }

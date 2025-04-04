@@ -31,8 +31,11 @@ struct String : Variant {
   // Get BNode value
   [[nodiscard]] std::string value() { return bNodeString.value(); }
   [[nodiscard]] std::string value() const { return bNodeString.value(); }
-
+  // Set/get maximum string length
+  static void setMaxStringLength(const uint64_t length) { maxStringLength = length; }
+  static uint64_t getMaxStringLength() { return maxStringLength; }
 private:
   BencodeString bNodeString;
+  inline static uint64_t maxStringLength { kMaxLength};
 };
 } // namespace Bencode_Lib
