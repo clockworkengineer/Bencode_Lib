@@ -44,10 +44,16 @@ int64_t Bencode_Parser::extractInteger(ISource &source) {
 /// stream.</param> <returns>String value parsed.</returns>
 std::string Bencode_Parser::extractString(ISource &source) {
   int64_t stringLength = extractInteger(source);
+  if (stringLength < 0) {
+    throw SyntaxError("Negative string length.");
+  }
   if (source.current() != ':') {
     throw SyntaxError("Missing colon separator in string value.");
   }
   source.next();
+  if (stringLength>String::kMaxLength) {
+    throw SyntaxError("String size exceeds maximum allowed size.");
+  }
   std::string buffer;
   while (stringLength-- > 0) {
     buffer += source.current();

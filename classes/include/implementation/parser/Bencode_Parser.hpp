@@ -35,7 +35,7 @@ private:
       {'0', parseString},     {'1', parseString}, {'2', parseString},
       {'3', parseString},     {'4', parseString}, {'5', parseString},
       {'6', parseString},     {'7', parseString}, {'8', parseString},
-      {'9', parseString}};
+      {'9', parseString}, {'-', parseString}, {'+', parseString}};
 };
 
 } // namespace Bencode_Lib
