@@ -17,25 +17,28 @@ public:
   ~Bencode_Parser() override = default;
   // Parse bencode BNode tree
   BNode parse(ISource &source) override;
-
+  // Get/Set parser max recursion depth
+  inline  static void setMaxParserDepth(const unsigned long depth) { maxParserDepth = depth; }
+  inline static unsigned long getMaxParserDepth() { return maxParserDepth; }
 private:
   // Parser functions
   [[nodiscard]] static int64_t extractInteger(ISource &source);
   [[nodiscard]] static std::string extractString(ISource &source);
-  [[nodiscard]] static BNode parseString(ISource &source);
-  [[nodiscard]] static BNode parseInteger(ISource &source);
-  [[nodiscard]] static BNode parseDictionary(ISource &source);
-  [[nodiscard]] static BNode parseList(ISource &source);
+  [[nodiscard]] static BNode parseString(ISource &source, const unsigned long parserDepth);
+  [[nodiscard]] static BNode parseInteger(ISource &source, const unsigned long parserDepth);
+  [[nodiscard]] static BNode parseDictionary(ISource &source, const unsigned long parserDepth);
+  [[nodiscard]] static BNode parseList(ISource &source, const unsigned long parserDepth);
   void static confirmBoundary(ISource &source, char expectedBoundary);
-  [[nodiscard]] static BNode parseBNodes(ISource &source);
+  [[nodiscard]] static BNode parseBNodes(ISource &source, const unsigned long parserDepth);
   // Parser routing table
-  using ParserFunc = std::function<BNode(ISource &)>;
+  using ParserFunc = std::function<BNode(ISource &, const unsigned long)>;
   inline static std::map<char, ParserFunc> parsers = {
       {'d', parseDictionary}, {'l', parseList},   {'i', parseInteger},
       {'0', parseString},     {'1', parseString}, {'2', parseString},
       {'3', parseString},     {'4', parseString}, {'5', parseString},
       {'6', parseString},     {'7', parseString}, {'8', parseString},
       {'9', parseString}, {'-', parseString}, {'+', parseString}};
+  inline  static unsigned long maxParserDepth { 5 };
 };
 
 } // namespace Bencode_Lib

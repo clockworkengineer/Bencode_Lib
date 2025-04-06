@@ -67,8 +67,9 @@ std::string Bencode_Parser::extractString(ISource &source) {
 /// ISource.
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
+/// <param name="parserDepth">Current parser depth.</param>
 /// stream.</param> <returns>String BNode.</returns>
-BNode Bencode_Parser::parseString(ISource &source) {
+BNode Bencode_Parser::parseString(ISource &source, const unsigned long parserDepth) {
   return BNode::make<String>(extractString(source));
 }
 
@@ -76,8 +77,9 @@ BNode Bencode_Parser::parseString(ISource &source) {
 /// Parse an integer from the input stream of characters referenced by ISource.
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
+/// <param name="parserDepth">Current parser depth.</param>
 /// stream.</param> <returns>Integer BNode.</returns>
-BNode Bencode_Parser::parseInteger(ISource &source) {
+BNode Bencode_Parser::parseInteger(ISource &source, const unsigned long parserDepth) {
   source.next();
   int64_t integer = extractInteger(source);
   confirmBoundary(source, 'e');
@@ -89,8 +91,9 @@ BNode Bencode_Parser::parseInteger(ISource &source) {
 /// ISource.
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
+/// <param name="parserDepth">Current parser depth.</param>
 /// stream.</param> <returns>Dictionary BNode.</returns>
-BNode Bencode_Parser::parseDictionary(ISource &source) {
+BNode Bencode_Parser::parseDictionary(ISource &source, const unsigned long parserDepth) {
   BNode dictionary = BNode::make<Dictionary>();
   std::string lastKey{};
   source.next();
@@ -104,7 +107,7 @@ BNode Bencode_Parser::parseDictionary(ISource &source) {
     // Check key not duplicate and insert
     if (!BRef<Dictionary>(dictionary).contains(key)) {
       BRef<Dictionary>(dictionary)
-          .add(Dictionary::Entry(key, parseBNodes(source)));
+          .add(Dictionary::Entry(key, parseBNodes(source, parserDepth+1)));
     } else {
       throw SyntaxError("Duplicate dictionary key.");
     }
@@ -117,12 +120,13 @@ BNode Bencode_Parser::parseDictionary(ISource &source) {
 /// Parse a list from the input stream of characters referenced by ISource.
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
+/// <param name="parserDepth">Current parser depth.</param>
 /// <returns>List BNode.</returns>
-BNode Bencode_Parser::parseList(ISource &source) {
+BNode Bencode_Parser::parseList(ISource &source, const unsigned long parserDepth) {
   BNode list = BNode::make<List>();
   source.next();
   while (source.more() && source.current() != 'e') {
-    BRef<List>(list).add(parseBNodes(source));
+    BRef<List>(list).add(parseBNodes(source, parserDepth+1));
   }
   confirmBoundary(source, 'e');
   return list;
@@ -145,14 +149,18 @@ void Bencode_Parser::confirmBoundary(ISource &source, const char expectedBoundar
 /// Parse a BNode tree root.
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
+/// <param name="parserDepth">Current parser depth.</param>
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Bencode_Parser::parseBNodes(ISource &source) {
+BNode Bencode_Parser::parseBNodes(ISource &source, const unsigned long parserDepth) {
+  if (parserDepth>getMaxParserDepth()) {
+    throw SyntaxError("Maximum parser depth exceeded.");
+  }
   const auto it = parsers.find(source.current());
   if (it == parsers.end()) {
     throw SyntaxError(
         "Expected integer, string, list or dictionary not present.");
   }
-  return it->second(source);
+  return it->second(source, parserDepth);
 }
 
 /// <summary>
@@ -162,6 +170,6 @@ BNode Bencode_Parser::parseBNodes(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Bencode_Parser::parse(ISource &source) { return parseBNodes(source); }
+BNode Bencode_Parser::parse(ISource &source) { return parseBNodes(source, 0); }
 
 } // namespace Bencode_Lib

@@ -20,6 +20,7 @@ Bencode_Impl::Bencode_Impl(IStringify *stringify, IParser *parser) {
   }
   if (parser == nullptr) {
     bNodeParser = std::make_unique<Bencode_Parser>();
+    Bencode_Parser::setMaxParserDepth((10));
   } else {
     bNodeParser.reset(parser);
   }
