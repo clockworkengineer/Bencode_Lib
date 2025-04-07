@@ -8,6 +8,7 @@ namespace Bencode_Lib {
 class Bencode_Parser final : public IParser {
 
 public:
+  constexpr static unsigned long kMaxParserDepth = 10;
   // Constructors/Destructors
   Bencode_Parser() = default;
   Bencode_Parser(const Bencode_Parser &other) = delete;
@@ -38,7 +39,7 @@ private:
       {'3', parseString},     {'4', parseString}, {'5', parseString},
       {'6', parseString},     {'7', parseString}, {'8', parseString},
       {'9', parseString}, {'-', parseString}, {'+', parseString}};
-  inline  static unsigned long maxParserDepth { 5 };
+  inline  static unsigned long maxParserDepth { kMaxParserDepth };
 };
 
 } // namespace Bencode_Lib

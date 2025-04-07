@@ -60,4 +60,36 @@ TEST_CASE("Parse erroneous torrent files",
     FileSource source{prefixTestDataPath(kMultiFileWithErrorTorrent)};
     REQUIRE_THROWS_AS(bStringify.parse(source), SyntaxError);
   }
+  SECTION("Parse a string with negative length", "[Bencode][Parse][String]") {
+    REQUIRE_THROWS_WITH(bStringify.parse(BufferSource{"-666:"}), "Bencode Syntax Error: Negative string length.");;
+  }
+  SECTION("Parse a string larger than the max allowed length", "[Bencode][Parse][String]") {
+    REQUIRE_THROWS_WITH(bStringify.parse(BufferSource{std::to_string(String::getMaxStringLength()+1)+":"}), "Bencode Syntax Error: String size exceeds maximum allowed size.");
+  }
+  SECTION("Default max string 16K", "[Bencode][Parse][String]") {
+    REQUIRE(String::getMaxStringLength()==16*1024);
+  }
+  SECTION("Parse a string larger than the max allowed length of 1M", "[Bencode][Parse][String]") {
+    String::setMaxStringLength(1024*1024);
+    REQUIRE(String::getMaxStringLength()==1024*1024);
+    REQUIRE_THROWS_WITH(bStringify.parse(BufferSource{std::to_string(String::getMaxStringLength()+1)+":"}), "Bencode Syntax Error: String size exceeds maximum allowed size.");
+  }
+  SECTION("Parse 2 nested list.", "[Bencode][Parse][Depth]") {
+    REQUIRE_NOTHROW(bStringify.parse(BufferSource("llee")));
+  }
+  SECTION("Parse 11 nested list.", "[Bencode][Parse][Depth]") {
+    REQUIRE_THROWS_WITH(bStringify.parse(BufferSource("lllllllllleeeeeeeeee")),"Bencode Syntax Error: Maximum parser depth exceeded.");
+  }
+  SECTION("Get default maximum parser depth.", "[Bencode][Parse][Depth]") {
+    REQUIRE(Bencode_Parser::getMaxParserDepth()==10);
+  }
+  SECTION("Set default maximum parser depth.", "[Bencode][Parse][Depth]") {
+    Bencode_Parser::setMaxParserDepth(20);
+    REQUIRE(Bencode_Parser::getMaxParserDepth()==20);
+  }
+  SECTION("Set default maximum parser depth and check new value works.", "[Bencode][Parse][Depth]") {
+    Bencode_Parser::setMaxParserDepth(20);
+    REQUIRE(Bencode_Parser::getMaxParserDepth()==20);
+    REQUIRE_NOTHROW(bStringify.parse(BufferSource("llllllllllllllleeeeeeeeeeeeeee")));
+  }
 }

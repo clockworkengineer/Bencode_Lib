@@ -148,11 +148,11 @@ void Bencode_Parser::confirmBoundary(ISource &source, const char expectedBoundar
 /// <summary>
 /// Parse a BNode tree root.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
-/// stream.</param> <returns>Root BNode.</returns>
+/// <returns>Root BNode.</returns>
 BNode Bencode_Parser::parseBNodes(ISource &source, const unsigned long parserDepth) {
-  if (parserDepth>getMaxParserDepth()) {
+  if (parserDepth>=getMaxParserDepth()) {
     throw SyntaxError("Maximum parser depth exceeded.");
   }
   const auto it = parsers.find(source.current());
@@ -170,6 +170,6 @@ BNode Bencode_Parser::parseBNodes(ISource &source, const unsigned long parserDep
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Bencode_Parser::parse(ISource &source) { return parseBNodes(source, 0); }
+BNode Bencode_Parser::parse(ISource &source) { return parseBNodes(source, 1); }
 
 } // namespace Bencode_Lib
