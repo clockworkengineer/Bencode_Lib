@@ -66,20 +66,20 @@ std::string Bencode_Parser::extractString(ISource &source) {
 /// Parse a byte string from the input stream of characters referenced by
 /// ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
-/// stream.</param> <returns>String BNode.</returns>
-BNode Bencode_Parser::parseString(ISource &source, const unsigned long parserDepth) {
+///  <returns>String BNode.</returns>
+BNode Bencode_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
   return BNode::make<String>(extractString(source));
 }
 
 /// <summary>
 /// Parse an integer from the input stream of characters referenced by ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
-/// stream.</param> <returns>Integer BNode.</returns>
-BNode Bencode_Parser::parseInteger(ISource &source, const unsigned long parserDepth) {
+///  <returns>Integer BNode.</returns>
+BNode Bencode_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsigned long parserDepth) {
   source.next();
   int64_t integer = extractInteger(source);
   confirmBoundary(source, 'e');
@@ -90,9 +90,9 @@ BNode Bencode_Parser::parseInteger(ISource &source, const unsigned long parserDe
 /// Parse a dictionary from the input stream of characters referenced by
 /// ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded
+/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
-/// stream.</param> <returns>Dictionary BNode.</returns>
+/// <returns>Dictionary BNode.</returns>
 BNode Bencode_Parser::parseDictionary(ISource &source, const unsigned long parserDepth) {
   BNode dictionary = BNode::make<Dictionary>();
   std::string lastKey{};

@@ -19,20 +19,25 @@ public:
   // Parse bencode BNode tree
   BNode parse(ISource &source) override;
   // Get/Set parser max recursion depth
-  inline  static void setMaxParserDepth(const unsigned long depth) { maxParserDepth = depth; }
-  inline static unsigned long getMaxParserDepth() { return maxParserDepth; }
+  static void setMaxParserDepth(const unsigned long depth) { maxParserDepth = depth; }
+  static unsigned long getMaxParserDepth() { return maxParserDepth; }
 private:
   // Parser functions
   [[nodiscard]] static int64_t extractInteger(ISource &source);
   [[nodiscard]] static std::string extractString(ISource &source);
-  [[nodiscard]] static BNode parseString(ISource &source, const unsigned long parserDepth);
-  [[nodiscard]] static BNode parseInteger(ISource &source, const unsigned long parserDepth);
-  [[nodiscard]] static BNode parseDictionary(ISource &source, const unsigned long parserDepth);
-  [[nodiscard]] static BNode parseList(ISource &source, const unsigned long parserDepth);
+  [[nodiscard]] static BNode parseString(ISource &source,
+                                         unsigned long parserDepth);
+  [[nodiscard]] static BNode parseInteger(ISource &source,
+                                          unsigned long parserDepth);
+  [[nodiscard]] static BNode parseDictionary(ISource &source,
+                                             unsigned long parserDepth);
+  [[nodiscard]] static BNode parseList(ISource &source,
+                                       unsigned long parserDepth);
   void static confirmBoundary(ISource &source, char expectedBoundary);
-  [[nodiscard]] static BNode parseBNodes(ISource &source, const unsigned long parserDepth);
+  [[nodiscard]] static BNode parseBNodes(ISource &source,
+                                         unsigned long parserDepth);
   // Parser routing table
-  using ParserFunc = std::function<BNode(ISource &, const unsigned long)>;
+  using ParserFunc = std::function<BNode(ISource &, unsigned long)>;
   inline static std::map<char, ParserFunc> parsers = {
       {'d', parseDictionary}, {'l', parseList},   {'i', parseInteger},
       {'0', parseString},     {'1', parseString}, {'2', parseString},
