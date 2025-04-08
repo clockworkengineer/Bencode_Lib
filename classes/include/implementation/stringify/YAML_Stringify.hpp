@@ -27,7 +27,7 @@ public:
   /// <param name="destination">Destination stream for stringified YAML.</param>
   void stringify(const BNode &bNode, IDestination &destination) const override {
     destination.add("---\n");
-    encodeYAML(bNode, destination, 0);
+    stringifyYAML(bNode, destination, 0);
     destination.add("...\n");
   }
 
@@ -39,23 +39,23 @@ private:
     }
     return std::string("");
   }
-  void encodeYAML(const BNode &bNode, IDestination &destination,
+  void stringifyYAML(const BNode &bNode, IDestination &destination,
                   const unsigned long indent) const {
     if (isA<Dictionary>(bNode)) {
-      encodeDictionary(bNode, destination, indent);
+      stringifyDictionary(bNode, destination, indent);
     } else if (isA<List>(bNode)) {
-      encodeList(bNode, destination, indent);
+      stringifyList(bNode, destination, indent);
     } else if (isA<Integer>(bNode)) {
-      encodeInteger(bNode, destination);
+      stringifyInteger(bNode, destination);
     } else if (isA<String>(bNode)) {
-      encodeString(bNode, destination);
+      stringifyString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
     } else {
       throw Error("Unknown BNode type encountered during encoding.");
     }
   }
 
-  void encodeDictionary(const BNode &bNode, IDestination &destination,
+  void stringifyDictionary(const BNode &bNode, IDestination &destination,
                         const unsigned long indent) const {
     if (!BRef<Dictionary>(bNode).value().empty()) {
       for (const auto &entryBNode : BRef<Dictionary>(bNode).value()) {
@@ -67,30 +67,30 @@ private:
             isA<Dictionary>(entryBNode.getBNode())) {
           destination.add('\n');
         }
-        encodeYAML(entryBNode.getBNode(), destination, indent + 2);
+        stringifyYAML(entryBNode.getBNode(), destination, indent + 2);
       }
     } else {
       destination.add("{}\n");
     }
   }
 
-  void encodeList(const BNode &bNode, IDestination &destination,
+  void stringifyList(const BNode &bNode, IDestination &destination,
                   const unsigned long indent) const {
     if (!BRef<List>(bNode).value().empty()) {
       for (const auto &bNodeNext : BRef<List>(bNode).value()) {
         destination.add(calculateIndent(destination, indent) + "- ");
-        encodeYAML(bNodeNext, destination, indent + 2);
+        stringifyYAML(bNodeNext, destination, indent + 2);
       }
     } else {
       destination.add("[]\n");
     }
   }
 
-  static void encodeInteger(const BNode &bNode, IDestination &destination) {
+  static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()) + "\n");
   }
 
-  void encodeString(const BNode &bNode, IDestination &destination) const {
+  void stringifyString(const BNode &bNode, IDestination &destination) const {
     destination.add("\"" + yamlTranslator->to(BRef<String>(bNode).value()) +
                     "\"" + "\n");
   }

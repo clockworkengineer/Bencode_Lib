@@ -27,41 +27,41 @@ public:
   void stringify(const BNode &bNode, IDestination &destination) const override {
     destination.add(R"(<?xml version="1.0" encoding="UTF-8"?>)");
     destination.add("<root>");
-    encodeXML(bNode, destination);
+    stringifyXML(bNode, destination);
     destination.add("</root>");
   }
 
 private:
-  void encodeXML(const BNode &bNode, IDestination &destination) const {
+  void stringifyXML(const BNode &bNode, IDestination &destination) const {
     if (isA<Dictionary>(bNode)) {
-      encodeDictionary(bNode, destination);
+      stringifyDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
-      encodeList(bNode, destination);
+      stringifyList(bNode, destination);
     } else if (isA<Integer>(bNode)) {
-      encodeInteger(bNode, destination);
+      stringifyInteger(bNode, destination);
     } else if (isA<String>(bNode)) {
-      encodeString(bNode, destination);
+      stringifyString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
     } else {
       throw Error("Unknown BNode type encountered during encoding.");
     }
   }
 
-  void encodeDictionary(const BNode &bNode, IDestination &destination) const {
+  void stringifyDictionary(const BNode &bNode, IDestination &destination) const {
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       auto elementName = bNodeNext.getKey();
       std::ranges::replace(elementName, ' ', '-');
       destination.add("<" + elementName + ">");
-      encodeXML(bNodeNext.getBNode(), destination);
+      stringifyXML(bNodeNext.getBNode(), destination);
       destination.add("</" + elementName + ">");
     }
   }
 
-  void encodeList(const BNode &bNode, IDestination &destination) const {
+  void stringifyList(const BNode &bNode, IDestination &destination) const {
     if (BRef<List>(bNode).value().size() > 1) {
       for (const auto &bNodeNext : BRef<List>(bNode).value()) {
         destination.add("<Row>");
-        encodeXML(bNodeNext, destination);
+        stringifyXML(bNodeNext, destination);
         destination.add("</Row>");
       }
     } else {
@@ -70,11 +70,11 @@ private:
     }
   }
 
-  static void encodeInteger(const BNode &bNode, IDestination &destination) {
+  static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
 
-  void encodeString(const BNode &bNode, IDestination &destination) const {
+  void stringifyString(const BNode &bNode, IDestination &destination) const {
     destination.add(xmlTranslator->to(BRef<String>(bNode).value()));
   }
 

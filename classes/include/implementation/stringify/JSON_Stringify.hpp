@@ -26,13 +26,13 @@ public:
   /// <param name="destination">Destination stream for stringified JSON.</param>
   void stringify(const BNode &bNode, IDestination &destination) const override {
     if (isA<Dictionary>(bNode)) {
-      encodeDictionary(bNode, destination);
+      stringifyDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
-      encodeList(bNode, destination);
+      stringifyList(bNode, destination);
     } else if (isA<Integer>(bNode)) {
-      encodeInteger(bNode, destination);
+      stringifyInteger(bNode, destination);
     } else if (isA<String>(bNode)) {
-      encodeString(bNode, destination);
+      stringifyString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
     } else {
       throw Error("Unknown BNode type encountered during encoding.");
@@ -40,7 +40,7 @@ public:
   }
 
 private:
-  void encodeDictionary(const BNode &bNode, IDestination &destination) const {
+  void stringifyDictionary(const BNode &bNode, IDestination &destination) const {
     destination.add('{');
     int commas = BRef<Dictionary>(bNode).value().size();
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
@@ -52,7 +52,7 @@ private:
     destination.add('}');
   }
 
-  void encodeList(const BNode &bNode, IDestination &destination) const {
+  void stringifyList(const BNode &bNode, IDestination &destination) const {
     int commas = BRef<List>(bNode).value().size();
     destination.add('[');
     for (const auto &bNodeNext : BRef<List>(bNode).value()) {
@@ -63,11 +63,11 @@ private:
     destination.add(']');
   }
 
-  static void encodeInteger(const BNode &bNode, IDestination &destination) {
+  static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
 
-  void encodeString(const BNode &bNode, IDestination &destination) const {
+  void stringifyString(const BNode &bNode, IDestination &destination) const {
     destination.add("\"");
     destination.add(jsonTranslator->to(BRef<String>(bNode).value()));
     destination.add("\"");
