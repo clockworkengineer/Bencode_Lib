@@ -20,12 +20,10 @@ namespace Bencode_Lib {
 /// <summary>
 /// Initialise the implementation layer.
 /// </summary>
-
 Bencode::Bencode([[maybe_unused]] IStringify *stringify,
                  [[maybe_unused]] IParser *parser)
     : implementation(std::make_unique<Bencode_Impl>(stringify, parser)) {}
 Bencode::~Bencode() = default;
-
 /// <summary>
 /// Bencode constructor. Pass a Bencode string to be initially parsed.
 /// </summary>
@@ -33,7 +31,6 @@ Bencode::~Bencode() = default;
 Bencode::Bencode(const std::string &bencodeString) : Bencode() {
   parse(BufferSource{bencodeString});
 }
-
 /// <summary>
 /// Bencode constructor (list).
 /// </summary>
@@ -41,7 +38,6 @@ Bencode::Bencode(const std::string &bencodeString) : Bencode() {
 Bencode::Bencode(const ListInitializer &list) : Bencode() {
   this->root() = BNode(list);
 }
-
 /// <summary>
 /// Bencode constructor (dictionary).
 /// </summary>
@@ -49,12 +45,10 @@ Bencode::Bencode(const ListInitializer &list) : Bencode() {
 Bencode::Bencode(const DictionaryInitializer &dictionary) : Bencode() {
   this->root() = BNode(dictionary);
 }
-
 /// <summary>
 ///  Get Bencode_Lib version.
 /// </summary>
 std::string Bencode::version() { return Bencode_Impl::version(); }
-
 /// <summary>
 /// Parse Bencoded byte string pointed to by source stream into BNode(s).
 /// </summary>
@@ -62,9 +56,8 @@ std::string Bencode::version() { return Bencode_Impl::version(); }
 /// stream.</param> <returns></returns>
 void Bencode::parse(ISource &source) const { implementation->parse(source); }
 void Bencode::parse(ISource &&source) const { implementation->parse(source); }
-
 /// <summary>
-/// Take BNode structure and create an Bencode encoding for it in the
+/// Take BNode structure and create a Bencode encoding for it in the
 /// destination stream.
 /// </summary>
 /// <param name="destination">Reference to interface used to facilitate the
@@ -75,28 +68,25 @@ void Bencode::stringify(IDestination &destination) const {
 void Bencode::stringify(IDestination &&destination) const {
   implementation->stringify(destination);
 }
-
 /// <summary>
-/// Recursively traverse JNode structure calling IAction methods (read only)
+/// Recursively traverse JNode structure calling IAction methods (read-only)
 ///  or to change the Bencode tree node directly.
 /// </summary>
 /// <param name="action">Action methods to call during traversal.</param>
-/// Traverse using non-const Bencode so can change Bencode tree
+/// Traverse using non-const Bencode so can change the Bencode tree
 [[maybe_unused]] void Bencode::traverse(IAction &action) { implementation->traverse(action); }
 // Traverse using const Bencode so cannot change the Bencode tree
 void Bencode::traverse(IAction &action) const {
   std::as_const(*implementation).traverse(action);
 }
-
 /// <summary>
-/// Get root of BNode tree.
+/// Get the root of BNode tree.
 /// </summary>
 /// <returns>Root of BNode encoded tree.</returns>
 BNode &Bencode::root() { return implementation->root(); }
 const BNode &Bencode::root() const { return implementation->root(); }
-
 /// <summary>
-/// Return object entry for the passed in key.
+/// Return object entry for the passed in keys.
 /// </summary>
 /// <param name="key">Dictionary entry (BNode) key.</param>
 BNode &Bencode::operator[](const std::string &key) {
@@ -105,7 +95,6 @@ BNode &Bencode::operator[](const std::string &key) {
 const BNode &Bencode::operator[](const std::string &key) const {
   return (*implementation)[key];
 }
-
 /// <summary>
 /// Return list entry for the passed in index.
 /// </summary>
@@ -116,10 +105,8 @@ BNode &Bencode::operator[](const std::size_t index) {
 const BNode &Bencode::operator[](const std::size_t index) const {
   return (*implementation)[index];
 }
-
-
 /// <summary>
-/// Create an Bencode file and write Bencode string to it.
+/// Create a Bencode file and write Bencode string to it.
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
 /// <param name="bencodeString">Bencode string</param>
@@ -127,7 +114,6 @@ void Bencode::toFile(const std::string &fileName, const std::string &bencodeStri
 {
   Bencode_Impl::toFile(fileName, bencodeString);
 }
-
 /// <summary>
 /// Open a Bencode file, read its contents into a string buffer and return
 /// the buffer.
@@ -135,5 +121,4 @@ void Bencode::toFile(const std::string &fileName, const std::string &bencodeStri
 /// <param name="fileName">Bencode file name</param>
 /// <returns>Bencode string.</returns>
 std::string Bencode::fromFile(const std::string &fileName) { return Bencode_Impl::fromFile(fileName); }
-
 } // namespace Bencode_Lib

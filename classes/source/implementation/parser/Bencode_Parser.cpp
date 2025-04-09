@@ -35,7 +35,6 @@ int64_t Bencode_Parser::extractInteger(ISource &source) {
   }
   return std::stoll(&number[0]);
 }
-
 /// <summary>
 /// Extract a byte string from the input stream of characters referenced by
 /// ISource.
@@ -61,7 +60,6 @@ std::string Bencode_Parser::extractString(ISource &source) {
   }
   return buffer;
 }
-
 /// <summary>
 /// Parse a byte string from the input stream of characters referenced by
 /// ISource.
@@ -72,7 +70,6 @@ std::string Bencode_Parser::extractString(ISource &source) {
 BNode Bencode_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
   return BNode::make<String>(extractString(source));
 }
-
 /// <summary>
 /// Parse an integer from the input stream of characters referenced by ISource.
 /// </summary>
@@ -85,7 +82,6 @@ BNode Bencode_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsign
   confirmBoundary(source, 'e');
   return BNode::make<Integer>(integer);
 }
-
 /// <summary>
 /// Parse a dictionary from the input stream of characters referenced by
 /// ISource.
@@ -115,7 +111,6 @@ BNode Bencode_Parser::parseDictionary(ISource &source, const unsigned long parse
   confirmBoundary(source, 'e');
   return dictionary;
 }
-
 /// <summary>
 /// Parse a list from the input stream of characters referenced by ISource.
 /// </summary>
@@ -131,7 +126,6 @@ BNode Bencode_Parser::parseList(ISource &source, const unsigned long parserDepth
   confirmBoundary(source, 'e');
   return list;
 }
-
 /// <summary>
 /// Generate SyntaxError if the expected boundary character is not found.
 /// </summary>
@@ -144,7 +138,6 @@ void Bencode_Parser::confirmBoundary(ISource &source, const char expectedBoundar
   }
   source.next();
 }
-
 /// <summary>
 /// Parse a BNode tree root.
 /// </summary>
@@ -162,7 +155,6 @@ BNode Bencode_Parser::parseBNodes(ISource &source, const unsigned long parserDep
   }
   return it->second(source, parserDepth);
 }
-
 /// <summary>
 /// Parse a BNode from the input stream of characters referenced by ISource to
 /// traverse and parse complex encodings. This method is called
@@ -171,5 +163,4 @@ BNode Bencode_Parser::parseBNodes(ISource &source, const unsigned long parserDep
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
 BNode Bencode_Parser::parse(ISource &source) { return parseBNodes(source, 1); }
-
 } // namespace Bencode_Lib

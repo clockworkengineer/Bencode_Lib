@@ -54,6 +54,7 @@ void Bencode_Impl::traverse(IAction &action) {
   }
   traverseBNodes(bNodeRoot, action);
 }
+
 void Bencode_Impl::traverse(IAction &action) const {
   if (bNodeRoot.isEmpty()) {
     throw Error("No Bencode to traverse.");
@@ -73,6 +74,7 @@ BNode &Bencode_Impl::operator[](const std::string &key) {
     return bNodeRoot[key];
   }
 }
+
 const BNode &Bencode_Impl::operator[](const std::string &key) const {
   return bNodeRoot[key];
 }
@@ -88,6 +90,7 @@ BNode &Bencode_Impl::operator[](const std::size_t index) {
     return bNodeRoot[index];
   }
 }
+
 const BNode &Bencode_Impl::operator[](const std::size_t index) const {
   return bNodeRoot[index];
 }

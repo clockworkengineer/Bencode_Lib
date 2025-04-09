@@ -3,10 +3,7 @@
 // Class: Bencode_Impl_File
 //
 // Description: Bencode class implementation layer to read and write
-// Bencode files in a number of different formats. Note that these
-// methods are all static and do not need a Bencode object to invoke.
-// For more information on byte marks and their meaning then check out link
-// https://en.wikipedia.org/wiki/Byte_order_mark.
+// Bencode files (which are binary format files).
 //
 // Dependencies: C++20 - Language standard features used.
 //
@@ -33,7 +30,6 @@ std::string readBencodeString(const std::ifstream &bencodeFile)
   bencodeFileBuffer << bencodeFile.rdbuf();
   return bencodeFileBuffer.str();
 }
-
 /// <summary>
 /// Open a Bencode file, read its contents into a string buffer and return
 /// the buffer.
@@ -43,10 +39,8 @@ std::string readBencodeString(const std::ifstream &bencodeFile)
 std::string Bencode_Impl::fromFile(const std::string &fileName)
 {
   // Read in Bencode
-  const std::ifstream bencodeFile{ fileName, std::ios_base::binary };
-  return readBencodeString(bencodeFile);
+  return readBencodeString(std::ifstream{ fileName, std::ios_base::binary });
 }
-
 /// <summary>
 /// Create a Bencode file and write Bencode string to it.
 /// </summary>
