@@ -50,7 +50,7 @@ std::string Bencode_Parser::extractString(ISource &source) {
     throw SyntaxError("Missing colon separator in string value.");
   }
   source.next();
-  if (stringLength>String::kMaxLength) {
+  if (static_cast<uint64_t>(stringLength)>String::getMaxStringLength()) {
     throw SyntaxError("String size exceeds maximum allowed size.");
   }
   std::string buffer;
