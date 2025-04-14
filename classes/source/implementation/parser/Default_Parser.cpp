@@ -1,6 +1,6 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Bencode_Parser.hpp"
+#include "Default_Parser.hpp"
 
 namespace Bencode_Lib {
 
@@ -9,7 +9,7 @@ namespace Bencode_Lib {
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Positive integers value.</returns>
-int64_t Bencode_Parser::extractInteger(ISource &source) {
+int64_t Default_Parser::extractInteger(ISource &source) {
   // Number size of 64 bit int +2 for sign and terminating null
   std::array<char, std::numeric_limits<int64_t>::digits10 + 2> number{};
   std::size_t digits = 0;
@@ -42,7 +42,7 @@ int64_t Bencode_Parser::extractInteger(ISource &source) {
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
 ///  <returns>String BNode.</returns>
-BNode Bencode_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
+BNode Default_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
   int64_t stringLength = extractInteger(source);
   if (stringLength < 0) {
     throw SyntaxError("Negative string length.");
@@ -67,7 +67,7 @@ BNode Bencode_Parser::parseString(ISource &source, [[maybe_unused]] const unsign
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
 ///  <returns>Integer BNode.</returns>
-BNode Bencode_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsigned long parserDepth) {
+BNode Default_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsigned long parserDepth) {
   source.next();
   int64_t integer = extractInteger(source);
   confirmBoundary(source, 'e');
@@ -80,7 +80,7 @@ BNode Bencode_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsign
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
 /// <returns>Dictionary BNode.</returns>
-BNode Bencode_Parser::parseDictionary(ISource &source, const unsigned long parserDepth) {
+BNode Default_Parser::parseDictionary(ISource &source, const unsigned long parserDepth) {
   BNode dictionary = BNode::make<Dictionary>();
   std::string lastKey{};
   source.next();
@@ -108,7 +108,7 @@ BNode Bencode_Parser::parseDictionary(ISource &source, const unsigned long parse
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
 /// <returns>List BNode.</returns>
-BNode Bencode_Parser::parseList(ISource &source, const unsigned long parserDepth) {
+BNode Default_Parser::parseList(ISource &source, const unsigned long parserDepth) {
   BNode list = BNode::make<List>();
   source.next();
   while (source.more() && source.current() != 'e') {
@@ -122,7 +122,7 @@ BNode Bencode_Parser::parseList(ISource &source, const unsigned long parserDepth
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="expectedBoundary">Expected boundary character.</param>
-void Bencode_Parser::confirmBoundary(ISource &source, const char expectedBoundary) {
+void Default_Parser::confirmBoundary(ISource &source, const char expectedBoundary) {
   if (source.current() != expectedBoundary) {
     throw SyntaxError(std::string("Missing end terminator on ") +
                       expectedBoundary);
@@ -135,7 +135,7 @@ void Bencode_Parser::confirmBoundary(ISource &source, const char expectedBoundar
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
 /// <returns>Root BNode.</returns>
-BNode Bencode_Parser::parseBNodes(ISource &source, const unsigned long parserDepth) {
+BNode Default_Parser::parseBNodes(ISource &source, const unsigned long parserDepth) {
   if (parserDepth>=getMaxParserDepth()) {
     throw SyntaxError("Maximum parser depth exceeded.");
   }
@@ -153,5 +153,5 @@ BNode Bencode_Parser::parseBNodes(ISource &source, const unsigned long parserDep
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Root BNode.</returns>
-BNode Bencode_Parser::parse(ISource &source) { return parseBNodes(source, 1); }
+BNode Default_Parser::parse(ISource &source) { return parseBNodes(source, 1); }
 } // namespace Bencode_Lib

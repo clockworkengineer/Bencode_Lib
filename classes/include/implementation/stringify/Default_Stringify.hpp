@@ -6,17 +6,17 @@
 
 namespace Bencode_Lib {
 
-class Bencode_Stringify final : public IStringify {
+class Default_Stringify final : public IStringify {
 public:
   // Constructors/Destructors
-  explicit Bencode_Stringify(std::unique_ptr<ITranslator> translator =
+  explicit Default_Stringify(std::unique_ptr<ITranslator> translator =
                                std::make_unique<Default_Translator>())
       : bencodeTranslator(std::move(translator)) {}
-  Bencode_Stringify(const Bencode_Stringify &other) = delete;
-  Bencode_Stringify &operator=(const Bencode_Stringify &other) = delete;
-  Bencode_Stringify(Bencode_Stringify &&other) = delete;
-  Bencode_Stringify &operator=(Bencode_Stringify &&other) = delete;
-  ~Bencode_Stringify() override = default;
+  Default_Stringify(const Default_Stringify &other) = delete;
+  Default_Stringify &operator=(const Default_Stringify &other) = delete;
+  Default_Stringify(Default_Stringify &&other) = delete;
+  Default_Stringify &operator=(Default_Stringify &&other) = delete;
+  ~Default_Stringify() override = default;
 
   /// <summary>
   /// Recursively traverse BNode structure encoding it into Bencode string on

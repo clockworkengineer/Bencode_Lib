@@ -2,8 +2,8 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Bencode_Parser.hpp"
-#include "Bencode_Stringify.hpp"
+#include "Default_Parser.hpp"
+#include "Default_Stringify.hpp"
 
 namespace Bencode_Lib {
 

@@ -27,7 +27,7 @@ set(BENCODE_SOURCES
   ./classes/source/Bencode.cpp
   ./classes/source/implementation/Bencode_Impl.cpp
   ./classes/source/implementation/file/Bencode_File.cpp
-  ./classes/source/implementation/parser/Bencode_Parser.cpp)
+        classes/source/implementation/parser/Default_Parser.cpp)
 
 set(BENCODE_INCLUDES
   ./classes/include/Bencode.hpp
@@ -45,8 +45,8 @@ set(BENCODE_INCLUDES
   ./classes/include/implementation/bnode/Bencode_BNode_Reference.hpp
   ./classes/include/implementation/bnode/Bencode_BNode.hpp
   ./classes/include/implementation/Bencode_Impl.hpp
-  ./classes/include/implementation/parser/Bencode_Parser.hpp
-  ./classes/include/implementation/stringify/Bencode_Stringify.hpp
+  ./classes/include/implementation/parser/Default_Parser.hpp
+  ./classes/include/implementation/stringify/Default_Stringify.hpp
   ./classes/include/implementation/stringify/JSON_Stringify.hpp
   ./classes/include/implementation/stringify/XML_Stringify.hpp
   ./classes/include/implementation/stringify/YAML_Stringify.hpp

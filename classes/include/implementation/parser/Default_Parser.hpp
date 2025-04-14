@@ -5,17 +5,17 @@
 
 namespace Bencode_Lib {
 
-class Bencode_Parser final : public IParser {
+class Default_Parser final : public IParser {
 
 public:
   constexpr static unsigned long kMaxParserDepth = 10;
   // Constructors/Destructors
-  Bencode_Parser() = default;
-  Bencode_Parser(const Bencode_Parser &other) = delete;
-  Bencode_Parser &operator=(const Bencode_Parser &other) = delete;
-  Bencode_Parser(Bencode_Parser &&other) = delete;
-  Bencode_Parser &operator=(Bencode_Parser &&other) = delete;
-  ~Bencode_Parser() override = default;
+  Default_Parser() = default;
+  Default_Parser(const Default_Parser &other) = delete;
+  Default_Parser &operator=(const Default_Parser &other) = delete;
+  Default_Parser(Default_Parser &&other) = delete;
+  Default_Parser &operator=(Default_Parser &&other) = delete;
+  ~Default_Parser() override = default;
   // Parse bencode BNode tree
   BNode parse(ISource &source) override;
   // Get/Set parser max recursion depth

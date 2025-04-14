@@ -14,12 +14,12 @@ namespace Bencode_Lib {
 // stringify/parser.
 Bencode_Impl::Bencode_Impl(IStringify *stringify, IParser *parser) {
   if (stringify == nullptr) {
-    bNodeStringify = std::make_unique<Bencode_Stringify>();
+    bNodeStringify = std::make_unique<Default_Stringify>();
   } else {
     bNodeStringify.reset(stringify);
   }
   if (parser == nullptr) {
-    bNodeParser = std::make_unique<Bencode_Parser>();
+    bNodeParser = std::make_unique<Default_Parser>();
   } else {
     bNodeParser.reset(parser);
   }

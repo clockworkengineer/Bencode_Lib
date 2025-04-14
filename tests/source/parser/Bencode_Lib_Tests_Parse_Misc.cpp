@@ -89,15 +89,15 @@ TEST_CASE("Check parse depth handling.", "[Bencode][Parse][Depth]") {
     REQUIRE_THROWS_WITH(bEncoder.parse(BufferSource("lllllllllleeeeeeeeee")),"Bencode Syntax Error: Maximum parser depth exceeded.");
   }
   SECTION("Get default maximum parser depth.", "[Bencode][Parse][Depth]") {
-    REQUIRE(Bencode_Parser::getMaxParserDepth()==10);
+    REQUIRE(Default_Parser::getMaxParserDepth()==10);
   }
   SECTION("Set default maximum parser depth.", "[Bencode][Parse][Depth]") {
-    Bencode_Parser::setMaxParserDepth(20);
-    REQUIRE(Bencode_Parser::getMaxParserDepth()==20);
+    Default_Parser::setMaxParserDepth(20);
+    REQUIRE(Default_Parser::getMaxParserDepth()==20);
   }
   SECTION("Set default maximum parser depth and check new value works.", "[Bencode][Parse][Depth]") {
-    Bencode_Parser::setMaxParserDepth(20);
-    REQUIRE(Bencode_Parser::getMaxParserDepth()==20);
+    Default_Parser::setMaxParserDepth(20);
+    REQUIRE(Default_Parser::getMaxParserDepth()==20);
     REQUIRE_NOTHROW(bEncoder.parse(BufferSource("llllllllllllllleeeeeeeeeeeeeee")));
   }
 
