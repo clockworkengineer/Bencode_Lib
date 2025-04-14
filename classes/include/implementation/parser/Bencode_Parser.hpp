@@ -24,7 +24,6 @@ public:
 private:
   // Parser functions
   [[nodiscard]] static int64_t extractInteger(ISource &source);
-  [[nodiscard]] static std::string extractString(ISource &source);
   [[nodiscard]] static BNode parseString(ISource &source,
                                          unsigned long parserDepth);
   [[nodiscard]] static BNode parseInteger(ISource &source,

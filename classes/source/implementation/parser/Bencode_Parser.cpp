@@ -36,12 +36,13 @@ int64_t Bencode_Parser::extractInteger(ISource &source) {
   return std::stoll(&number[0]);
 }
 /// <summary>
-/// Extract a byte string from the input stream of characters referenced by
+/// Parse a byte string from the input stream of characters referenced by
 /// ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded
-/// stream.</param> <returns>String value parsed.</returns>
-std::string Bencode_Parser::extractString(ISource &source) {
+/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
+/// <param name="parserDepth">Current parser depth.</param>
+///  <returns>String BNode.</returns>
+BNode Bencode_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
   int64_t stringLength = extractInteger(source);
   if (stringLength < 0) {
     throw SyntaxError("Negative string length.");
@@ -58,17 +59,7 @@ std::string Bencode_Parser::extractString(ISource &source) {
     buffer += source.current();
     source.next();
   }
-  return buffer;
-}
-/// <summary>
-/// Parse a byte string from the input stream of characters referenced by
-/// ISource.
-/// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
-/// <param name="parserDepth">Current parser depth.</param>
-///  <returns>String BNode.</returns>
-BNode Bencode_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
-  return BNode::make<String>(extractString(source));
+  return BNode::make<String>(buffer);
 }
 /// <summary>
 /// Parse an integer from the input stream of characters referenced by ISource.
@@ -94,7 +85,7 @@ BNode Bencode_Parser::parseDictionary(ISource &source, const unsigned long parse
   std::string lastKey{};
   source.next();
   while (source.more() && source.current() != 'e') {
-    std::string key = extractString(source);
+    std::string key = BRef<String>(parseString(source,parserDepth)).value();
     // Check keys in lexical order
     if (lastKey > key) {
       throw SyntaxError("Dictionary keys not in sequence.");
