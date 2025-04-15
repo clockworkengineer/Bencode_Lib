@@ -50,7 +50,6 @@ private:
     }
     destination.add('e');
   }
-
   void stringifyList(const BNode &bNode, IDestination &destination) const {
     destination.add('l');
     for (const auto &bNodeNext : BRef<List>(bNode).value()) {
@@ -58,13 +57,11 @@ private:
     }
     destination.add('e');
   }
-
   static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add('i');
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
     destination.add('e');
   }
-
   static void stringifyString(const BNode &bNode, IDestination &destination) {
     destination.add(
         std::to_string(static_cast<int>(BRef<String>(bNode).value().length())) +

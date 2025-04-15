@@ -51,7 +51,6 @@ private:
     }
     destination.add('}');
   }
-
   void stringifyList(const BNode &bNode, IDestination &destination) const {
     int commas = BRef<List>(bNode).value().size();
     destination.add('[');
@@ -62,11 +61,9 @@ private:
     }
     destination.add(']');
   }
-
   static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
-
   void stringifyString(const BNode &bNode, IDestination &destination) const {
     destination.add("\"");
     destination.add(jsonTranslator->to(BRef<String>(bNode).value()));

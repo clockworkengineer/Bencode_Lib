@@ -54,7 +54,6 @@ private:
       throw Error("Unknown BNode type encountered during encoding.");
     }
   }
-
   void stringifyDictionary(const BNode &bNode, IDestination &destination,
                         const unsigned long indent) const {
     if (!BRef<Dictionary>(bNode).value().empty()) {
@@ -73,7 +72,6 @@ private:
       destination.add("{}\n");
     }
   }
-
   void stringifyList(const BNode &bNode, IDestination &destination,
                   const unsigned long indent) const {
     if (!BRef<List>(bNode).value().empty()) {
@@ -85,11 +83,9 @@ private:
       destination.add("[]\n");
     }
   }
-
   static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()) + "\n");
   }
-
   void stringifyString(const BNode &bNode, IDestination &destination) const {
     destination.add("\"" + yamlTranslator->to(BRef<String>(bNode).value()) +
                     "\"" + "\n");

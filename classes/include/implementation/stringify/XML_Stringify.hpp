@@ -46,7 +46,6 @@ private:
       throw Error("Unknown BNode type encountered during encoding.");
     }
   }
-
   void stringifyDictionary(const BNode &bNode, IDestination &destination) const {
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       auto elementName = bNodeNext.getKey();
@@ -56,7 +55,6 @@ private:
       destination.add("</" + elementName + ">");
     }
   }
-
   void stringifyList(const BNode &bNode, IDestination &destination) const {
     if (BRef<List>(bNode).value().size() > 1) {
       for (const auto &bNodeNext : BRef<List>(bNode).value()) {
@@ -69,11 +67,9 @@ private:
       destination.add("</Row>");
     }
   }
-
   static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
-
   void stringifyString(const BNode &bNode, IDestination &destination) const {
     destination.add(xmlTranslator->to(BRef<String>(bNode).value()));
   }
