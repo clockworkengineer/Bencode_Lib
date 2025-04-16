@@ -26,6 +26,11 @@ public:
   /// <param name="destination">Destination stream for stringified
   /// Bencode.</param>
   void stringify(const BNode &bNode, IDestination &destination) const override {
+      stringifyBNodes(bNode, destination);
+  }
+
+private:
+  static void stringifyBNodes(const BNode &bNode, IDestination &destination)   {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
@@ -39,21 +44,19 @@ public:
       throw Error("Unknown BNode type encountered during encoding.");
     }
   }
-
-private:
-  void stringifyDictionary(const BNode &bNode, IDestination &destination) const {
+  static void stringifyDictionary(const BNode &bNode, IDestination &destination)  {
     destination.add('d');
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       destination.add(std::to_string(bNodeNext.getKey().length()) + ":" +
                       bNodeNext.getKey());
-      stringify(bNodeNext.getBNode(), destination);
+      stringifyBNodes(bNodeNext.getBNode(), destination);
     }
     destination.add('e');
   }
-  void stringifyList(const BNode &bNode, IDestination &destination) const {
+  static void stringifyList(const BNode &bNode, IDestination &destination)  {
     destination.add('l');
     for (const auto &bNodeNext : BRef<List>(bNode).value()) {
-      stringify(bNodeNext, destination);
+      stringifyBNodes(bNodeNext, destination);
     }
     destination.add('e');
   }

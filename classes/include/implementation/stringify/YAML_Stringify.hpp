@@ -12,7 +12,7 @@ public:
   // Constructors/destructors
   explicit YAML_Stringify(std::unique_ptr<ITranslator> translator =
                             std::make_unique<Default_Translator>())
-      : yamlTranslator(std::move(translator)) {}
+      {yamlTranslator = std::move(translator);}
   YAML_Stringify(const YAML_Stringify &other) = delete;
   YAML_Stringify &operator=(const YAML_Stringify &other) = delete;
   YAML_Stringify(YAML_Stringify &&other) = delete;
@@ -27,7 +27,7 @@ public:
   /// <param name="destination">Destination stream for stringified YAML.</param>
   void stringify(const BNode &bNode, IDestination &destination) const override {
     destination.add("---\n");
-    stringifyYAML(bNode, destination, 0);
+    stringifyBNodes(bNode, destination, 0);
     destination.add("...\n");
   }
 
@@ -39,8 +39,8 @@ private:
     }
     return std::string("");
   }
-  void stringifyYAML(const BNode &bNode, IDestination &destination,
-                  const unsigned long indent) const {
+  static void stringifyBNodes(const BNode &bNode, IDestination &destination,
+                  const unsigned long indent) {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination, indent);
     } else if (isA<List>(bNode)) {
@@ -54,8 +54,8 @@ private:
       throw Error("Unknown BNode type encountered during encoding.");
     }
   }
-  void stringifyDictionary(const BNode &bNode, IDestination &destination,
-                        const unsigned long indent) const {
+  static void stringifyDictionary(const BNode &bNode, IDestination &destination,
+                        const unsigned long indent)  {
     if (!BRef<Dictionary>(bNode).value().empty()) {
       for (const auto &entryBNode : BRef<Dictionary>(bNode).value()) {
         destination.add(calculateIndent(destination, indent));
@@ -66,18 +66,18 @@ private:
             isA<Dictionary>(entryBNode.getBNode())) {
           destination.add('\n');
         }
-        stringifyYAML(entryBNode.getBNode(), destination, indent + 2);
+        stringifyBNodes(entryBNode.getBNode(), destination, indent + 2);
       }
     } else {
       destination.add("{}\n");
     }
   }
-  void stringifyList(const BNode &bNode, IDestination &destination,
-                  const unsigned long indent) const {
+  static void stringifyList(const BNode &bNode, IDestination &destination,
+                  const unsigned long indent) {
     if (!BRef<List>(bNode).value().empty()) {
       for (const auto &bNodeNext : BRef<List>(bNode).value()) {
         destination.add(calculateIndent(destination, indent) + "- ");
-        stringifyYAML(bNodeNext, destination, indent + 2);
+        stringifyBNodes(bNodeNext, destination, indent + 2);
       }
     } else {
       destination.add("[]\n");
@@ -86,11 +86,11 @@ private:
   static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()) + "\n");
   }
-  void stringifyString(const BNode &bNode, IDestination &destination) const {
+  static void stringifyString(const BNode &bNode, IDestination &destination)  {
     destination.add("\"" + yamlTranslator->to(BRef<String>(bNode).value()) +
                     "\"" + "\n");
   }
 
-  std::unique_ptr<ITranslator> yamlTranslator;
+  inline static std::unique_ptr<ITranslator> yamlTranslator;
 };
 } // namespace Bencode_Lib

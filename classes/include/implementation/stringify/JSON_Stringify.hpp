@@ -11,7 +11,7 @@ public:
   // Constructors/destructors
   explicit JSON_Stringify(std::unique_ptr<ITranslator> translator =
                             std::make_unique<Default_Translator>())
-      : jsonTranslator(std::move(translator)) {}
+  {jsonTranslator = std::move(translator);}
   JSON_Stringify(const JSON_Stringify &other) = delete;
   JSON_Stringify &operator=(const JSON_Stringify &other) = delete;
   JSON_Stringify(JSON_Stringify &&other) = delete;
@@ -25,6 +25,11 @@ public:
   /// <param name="bNode">BNode structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified JSON.</param>
   void stringify(const BNode &bNode, IDestination &destination) const override {
+    stringifyBNodes(bNode, destination);
+  }
+
+private:
+  static void stringifyBNodes(const BNode &bNode, IDestination &destination)   {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
@@ -38,24 +43,22 @@ public:
       throw Error("Unknown BNode type encountered during encoding.");
     }
   }
-
-private:
-  void stringifyDictionary(const BNode &bNode, IDestination &destination) const {
+  static void stringifyDictionary(const BNode &bNode, IDestination &destination)  {
     destination.add('{');
     int commas = BRef<Dictionary>(bNode).value().size();
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       destination.add("\"" + bNodeNext.getKey() + "\"" + " : ");
-      stringify(bNodeNext.getBNode(), destination);
+      stringifyBNodes(bNodeNext.getBNode(), destination);
       if (--commas > 0)
         destination.add(",");
     }
     destination.add('}');
   }
-  void stringifyList(const BNode &bNode, IDestination &destination) const {
+  static void stringifyList(const BNode &bNode, IDestination &destination)  {
     int commas = BRef<List>(bNode).value().size();
     destination.add('[');
     for (const auto &bNodeNext : BRef<List>(bNode).value()) {
-      stringify(bNodeNext, destination);
+      stringifyBNodes(bNodeNext, destination);
       if (--commas > 0)
         destination.add(",");
     }
@@ -64,12 +67,12 @@ private:
   static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
-  void stringifyString(const BNode &bNode, IDestination &destination) const {
+  static void stringifyString(const BNode &bNode, IDestination &destination)  {
     destination.add("\"");
     destination.add(jsonTranslator->to(BRef<String>(bNode).value()));
     destination.add("\"");
   }
 
-  std::unique_ptr<ITranslator> jsonTranslator;
+  inline static std::unique_ptr<ITranslator> jsonTranslator;
 };
 } // namespace Bencode_Lib

@@ -11,7 +11,7 @@ public:
   // Constructors/destructors
   explicit XML_Stringify(std::unique_ptr<ITranslator> translator =
                            std::make_unique<XML_Translator>())
-      : xmlTranslator(std::move(translator)) {}
+        {xmlTranslator = std::move(translator);}
   XML_Stringify(const XML_Stringify &other) = delete;
   XML_Stringify &operator=(const XML_Stringify &other) = delete;
   XML_Stringify(XML_Stringify &&other) = delete;
@@ -27,12 +27,12 @@ public:
   void stringify(const BNode &bNode, IDestination &destination) const override {
     destination.add(R"(<?xml version="1.0" encoding="UTF-8"?>)");
     destination.add("<root>");
-    stringifyXML(bNode, destination);
+    stringifyBNodes(bNode, destination);
     destination.add("</root>");
   }
 
 private:
-  void stringifyXML(const BNode &bNode, IDestination &destination) const {
+  static void stringifyBNodes(const BNode &bNode, IDestination &destination)  {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
@@ -46,20 +46,20 @@ private:
       throw Error("Unknown BNode type encountered during encoding.");
     }
   }
-  void stringifyDictionary(const BNode &bNode, IDestination &destination) const {
+  static void stringifyDictionary(const BNode &bNode, IDestination &destination)  {
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       auto elementName = bNodeNext.getKey();
       std::ranges::replace(elementName, ' ', '-');
       destination.add("<" + elementName + ">");
-      stringifyXML(bNodeNext.getBNode(), destination);
+      stringifyBNodes(bNodeNext.getBNode(), destination);
       destination.add("</" + elementName + ">");
     }
   }
-  void stringifyList(const BNode &bNode, IDestination &destination) const {
+  static void stringifyList(const BNode &bNode, IDestination &destination)  {
     if (BRef<List>(bNode).value().size() > 1) {
       for (const auto &bNodeNext : BRef<List>(bNode).value()) {
         destination.add("<Row>");
-        stringifyXML(bNodeNext, destination);
+        stringifyBNodes(bNodeNext, destination);
         destination.add("</Row>");
       }
     } else {
@@ -70,10 +70,10 @@ private:
   static void stringifyInteger(const BNode &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
-  void stringifyString(const BNode &bNode, IDestination &destination) const {
+  static void stringifyString(const BNode &bNode, IDestination &destination)  {
     destination.add(xmlTranslator->to(BRef<String>(bNode).value()));
   }
 
-  std::unique_ptr<ITranslator> xmlTranslator;
+  inline static std::unique_ptr<ITranslator> xmlTranslator;
 };
 } // namespace Bencode_Lib
