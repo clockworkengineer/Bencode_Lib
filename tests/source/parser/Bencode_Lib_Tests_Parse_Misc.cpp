@@ -65,7 +65,7 @@ TEST_CASE("Parse erroneous torrent files",
 TEST_CASE("Check string overflow handling.", "[Bencode][String][Overflow]") {
   const Bencode bEncoder;
   SECTION("Parse a string with negative length", "[Bencode][Parse][String]") {
-    REQUIRE_THROWS_WITH(bEncoder.parse(BufferSource{"-666:"}), "Bencode Syntax Error: Negative string length.");;
+    REQUIRE_THROWS_WITH(bEncoder.parse(BufferSource{"-666:"}), "Bencode Syntax Error: Negative string length.");
   }
   SECTION("Parse a string larger than the max allowed length", "[Bencode][Parse][String]") {
     REQUIRE_THROWS_WITH(bEncoder.parse(BufferSource{std::to_string(String::getMaxStringLength()+1)+":"}), "Bencode Syntax Error: String size exceeds maximum allowed size.");
