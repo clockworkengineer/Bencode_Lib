@@ -26,6 +26,12 @@ public:
     length += bytes.length();
         lastChar = bytes.back();
   }
+  void add( std::string_view bytes) override {
+    destination.write(bytes.data(), bytes.length());
+    destination.flush();
+    length += bytes.length();
+    lastChar = bytes.back();
+  }
   void add(const char *bytes) override {
     int length = strlen(bytes);
     destination.write(bytes, length);
