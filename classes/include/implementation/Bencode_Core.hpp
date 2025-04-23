@@ -16,5 +16,6 @@
 #include "Bencode_Sources.hpp"
 #include "Bencode_Destinations.hpp"
 #include "Bencode_Error.hpp"
+#include "Default_Translator.hpp"
 #include "Default_Parser.hpp"
 #include "Default_Stringify.hpp"
