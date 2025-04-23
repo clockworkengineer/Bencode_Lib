@@ -4,19 +4,19 @@ namespace Bencode_Lib {
 
 // Dictionary error
 struct DictionaryError final : std::runtime_error {
-  explicit DictionaryError(const std::string &message)
-      : std::runtime_error("Dictionary Error: " + message) {}
+  explicit DictionaryError(const std::string_view message)
+      : std::runtime_error(std::string("Dictionary Error: ").append(message)) {}
 };
 
 // Dictionary entry
 struct DictionaryEntry {
-  DictionaryEntry(const std::string &key, BNode &&bNode)
-      : key(BNode::make<String>(key)), bNode(std::move(bNode)) {}
-  [[nodiscard]] std::string getKey() {
+  DictionaryEntry(const std::string_view key, BNode &&bNode)
+      : key(BNode::make<String>(std::string(key))), bNode(std::move(bNode)) {}
+  [[nodiscard]] std::string_view getKey() {
     return static_cast<String &>(key.getVariant()).value();
   }
   [[nodiscard]] std::string getKey() const {
-    return static_cast<const String &>(key.getVariant()).value();
+    return std::string(static_cast<const String &>(key.getVariant()).value());
   }
   [[nodiscard]] BNode &getKeyBNode() { return key; }
   [[nodiscard]] const BNode &getKeyBNode() const { return key; }
@@ -47,7 +47,7 @@ struct Dictionary : Variant {
       return a.getKey() < b.getKey();
     });
   }
-  [[nodiscard]] bool contains(const std::string &key) const {
+  [[nodiscard]] bool contains( std::string_view key) const {
     try {
       findEntryWithKey(bNodeDictionary, key);
     } catch ([[maybe_unused]] const Error &error) {
@@ -59,10 +59,10 @@ struct Dictionary : Variant {
     return static_cast<int>(bNodeDictionary.size());
   }
 
-  BNode &operator[](const std::string &key) {
+  BNode &operator[]( std::string_view key) {
     return findEntryWithKey(bNodeDictionary, key)->getBNode();
   }
-  const BNode &operator[](const std::string &key) const {
+  const BNode &operator[]( std::string_view key) const {
     return findEntryWithKey(bNodeDictionary, key)->getBNode();
   }
 
@@ -73,7 +73,7 @@ struct Dictionary : Variant {
 
 private:
   template <typename T>
-  static auto findEntry(T &dictionary, const std::string &key) {
+  static auto findEntry(T &dictionary, std::string_view key) {
     auto it =
         std::ranges::find_if(dictionary, [&key](const auto &entry) -> bool {
           return entry.getKey() == key;
@@ -86,12 +86,12 @@ private:
 
   static Entries::const_iterator
   findEntryWithKey(const Entries &dictionary,
-                   const std::string &key) {
+                    std::string_view key) {
     return findEntry(dictionary, key);
   }
 
   static Entries::iterator
-  findEntryWithKey(Entries &dictionary, const std::string &key) {
+  findEntryWithKey(Entries &dictionary, std::string_view key) {
     return findEntry(dictionary, key);
   }
 
