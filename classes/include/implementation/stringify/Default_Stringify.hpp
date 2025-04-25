@@ -67,7 +67,8 @@ private:
   static void stringifyString(const BNode &bNode, IDestination &destination) {
     destination.add(
         std::to_string(static_cast<int>(BRef<String>(bNode).value().length())) +
-        ":" + BRef<String>(bNode).value());
+        ":");
+    destination.add(BRef<String>(bNode).value());
   }
 
   [[maybe_unused]] std::unique_ptr<ITranslator> bencodeTranslator;

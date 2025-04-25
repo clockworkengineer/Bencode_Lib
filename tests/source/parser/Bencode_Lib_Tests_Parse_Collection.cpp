@@ -30,7 +30,7 @@ TEST_CASE("Bencode for parse of collection types (list, dictionary) ",
     bStringify.parse(source);
     std::vector<std::string> strings;
     for (const auto &bNode : BRef<List>(bStringify.root()).value()) {
-      strings.push_back(BRef<String>(bNode).value());
+      strings.push_back(std::string(BRef<String>(bNode).value()));
     }
     REQUIRE(strings == std::vector<std::string>{"sillyy", "poiuytrewqas",
                                                 "abcdefghijklmnopqrstuvwxyz"});

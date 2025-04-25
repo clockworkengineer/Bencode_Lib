@@ -33,5 +33,20 @@ public:
     }
     return translated;
   }
+  [[nodiscard]] std::string to( std::string_view escapedString) const override {
+    std::string translated;
+    for (const char ch : escapedString) {
+      if (!isprint(ch)) {
+        const auto digits = "0123456789ABCDEF";
+        translated += "\\u00";
+        translated += digits[ch >> 4 & 0x0f];
+        translated += digits[ch&0x0f];
+      } else {
+        translated += ch;
+      }
+    }
+    return translated;
+  }
 };
+
 } // namespace Bencode_Lib

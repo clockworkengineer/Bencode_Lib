@@ -46,5 +46,32 @@ public:
     }
     return translated;
   }
+  [[nodiscard]] std::string to( std::string_view escapedString) const override {
+    std::string translated;
+    for (const  char ch : escapedString) {
+      if (!isprint(ch)) {
+        translated += "&#x00";
+        const auto digits = "0123456789ABCDEF";
+        translated += digits[ch >> 4 & 0x0f];
+        translated += digits[ch&0x0f];
+        translated += ";";
+      } else {
+        if (ch == '&') {
+          translated += "&amp;";
+        } else if (ch == '<') {
+          translated += "&lt;";
+        } else if (ch == '>') {
+          translated += "&gt;";
+        } else if (ch == '\'') {
+          translated += "&apos;";
+        } else if (ch == '"') {
+          translated += "&quot;";
+        } else {
+          translated += ch;
+        }
+      }
+    }
+    return translated;
+  }
 };
 } // namespace Bencode_Lib

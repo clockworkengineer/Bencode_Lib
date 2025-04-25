@@ -18,7 +18,7 @@ namespace Bencode_Lib {
 /// </summary>
 /// <param name="bencodeFile">Bencode file stream</param>
 /// <param name="bencodeString">Bencode string</param>
-void writeBencodeString(std::ofstream &bencodeFile, const std::string &bencodeString) { bencodeFile << bencodeString; }
+void writeBencodeString(std::ofstream &bencodeFile,  std::string_view bencodeString) { bencodeFile << bencodeString; }
 /// <summary>
 /// Read Bencode string from a file stream.
 /// </summary>
@@ -36,19 +36,19 @@ std::string readBencodeString(const std::ifstream &bencodeFile)
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
 /// <returns>Bencode string.</returns>
-std::string Bencode_Impl::fromFile(const std::string &fileName)
+std::string Bencode_Impl::fromFile(std::string_view fileName)
 {
   // Read in Bencode
-  return readBencodeString(std::ifstream{ fileName, std::ios_base::binary });
+  return readBencodeString(std::ifstream{ std::string(fileName), std::ios_base::binary });
 }
 /// <summary>
 /// Create a Bencode file and write Bencode string to it.
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
 /// <param name="bencodeString">Bencode string</param>
-void Bencode_Impl::toFile(const std::string &fileName, const std::string &bencodeString)
+void Bencode_Impl::toFile(std::string_view fileName, std::string_view bencodeString)
 {
-  std::ofstream bencodeFile{ fileName, std::ios::binary };
+  std::ofstream bencodeFile{ std::string(fileName), std::ios::binary };
   writeBencodeString(bencodeFile, bencodeString);
   bencodeFile.close();
 }

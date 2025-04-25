@@ -29,5 +29,6 @@ public:
   // escapes where applicable for its form.
   // =========================================================================
   [[nodiscard]] virtual std::string to(const std::string &rawString) const = 0;
+  [[nodiscard]] virtual std::string to( std::string_view rawString) const = 0;
 };
 }// namespace Bencode_Lib

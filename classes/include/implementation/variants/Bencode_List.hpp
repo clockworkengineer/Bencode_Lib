@@ -4,8 +4,8 @@ namespace Bencode_Lib {
 
 // List Error
 struct ListError final : std::runtime_error {
-  explicit ListError(const std::string &message)
-      : std::runtime_error("List Error: " + message) {}
+  explicit ListError(std::string_view message)
+      : std::runtime_error(std::string("List Error: ").append(message)) {}
 };
 struct List : Variant {
   using Error = ListError;

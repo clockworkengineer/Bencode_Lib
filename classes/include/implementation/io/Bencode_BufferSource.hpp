@@ -6,7 +6,7 @@ class BufferSource final : public ISource {
 
 public:
   // Constructors/Destructors
-  explicit BufferSource(const std::string &sourceBuffer) {
+  explicit BufferSource(std::string_view sourceBuffer) {
     if (sourceBuffer.empty()) {
       throw Error("Empty source buffer passed to be parsed.");
     }

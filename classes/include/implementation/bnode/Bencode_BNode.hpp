@@ -5,8 +5,8 @@ namespace Bencode_Lib {
 struct BNode {
   // BNode Error
   struct Error final : std::runtime_error {
-    explicit Error(const std::string &message)
-        : std::runtime_error("BNode Error: " + message) {}
+    explicit Error(const std::string_view message)
+        : std::runtime_error(std::string("BNode Error: ").append(message)) {}
   };
   // Constructors/Destructors
   BNode() = default;
@@ -23,8 +23,8 @@ struct BNode {
     return *this = BNode(value);
   }
   // Indexing operators
-  BNode &operator[](const std::string &key);
-  const BNode &operator[](const std::string &key) const;
+  BNode &operator[](std::string_view key);
+  const BNode &operator[](const std::string_view key) const;
   BNode &operator[](int index);
   const BNode &operator[](int index) const;
   // Interrogate variant

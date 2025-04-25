@@ -85,7 +85,7 @@ BNode Default_Parser::parseDictionary(ISource &source, const unsigned long parse
   std::string lastKey{};
   source.next();
   while (source.more() && source.current() != 'e') {
-    std::string key = BRef<String>(parseString(source,parserDepth)).value();
+    std::string_view key = { BRef<String>(parseString(source,parserDepth)).value()} ;
     // Check keys in lexical order
     if (lastKey > key) {
       throw SyntaxError("Dictionary keys not in sequence.");

@@ -42,7 +42,7 @@ public:
   explicit Bencode([[maybe_unused]] IStringify *stringify = nullptr,
                    [[maybe_unused]] IParser *parser = nullptr);
   // Pass in default JSON to parse
-  explicit Bencode(const std::string &bencodeString);
+  explicit Bencode(std::string_view bencodeString);
   // Construct an array
   Bencode(const ListInitializer &list);
   // Construct object
@@ -67,14 +67,14 @@ public:
   [[maybe_unused]] void traverse(IAction &action);
   void traverse(IAction &action) const;
   // Search for Bencode dictionary entry with a given key
-  BNode &operator[](const std::string &key);
-  const BNode &operator[](const std::string &key) const;
+  BNode &operator[](std::string_view key);
+  const BNode &operator[](std::string_view key) const;
   // Get Bencode list entry at index
   BNode &operator[](std::size_t index);
   const BNode &operator[](std::size_t index) const;
   // Read/Write Bencode from the file
-  static std::string fromFile(const std::string &fileName);
-  static void toFile(const std::string &fileName, const std::string &bencodeString);
+  static std::string fromFile(std::string_view fileName);
+  static void toFile(std::string_view fileName, std::string_view bencodeString);
 
 private:
   const std::unique_ptr<Bencode_Impl> implementation;
