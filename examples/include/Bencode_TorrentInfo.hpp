@@ -41,7 +41,7 @@ struct TorrentInfo {
 private:
   static std::string getString(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
-      return (BRef<String>(bNode[field]).value());
+      return (std::string(BRef<String>(bNode[field]).value()));
     }
     return ("");
   }
@@ -58,7 +58,7 @@ private:
       std::vector<std::string> servers;
       for (auto &server : BRef<List>(bNode["announce-list"]).value()) {
         for (auto &bNodeString : BRef<List>(server).value()) {
-          servers.push_back(BRef<String>(bNodeString).value());
+          servers.push_back(std::string(BRef<String>(bNodeString).value()));
         }
       }
       return (servers);

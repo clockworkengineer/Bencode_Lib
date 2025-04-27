@@ -22,7 +22,7 @@ public:
     sizeInBytes += sizeof(Bencode_Lib::String);
     sizeInBytes += bNodeString.value().size();
     maxStringSize = std::max(bNodeString.value().size(), maxKeySize);
-    uniqueStrings.insert(bNodeString.value());
+    uniqueStrings.insert(std::string(bNodeString.value()));
   }
   // Add integer details to analysis
   void
