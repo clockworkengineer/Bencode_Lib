@@ -118,21 +118,21 @@ public:
 private:
   // Bencode analysis data
   // Node
-  Bencode::IntegerType totalNodes{};
+  int64_t totalNodes{};
   size_t sizeInBytes{};
   // Bencode_Lib::Dictionary
-  Bencode::IntegerType totalDictionarys{};
+  int64_t totalDictionarys{};
   size_t maxDictionarySize{};
-  Bencode::IntegerType totalKeys{};
+  int64_t totalKeys{};
   size_t maxKeySize{};
-  std::set<std::string> uniqueKeys{};
+  std::set<std::string_view> uniqueKeys{};
   // Bencode_Lib::List
   size_t maxListSize{};
-  Bencode::IntegerType totalLists{};
+  int64_t totalLists{};
   // Bencode_Lib::String
-  Bencode::IntegerType totalStrings{};
+  int64_t totalStrings{};
   std::set<std::string> uniqueStrings{};
   size_t maxStringSize{};
   // Bencode_Lib::Integer
-  Bencode::IntegerType totalIntegers{};
+  int64_t totalIntegers{};
 };
