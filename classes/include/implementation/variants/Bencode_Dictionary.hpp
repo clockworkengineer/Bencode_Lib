@@ -11,12 +11,12 @@ struct DictionaryError final : std::runtime_error {
 // Dictionary entry
 struct DictionaryEntry {
   DictionaryEntry(const std::string_view key, BNode &&bNode)
-      : key(BNode::make<String>(std::string(key))), bNode(std::move(bNode)) {}
+      : key(BNode::make<String>(key)), bNode(std::move(bNode)) {}
   [[nodiscard]] std::string_view getKey() {
     return static_cast<String &>(key.getVariant()).value();
   }
-  [[nodiscard]] std::string getKey() const {
-    return std::string(static_cast<const String &>(key.getVariant()).value());
+  [[nodiscard]] std::string_view getKey() const {
+    return static_cast<const String &>(key.getVariant()).value();
   }
   [[nodiscard]] BNode &getKeyBNode() { return key; }
   [[nodiscard]] const BNode &getKeyBNode() const { return key; }
