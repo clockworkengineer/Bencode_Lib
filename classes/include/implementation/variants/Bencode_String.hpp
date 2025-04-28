@@ -18,7 +18,7 @@ private:
 };
 
 struct String : Variant {
-  constexpr static int64_t kMaxLength = 16*1024;
+  constexpr static Bencode::IntegerType kMaxLength = 16*1024;
   // Constructors/Destructors
   String() : Variant(Type::string) , bNodeString(""){}
   explicit String(std::string_view string)

@@ -5,7 +5,7 @@ namespace Bencode_Lib {
 struct Integer : Variant {
   // Constructors/Destructors
   Integer() : Variant(Type::integer) {}
-  explicit Integer(const int64_t integer)
+  explicit Integer(const Bencode::IntegerType integer)
       : Variant(Type::integer), bNodeInteger(integer) {}
   Integer(const Integer &other) = default;
   Integer &operator=(const Integer &other) = default;
@@ -13,9 +13,9 @@ struct Integer : Variant {
   Integer &operator=(Integer &&other) = default;
   ~Integer() = default;
   // Get BNode value
-  [[nodiscard]] int64_t value() const { return bNodeInteger; }
+  [[nodiscard]] Bencode::IntegerType value() const { return bNodeInteger; }
 
 private:
-  int64_t bNodeInteger = 0;
+  Bencode::IntegerType bNodeInteger = 0;
 };
 } // namespace Bencode_Lib

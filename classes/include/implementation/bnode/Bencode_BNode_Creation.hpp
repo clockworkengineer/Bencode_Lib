@@ -51,14 +51,14 @@ static BNode typeToBNode(const Bencode::InitializerListTypes &type) {
   throw BNode::Error("BNode of unsupported type could not be created.");
 }
 // Construct BNode Array from the initializer list
-inline BNode::BNode(const Bencode::ListInitializer &list) {
+inline BNode::BNode(const Bencode::ListInitializerType &list) {
   *this = make<List>();
   for (const auto &entry : list) {
     BRef<List>(*this).add(typeToBNode(entry));
   }
 }
 // Construct BNode Dictionary from the initializer list
-inline BNode::BNode(const Bencode::DictionaryInitializer &dictionary) {
+inline BNode::BNode(const Bencode::DictionaryInitializerType &dictionary) {
   *this = make<Dictionary>();
   for (const auto &[fst, snd] : dictionary) {
     BRef<Dictionary>(*this).add(

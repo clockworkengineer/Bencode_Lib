@@ -32,7 +32,7 @@ TEST_CASE("ISource (Buffer interface). Contains file singlefile.torrent.",
           "character, check it and the bytes moved.",
           "[Bencode][ISource]") {
     BufferSource source{bencodedBuffer};
-    int64_t length = 0;
+    Bencode::IntegerType length = 0;
     while (source.more()) {
       source.next();
       length++;

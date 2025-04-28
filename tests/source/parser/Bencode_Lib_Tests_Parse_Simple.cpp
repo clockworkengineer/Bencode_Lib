@@ -45,7 +45,7 @@ TEST_CASE("Bencode for parse of simple types (integer, string) ",
     BufferSource source{"i9223372036854775807e"};
     bStringify.parse(source);
     REQUIRE(BRef<Integer>(bStringify.root()).value() ==
-            std::numeric_limits<int64_t>::max());
+            std::numeric_limits<Bencode::IntegerType>::max());
   }
   SECTION("Parse out of range positive 64 bit integer (9223372036854775808)."
           "[Bencode][Parse][Integer]") {
@@ -57,7 +57,7 @@ TEST_CASE("Bencode for parse of simple types (integer, string) ",
     BufferSource source{"i-9223372036854775808e"};
     bStringify.parse(source);
     REQUIRE(BRef<Integer>(bStringify.root()).value() ==
-            std::numeric_limits<int64_t>::min());
+            std::numeric_limits<Bencode::IntegerType>::min());
   }
   SECTION("Parse out of range negative 64 bit integer (-9223372036854775809)."
           "[Bencode][Parse][Integer]") {

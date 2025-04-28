@@ -20,11 +20,11 @@ public:
     totalDictionarys++;
   }
 
-  int64_t totalNodes{};
-  int64_t totalDictionarys{};
-  int64_t totalLists{};
-  int64_t totalStrings{};
-  int64_t totalIntegers{};
+  Bencode::IntegerType totalNodes{};
+  Bencode::IntegerType totalDictionarys{};
+  Bencode::IntegerType totalLists{};
+  Bencode::IntegerType totalStrings{};
+  Bencode::IntegerType totalIntegers{};
 };
 TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
   const Bencode bStringify;

@@ -18,11 +18,11 @@ TEST_CASE("Bencode for parse of collection types (list, dictionary) ",
   SECTION("Parse an list of integers.s", "[Bencode][Parse][List]") {
     BufferSource source{"li266ei6780ei88ee"};
     bStringify.parse(source);
-    std::vector<int64_t> numbers;
+    std::vector<Bencode::IntegerType> numbers;
     for (const auto &bNode : BRef<List>(bStringify.root()).value()) {
       numbers.push_back(BRef<Integer>(bNode).value());
     }
-    REQUIRE(numbers == std::vector<int64_t>{266, 6780, 88});
+    REQUIRE(numbers == std::vector<Bencode::IntegerType>{266, 6780, 88});
   }
   SECTION("Parse an list of strings.s", "[Bencode][Parse][List]") {
     BufferSource source{
@@ -49,11 +49,11 @@ TEST_CASE("Bencode for parse of collection types (list, dictionary) ",
   SECTION("Parse an Dictionary of ints.s", "[Bencode][Parse][Dictionary]") {
     BufferSource source{"d3:onei1e5:threei3e3:twoi2ee"};
     bStringify.parse(source);
-    std::map<std::string_view, int64_t> entries;
+    std::map<std::string_view, Bencode::IntegerType> entries;
     for (const auto &bNode : BRef<Dictionary>(bStringify.root()).value()) {
       entries[bNode.getKey()] = BRef<Integer>(bNode.getBNode()).value();
     }
-    REQUIRE(entries == std::map<std::string_view, int64_t>{
+    REQUIRE(entries == std::map<std::string_view, Bencode::IntegerType>{
                            {"one", 1}, {"two", 2}, {"three", 3}});
   }
   SECTION("Parse a Dictionary of strings.s", "[Bencode][Parse][Dictionary]") {

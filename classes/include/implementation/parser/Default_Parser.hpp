@@ -23,7 +23,7 @@ public:
   static unsigned long getMaxParserDepth() { return maxParserDepth; }
 private:
   // Parser functions
-  [[nodiscard]] static int64_t extractInteger(ISource &source);
+  [[nodiscard]] static Bencode::IntegerType extractInteger(ISource &source);
   [[nodiscard]] static BNode parseString(ISource &source,
                                          unsigned long parserDepth);
   [[nodiscard]] static BNode parseInteger(ISource &source,

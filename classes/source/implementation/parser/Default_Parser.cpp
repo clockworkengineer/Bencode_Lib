@@ -8,9 +8,9 @@ namespace Bencode_Lib {
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Positive integers value.</returns>
-int64_t Default_Parser::extractInteger(ISource &source) {
+Bencode::IntegerType Default_Parser::extractInteger(ISource &source) {
   // Number size of 64 bit int +2 for sign and terminating null
-  std::array<char, std::numeric_limits<int64_t>::digits10 + 2> number{};
+  std::array<char, std::numeric_limits<Bencode::IntegerType>::digits10 + 2> number{};
   std::size_t digits = 0;
   if (source.current() == '-') {
     number[digits++] = source.current();
@@ -42,7 +42,7 @@ int64_t Default_Parser::extractInteger(ISource &source) {
 /// <param name="parserDepth">Current parser depth.</param>
 ///  <returns>String BNode.</returns>
 BNode Default_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
-  int64_t stringLength = extractInteger(source);
+  Bencode::IntegerType stringLength = extractInteger(source);
   if (stringLength < 0) {
     throw SyntaxError("Negative string length.");
   }
@@ -68,7 +68,7 @@ BNode Default_Parser::parseString(ISource &source, [[maybe_unused]] const unsign
 ///  <returns>Integer BNode.</returns>
 BNode Default_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsigned long parserDepth) {
   source.next();
-  int64_t integer = extractInteger(source);
+  Bencode::IntegerType integer = extractInteger(source);
   confirmBoundary(source, 'e');
   return BNode::make<Integer>(integer);
 }

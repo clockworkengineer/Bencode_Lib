@@ -4,7 +4,7 @@ TEST_CASE("Bencode for parse of a table of integer test data",
           "[Bencode][Parse][Integer]") {
   const Bencode bEncoder;
   auto [testInput, expected] = GENERATE(
-      table<std::string, int64_t>({{"i277e", 277}, {"i32767e", 32767}}));
+      table<std::string, Bencode::IntegerType>({{"i277e", 277}, {"i32767e", 32767}}));
   BufferSource source{testInput};
   bEncoder.parse(source);
   REQUIRE(BRef<Integer>(bEncoder.root()).value() == expected);

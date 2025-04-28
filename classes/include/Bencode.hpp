@@ -29,14 +29,22 @@ struct BNode;
 class Bencode {
 
 public:
+  // Bencode maximum integer type
+  using IntegerType = int64_t;
+  // Bencode maximum string type
+  using StringType = std::string;
+  // Bencode maximum list type
+  using ListType = std::vector<BNode>;
+  // Bencode maximum dictionary type
+  using DictionaryType = std::map<std::string, BNode>;
   // Possible Bencode BNode initializer types
   using InitializerListTypes =
       std::variant<int, long, long long, float, double, long double, bool,
                    std::string, std::nullptr_t, BNode>;
   // List initializer list
-  using ListInitializer = std::initializer_list<InitializerListTypes>;
+  using ListInitializerType = std::initializer_list<InitializerListTypes>;
   // Dictionary initializer list
-  using DictionaryInitializer =
+  using DictionaryInitializerType =
       std::initializer_list<std::pair<std::string, InitializerListTypes>>;
   // Constructors/Destructors
   explicit Bencode([[maybe_unused]] IStringify *stringify = nullptr,
@@ -44,9 +52,9 @@ public:
   // Pass in default JSON to parse
   explicit Bencode(std::string_view bencodeString);
   // Construct an array
-  Bencode(const ListInitializer &list);
+  Bencode(const ListInitializerType &list);
   // Construct object
-  Bencode(const DictionaryInitializer &dictionary);
+  Bencode(const DictionaryInitializerType &dictionary);
   Bencode(const Bencode &other) = delete;
   Bencode &operator=(const Bencode &other) = delete;
   Bencode(Bencode &&other) = delete;

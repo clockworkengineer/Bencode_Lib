@@ -30,7 +30,7 @@ TEST_CASE("ISource (File interface).", "[Bencode][ISource]") {
           "check it and the bytes moved.",
           "[Bencode][ISource]") {
     FileSource source{prefixTestDataPath(kSingleFileTorrent)};
-    int64_t length = 0;
+    Bencode::IntegerType length = 0;
     while (source.more()) {
       source.next();
       length++;
