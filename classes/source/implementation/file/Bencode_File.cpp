@@ -22,7 +22,7 @@ void writeBencodeString(std::ofstream &bencodeFile,  std::string_view bencodeStr
 /// <summary>
 /// Read Bencode string from a file stream.
 /// </summary>
-/// <param name="bencodeFile">Bencode file stream</param>
+/// <param name="bencodeFile">Bencode file stream.</param>
 /// <returns>Bencode string.</returns>
 std::string readBencodeString(const std::ifstream &bencodeFile)
 {
