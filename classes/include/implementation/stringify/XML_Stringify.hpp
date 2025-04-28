@@ -48,7 +48,7 @@ private:
   }
   static void stringifyDictionary(const BNode &bNode, IDestination &destination)  {
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
-      auto elementName = bNodeNext.getKey();
+      auto elementName = std::string(bNodeNext.getKey());
       std::ranges::replace(elementName, ' ', '-');
       destination.add("<" + elementName + ">");
       stringifyBNodes(bNodeNext.getBNode(), destination);

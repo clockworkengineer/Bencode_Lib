@@ -46,7 +46,9 @@ private:
     destination.add('{');
     int commas = BRef<Dictionary>(bNode).value().size();
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
-      destination.add("\"" + bNodeNext.getKey() + "\"" + " : ");
+      destination.add("\"");
+      destination.add(bNodeNext.getKey());
+      destination.add("\" : ");
       stringifyBNodes(bNodeNext.getBNode(), destination);
       if (--commas > 0)
         destination.add(",");

@@ -18,13 +18,11 @@ public:
       encodeBuffer.push_back(static_cast<std::byte>(ch));
     }
   }
-
   void add(const std::string_view sourceBuffer) override {
     for (auto ch : sourceBuffer) {
       encodeBuffer.push_back(static_cast<std::byte>(ch));
     }
   }
-
   void add(const char * sourceBuffer) override {
     for (std::size_t index=0; index<strlen(sourceBuffer); index++) {
       encodeBuffer.push_back(static_cast<std::byte>(sourceBuffer[index]));

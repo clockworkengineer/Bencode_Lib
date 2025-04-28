@@ -6,8 +6,8 @@ class FileSource final : public ISource {
 
 public:
   // Constructors/Destructors
-  explicit FileSource(const std::string &sourceFileName) {
-    source.open(sourceFileName.c_str(), std::ios_base::binary);
+  explicit FileSource(std::string_view sourceFileName) {
+    source.open(sourceFileName.data(), std::ios_base::binary);
     if (!source.is_open()) {
       throw Error(
           "Bencode file input stream failed to open or does not exist.");

@@ -46,8 +46,8 @@ private:
   static void stringifyDictionary(const BNode &bNode, IDestination &destination)  {
     destination.add('d');
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
-      destination.add(std::to_string(bNodeNext.getKey().length()) + ":" +
-                      bNodeNext.getKey());
+      destination.add(std::to_string(bNodeNext.getKey().length()) + ":");
+      destination.add(bNodeNext.getKey());
       stringifyBNodes(bNodeNext.getBNode(), destination);
     }
     destination.add('e');
