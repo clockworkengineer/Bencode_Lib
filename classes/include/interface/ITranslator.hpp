@@ -11,9 +11,9 @@ public:
   // =============
   // ITranslator Error
   // =============
-  struct Error final : std::runtime_error
-  {
-    explicit Error(const std::string &message) : std::runtime_error("ITranslator Error: " + message) {}
+  struct Error final : std::runtime_error {
+    explicit Error(const std::string &message)
+        : std::runtime_error("ITranslator Error: " + message) {}
   };
   // ========================
   // Constructors/destructors
