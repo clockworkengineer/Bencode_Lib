@@ -18,7 +18,7 @@ public:
       encodeBuffer.push_back(static_cast<std::byte>(ch));
     }
   }
-  void add(const std::string_view sourceBuffer) override {
+  void add(const std::string_view &sourceBuffer) override {
     for (auto ch : sourceBuffer) {
       encodeBuffer.push_back(static_cast<std::byte>(ch));
     }

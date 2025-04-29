@@ -17,7 +17,7 @@ public:
   // IStringify Error
   // ==============
   struct Error final : std::runtime_error {
-    explicit Error(const std::string_view message)
+    explicit Error(const std::string_view &message)
         : std::runtime_error(std::string("IStringify Error: ").append(message)) {}
   };
   // ========================
