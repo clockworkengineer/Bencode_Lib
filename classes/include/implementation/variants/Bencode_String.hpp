@@ -3,10 +3,10 @@
 namespace Bencode_Lib {
 
 struct BencodeString {
-  explicit BencodeString(std::string_view str) {
-    bencodeString.reset(static_cast<char *>(malloc(str.size())));
-    BencodeStringLength = str.size();
-    std::memcpy(&bencodeString[0], str.data(), BencodeStringLength);
+  explicit BencodeString(const std::string_view &string) {
+    bencodeString.reset(static_cast<char *>(malloc(string.size())));
+    BencodeStringLength = string.size();
+    std::memcpy(&bencodeString[0], string.data(), BencodeStringLength);
   }
 
   [[nodiscard]] std::string_view value() const {

@@ -2,15 +2,13 @@
 
 namespace Bencode_Lib {
 
-// List Error
-struct ListError final : std::runtime_error {
-  explicit ListError(std::string_view message)
-      : std::runtime_error(std::string("List Error: ").append(message)) {}
-};
 struct List : Variant {
-  using Error = ListError;
   using Entry = BNode;
   using ListEntries = std::vector<Entry>;
+  struct Error final : std::runtime_error {
+    explicit Error(std::string_view message)
+        : std::runtime_error(std::string("List Error: ").append(message)) {}
+  };
   // Constructors/Destructors
   List() : Variant(Type::list){}
   List(const List &other) = default;

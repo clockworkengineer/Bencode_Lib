@@ -2,12 +2,6 @@
 
 namespace Bencode_Lib {
 
-// Dictionary error
-struct DictionaryError final : std::runtime_error {
-  explicit DictionaryError(const std::string_view message)
-      : std::runtime_error(std::string("Dictionary Error: ").append(message)) {}
-};
-
 // Dictionary entry
 struct DictionaryEntry {
   DictionaryEntry(const std::string_view key, BNode &&bNode)
@@ -30,9 +24,12 @@ private:
 
 // Dictionary variant
 struct Dictionary : Variant {
-  using Error = DictionaryError;
   using Entry = DictionaryEntry;
   using Entries = std::vector<Entry>;
+  struct Error final : std::runtime_error {
+    explicit Error(const std::string_view message)
+        : std::runtime_error(std::string("Dictionary Error: ").append(message)) {}
+  };
   // Constructors/Destructors
   Dictionary() : Variant(Type::dictionary) {}
   Dictionary(const Dictionary &other) = default;
@@ -73,20 +70,20 @@ struct Dictionary : Variant {
 
 private:
   template <typename T>
-  static auto findEntry(T &dictionary, std::string_view key) {
+  static auto findEntry(T &dictionary, const std::string_view &key) {
     auto it =
         std::ranges::find_if(dictionary, [&key](const auto &entry) -> bool {
           return entry.getKey() == key;
         });
     if (it == dictionary.end()) {
-      throw DictionaryError("Invalid key used in dictionary.");
+      throw Error("Invalid key used in dictionary.");
     }
     return it;
   }
 
   static Entries::const_iterator
   findEntryWithKey(const Entries &dictionary,
-                    std::string_view key) {
+                    const std::string_view &key) {
     return findEntry(dictionary, key);
   }
 
