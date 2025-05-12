@@ -5,10 +5,6 @@ namespace Bencode_Lib {
 struct List : Variant {
   using Entry = BNode;
   using ListEntries = std::vector<Entry>;
-  struct Error final : std::runtime_error {
-    explicit Error(std::string_view message)
-        : std::runtime_error(std::string("List Error: ").append(message)) {}
-  };
   // Constructors/Destructors
   List() : Variant(Type::list){}
   List(const List &other) = default;
@@ -50,7 +46,7 @@ private:
   // ensure the index is within the bounds
   void validateIndex(const int index) const {
     if (!(index >= 0 && index < static_cast<int>(bNodeList.size()))) {
-      throw Error("Invalid index used in list.");
+      throw BNode::Error("Invalid index used in list.");
     }
   }
 

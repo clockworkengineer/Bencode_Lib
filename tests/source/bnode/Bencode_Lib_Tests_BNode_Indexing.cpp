@@ -39,17 +39,17 @@ TEST_CASE("Use of BNode indexing operators", "[Bencode][BNode][Index]") {
     BufferSource source{
         "d3:one10:01234567895:three6:qwerty3:two9:asdfghjkle"};
     bStringify.parse(source);
-    REQUIRE_THROWS_AS(isA<Dictionary>(bStringify.root()["onee"]), Dictionary::Error);
+    REQUIRE_THROWS_AS(isA<Dictionary>(bStringify.root()["onee"]), BNode::Error);
     REQUIRE_THROWS_WITH(isA<Dictionary>(bStringify.root()["onee"]),
-                        "Dictionary Error: Invalid key used in dictionary.");
+                        "BNode Error: Invalid key used in dictionary.");
   }
   SECTION("Parse list and check an invalid index generates exception",
           "[Bencode][BNode][Index]") {
     BufferSource source{
         "l6:sillyy12:poiuytrewqas26:abcdefghijklmnopqrstuvwxyze"};
     bStringify.parse(source);
-    REQUIRE_THROWS_AS(isA<List>(bStringify.root()[3]), List::Error);
+    REQUIRE_THROWS_AS(isA<List>(bStringify.root()[3]), BNode::Error);
     REQUIRE_THROWS_WITH(isA<List>(bStringify.root()[3]),
-                        "List Error: Invalid index used in list.");
+                        "BNode Error: Invalid index used in list.");
   }
 }

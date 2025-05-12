@@ -26,10 +26,6 @@ private:
 struct Dictionary : Variant {
   using Entry = DictionaryEntry;
   using Entries = std::vector<Entry>;
-  struct Error final : std::runtime_error {
-    explicit Error(const std::string_view message)
-        : std::runtime_error(std::string("Dictionary Error: ").append(message)) {}
-  };
   // Constructors/Destructors
   Dictionary() : Variant(Type::dictionary) {}
   Dictionary(const Dictionary &other) = default;
@@ -47,7 +43,7 @@ struct Dictionary : Variant {
   [[nodiscard]] bool contains( std::string_view key) const {
     try {
       findEntryWithKey(bNodeDictionary, key);
-    } catch ([[maybe_unused]] const Error &error) {
+    } catch ([[maybe_unused]] const BNode::Error &error) {
       return false;
     }
     return true;
@@ -76,7 +72,7 @@ private:
           return entry.getKey() == key;
         });
     if (it == dictionary.end()) {
-      throw Error("Invalid key used in dictionary.");
+      throw BNode::Error("Invalid key used in dictionary.");
     }
     return it;
   }

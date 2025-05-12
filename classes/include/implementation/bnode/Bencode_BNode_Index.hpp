@@ -8,7 +8,7 @@ inline BNode &BNode::operator[](const int index) {
       *this = make<List>();
     }
     return BRef<List>(*this)[index];
-  } catch ([[maybe_unused]] const List::Error &error) {
+  } catch ([[maybe_unused]] const BNode::Error &error) {
     BRef<List>(*this).resize(index);
     return BRef<List>(*this)[index];
   }
