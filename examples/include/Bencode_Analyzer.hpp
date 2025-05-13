@@ -22,7 +22,7 @@ public:
     sizeInBytes += sizeof(Bencode_Lib::String);
     sizeInBytes += bNodeString.value().size();
     maxStringSize = std::max(bNodeString.value().size(), maxKeySize);
-    uniqueStrings.insert(std::string(bNodeString.value()));
+    uniqueStrings.insert(bNodeString.value());
   }
   // Add integer details to analysis
   void
@@ -131,7 +131,7 @@ private:
   int64_t totalLists{};
   // Bencode_Lib::String
   int64_t totalStrings{};
-  std::set<std::string> uniqueStrings{};
+  std::set<std::string_view> uniqueStrings{};
   size_t maxStringSize{};
   // Bencode_Lib::Integer
   int64_t totalIntegers{};

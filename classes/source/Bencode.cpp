@@ -28,7 +28,7 @@ Bencode::~Bencode() = default;
 /// Bencode constructor. Pass a Bencode string to be initially parsed.
 /// </summary>
 /// <param name="bencodeString">Bencode string.</param>
-Bencode::Bencode(const std::string_view bencodeString) : Bencode() {
+Bencode::Bencode(const std::string_view &bencodeString) : Bencode() {
   parse(BufferSource{bencodeString});
 }
 /// <summary>
@@ -89,10 +89,10 @@ const BNode &Bencode::root() const { return implementation->root(); }
 /// Return object entry for the passed in keys.
 /// </summary>
 /// <param name="key">Dictionary entry (BNode) key.</param>
-BNode &Bencode::operator[](const std::string_view key) {
+BNode &Bencode::operator[](const std::string_view &key) {
   return (*implementation)[key];
 }
-const BNode &Bencode::operator[](const std::string_view key) const {
+const BNode &Bencode::operator[](const std::string_view &key) const {
   return (*implementation)[key];
 }
 /// <summary>
@@ -110,8 +110,8 @@ const BNode &Bencode::operator[](const std::size_t index) const {
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
 /// <param name="bencodeString">Bencode string</param>
-void Bencode::toFile(const std::string_view fileName,
-                     const std::string_view bencodeString)
+void Bencode::toFile(const std::string_view &fileName,
+                     const std::string_view &bencodeString)
 {
   Bencode_Impl::toFile(fileName, bencodeString);
 }
@@ -121,5 +121,5 @@ void Bencode::toFile(const std::string_view fileName,
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
 /// <returns>Bencode string.</returns>
-std::string Bencode::fromFile(const std::string_view fileName) { return Bencode_Impl::fromFile(fileName); }
+std::string Bencode::fromFile(const std::string_view &fileName) { return Bencode_Impl::fromFile(fileName); }
 } // namespace Bencode_Lib

@@ -62,7 +62,7 @@ void Bencode_Impl::traverse(IAction &action) const {
   traverseBNodes(bNodeRoot, action);
 }
 
-BNode &Bencode_Impl::operator[](const std::string_view key) {
+BNode &Bencode_Impl::operator[](const std::string_view &key) {
   try {
     if (bNodeRoot.isEmpty()) {
       bNodeRoot = BNode::make<Dictionary>();
@@ -75,7 +75,7 @@ BNode &Bencode_Impl::operator[](const std::string_view key) {
   }
 }
 
-const BNode &Bencode_Impl::operator[](const std::string_view key) const {
+const BNode &Bencode_Impl::operator[](const std::string_view &key) const {
   return bNodeRoot[key];
 }
 

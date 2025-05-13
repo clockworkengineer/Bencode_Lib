@@ -17,7 +17,7 @@ inline const BNode &BNode::operator[](const int index) const {
   return BRef<const List>(*this)[index];
 }
 // Dictionary
-inline BNode &BNode::operator[](std::string_view key) {
+inline BNode &BNode::operator[](const std::string_view &key) {
   if (isA<Hole>(*this)) {
     *this = make<Dictionary>();
     BRef<Dictionary>(*this).add(Dictionary::Entry(key, make<Hole>()));
@@ -25,7 +25,7 @@ inline BNode &BNode::operator[](std::string_view key) {
   }
   return BRef<Dictionary>(*this)[key];
 }
-inline const BNode &BNode::operator[](std::string_view key) const {
+inline const BNode &BNode::operator[](const std::string_view &key) const {
   return BRef<const Dictionary>(*this)[key];
 }
 } // namespace Bencode_Lib

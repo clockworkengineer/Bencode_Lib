@@ -28,14 +28,14 @@ public:
   void traverse(IAction &action);
   void traverse(IAction &action) const;
   // Search for Bencode dictionary entry with a given key
-  BNode &operator[](std::string_view key);
-  const BNode &operator[](std::string_view key) const;
+  BNode &operator[](const std::string_view &key);
+  const BNode &operator[](const std::string_view &key) const;
   // Get Bencode list element at index
   BNode &operator[](std::size_t index);
   const BNode &operator[](std::size_t index) const;
   // Read/Write Bencode from a file
-  static std::string fromFile(std::string_view fileName);
-  static void toFile(std::string_view fileName, std::string_view bencodeString);
+  static std::string fromFile(const std::string_view &fileName);
+  static void toFile(const std::string_view &fileName, const std::string_view &bencodeString);
 
 private:
   // Traverse Bencode BNode tree

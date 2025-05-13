@@ -6,7 +6,7 @@ class FileSource final : public ISource {
 
 public:
   // Constructors/Destructors
-  explicit FileSource(std::string_view sourceFileName) {
+  explicit FileSource(const std::string_view &sourceFileName) {
     source.open(sourceFileName.data(), std::ios_base::binary);
     if (!source.is_open()) {
       throw Error(

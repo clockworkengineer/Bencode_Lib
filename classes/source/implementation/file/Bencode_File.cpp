@@ -37,20 +37,20 @@ std::string readBencodeString(const std::ifstream &bencodeFile)
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
 /// <returns>Bencode string.</returns>
-std::string Bencode_Impl::fromFile(const std::string_view fileName)
+std::string Bencode_Impl::fromFile(const std::string_view &fileName)
 {
   // Read in Bencode
-  return readBencodeString(std::ifstream{ std::string(fileName), std::ios_base::binary });
+  return readBencodeString(std::ifstream{ fileName.data(), std::ios_base::binary });
 }
 /// <summary>
 /// Create a Bencode file and write Bencode string to it.
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
 /// <param name="bencodeString">Bencode string</param>
-void Bencode_Impl::toFile(const std::string_view fileName,
-                          const std::string_view bencodeString)
+void Bencode_Impl::toFile(const std::string_view &fileName,
+                          const std::string_view &bencodeString)
 {
-  std::ofstream bencodeFile{ std::string(fileName), std::ios::binary };
+  std::ofstream bencodeFile{ fileName.data(), std::ios::binary };
   writeBencodeString(bencodeFile, bencodeString);
   bencodeFile.close();
 }
