@@ -39,9 +39,9 @@ struct TorrentInfo {
   std::string dump();
 
 private:
-  static std::string getString(const Dictionary &bNode, const char *field) {
+  static std::string_view getString(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
-      return (std::string(BRef<String>(bNode[field]).value()));
+      return (BRef<String>(bNode[field]).value());
     }
     return ("");
   }
