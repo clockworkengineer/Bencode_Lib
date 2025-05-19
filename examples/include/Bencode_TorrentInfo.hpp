@@ -18,7 +18,7 @@ struct TorrentInfo {
   using Integer = Bencode_Lib::Integer;
   // File details
   struct FileDetails {
-    FileDetails(std::string path, const std::uint64_t length)
+    FileDetails(const std::string &path, const std::uint64_t length)
         : path(std::move(path)), length(length) {}
     std::string path;       // Full file path name
     std::uint64_t length{}; // File length in bytes

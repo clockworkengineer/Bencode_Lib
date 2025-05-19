@@ -16,7 +16,7 @@ namespace be = Bencode_Lib;
 /// Parse Bencode file and analyze its Bencode tree.
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
-void processBencodeFile(const std::string &fileName)
+void processBencodeFile(const std::string_view &fileName)
 {
   PLOG_INFO << "Analyzing " << fileName;
   const be::Bencode bStringify;

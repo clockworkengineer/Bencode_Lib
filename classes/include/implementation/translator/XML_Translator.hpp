@@ -6,18 +6,11 @@ namespace Bencode_Lib {
 
 class XML_Translator final : public ITranslator {
 public:
-  // ==============
-  // Translator Error
-  // ==============
-  struct Error final : std::runtime_error {
-    explicit Error(const std::string &message)
-        : std::runtime_error("Translator Error: " + message) {}
-  };
   // ======================================================================
   // Translate string characters to XML character references when necessary
   // ======================================================================
-  [[nodiscard]] std::string from(const std::string &escapedString) const override {
-    return escapedString;
+  [[nodiscard]] std::string from(const std::string_view &escapedString) const override {
+    return std::string(escapedString);
   }
   [[nodiscard]] std::string to(const std::string_view &escapedString) const override {
     std::string translated;
