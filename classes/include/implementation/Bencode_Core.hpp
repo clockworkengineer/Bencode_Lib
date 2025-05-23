@@ -1,7 +1,7 @@
 #pragma once
-// ========================
-// Bencode core definitions
-// ========================
+// ============
+// Bencode Core
+// ============
 #include "Bencode_Interfaces.hpp"
 #include "Bencode_Variant.hpp"
 #include "Bencode_BNode.hpp"
