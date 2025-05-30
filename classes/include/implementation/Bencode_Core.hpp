@@ -2,6 +2,7 @@
 // ============
 // Bencode Core
 // ============
+#include "Bencode_Config.hpp"
 #include "Bencode_Interfaces.hpp"
 #include "Bencode_Variant.hpp"
 #include "Bencode_BNode.hpp"

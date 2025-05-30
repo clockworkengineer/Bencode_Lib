@@ -15,14 +15,16 @@
 #include <utility>
 #include <cstring>
 
-#include "Bencode_Config.hpp"
-#include "Bencode_Interfaces.hpp"
-
 namespace Bencode_Lib {
 
 // ============================
 // Bencode forward declarations
 // ============================
+class IStringify;
+class IParser;
+class ISource;
+class IDestination;
+class IAction;
 class Bencode_Impl;
 struct BNode;
 
