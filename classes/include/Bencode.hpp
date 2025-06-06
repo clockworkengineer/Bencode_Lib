@@ -14,6 +14,7 @@
 #include <sstream>
 #include <utility>
 #include <cstring>
+#include <cstdint>
 
 namespace Bencode_Lib {
 
