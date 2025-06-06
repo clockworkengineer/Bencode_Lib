@@ -6,10 +6,11 @@
 /// <param name="file">Test data file name</param>
 /// <returns>Full path to test data file</returns>
 std::string prefixTestDataPath(const std::string &file) {
-  // Use test files one directory above
-  const std::filesystem::path currentPath =
-      std::filesystem::current_path() / "../files" / file;
-  return currentPath.string();
+#ifdef _WIN32
+  return (std::filesystem::current_path() / "./files" / file).string();
+#else
+  return (std::filesystem::current_path() / "../files" / file).string();
+#endif
 }
 /// <summary>
 /// Compare two Bencoded files.
