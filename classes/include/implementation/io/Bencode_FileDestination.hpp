@@ -62,6 +62,9 @@ public:
   std::size_t size() const { return length; }
     [[nodiscard]] char last() override { return lastChar; }
 
+  std::string getFileName() { return filename;}
+  void close() { destination.close(); }
+
 private:
   std::ofstream destination;
   std::string filename;

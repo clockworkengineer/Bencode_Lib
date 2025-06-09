@@ -22,7 +22,7 @@
 #define kNonExistantTorrent "doesntexist.torrent"
 #define kGeneratedTorrentFile "generated.torrent"
 
-std::string prefixTestDataPath(const std::string &file);
+std::string prefixTestDataPath(const std::string &bencodeFileName);
 bool compareFiles(const std::string &fileName1, const std::string &fileName2);
 std::string readBencodedBytesFromFile(const std::string &bencodedFileName);
 

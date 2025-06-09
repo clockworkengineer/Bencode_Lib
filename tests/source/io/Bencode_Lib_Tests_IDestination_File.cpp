@@ -8,34 +8,35 @@ TEST_CASE("IDestination (File interface).", "[Bencode][IDestination]") {
   SECTION("Create FileDestination when file already exists.",
           "[Bencode][IDestination]") {
     FileDestination file{prefixTestDataPath(kGeneratedTorrentFile)};
-    REQUIRE_NOTHROW(FileDestination(prefixTestDataPath(kGeneratedTorrentFile)));
+    REQUIRE_NOTHROW(FileDestination(file.getFileName()));
   }
   SECTION("Create FileDestination and test file exists and should be empty.",
           "[Bencode][IDestination]") {
     std::filesystem::remove(prefixTestDataPath(kGeneratedTorrentFile));
     FileDestination file{prefixTestDataPath(kGeneratedTorrentFile)};
     REQUIRE_FALSE(
-        !std::filesystem::exists(prefixTestDataPath(kGeneratedTorrentFile)));
-    std::filesystem::path filePath{prefixTestDataPath(kGeneratedTorrentFile)};
-    REQUIRE(std::filesystem::file_size(filePath) == 0);
+        !std::filesystem::exists(file.getFileName()));
+    std::filesystem::path filePath{file.getFileName()};
+    REQUIRE(std::filesystem::file_size(file.getFileName()) == 0);
   }
   SECTION("Create FileDestination and add one character.",
           "[Bencode][IDestination]") {
     std::filesystem::remove(prefixTestDataPath(kGeneratedTorrentFile));
     FileDestination file{prefixTestDataPath(kGeneratedTorrentFile)};
     file.add('i');
-    std::filesystem::path filePath{prefixTestDataPath(kGeneratedTorrentFile)};
-    REQUIRE(std::filesystem::file_size(filePath) == 1);
+    file.close();
+    std::filesystem::path filePath{file.getFileName()};
+    REQUIRE(std::filesystem::file_size(file.getFileName()) == 1);
   }
   SECTION("Create FileDestination, add an encoded integer.",
           "[Bencode][IDestination]") {
     std::filesystem::remove(prefixTestDataPath(kGeneratedTorrentFile));
     FileDestination file{prefixTestDataPath(kGeneratedTorrentFile)};
     file.add("i65767e");
-    std::filesystem::path filePath{prefixTestDataPath(kGeneratedTorrentFile)};
-    REQUIRE(std::filesystem::file_size(filePath) == 7);
+    file.close();
+    REQUIRE(std::filesystem::file_size(file.getFileName()) == 7);
     std::string expected{
-        readBencodedBytesFromFile(prefixTestDataPath(kGeneratedTorrentFile))};
+        readBencodedBytesFromFile(file.getFileName())};
     REQUIRE(expected == "i65767e");
   }
 }

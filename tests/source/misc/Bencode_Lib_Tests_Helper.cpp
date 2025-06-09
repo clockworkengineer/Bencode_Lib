@@ -3,11 +3,11 @@
 /// <summary>
 /// Prefix path to test data file name.
 /// </summary>
-/// <param name="file">Test data file name</param>
+/// <param name="bencodeFileName">Test data file name</param>
 /// <returns>Full path to test data file</returns>
-std::string prefixTestDataPath(const std::string &file) {
+std::string prefixTestDataPath(const std::string &bencodeFileName) {
 #ifdef _WIN32
-  return (std::filesystem::current_path() / "./files" / file).string();
+  return (std::filesystem::current_path() / "./files" / bencodeFileName).string();
 #else
   return (std::filesystem::current_path() / "../files" / file).string();
 #endif
