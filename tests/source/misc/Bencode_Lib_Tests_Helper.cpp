@@ -6,11 +6,13 @@
 /// <param name="bencodeFileName">Test data file name</param>
 /// <returns>Full path to test data file</returns>
 std::string prefixTestDataPath(const std::string &bencodeFileName) {
-#ifdef _WIN32
-  return (std::filesystem::current_path() / "./files" / bencodeFileName).string();
-#else
-  return (std::filesystem::current_path() / "../files" / file).string();
-#endif
+  if (std::filesystem::is_directory("./files")) {
+    return (std::filesystem::current_path() / "./files" / bencodeFileName)
+        .string();
+  } else {
+    return (std::filesystem::current_path() / "../files" / bencodeFileName)
+        .string();
+  }
 }
 /// <summary>
 /// Compare two Bencoded files.
