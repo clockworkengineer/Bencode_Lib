@@ -34,7 +34,7 @@ public:
   void clear() override { encodeBuffer.clear(); }
 
   [[nodiscard]] std::size_t size() const { return encodeBuffer.size(); }
-  std::string toString() {
+  std::string toString() const {
     std::string destination;
     for (auto ch : encodeBuffer) {
       destination.push_back(static_cast<char>(ch));

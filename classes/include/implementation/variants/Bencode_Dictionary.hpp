@@ -40,7 +40,7 @@ struct Dictionary : Variant {
       return a.getKey() < b.getKey();
     });
   }
-  [[nodiscard]] bool contains( std::string_view key) const {
+  [[nodiscard]] bool contains(const std::string_view key) const {
     try {
       findEntryWithKey(bNodeDictionary, key);
     } catch ([[maybe_unused]] const BNode::Error &error) {
@@ -52,10 +52,10 @@ struct Dictionary : Variant {
     return static_cast<int>(bNodeDictionary.size());
   }
 
-  BNode &operator[]( std::string_view key) {
+  BNode &operator[](const std::string_view key) {
     return findEntryWithKey(bNodeDictionary, key)->getBNode();
   }
-  const BNode &operator[]( std::string_view key) const {
+  const BNode &operator[](const std::string_view key) const {
     return findEntryWithKey(bNodeDictionary, key)->getBNode();
   }
 
@@ -84,7 +84,7 @@ private:
   }
 
   static Entries::iterator
-  findEntryWithKey(Entries &dictionary, std::string_view key) {
+  findEntryWithKey(Entries &dictionary, const std::string_view key) {
     return findEntry(dictionary, key);
   }
 

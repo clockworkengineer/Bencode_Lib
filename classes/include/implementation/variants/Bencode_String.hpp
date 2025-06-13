@@ -21,7 +21,7 @@ struct String : Variant {
   constexpr static Bencode::IntegerType kMaxLength = 16*1024;
   // Constructors/Destructors
   String() : Variant(Type::string) , bNodeString(""){}
-  explicit String(std::string_view string)
+  explicit String(const std::string_view string)
       : Variant(Type::string), bNodeString(string) {}
   String(const String &other) = delete;
   String &operator=(const String &other) = delete;

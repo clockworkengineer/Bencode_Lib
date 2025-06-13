@@ -6,7 +6,7 @@ class FileDestination final : public IDestination {
 
 public:
   // Constructors/Destructors
-  explicit FileDestination(std::string_view filename) : filename(filename) {
+  explicit FileDestination(const std::string_view filename) : filename(filename) {
     destination.open(filename.data(), std::ios_base::binary);
     if (!destination.is_open()) {
       throw Error("Bencode file output stream failed to open or could not be "
