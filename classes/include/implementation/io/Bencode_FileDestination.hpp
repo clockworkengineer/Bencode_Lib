@@ -33,11 +33,11 @@ public:
     lastChar = bytes.back();
   }
   void add(const char *bytes) override {
-    int length = strlen(bytes);
-    destination.write(bytes, length);
+    int addLength = strlen(bytes);
+    destination.write(bytes, addLength);
     destination.flush();
-    length += length;
-    lastChar = bytes[length - 1];
+    length += addLength;
+    lastChar = bytes[addLength - 1];
   }
   void add(const char ch) override {
     destination.put(ch);
