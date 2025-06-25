@@ -12,10 +12,12 @@ TEST_CASE("Check R-Value reference stringify/parse.",
   }
   SECTION("Stringify/Parse both with R-Value reference (File).",
           "[Bencode][BNode][R-alue Reference]") {
-    std::filesystem::remove(prefixTestDataPath(kGeneratedTorrentFile));
     bStringify.parse(FileSource{prefixTestDataPath(kMultiFileTorrent)});
-    bStringify.stringify(FileDestination{prefixTestDataPath(kGeneratedTorrentFile)});
+    FileDestination destination{generateRandomFileName()};
+    bStringify.stringify(destination);
+    destination.close();
     REQUIRE_FALSE(!compareFiles(prefixTestDataPath(kMultiFileTorrent),
-                                prefixTestDataPath(kGeneratedTorrentFile)));
+                                destination.getFileName()));
+    std::filesystem::remove(destination.getFileName());
   }
 }

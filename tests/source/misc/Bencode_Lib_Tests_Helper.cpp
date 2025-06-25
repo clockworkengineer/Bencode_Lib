@@ -50,3 +50,11 @@ std::string readBencodedBytesFromFile(const std::string &bencodedFileName) {
   bencodedFile.close();
   return bencodedFileBuffer.str();
 }
+/// <summary>
+/// Generate unique file name.
+/// </summary>
+/// <returns>Unique torrent file name</returns>
+std::string generateRandomFileName(void) {
+  std::string name1 = std::tmpnam(nullptr);
+  return name1;
+}
