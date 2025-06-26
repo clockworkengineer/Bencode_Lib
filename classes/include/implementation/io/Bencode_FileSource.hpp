@@ -6,7 +6,8 @@ class FileSource final : public ISource {
 
 public:
   // Constructors/Destructors
-  explicit FileSource(const std::string_view &sourceFileName) {
+  explicit FileSource(const std::string_view &sourceFileName) :
+      filename(sourceFileName) {
     source.open(sourceFileName.data(), std::ios_base::binary);
     if (!source.is_open()) {
       throw Error(
@@ -30,9 +31,12 @@ public:
     source.clear();
     source.seekg(0, std::ios_base::beg);
   }
+  std::string getFileName() { return filename; }
+  void close() { source.close(); }
 
 private:
   mutable std::ifstream source;
+  std::string filename;
 };
 
 } // namespace Bencode_Lib
