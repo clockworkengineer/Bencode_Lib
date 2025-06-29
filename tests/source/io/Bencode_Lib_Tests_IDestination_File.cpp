@@ -4,7 +4,7 @@ TEST_CASE("IDestination (File interface).", "[Bencode][IDestination]") {
   SECTION("Create FileDestination.", "[Bencode][IDestination]") {
     std::string fileName{generateRandomFileName()};
     REQUIRE_NOTHROW(FileDestination(fileName));
-
+    REQUIRE(std::filesystem::exists(fileName));
     std::filesystem::remove(fileName);
   }
   SECTION("Create FileDestination when file already exists.",
