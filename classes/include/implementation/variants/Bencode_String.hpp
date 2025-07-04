@@ -28,7 +28,7 @@ struct String : Variant {
   String(String &&other) = default;
   String &operator=(String &&other) = default;
   ~String() = default;
-  // Get BNode value
+  // Get Node value
   [[nodiscard]] std::string_view value() { return bNodeString.value(); }
   [[nodiscard]] std::string_view value() const { return bNodeString.value(); }
   // Set/get maximum string length

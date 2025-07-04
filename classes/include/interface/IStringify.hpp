@@ -6,7 +6,7 @@ namespace Bencode_Lib {
 // Forward declarations
 // ====================
 class IDestination;
-struct BNode;
+struct Node;
 
 // =============================
 // Interface for Bencode stringify
@@ -25,9 +25,9 @@ public:
   // ========================
   virtual ~IStringify() = default;
   // =====================================
-  // Stringify to destination from BNode tree
+  // Stringify to destination from Node tree
   // =====================================
-  virtual void stringify(const BNode &bNode, IDestination &destination) const = 0;
+  virtual void stringify(const Node &bNode, IDestination &destination) const = 0;
 };
 // Make custom stringify
 // to pass to Bencode constructor:The note pointer is tidied up internally.

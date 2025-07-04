@@ -12,7 +12,7 @@ struct Integer : Variant {
   Integer(Integer &&other) = default;
   Integer &operator=(Integer &&other) = default;
   ~Integer() = default;
-  // Get BNode value
+  // Get Node value
   [[nodiscard]] Bencode::IntegerType value() const { return bNodeInteger; }
 
 private:

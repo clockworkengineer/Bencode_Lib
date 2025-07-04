@@ -2,7 +2,7 @@
 
 TEST_CASE("Stringify generated exceptions",
           "[Bencode][Stringify][Exceptions]") {
-  SECTION("Stringify called with no BNode tree to stringify",
+  SECTION("Stringify called with no Node tree to stringify",
           "[Bencode][Stringify][Exceptions]") {
     const Bencode bStringify;
     BufferDestination destination;

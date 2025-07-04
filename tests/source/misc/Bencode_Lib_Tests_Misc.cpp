@@ -1,17 +1,17 @@
 #include "Bencode_Lib_Tests.hpp"
 
 TEST_CASE("Check R-Value reference stringify/parse.",
-          "[Bencode][BNode][Reference]") {
+          "[Bencode][Node][Reference]") {
   const Bencode bStringify;
   SECTION("Stringify/Parse with R-Value reference (Buffer).",
-          "[Bencode][BNode][R-Value Reference]") {
+          "[Bencode][Node][R-Value Reference]") {
     bStringify.parse(BufferSource{"i45500e"});
     bStringify.stringify(
         BufferDestination{}); // Does nothing as sink (for completeness)
     REQUIRE(BRef<Integer>((bStringify.root())).value() == 45500);
   }
   SECTION("Stringify/Parse both with R-Value reference (File).",
-          "[Bencode][BNode][R-alue Reference]") {
+          "[Bencode][Node][R-alue Reference]") {
     bStringify.parse(FileSource{prefixTestDataPath(kMultiFileTorrent)});
     FileDestination destination{generateRandomFileName()};
     bStringify.stringify(destination);

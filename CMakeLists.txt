@@ -40,10 +40,10 @@ set(BENCODE_INCLUDES
   ./classes/include/interface/ITranslator.hpp
   ./classes/include/implementation/Bencode_Core.hpp
   ./classes/include/implementation/common/Bencode_Error.hpp
-  ./classes/include/implementation/bnode/Bencode_BNode_Creation.hpp
-  ./classes/include/implementation/bnode/Bencode_BNode_Index.hpp
-  ./classes/include/implementation/bnode/Bencode_BNode_Reference.hpp
-  ./classes/include/implementation/bnode/Bencode_BNode.hpp
+  ./classes/include/implementation/node/Bencode_Node_Creation.hpp
+  ./classes/include/implementation/node/Bencode_Node_Index.hpp
+  ./classes/include/implementation/node/Bencode_Node_Reference.hpp
+  ./classes/include/implementation/node/Bencode_Node.hpp
   ./classes/include/implementation/Bencode_Impl.hpp
   ./classes/include/implementation/parser/Default_Parser.hpp
   ./classes/include/implementation/stringify/Default_Stringify.hpp
@@ -72,7 +72,7 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
   ${PROJECT_SOURCE_DIR}/classes/include/interface
   ${PROJECT_SOURCE_DIR}/classes/include/implementation
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/common
-  ${PROJECT_SOURCE_DIR}/classes/include/implementation/bnode
+  ${PROJECT_SOURCE_DIR}/classes/include/implementation/node
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/parser
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/io

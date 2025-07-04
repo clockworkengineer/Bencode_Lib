@@ -3,7 +3,7 @@
 namespace Bencode_Lib {
 
 struct List : Variant {
-  using Entry = BNode;
+  using Entry = Node;
   using ListEntries = std::vector<Entry>;
   // Constructors/Destructors
   List() : Variant(Type::list){}
@@ -16,19 +16,19 @@ struct List : Variant {
   void add(Entry bNode) {
     bNodeList.emplace_back(std::move(bNode));
   }
-  // Get BNode size
+  // Get Node size
   [[nodiscard]] int size() const {
     return static_cast<int>(bNodeList.size());
   }
-  // Get BNode value
+  // Get Node value
   [[nodiscard]]ListEntries &value() { return bNodeList; }
   [[nodiscard]] const ListEntries &value() const { return bNodeList; }
-  // Get BNode at index
-  BNode &operator[](const int index) {
+  // Get Node at index
+  Node &operator[](const int index) {
     validateIndex(index);
     return bNodeList[index];
   }
-  const BNode &operator[](const int index) const {
+  const Node &operator[](const int index) const {
     validateIndex(index);
     return bNodeList[index];
   }
@@ -37,7 +37,7 @@ struct List : Variant {
     bNodeList.resize(index + 1);
     for (auto &entry : bNodeList) {
       if (entry.isEmpty()) {
-        entry = BNode::make<Hole>();
+        entry = Node::make<Hole>();
       }
     }
   }
@@ -46,7 +46,7 @@ private:
   // ensure the index is within the bounds
   void validateIndex(const int index) const {
     if (!(index >= 0 && index < static_cast<int>(bNodeList.size()))) {
-      throw BNode::Error("Invalid index used in list.");
+      throw Node::Error("Invalid index used in list.");
     }
   }
 

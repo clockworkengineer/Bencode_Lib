@@ -19,20 +19,20 @@ public:
   ~XML_Stringify() override = default;
 
   /// <summary>
-  /// Recursively traverse BNode structure encoding it into XML string on
+  /// Recursively traverse Node structure encoding it into XML string on
   /// the destination stream passed in.
   /// </summary>
-  /// <param name="bNode">BNode structure to be traversed.</param>
+  /// <param name="bNode">Node structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified XML.</param>
-  void stringify(const BNode &bNode, IDestination &destination) const override {
+  void stringify(const Node &bNode, IDestination &destination) const override {
     destination.add(R"(<?xml version="1.0" encoding="UTF-8"?>)");
     destination.add("<root>");
-    stringifyBNodes(bNode, destination);
+    stringifyNodes(bNode, destination);
     destination.add("</root>");
   }
 
 private:
-  static void stringifyBNodes(const BNode &bNode, IDestination &destination)  {
+  static void stringifyNodes(const Node &bNode, IDestination &destination)  {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
@@ -43,23 +43,23 @@ private:
       stringifyString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
     } else {
-      throw Error("Unknown BNode type encountered during encoding.");
+      throw Error("Unknown Node type encountered during encoding.");
     }
   }
-  static void stringifyDictionary(const BNode &bNode, IDestination &destination)  {
+  static void stringifyDictionary(const Node &bNode, IDestination &destination)  {
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       auto elementName = std::string(bNodeNext.getKey());
       std::ranges::replace(elementName, ' ', '-');
       destination.add("<" + elementName + ">");
-      stringifyBNodes(bNodeNext.getBNode(), destination);
+      stringifyNodes(bNodeNext.getNode(), destination);
       destination.add("</" + elementName + ">");
     }
   }
-  static void stringifyList(const BNode &bNode, IDestination &destination)  {
+  static void stringifyList(const Node &bNode, IDestination &destination)  {
     if (BRef<List>(bNode).value().size() > 1) {
       for (const auto &bNodeNext : BRef<List>(bNode).value()) {
         destination.add("<Row>");
-        stringifyBNodes(bNodeNext, destination);
+        stringifyNodes(bNodeNext, destination);
         destination.add("</Row>");
       }
     } else {
@@ -67,10 +67,10 @@ private:
       destination.add("</Row>");
     }
   }
-  static void stringifyInteger(const BNode &bNode, IDestination &destination) {
+  static void stringifyInteger(const Node &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
-  static void stringifyString(const BNode &bNode, IDestination &destination)  {
+  static void stringifyString(const Node &bNode, IDestination &destination)  {
     destination.add(xmlTranslator->to(BRef<String>(bNode).value()));
   }
 

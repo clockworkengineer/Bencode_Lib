@@ -40,8 +40,8 @@ Bencode::IntegerType Default_Parser::extractInteger(ISource &source) {
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
-///  <returns>String BNode.</returns>
-BNode Default_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
+///  <returns>String Node.</returns>
+Node Default_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
   Bencode::IntegerType stringLength = extractInteger(source);
   if (stringLength < 0) {
     throw SyntaxError("Negative string length.");
@@ -58,19 +58,19 @@ BNode Default_Parser::parseString(ISource &source, [[maybe_unused]] const unsign
     buffer += source.current();
     source.next();
   }
-  return BNode::make<String>(buffer);
+  return Node::make<String>(buffer);
 }
 /// <summary>
 /// Parse an integer from the input stream of characters referenced by ISource.
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
-///  <returns>Integer BNode.</returns>
-BNode Default_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsigned long parserDepth) {
+///  <returns>Integer Node.</returns>
+Node Default_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsigned long parserDepth) {
   source.next();
   Bencode::IntegerType integer = extractInteger(source);
   confirmBoundary(source, 'e');
-  return BNode::make<Integer>(integer);
+  return Node::make<Integer>(integer);
 }
 /// <summary>
 /// Parse a dictionary from the input stream of characters referenced by
@@ -78,9 +78,9 @@ BNode Default_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsign
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
-/// <returns>Dictionary BNode.</returns>
-BNode Default_Parser::parseDictionary(ISource &source, const unsigned long parserDepth) {
-  BNode dictionary = BNode::make<Dictionary>();
+/// <returns>Dictionary Node.</returns>
+Node Default_Parser::parseDictionary(ISource &source, const unsigned long parserDepth) {
+  Node dictionary = Node::make<Dictionary>();
   std::string lastKey{};
   source.next();
   while (source.more() && source.current() != 'e') {
@@ -93,7 +93,7 @@ BNode Default_Parser::parseDictionary(ISource &source, const unsigned long parse
     // Check key not duplicate and insert
     if (!BRef<Dictionary>(dictionary).contains(key)) {
       BRef<Dictionary>(dictionary)
-          .add(Dictionary::Entry(key, parseBNodes(source, parserDepth+1)));
+          .add(Dictionary::Entry(key, parseNodes(source, parserDepth+1)));
     } else {
       throw SyntaxError("Duplicate dictionary key.");
     }
@@ -106,12 +106,12 @@ BNode Default_Parser::parseDictionary(ISource &source, const unsigned long parse
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
-/// <returns>List BNode.</returns>
-BNode Default_Parser::parseList(ISource &source, const unsigned long parserDepth) {
-  BNode list = BNode::make<List>();
+/// <returns>List Node.</returns>
+Node Default_Parser::parseList(ISource &source, const unsigned long parserDepth) {
+  Node list = Node::make<List>();
   source.next();
   while (source.more() && source.current() != 'e') {
-    BRef<List>(list).add(parseBNodes(source, parserDepth+1));
+    BRef<List>(list).add(parseNodes(source, parserDepth+1));
   }
   confirmBoundary(source, 'e');
   return list;
@@ -129,12 +129,12 @@ void Default_Parser::confirmBoundary(ISource &source, const char expectedBoundar
   source.next();
 }
 /// <summary>
-/// Parse a BNode tree root.
+/// Parse a Node tree root.
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
 /// <param name="parserDepth">Current parser depth.</param>
-/// <returns>Root BNode.</returns>
-BNode Default_Parser::parseBNodes(ISource &source, const unsigned long parserDepth) {
+/// <returns>Root Node.</returns>
+Node Default_Parser::parseNodes(ISource &source, const unsigned long parserDepth) {
   if (parserDepth>=getMaxParserDepth()) {
     throw SyntaxError("Maximum parser depth exceeded.");
   }
@@ -146,11 +146,11 @@ BNode Default_Parser::parseBNodes(ISource &source, const unsigned long parserDep
   return it->second(source, parserDepth);
 }
 /// <summary>
-/// Parse a BNode from the input stream of characters referenced by ISource to
+/// Parse a Node from the input stream of characters referenced by ISource to
 /// traverse and parse complex encodings. This method is called
-/// recursively to build up a BNode structure.
+/// recursively to build up a Node structure.
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
-/// stream.</param> <returns>Root BNode.</returns>
-BNode Default_Parser::parse(ISource &source) { return parseBNodes(source, 1); }
+/// stream.</param> <returns>Root Node.</returns>
+Node Default_Parser::parse(ISource &source) { return parseNodes(source, 1); }
 } // namespace Bencode_Lib

@@ -5,7 +5,7 @@ namespace Bencode_Lib {
 // ====================
 // Forward declarations
 // ====================
-struct BNode;
+struct Node;
 
 // =============================================================
 // Interface for the action events during Bencode tree traversal
@@ -25,29 +25,29 @@ public:
   // ========================
   virtual ~IAction() = default;
   // ============================
-  // BNode encountered so process
+  // Node encountered so process
   // ============================
-  virtual void onBNode([[maybe_unused]] BNode &bNode) { }
-  virtual void onBNode([[maybe_unused]] const BNode &bNode) { }
+  virtual void onNode([[maybe_unused]] Node &bNode) { }
+  virtual void onNode([[maybe_unused]] const Node &bNode) { }
   // =============================
   // String encountered so process
   // =============================
-  virtual void onString([[maybe_unused]] BNode &bNode) { }
-  virtual void onString([[maybe_unused]] const BNode &bNode) { }
+  virtual void onString([[maybe_unused]] Node &bNode) { }
+  virtual void onString([[maybe_unused]] const Node &bNode) { }
   // =============================
   // Integer encountered so process
   // =============================
-  virtual void onInteger([[maybe_unused]] BNode &bNode) { }
-  virtual void onInteger([[maybe_unused]] const BNode &bNode) { }
+  virtual void onInteger([[maybe_unused]] Node &bNode) { }
+  virtual void onInteger([[maybe_unused]] const Node &bNode) { }
   // ============================
   // Array encountered so process
   // ============================
-  virtual void onList([[maybe_unused]] BNode &bNode) { }
-  virtual void onList([[maybe_unused]] const BNode &bNode) { }
+  virtual void onList([[maybe_unused]] Node &bNode) { }
+  virtual void onList([[maybe_unused]] const Node &bNode) { }
   // =============================
   // Object encountered so process
   // =============================
-  virtual void onDictionary([[maybe_unused]] BNode &bNode) { }
-  virtual void onDictionary([[maybe_unused]] const BNode &bNode) { }
+  virtual void onDictionary([[maybe_unused]] Node &bNode) { }
+  virtual void onDictionary([[maybe_unused]] const Node &bNode) { }
 };
 }// namespace Bencode_Lib

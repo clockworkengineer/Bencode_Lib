@@ -4,19 +4,19 @@ class Bencode_Analyzer final : public IAction {
 public:
   Bencode_Analyzer() = default;
   ~Bencode_Analyzer() override = default;
-  void onBNode([[maybe_unused]] const BNode &bNode) override {
+  void onNode([[maybe_unused]] const Node &bNode) override {
     totalNodes++;
   }
-  void onString([[maybe_unused]] const BNode &bNode) override {
+  void onString([[maybe_unused]] const Node &bNode) override {
     totalStrings++;
   }
-  void onInteger([[maybe_unused]] const BNode &bNode) override {
+  void onInteger([[maybe_unused]] const Node &bNode) override {
     totalIntegers++;
   }
-  void onList([[maybe_unused]] const BNode &bNode) override {
+  void onList([[maybe_unused]] const Node &bNode) override {
     totalLists++;
   }
-  void onDictionary([[maybe_unused]] const BNode &bNode) override {
+  void onDictionary([[maybe_unused]] const Node &bNode) override {
     totalDictionarys++;
   }
 
@@ -26,7 +26,7 @@ public:
   Bencode::IntegerType totalStrings{};
   Bencode::IntegerType totalIntegers{};
 };
-TEST_CASE("Bencode BNode tree traverse tests ", "[Bencode][Traverse]") {
+TEST_CASE("Bencode Node tree traverse tests ", "[Bencode][Traverse]") {
   const Bencode bStringify;
   SECTION("Parse an Integer and traverse", "[Bencode][Traverse][Integer]") {
     BufferSource source{"i266e"};

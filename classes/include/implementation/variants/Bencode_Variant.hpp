@@ -11,7 +11,7 @@ struct Variant {
   Variant(Variant &&other) = default;
   Variant &operator=(Variant &&other) = default;
   ~Variant() = default;
-  // Get BNode type
+  // Get Node type
   [[nodiscard]] Type getNodeType() const {
     return nodeType;
   }

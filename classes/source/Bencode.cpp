@@ -36,28 +36,28 @@ Bencode::Bencode(const std::string_view &bencodeString) : Bencode() {
 /// </summary>
 /// <param name="list">Initializer list of single values or JNode.</param>
 Bencode::Bencode(const ListInitializerType &list) : Bencode() {
-  this->root() = BNode(list);
+  this->root() = Node(list);
 }
 /// <summary>
 /// Bencode constructor (dictionary).
 /// </summary>
 /// <param name="dictionary">Initializer list of key/value(JNode) pairs.</param>
 Bencode::Bencode(const DictionaryInitializerType &dictionary) : Bencode() {
-  this->root() = BNode(dictionary);
+  this->root() = Node(dictionary);
 }
 /// <summary>
 ///  Get Bencode_Lib version.
 /// </summary>
 std::string Bencode::version() { return Bencode_Impl::version(); }
 /// <summary>
-/// Parse Bencoded byte string pointed to by source stream into BNode(s).
+/// Parse Bencoded byte string pointed to by source stream into Node(s).
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns></returns>
 void Bencode::parse(ISource &source) const { implementation->parse(source); }
 void Bencode::parse(ISource &&source) const { implementation->parse(source); }
 /// <summary>
-/// Take BNode structure and create a Bencode encoding for it in the
+/// Take Node structure and create a Bencode encoding for it in the
 /// destination stream.
 /// </summary>
 /// <param name="destination">Reference to interface used to facilitate the
@@ -80,29 +80,29 @@ void Bencode::traverse(IAction &action) const {
   std::as_const(*implementation).traverse(action);
 }
 /// <summary>
-/// Get the root of BNode tree.
+/// Get the root of Node tree.
 /// </summary>
-/// <returns>Root of BNode encoded tree.</returns>
-BNode &Bencode::root() { return implementation->root(); }
-const BNode &Bencode::root() const { return implementation->root(); }
+/// <returns>Root of Node encoded tree.</returns>
+Node &Bencode::root() { return implementation->root(); }
+const Node &Bencode::root() const { return implementation->root(); }
 /// <summary>
 /// Return object entry for the passed in keys.
 /// </summary>
-/// <param name="key">Dictionary entry (BNode) key.</param>
-BNode &Bencode::operator[](const std::string_view &key) {
+/// <param name="key">Dictionary entry (Node) key.</param>
+Node &Bencode::operator[](const std::string_view &key) {
   return (*implementation)[key];
 }
-const BNode &Bencode::operator[](const std::string_view &key) const {
+const Node &Bencode::operator[](const std::string_view &key) const {
   return (*implementation)[key];
 }
 /// <summary>
 /// Return list entry for the passed in index.
 /// </summary>
-/// <param name="index">Array entry (BNode) index.</param>
-BNode &Bencode::operator[](const std::size_t index) {
+/// <param name="index">Array entry (Node) index.</param>
+Node &Bencode::operator[](const std::size_t index) {
   return (*implementation)[index];
 }
-const BNode &Bencode::operator[](const std::size_t index) const {
+const Node &Bencode::operator[](const std::size_t index) const {
   return (*implementation)[index];
 }
 /// <summary>

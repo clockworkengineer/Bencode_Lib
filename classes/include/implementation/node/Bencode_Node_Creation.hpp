@@ -1,8 +1,8 @@
 #pragma once
 
 namespace Bencode_Lib {
-// Construct BNode from raw values
-template <typename T> BNode::BNode(T value) {
+// Construct Node from raw values
+template <typename T> Node::Node(T value) {
   if constexpr (std::is_integral_v<T>) {
     *this = make<Integer>(value);
   } else if constexpr (std::is_floating_point_v<T>) {
@@ -16,53 +16,53 @@ template <typename T> BNode::BNode(T value) {
     bNodeVariant = std::move(value);
   }
 }
-// Convert the initializer list to BNode
-static BNode typeToBNode(const Bencode::InitializerListTypes &type) {
+// Convert the initializer list to Node
+static Node typeToNode(const Bencode::InitializerListTypes &type) {
   if (const auto pValue = std::get_if<int>(&type)) {
-    return BNode(*pValue);
+    return Node(*pValue);
   }
   if (const auto pValue = std::get_if<long>(&type)) {
-    return BNode(*pValue);
+    return Node(*pValue);
   }
   if (const auto pValue = std::get_if<long long>(&type)) {
-    return BNode(*pValue);
+    return Node(*pValue);
   }
   if (const auto pValue = std::get_if<float>(&type)) {
-    return BNode(*pValue);
+    return Node(*pValue);
   }
   if (const auto pValue = std::get_if<double>(&type)) {
-    return BNode(*pValue);
+    return Node(*pValue);
   }
   if (const auto pValue = std::get_if<long double>(&type)) {
-    return BNode(*pValue);
+    return Node(*pValue);
   }
   if (const auto pValue = std::get_if<bool>(&type)) {
-    return BNode(*pValue);
+    return Node(*pValue);
   }
   if (const auto pValue = std::get_if<std::string>(&type)) {
-    return BNode(*pValue);
+    return Node(*pValue);
   }
   if ([[maybe_unused]] auto pValue = std::get_if<std::nullptr_t>(&type)) {
-    return BNode(0);
+    return Node(0);
   }
-  if (const auto pValue = std::get_if<BNode>(&type)) {
-    return std::move(*const_cast<BNode *>(pValue));
+  if (const auto pValue = std::get_if<Node>(&type)) {
+    return std::move(*const_cast<Node *>(pValue));
   }
-  throw BNode::Error("BNode of unsupported type could not be created.");
+  throw Node::Error("Node of unsupported type could not be created.");
 }
-// Construct BNode Array from the initializer list
-inline BNode::BNode(const Bencode::ListInitializerType &list) {
+// Construct Node Array from the initializer list
+inline Node::Node(const Bencode::ListInitializerType &list) {
   *this = make<List>();
   for (const auto &entry : list) {
-    BRef<List>(*this).add(typeToBNode(entry));
+    BRef<List>(*this).add(typeToNode(entry));
   }
 }
-// Construct BNode Dictionary from the initializer list
-inline BNode::BNode(const Bencode::DictionaryInitializerType &dictionary) {
+// Construct Node Dictionary from the initializer list
+inline Node::Node(const Bencode::DictionaryInitializerType &dictionary) {
   *this = make<Dictionary>();
   for (const auto &[fst, snd] : dictionary) {
     BRef<Dictionary>(*this).add(
-        Dictionary::Entry(fst, typeToBNode(snd)));
+        Dictionary::Entry(fst, typeToNode(snd)));
   }
 }
 

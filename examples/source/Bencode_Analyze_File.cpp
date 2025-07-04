@@ -35,7 +35,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
   // Output Bencode Lib version and data structure metrics
   PLOG_INFO << be::Bencode::version();
   PLOG_INFO << Bencode_Analyzer::dumpNumericSizes();
-  PLOG_INFO << Bencode_Analyzer::dumpBNodeSizes();
+  PLOG_INFO << Bencode_Analyzer::dumpNodeSizes();
   // Analyze Bencode files.
   for (auto &fileName : Utility::createTorrentFileList()) {
     try {

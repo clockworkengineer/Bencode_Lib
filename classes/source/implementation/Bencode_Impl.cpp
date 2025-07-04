@@ -52,46 +52,46 @@ void Bencode_Impl::traverse(IAction &action) {
   if (bNodeRoot.isEmpty()) {
     throw Error("No Bencode to traverse.");
   }
-  traverseBNodes(bNodeRoot, action);
+  traverseNodes(bNodeRoot, action);
 }
 
 void Bencode_Impl::traverse(IAction &action) const {
   if (bNodeRoot.isEmpty()) {
     throw Error("No Bencode to traverse.");
   }
-  traverseBNodes(bNodeRoot, action);
+  traverseNodes(bNodeRoot, action);
 }
 
-BNode &Bencode_Impl::operator[](const std::string_view &key) {
+Node &Bencode_Impl::operator[](const std::string_view &key) {
   try {
     if (bNodeRoot.isEmpty()) {
-      bNodeRoot = BNode::make<Dictionary>();
+      bNodeRoot = Node::make<Dictionary>();
     }
     return bNodeRoot[key];
-  } catch ([[maybe_unused]] BNode::Error &error) {
+  } catch ([[maybe_unused]] Node::Error &error) {
     BRef<Dictionary>(bNodeRoot).add(
-        Dictionary::Entry(key, BNode::make<Hole>()));
+        Dictionary::Entry(key, Node::make<Hole>()));
     return bNodeRoot[key];
   }
 }
 
-const BNode &Bencode_Impl::operator[](const std::string_view &key) const {
+const Node &Bencode_Impl::operator[](const std::string_view &key) const {
   return bNodeRoot[key];
 }
 
-BNode &Bencode_Impl::operator[](const std::size_t index) {
+Node &Bencode_Impl::operator[](const std::size_t index) {
   try {
     if (bNodeRoot.isEmpty()) {
-      bNodeRoot = BNode::make<List>();
+      bNodeRoot = Node::make<List>();
     }
     return bNodeRoot[index];
-  } catch ([[maybe_unused]] BNode::Error &error) {
+  } catch ([[maybe_unused]] Node::Error &error) {
     BRef<List>(bNodeRoot).resize(index);
     return bNodeRoot[index];
   }
 }
 
-const BNode &Bencode_Impl::operator[](const std::size_t index) const {
+const Node &Bencode_Impl::operator[](const std::size_t index) const {
   return bNodeRoot[index];
 }
 

@@ -6,7 +6,7 @@ namespace Bencode_Lib {
 // Forward declarations
 // ====================
 class ISource;
-struct BNode;
+struct Node;
 
 // =============================
 // Interface for Bencode parser
@@ -25,8 +25,8 @@ public:
   // ========================
   virtual ~IParser() = default;
   // ==========================================
-  // Parse Bencode into BNode tree from source
+  // Parse Bencode into Node tree from source
   // ==========================================
-  virtual BNode parse(ISource &source) = 0;
+  virtual Node parse(ISource &source) = 0;
 };
 } // namespace Bencode_Lib

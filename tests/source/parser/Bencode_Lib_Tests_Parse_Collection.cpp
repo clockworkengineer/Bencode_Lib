@@ -51,7 +51,7 @@ TEST_CASE("Bencode for parse of collection types (list, dictionary) ",
     bStringify.parse(source);
     std::map<std::string_view, Bencode::IntegerType> entries;
     for (const auto &bNode : BRef<Dictionary>(bStringify.root()).value()) {
-      entries[bNode.getKey()] = BRef<Integer>(bNode.getBNode()).value();
+      entries[bNode.getKey()] = BRef<Integer>(bNode.getNode()).value();
     }
     REQUIRE(entries == std::map<std::string_view, Bencode::IntegerType>{
                            {"one", 1}, {"two", 2}, {"three", 3}});
@@ -61,7 +61,7 @@ TEST_CASE("Bencode for parse of collection types (list, dictionary) ",
     bStringify.parse(source);
     std::map<std::string_view, std::string_view> entries;
     for (const auto &bNode : BRef<Dictionary>(bStringify.root()).value()) {
-      entries[bNode.getKey()] = BRef<String>(bNode.getBNode()).value();
+      entries[bNode.getKey()] = BRef<String>(bNode.getNode()).value();
     }
     REQUIRE(entries == std::map<std::string_view, std::string_view>{{"one", "0123456789"},
                                                           {"two", "asdfghjkl"},

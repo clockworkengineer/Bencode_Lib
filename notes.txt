@@ -2,7 +2,7 @@ Current passing tests 239/239.
 
 Current sizes:
 
-Bencode_Lib::BNode size 8 in bytes.
+Bencode_Lib::Node size 8 in bytes.
 Bencode_Lib::Dictionary size 32 in bytes.
 Bencode_Lib::Dictionary Entry size 40 in bytes.
 Bencode_Lib::Entries size 32 in bytes.
@@ -12,7 +12,7 @@ Bencode_Lib::String size 40 in bytes.
 |
 V
 
-Bencode_Lib::BNode size 8 in bytes.
+Bencode_Lib::Node size 8 in bytes.
 Bencode_Lib::Dictionary size 32 in bytes.
 Bencode_Lib::Dictionary Entry size 16 in bytes.
 Bencode_Lib::List size 32 in bytes.
@@ -22,7 +22,7 @@ Bencode_Lib::String size 40 in bytes.
 |
 V
 
-Bencode_Lib::BNode size 8 in bytes.
+Bencode_Lib::Node size 8 in bytes.
 Bencode_Lib::Dictionary size 32 in bytes.
 Bencode_Lib::Dictionary Entry size 16 in bytes.
 Bencode_Lib::List size 32 in bytes.

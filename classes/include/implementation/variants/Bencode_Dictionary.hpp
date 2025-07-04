@@ -4,22 +4,22 @@ namespace Bencode_Lib {
 
 // Dictionary entry
 struct DictionaryEntry {
-  DictionaryEntry(const std::string_view key, BNode &&bNode)
-      : key(BNode::make<String>(key)), bNode(std::move(bNode)) {}
+  DictionaryEntry(const std::string_view key, Node &&bNode)
+      : key(Node::make<String>(key)), bNode(std::move(bNode)) {}
   [[nodiscard]] std::string_view getKey() {
     return static_cast<String &>(key.getVariant()).value();
   }
   [[nodiscard]] std::string_view getKey() const {
     return static_cast<const String &>(key.getVariant()).value();
   }
-  [[nodiscard]] BNode &getKeyBNode() { return key; }
-  [[nodiscard]] const BNode &getKeyBNode() const { return key; }
-  [[nodiscard]] BNode &getBNode() { return bNode; }
-  [[nodiscard]] const BNode &getBNode() const { return bNode; }
+  [[nodiscard]] Node &getKeyNode() { return key; }
+  [[nodiscard]] const Node &getKeyNode() const { return key; }
+  [[nodiscard]] Node &getNode() { return bNode; }
+  [[nodiscard]] const Node &getNode() const { return bNode; }
 
 private:
-  BNode key{};
-  BNode bNode{};
+  Node key{};
+  Node bNode{};
 };
 
 // Dictionary variant
@@ -43,7 +43,7 @@ struct Dictionary : Variant {
   [[nodiscard]] bool contains(const std::string_view key) const {
     try {
       findEntryWithKey(bNodeDictionary, key);
-    } catch ([[maybe_unused]] const BNode::Error &error) {
+    } catch ([[maybe_unused]] const Node::Error &error) {
       return false;
     }
     return true;
@@ -52,11 +52,11 @@ struct Dictionary : Variant {
     return static_cast<int>(bNodeDictionary.size());
   }
 
-  BNode &operator[](const std::string_view key) {
-    return findEntryWithKey(bNodeDictionary, key)->getBNode();
+  Node &operator[](const std::string_view key) {
+    return findEntryWithKey(bNodeDictionary, key)->getNode();
   }
-  const BNode &operator[](const std::string_view key) const {
-    return findEntryWithKey(bNodeDictionary, key)->getBNode();
+  const Node &operator[](const std::string_view key) const {
+    return findEntryWithKey(bNodeDictionary, key)->getNode();
   }
 
   [[nodiscard]] Entries &value() { return bNodeDictionary; }
@@ -72,7 +72,7 @@ private:
           return entry.getKey() == key;
         });
     if (it == dictionary.end()) {
-      throw BNode::Error("Invalid key used in dictionary.");
+      throw Node::Error("Invalid key used in dictionary.");
     }
     return it;
   }

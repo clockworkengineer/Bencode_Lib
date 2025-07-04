@@ -66,7 +66,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     bencode["answer"]["everything"] = 42;
     bencode["list"] = {1, 0, 2};
     bencode["dictionary"] = {{"currency", "USD"},
-                             {"value", BNode{1, 2, 3, 4, 5}}};
+                             {"value", Node{1, 2, 3, 4, 5}}};
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(
@@ -84,7 +84,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     bencode["answer"]["everything"] = 42;
     bencode["list"] = {1, 0, 2};
     bencode["dictionary"] = {{"currency", "USD"},
-                             {"value", BNode{{"key1", 22}, {"key2", 99.899}}}};
+                             {"value", Node{{"key1", 22}, {"key2", 99.899}}}};
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(
@@ -108,16 +108,16 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
   SECTION(
       "Dictionary creation completely using a nested initializer list assignment.",
       "[Bencode][Create][Complex][Initializer]") {
-    // Note: For the moment has to explicitly uses BNode to create a
+    // Note: For the moment has to explicitly uses Node to create a
     // nested dictionary/list
     Bencode bencode = {
         {"pi", 3.141},
         {"happy", true},
         {"name", "Niels"},
         {"nothing", nullptr},
-        {"answer", BNode{{"everything", 42}}},
-        {"list", BNode{1, 0, 2}},
-        {"dictionary", BNode{{"currency", "USD"}, {"value", 42.99}}}};
+        {"answer", Node{{"everything", 42}}},
+        {"list", Node{1, 0, 2}},
+        {"dictionary", Node{{"currency", "USD"}, {"value", 42.99}}}};
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(
@@ -141,16 +141,16 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
   }
   SECTION("Object creation completely using an nested initializer list.",
           "[Bencode][Create][Complex][Initializer]") {
-    // Note: For the moment has to explicitly uses BNode to create a
+    // Note: For the moment has to explicitly uses Node to create a
     // nested dictionary/list
     Bencode bencode{
         {"pi", 3.141},
         {"happy", true},
         {"name", "Niels"},
         {"nothing", nullptr},
-        {"answer", BNode{{"everything", 42}}},
-        {"list", BNode{1, 0, 2}},
-        {"dictionary", BNode{{"currency", "USD"}, {"value", 42.99}}}};
+        {"answer", Node{{"everything", 42}}},
+        {"list", Node{1, 0, 2}},
+        {"dictionary", Node{{"currency", "USD"}, {"value", 42.99}}}};
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(

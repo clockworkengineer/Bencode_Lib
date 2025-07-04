@@ -18,14 +18,14 @@ public:
   ~YAML_Stringify() override = default;
 
   /// <summary>
-  /// Recursively traverse BNode structure encoding it into YAML string on
+  /// Recursively traverse Node structure encoding it into YAML string on
   /// the destination stream passed in.
   /// </summary>
-  /// <param name="bNode">BNode structure to be traversed.</param>
+  /// <param name="bNode">Node structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified YAML.</param>
-  void stringify(const BNode &bNode, IDestination &destination) const override {
+  void stringify(const Node &bNode, IDestination &destination) const override {
     destination.add("---\n");
-    stringifyBNodes(bNode, destination, 0);
+    stringifyNodes(bNode, destination, 0);
     destination.add("...\n");
   }
 
@@ -37,7 +37,7 @@ private:
     }
     return std::string("");
   }
-  static void stringifyBNodes(const BNode &bNode, IDestination &destination,
+  static void stringifyNodes(const Node &bNode, IDestination &destination,
                   const unsigned long indent) {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination, indent);
@@ -49,43 +49,43 @@ private:
       stringifyString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
     } else {
-      throw Error("Unknown BNode type encountered during encoding.");
+      throw Error("Unknown Node type encountered during encoding.");
     }
   }
-  static void stringifyDictionary(const BNode &bNode, IDestination &destination,
+  static void stringifyDictionary(const Node &bNode, IDestination &destination,
                         const unsigned long indent)  {
     if (!BRef<Dictionary>(bNode).value().empty()) {
-      for (const auto &entryBNode : BRef<Dictionary>(bNode).value()) {
+      for (const auto &entryNode : BRef<Dictionary>(bNode).value()) {
         destination.add(calculateIndent(destination, indent));
         destination.add("\"");
-        destination.add(BRef<String>(entryBNode.getKeyBNode()).value());
+        destination.add(BRef<String>(entryNode.getKeyNode()).value());
         destination.add("\"");
         destination.add(": ");
-        if (isA<List>(entryBNode.getBNode()) ||
-            isA<Dictionary>(entryBNode.getBNode())) {
+        if (isA<List>(entryNode.getNode()) ||
+            isA<Dictionary>(entryNode.getNode())) {
           destination.add('\n');
         }
-        stringifyBNodes(entryBNode.getBNode(), destination, indent + 2);
+        stringifyNodes(entryNode.getNode(), destination, indent + 2);
       }
     } else {
       destination.add("{}\n");
     }
   }
-  static void stringifyList(const BNode &bNode, IDestination &destination,
+  static void stringifyList(const Node &bNode, IDestination &destination,
                   const unsigned long indent) {
     if (!BRef<List>(bNode).value().empty()) {
       for (const auto &bNodeNext : BRef<List>(bNode).value()) {
         destination.add(calculateIndent(destination, indent) + "- ");
-        stringifyBNodes(bNodeNext, destination, indent + 2);
+        stringifyNodes(bNodeNext, destination, indent + 2);
       }
     } else {
       destination.add("[]\n");
     }
   }
-  static void stringifyInteger(const BNode &bNode, IDestination &destination) {
+  static void stringifyInteger(const Node &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()) + "\n");
   }
-  static void stringifyString(const BNode &bNode, IDestination &destination)  {
+  static void stringifyString(const Node &bNode, IDestination &destination)  {
     destination.add("\"" + yamlTranslator->to(BRef<String>(bNode).value()) +
                     "\"" + "\n");
   }

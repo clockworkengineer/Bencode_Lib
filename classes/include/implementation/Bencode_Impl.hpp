@@ -15,33 +15,33 @@ public:
   Bencode_Impl(Bencode_Impl &&other) = delete;
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
   ~Bencode_Impl();
-  // Parse Bencoded source into BNode tree
+  // Parse Bencoded source into Node tree
   void parse(ISource &source);
-  // Stringify BNode tree
+  // Stringify Node tree
   void stringify(IDestination &destination) const;
   // Bencode version
   static std::string version();
-  // Return root BNode of the tree
-  [[nodiscard]] BNode &root() { return bNodeRoot; }
-  [[nodiscard]] const BNode &root() const { return bNodeRoot; }
-  // Traverse BNode tree
+  // Return root Node of the tree
+  [[nodiscard]] Node &root() { return bNodeRoot; }
+  [[nodiscard]] const Node &root() const { return bNodeRoot; }
+  // Traverse Node tree
   void traverse(IAction &action);
   void traverse(IAction &action) const;
   // Search for Bencode dictionary entry with a given key
-  BNode &operator[](const std::string_view &key);
-  const BNode &operator[](const std::string_view &key) const;
+  Node &operator[](const std::string_view &key);
+  const Node &operator[](const std::string_view &key) const;
   // Get Bencode list element at index
-  BNode &operator[](std::size_t index);
-  const BNode &operator[](std::size_t index) const;
+  Node &operator[](std::size_t index);
+  const Node &operator[](std::size_t index) const;
   // Read/Write Bencode from a file
   static std::string fromFile(const std::string_view &fileName);
   static void toFile(const std::string_view &fileName, const std::string_view &bencodeString);
 
 private:
-  // Traverse Bencode BNode tree
-  template <typename T> static void traverseBNodes(T &bNode, IAction &action);
-  // Root of BNode tree
-  BNode bNodeRoot;
+  // Traverse Bencode Node tree
+  template <typename T> static void traverseNodes(T &bNode, IAction &action);
+  // Root of Node tree
+  Node bNodeRoot;
   // Bencode stringify
   std::unique_ptr<IStringify> bNodeStringify{};
   // Bencode parser
@@ -49,14 +49,14 @@ private:
 };
 
 /// <summary>
-/// Recursively traverse BNode tree calling IAction methods and possibly
+/// Recursively traverse Node tree calling IAction methods and possibly
 /// modifying the tree contents or even structure.
 /// </summary>
-/// <param name="bNode">BNode tree to be traversed.</param>
+/// <param name="bNode">Node tree to be traversed.</param>
 /// <param name="action">Action methods to call during traversal.</param>
 template <typename T>
-void Bencode_Impl::traverseBNodes(T &bNode, IAction &action) {
-  action.onBNode(bNode);
+void Bencode_Impl::traverseNodes(T &bNode, IAction &action) {
+  action.onNode(bNode);
   if (isA<Integer>(bNode)) {
     action.onInteger(bNode);
   } else if (isA<String>(bNode)) {
@@ -64,15 +64,15 @@ void Bencode_Impl::traverseBNodes(T &bNode, IAction &action) {
   } else if (isA<Dictionary>(bNode)) {
     action.onDictionary(bNode);
     for (auto &entry : BRef<Dictionary>(bNode).value()) {
-      traverseBNodes(entry.getBNode(), action);
+      traverseNodes(entry.getNode(), action);
     }
   } else if (isA<List>(bNode)) {
     action.onList(bNode);
     for (auto &entry : BRef<List>(bNode).value()) {
-      traverseBNodes(entry, action);
+      traverseNodes(entry, action);
     }
   } else if (isA<Hole>(bNode)) {
-    throw Error("Unknown BNode type encountered during tree traversal.");
+    throw Error("Unknown Node type encountered during tree traversal.");
   }
 }
 

@@ -10,13 +10,13 @@ class Bencode_Analyzer : public Bencode_Lib::IAction {
 public:
   Bencode_Analyzer() = default;
   ~Bencode_Analyzer() override = default;
-  // Add BNode details to analysis
+  // Add Node details to analysis
   void
-  onBNode([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
+  onNode([[maybe_unused]] const Bencode_Lib::Node &bNode) override {
     totalNodes++;
   }
   // Add string details to analysis
-  void onString(const Bencode_Lib::BNode &bNode) override {
+  void onString(const Bencode_Lib::Node &bNode) override {
     const auto &bNodeString = BRef<Bencode_Lib::String>(bNode);
     totalStrings++;
     sizeInBytes += sizeof(Bencode_Lib::String);
@@ -26,22 +26,22 @@ public:
   }
   // Add integer details to analysis
   void
-  onInteger([[maybe_unused]] const Bencode_Lib::BNode &bNode) override {
+  onInteger([[maybe_unused]] const Bencode_Lib::Node &bNode) override {
     totalIntegers++;
     sizeInBytes += sizeof(Bencode_Lib::Integer);
   }
   // Add list details to analysis
-  void onList(const Bencode_Lib::BNode &bNode) override {
+  void onList(const Bencode_Lib::Node &bNode) override {
     const auto &bNodeList = BRef<Bencode_Lib::List>(bNode);
     totalLists++;
     sizeInBytes += sizeof(Bencode_Lib::List);
     maxListSize = std::max(bNodeList.size(), static_cast<int>(maxListSize));
     for ([[maybe_unused]] auto &bNodeEntry : bNodeList.value()) {
-      sizeInBytes += sizeof(Bencode_Lib::BNode);
+      sizeInBytes += sizeof(Bencode_Lib::Node);
     }
   }
   // Add dictionary details to analysis
-  void onDictionary(const Bencode_Lib::BNode &bNode) override {
+  void onDictionary(const Bencode_Lib::Node &bNode) override {
     const auto &bNodeDictionary =
         BRef<Bencode_Lib::Dictionary>(bNode);
     totalDictionarys++;
@@ -85,11 +85,11 @@ public:
     os << "Bencode Tree contains " << totalIntegers << " integers.\n";
     return (os.str());
   }
-  static std::string dumpBNodeSizes() {
+  static std::string dumpNodeSizes() {
     std::stringstream os;
-    os << "\n--------------------Bencode_Lib::BNode "
+    os << "\n--------------------Bencode_Lib::Node "
           "Sizes---------------------\n";
-    os << "Bencode_Lib::BNode size " << sizeof(Bencode_Lib::BNode)
+    os << "Bencode_Lib::Node size " << sizeof(Bencode_Lib::Node)
        << " in bytes.\n";
     os << "Bencode_Lib::Dictionary size " << sizeof(Bencode_Lib::Dictionary)
        << " in bytes.\n";

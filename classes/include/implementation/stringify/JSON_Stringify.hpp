@@ -18,17 +18,17 @@ public:
   ~JSON_Stringify() override = default;
 
   /// <summary>
-  /// Recursively traverse BNode structure encoding it into JSON string on
+  /// Recursively traverse Node structure encoding it into JSON string on
   /// the destination stream passed in.
   /// </summary>
-  /// <param name="bNode">BNode structure to be traversed.</param>
+  /// <param name="bNode">Node structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified JSON.</param>
-  void stringify(const BNode &bNode, IDestination &destination) const override {
-    stringifyBNodes(bNode, destination);
+  void stringify(const Node &bNode, IDestination &destination) const override {
+    stringifyNodes(bNode, destination);
   }
 
 private:
-  static void stringifyBNodes(const BNode &bNode, IDestination &destination)   {
+  static void stringifyNodes(const Node &bNode, IDestination &destination)   {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
@@ -39,36 +39,36 @@ private:
       stringifyString(bNode, destination);
     } else if (isA<Hole>(bNode)) {
     } else {
-      throw Error("Unknown BNode type encountered during encoding.");
+      throw Error("Unknown Node type encountered during encoding.");
     }
   }
-  static void stringifyDictionary(const BNode &bNode, IDestination &destination)  {
+  static void stringifyDictionary(const Node &bNode, IDestination &destination)  {
     destination.add('{');
     int commas = BRef<Dictionary>(bNode).value().size();
     for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
       destination.add("\"");
       destination.add(bNodeNext.getKey());
       destination.add("\" : ");
-      stringifyBNodes(bNodeNext.getBNode(), destination);
+      stringifyNodes(bNodeNext.getNode(), destination);
       if (--commas > 0)
         destination.add(",");
     }
     destination.add('}');
   }
-  static void stringifyList(const BNode &bNode, IDestination &destination)  {
+  static void stringifyList(const Node &bNode, IDestination &destination)  {
     int commas = BRef<List>(bNode).value().size();
     destination.add('[');
     for (const auto &bNodeNext : BRef<List>(bNode).value()) {
-      stringifyBNodes(bNodeNext, destination);
+      stringifyNodes(bNodeNext, destination);
       if (--commas > 0)
         destination.add(",");
     }
     destination.add(']');
   }
-  static void stringifyInteger(const BNode &bNode, IDestination &destination) {
+  static void stringifyInteger(const Node &bNode, IDestination &destination) {
     destination.add(std::to_string(BRef<Integer>(bNode).value()));
   }
-  static void stringifyString(const BNode &bNode, IDestination &destination)  {
+  static void stringifyString(const Node &bNode, IDestination &destination)  {
     destination.add("\"");
     destination.add(jsonTranslator->to(BRef<String>(bNode).value()));
     destination.add("\"");

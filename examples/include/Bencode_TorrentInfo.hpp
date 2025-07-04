@@ -176,7 +176,7 @@ inline std::string TorrentInfo::dump() {
   return (os.str());
 }
 /// <summary>
-/// Load torrent file into a BNode tree.
+/// Load torrent file into a Node tree.
 /// </summary>
 /// <param name="fileName">Torrent file name</param>
 inline void TorrentInfo::load(const std::string &fileName) {

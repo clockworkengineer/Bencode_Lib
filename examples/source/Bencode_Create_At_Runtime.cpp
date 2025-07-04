@@ -36,24 +36,24 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     bStringify["list"] = {1, 0, 2};
     // add another object (using an initializer list of pairs)
     bStringify["object"] = {{"currency", "USD"}, {"value", 42.99}};
-    // add another object that has a nested array (BNode{})
+    // add another object that has a nested array (Node{})
     bStringify["object2"] = {{"currency", "USD"},
-                          {"array", be::BNode{23.22, 33, 55, 99.99}}};
+                          {"array", be::Node{23.22, 33, 55, 99.99}}};
     be::BufferDestination destination;
     bStringify.stringify(destination);
     PLOG_INFO << destination.toString();
     destination.clear();
     // create Bencode using an initializer list and nesting array/objects using
-    // BNode{}.
+    // Node{}.
     const be::Bencode bStringify2 = {
         {"pi", 3.141},
         {"sad", true},
         {"first_name", "Niels"},
         {"nothing", nullptr},
-        {"the_answer", be::BNode{{"everything", 42}}},
-        {"list", be::BNode{1, 0, 2}},
-        {"object", be::BNode{{"currency", "USD"},
-                             {"value", be::BNode{23.22, 33, 55, 99.99}}}}};
+        {"the_answer", be::Node{{"everything", 42}}},
+        {"list", be::Node{1, 0, 2}},
+        {"object", be::Node{{"currency", "USD"},
+                             {"value", be::Node{23.22, 33, 55, 99.99}}}}};
     bStringify2.stringify(destination);
     PLOG_INFO << destination.toString();
   } catch (std::exception &ex) {

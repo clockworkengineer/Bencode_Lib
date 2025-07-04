@@ -27,7 +27,7 @@ class ISource;
 class IDestination;
 class IAction;
 class Bencode_Impl;
-struct BNode;
+struct Node;
 
 class Bencode {
 
@@ -37,13 +37,13 @@ public:
   // Bencode maximum string type
   using StringType = std::string;
   // Bencode maximum list type
-  using ListType = std::vector<BNode>;
+  using ListType = std::vector<Node>;
   // Bencode maximum dictionary type
-  using DictionaryType = std::map<std::string, BNode>;
-  // Possible Bencode BNode initializer types
+  using DictionaryType = std::map<std::string, Node>;
+  // Possible Bencode Node initializer types
   using InitializerListTypes =
       std::variant<int, long, long long, float, double, long double, bool,
-                   std::string, std::nullptr_t, BNode>;
+                   std::string, std::nullptr_t, Node>;
   // List initializer list
   using ListInitializerType = std::initializer_list<InitializerListTypes>;
   // Dictionary initializer list
@@ -63,26 +63,26 @@ public:
   Bencode(Bencode &&other) = delete;
   Bencode &operator=(Bencode &&other) = delete;
   ~Bencode();
-  // Parse Bencode into BNode tree
+  // Parse Bencode into Node tree
   void parse(ISource &source) const;
   void parse(ISource &&source) const;
-  // Stringify Bencode from BNode tree
+  // Stringify Bencode from Node tree
   void stringify(IDestination &destination) const;
   void stringify(IDestination &&destination) const;
   // Return Bencode_Lib version
   [[nodiscard]] static std::string version();
-  // Return BNode tree root
-  [[nodiscard]] BNode &root();
-  [[nodiscard]] const BNode &root() const;
+  // Return Node tree root
+  [[nodiscard]] Node &root();
+  [[nodiscard]] const Node &root() const;
   // Traverse Bencode tree
   [[maybe_unused]] void traverse(IAction &action);
   void traverse(IAction &action) const;
   // Search for Bencode dictionary entry with a given key
-  BNode &operator[](const std::string_view &key);
-  const BNode &operator[](const std::string_view &key) const;
+  Node &operator[](const std::string_view &key);
+  const Node &operator[](const std::string_view &key) const;
   // Get Bencode list entry at index
-  BNode &operator[](std::size_t index);
-  const BNode &operator[](std::size_t index) const;
+  Node &operator[](std::size_t index);
+  const Node &operator[](std::size_t index) const;
   // Read/Write Bencode from the file
   static std::string fromFile(const std::string_view &fileName);
   static void toFile(const std::string_view &fileName, const std::string_view &bencodeString);
