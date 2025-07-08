@@ -7,7 +7,7 @@ TEST_CASE("Bencode for parse of a table of integer test data",
       table<std::string, Bencode::IntegerType>({{"i277e", 277}, {"i32767e", 32767}}));
   BufferSource source{testInput};
   bEncoder.parse(source);
-  REQUIRE(BRef<Integer>(bEncoder.root()).value() == expected);
+  REQUIRE(NRef<Integer>(bEncoder.root()).value() == expected);
 }
 TEST_CASE("Bencode for parse of a table of string test data",
           "[Bencode][Parse][String]") {
@@ -16,7 +16,7 @@ TEST_CASE("Bencode for parse of a table of string test data",
       {{"13:qwertyuiopasd", "qwertyuiopasd"}, {"6:mnbvcx", "mnbvcx"}}));
   BufferSource source{testInput};
   bEncoder.parse(source);
-  REQUIRE(BRef<String>(bEncoder.root()).value() == expected);
+  REQUIRE(NRef<String>(bEncoder.root()).value() == expected);
 }
 TEST_CASE("Parse torrent files", "[Bencode][Parse][Torrents]") {
   const Bencode bEncoder;

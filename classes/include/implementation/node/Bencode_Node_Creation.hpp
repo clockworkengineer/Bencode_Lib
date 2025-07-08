@@ -54,14 +54,14 @@ static Node typeToNode(const Bencode::InitializerListTypes &type) {
 inline Node::Node(const Bencode::ListInitializerType &list) {
   *this = make<List>();
   for (const auto &entry : list) {
-    BRef<List>(*this).add(typeToNode(entry));
+    NRef<List>(*this).add(typeToNode(entry));
   }
 }
 // Construct Node Dictionary from the initializer list
 inline Node::Node(const Bencode::DictionaryInitializerType &dictionary) {
   *this = make<Dictionary>();
   for (const auto &[fst, snd] : dictionary) {
-    BRef<Dictionary>(*this).add(
+    NRef<Dictionary>(*this).add(
         Dictionary::Entry(fst, typeToNode(snd)));
   }
 }

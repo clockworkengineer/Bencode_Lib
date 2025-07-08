@@ -84,15 +84,15 @@ Node Default_Parser::parseDictionary(ISource &source, const unsigned long parser
   std::string lastKey{};
   source.next();
   while (source.more() && source.current() != 'e') {
-    const std::string_view key = { BRef<String>(parseString(source,parserDepth)).value()} ;
+    const std::string_view key = { NRef<String>(parseString(source,parserDepth)).value()} ;
     // Check keys in lexical order
     if (lastKey > key) {
       throw SyntaxError("Dictionary keys not in sequence.");
     }
     lastKey = key;
     // Check key not duplicate and insert
-    if (!BRef<Dictionary>(dictionary).contains(key)) {
-      BRef<Dictionary>(dictionary)
+    if (!NRef<Dictionary>(dictionary).contains(key)) {
+      NRef<Dictionary>(dictionary)
           .add(Dictionary::Entry(key, parseNodes(source, parserDepth+1)));
     } else {
       throw SyntaxError("Duplicate dictionary key.");
@@ -111,7 +111,7 @@ Node Default_Parser::parseList(ISource &source, const unsigned long parserDepth)
   Node list = Node::make<List>();
   source.next();
   while (source.more() && source.current() != 'e') {
-    BRef<List>(list).add(parseNodes(source, parserDepth+1));
+    NRef<List>(list).add(parseNodes(source, parserDepth+1));
   }
   confirmBoundary(source, 'e');
   return list;

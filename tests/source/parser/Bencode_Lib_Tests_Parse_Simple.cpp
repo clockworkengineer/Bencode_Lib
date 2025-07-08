@@ -11,22 +11,22 @@ TEST_CASE("Bencode for parse of simple types (integer, string) ",
   SECTION("Parse an integer (266).", "[Bencode][Parse][Integer]") {
     BufferSource source{"i266e"};
     bStringify.parse(source);
-    REQUIRE(BRef<Integer>(bStringify.root()).value() == 266);
+    REQUIRE(NRef<Integer>(bStringify.root()).value() == 266);
   }
   SECTION("Parse an integer (1000).", "[Bencode][Parse][Integer]") {
     BufferSource source{"i1000e"};
     bStringify.parse(source);
-    REQUIRE(BRef<Integer>(bStringify.root()).value() == 1000);
+    REQUIRE(NRef<Integer>(bStringify.root()).value() == 1000);
   }
   SECTION("Parse an integer (0).", "[Bencode][Parse][Integer]") {
     BufferSource source{"i0e"};
     bStringify.parse(source);
-    REQUIRE(BRef<Integer>(bStringify.root()).value() == 0);
+    REQUIRE(NRef<Integer>(bStringify.root()).value() == 0);
   }
   SECTION("Parse an negative integer (-666).", "[Bencode][Parse][Integer]") {
     BufferSource source{"i-666e"};
     bStringify.parse(source);
-    REQUIRE(BRef<Integer>(bStringify.root()).value() == -666);
+    REQUIRE(NRef<Integer>(bStringify.root()).value() == -666);
   }
   SECTION("Parse an negative zero (-0) is a syntax error",
           "[Bencode][Parse][Integer]") {
@@ -44,7 +44,7 @@ TEST_CASE("Bencode for parse of simple types (integer, string) ",
           "[Bencode][Parse][Integer]") {
     BufferSource source{"i9223372036854775807e"};
     bStringify.parse(source);
-    REQUIRE(BRef<Integer>(bStringify.root()).value() ==
+    REQUIRE(NRef<Integer>(bStringify.root()).value() ==
             std::numeric_limits<Bencode::IntegerType>::max());
   }
   SECTION("Parse out of range positive 64 bit integer (9223372036854775808)."
@@ -56,7 +56,7 @@ TEST_CASE("Bencode for parse of simple types (integer, string) ",
           "[Bencode][Parse][Integer]") {
     BufferSource source{"i-9223372036854775808e"};
     bStringify.parse(source);
-    REQUIRE(BRef<Integer>(bStringify.root()).value() ==
+    REQUIRE(NRef<Integer>(bStringify.root()).value() ==
             std::numeric_limits<Bencode::IntegerType>::min());
   }
   SECTION("Parse out of range negative 64 bit integer (-9223372036854775809)."
@@ -72,18 +72,18 @@ TEST_CASE("Bencode for parse of simple types (integer, string) ",
   SECTION("Parse a string ('qwertyuiopas').", "[Bencode][Parse][String]") {
     BufferSource source{"12:qwertyuiopas"};
     bStringify.parse(source);
-    REQUIRE(BRef<String>(bStringify.root()).value() == "qwertyuiopas");
+    REQUIRE(NRef<String>(bStringify.root()).value() == "qwertyuiopas");
   }
   SECTION("Parse a string ('abcdefghijklmnopqrstuvwxyz').",
           "[Bencode][Parse][String]") {
     BufferSource source{"26:abcdefghijklmnopqrstuvwxyz"};
     bStringify.parse(source);
-    REQUIRE(BRef<String>(bStringify.root()).value() ==
+    REQUIRE(NRef<String>(bStringify.root()).value() ==
             "abcdefghijklmnopqrstuvwxyz");
   }
   SECTION("Parse a string with zero length", "[Bencode][Parse][String]") {
     REQUIRE_NOTHROW(bStringify.parse(BufferSource{"0:"}));
-    REQUIRE(BRef<String>(bStringify.root()).value().empty());
+    REQUIRE(NRef<String>(bStringify.root()).value().empty());
   }
   SECTION("Parse a string with all possible 256 characters.",
           "[Bencode][Parse][String]") {
@@ -92,6 +92,6 @@ TEST_CASE("Bencode for parse of simple types (integer, string) ",
       str.push_back(static_cast<char>(i));
     }
     bStringify.parse(BufferSource("256:" + str));
-    REQUIRE(BRef<String>(bStringify.root()).value() == str);
+    REQUIRE(NRef<String>(bStringify.root()).value() == str);
   }
 }

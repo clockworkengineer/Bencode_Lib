@@ -69,7 +69,7 @@ Node &Bencode_Impl::operator[](const std::string_view &key) {
     }
     return bNodeRoot[key];
   } catch ([[maybe_unused]] Node::Error &error) {
-    BRef<Dictionary>(bNodeRoot).add(
+    NRef<Dictionary>(bNodeRoot).add(
         Dictionary::Entry(key, Node::make<Hole>()));
     return bNodeRoot[key];
   }
@@ -86,7 +86,7 @@ Node &Bencode_Impl::operator[](const std::size_t index) {
     }
     return bNodeRoot[index];
   } catch ([[maybe_unused]] Node::Error &error) {
-    BRef<List>(bNodeRoot).resize(index);
+    NRef<List>(bNodeRoot).resize(index);
     return bNodeRoot[index];
   }
 }

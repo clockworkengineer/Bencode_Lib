@@ -44,8 +44,8 @@ private:
   }
   static void stringifyDictionary(const Node &bNode, IDestination &destination)  {
     destination.add('{');
-    int commas = BRef<Dictionary>(bNode).value().size();
-    for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
+    int commas = NRef<Dictionary>(bNode).value().size();
+    for (const auto &bNodeNext : NRef<Dictionary>(bNode).value()) {
       destination.add("\"");
       destination.add(bNodeNext.getKey());
       destination.add("\" : ");
@@ -56,9 +56,9 @@ private:
     destination.add('}');
   }
   static void stringifyList(const Node &bNode, IDestination &destination)  {
-    int commas = BRef<List>(bNode).value().size();
+    int commas = NRef<List>(bNode).value().size();
     destination.add('[');
-    for (const auto &bNodeNext : BRef<List>(bNode).value()) {
+    for (const auto &bNodeNext : NRef<List>(bNode).value()) {
       stringifyNodes(bNodeNext, destination);
       if (--commas > 0)
         destination.add(",");
@@ -66,11 +66,11 @@ private:
     destination.add(']');
   }
   static void stringifyInteger(const Node &bNode, IDestination &destination) {
-    destination.add(std::to_string(BRef<Integer>(bNode).value()));
+    destination.add(std::to_string(NRef<Integer>(bNode).value()));
   }
   static void stringifyString(const Node &bNode, IDestination &destination)  {
     destination.add("\"");
-    destination.add(jsonTranslator->to(BRef<String>(bNode).value()));
+    destination.add(jsonTranslator->to(NRef<String>(bNode).value()));
     destination.add("\"");
   }
 

@@ -63,12 +63,12 @@ void Bencode_Impl::traverseNodes(T &bNode, IAction &action) {
     action.onString(bNode);
   } else if (isA<Dictionary>(bNode)) {
     action.onDictionary(bNode);
-    for (auto &entry : BRef<Dictionary>(bNode).value()) {
+    for (auto &entry : NRef<Dictionary>(bNode).value()) {
       traverseNodes(entry.getNode(), action);
     }
   } else if (isA<List>(bNode)) {
     action.onList(bNode);
-    for (auto &entry : BRef<List>(bNode).value()) {
+    for (auto &entry : NRef<List>(bNode).value()) {
       traverseNodes(entry, action);
     }
   } else if (isA<Hole>(bNode)) {

@@ -45,7 +45,7 @@ private:
   }
   static void stringifyDictionary(const Node &bNode, IDestination &destination)  {
     destination.add('d');
-    for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
+    for (const auto &bNodeNext : NRef<Dictionary>(bNode).value()) {
       destination.add(std::to_string(bNodeNext.getKey().length()) + ":");
       destination.add(bNodeNext.getKey());
       stringifyNodes(bNodeNext.getNode(), destination);
@@ -54,21 +54,21 @@ private:
   }
   static void stringifyList(const Node &bNode, IDestination &destination)  {
     destination.add('l');
-    for (const auto &bNodeNext : BRef<List>(bNode).value()) {
+    for (const auto &bNodeNext : NRef<List>(bNode).value()) {
       stringifyNodes(bNodeNext, destination);
     }
     destination.add('e');
   }
   static void stringifyInteger(const Node &bNode, IDestination &destination) {
     destination.add('i');
-    destination.add(std::to_string(BRef<Integer>(bNode).value()));
+    destination.add(std::to_string(NRef<Integer>(bNode).value()));
     destination.add('e');
   }
   static void stringifyString(const Node &bNode, IDestination &destination) {
     destination.add(
-        std::to_string(static_cast<int>(BRef<String>(bNode).value().length())) +
+        std::to_string(static_cast<int>(NRef<String>(bNode).value().length())) +
         ":");
-    destination.add(BRef<String>(bNode).value());
+    destination.add(NRef<String>(bNode).value());
   }
 
   [[maybe_unused]] std::unique_ptr<ITranslator> bencodeTranslator;

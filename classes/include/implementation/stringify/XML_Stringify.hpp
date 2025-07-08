@@ -47,7 +47,7 @@ private:
     }
   }
   static void stringifyDictionary(const Node &bNode, IDestination &destination)  {
-    for (const auto &bNodeNext : BRef<Dictionary>(bNode).value()) {
+    for (const auto &bNodeNext : NRef<Dictionary>(bNode).value()) {
       auto elementName = std::string(bNodeNext.getKey());
       std::ranges::replace(elementName, ' ', '-');
       destination.add("<" + elementName + ">");
@@ -56,8 +56,8 @@ private:
     }
   }
   static void stringifyList(const Node &bNode, IDestination &destination)  {
-    if (BRef<List>(bNode).value().size() > 1) {
-      for (const auto &bNodeNext : BRef<List>(bNode).value()) {
+    if (NRef<List>(bNode).value().size() > 1) {
+      for (const auto &bNodeNext : NRef<List>(bNode).value()) {
         destination.add("<Row>");
         stringifyNodes(bNodeNext, destination);
         destination.add("</Row>");
@@ -68,10 +68,10 @@ private:
     }
   }
   static void stringifyInteger(const Node &bNode, IDestination &destination) {
-    destination.add(std::to_string(BRef<Integer>(bNode).value()));
+    destination.add(std::to_string(NRef<Integer>(bNode).value()));
   }
   static void stringifyString(const Node &bNode, IDestination &destination)  {
-    destination.add(xmlTranslator->to(BRef<String>(bNode).value()));
+    destination.add(xmlTranslator->to(NRef<String>(bNode).value()));
   }
 
   inline static std::unique_ptr<ITranslator> xmlTranslator;

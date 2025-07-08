@@ -54,11 +54,11 @@ private:
   }
   static void stringifyDictionary(const Node &bNode, IDestination &destination,
                         const unsigned long indent)  {
-    if (!BRef<Dictionary>(bNode).value().empty()) {
-      for (const auto &entryNode : BRef<Dictionary>(bNode).value()) {
+    if (!NRef<Dictionary>(bNode).value().empty()) {
+      for (const auto &entryNode : NRef<Dictionary>(bNode).value()) {
         destination.add(calculateIndent(destination, indent));
         destination.add("\"");
-        destination.add(BRef<String>(entryNode.getKeyNode()).value());
+        destination.add(NRef<String>(entryNode.getKeyNode()).value());
         destination.add("\"");
         destination.add(": ");
         if (isA<List>(entryNode.getNode()) ||
@@ -73,8 +73,8 @@ private:
   }
   static void stringifyList(const Node &bNode, IDestination &destination,
                   const unsigned long indent) {
-    if (!BRef<List>(bNode).value().empty()) {
-      for (const auto &bNodeNext : BRef<List>(bNode).value()) {
+    if (!NRef<List>(bNode).value().empty()) {
+      for (const auto &bNodeNext : NRef<List>(bNode).value()) {
         destination.add(calculateIndent(destination, indent) + "- ");
         stringifyNodes(bNodeNext, destination, indent + 2);
       }
@@ -83,10 +83,10 @@ private:
     }
   }
   static void stringifyInteger(const Node &bNode, IDestination &destination) {
-    destination.add(std::to_string(BRef<Integer>(bNode).value()) + "\n");
+    destination.add(std::to_string(NRef<Integer>(bNode).value()) + "\n");
   }
   static void stringifyString(const Node &bNode, IDestination &destination)  {
-    destination.add("\"" + yamlTranslator->to(BRef<String>(bNode).value()) +
+    destination.add("\"" + yamlTranslator->to(NRef<String>(bNode).value()) +
                     "\"" + "\n");
   }
 

@@ -8,7 +8,7 @@ TEST_CASE("Check R-Value reference stringify/parse.",
     bStringify.parse(BufferSource{"i45500e"});
     bStringify.stringify(
         BufferDestination{}); // Does nothing as sink (for completeness)
-    REQUIRE(BRef<Integer>((bStringify.root())).value() == 45500);
+    REQUIRE(NRef<Integer>((bStringify.root())).value() == 45500);
   }
   SECTION("Stringify/Parse both with R-Value reference (File).",
           "[Bencode][Node][R-alue Reference]") {

@@ -41,11 +41,11 @@ template <typename T> void CheckNodeType(const Node &bNode) {
     }
   }
 }
-template <typename T> T &BRef(Node &bNode) {
+template <typename T> T &NRef(Node &bNode) {
   CheckNodeType<T>(bNode);
   return static_cast<T &>(bNode.getVariant());
 }
-template <typename T> const T &BRef(const Node &bNode) {
+template <typename T> const T &NRef(const Node &bNode) {
   CheckNodeType<T>(bNode);
   return static_cast<const T &>(bNode.getVariant());
 }

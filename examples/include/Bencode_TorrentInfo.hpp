@@ -41,13 +41,13 @@ struct TorrentInfo {
 private:
   static std::string_view getString(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
-      return (BRef<String>(bNode[field]).value());
+      return (NRef<String>(bNode[field]).value());
     }
     return ("");
   }
   static std::uint64_t getInteger(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
-      return (BRef<Integer>(bNode[field]).value());
+      return (NRef<Integer>(bNode[field]).value());
     }
     return (0);
   }
@@ -56,9 +56,9 @@ private:
     // string is encased in its own list for an extra level (bug ?).
     if (bNode.contains("announce-list")) {
       std::vector<std::string> servers;
-      for (auto &server : BRef<List>(bNode["announce-list"]).value()) {
-        for (auto &bNodeString : BRef<List>(server).value()) {
-          servers.push_back(std::string(BRef<String>(bNodeString).value()));
+      for (auto &server : NRef<List>(bNode["announce-list"]).value()) {
+        for (auto &bNodeString : NRef<List>(server).value()) {
+          servers.push_back(std::string(NRef<String>(bNodeString).value()));
         }
       }
       return (servers);
@@ -68,8 +68,8 @@ private:
   static std::string getFilePath(const Dictionary &bNode) {
     if (bNode.contains("path")) {
       std::filesystem::path path{};
-      for (auto &folder : BRef<List>(bNode["path"]).value()) {
-        path /= BRef<String>(folder).value();
+      for (auto &folder : NRef<List>(bNode["path"]).value()) {
+        path /= NRef<String>(folder).value();
       }
       return (path.string());
     }
@@ -78,9 +78,9 @@ private:
   static std::vector<TorrentInfo::FileDetails> getFilesList(const Dictionary &bNode) {
     if (bNode.contains("files")) {
       std::vector<FileDetails> fileList;
-      for (auto &file : BRef<List>(bNode["files"]).value()) {
-        fileList.emplace_back(getFilePath(BRef<Dictionary>(file)),
-                              getInteger(BRef<Dictionary>(file), "length"));
+      for (auto &file : NRef<List>(bNode["files"]).value()) {
+        fileList.emplace_back(getFilePath(NRef<Dictionary>(file)),
+                              getInteger(NRef<Dictionary>(file), "length"));
       }
       return (fileList);
     }
@@ -128,7 +128,7 @@ inline void TorrentInfo::populate() {
   if (!isA<Dictionary>(bStringify.root())) {
     throw Bencode_Lib::Error("Valid torrent file not found.");
   }
-  auto &bNodeTop = BRef<Dictionary>(bStringify.root());
+  auto &bNodeTop = NRef<Dictionary>(bStringify.root());
   announce = getString(bNodeTop, "announce");
   announceList = getAnnounceList(bNodeTop);
   encoding = getString(bNodeTop, "encoding");
@@ -136,7 +136,7 @@ inline void TorrentInfo::populate() {
   creationDate = getInteger(bNodeTop, "creation date");
   createdBy = getString(bNodeTop, "created by");
   if (bNodeTop.contains("info")) {
-    auto &bNodeInfo = BRef<Dictionary>(bNodeTop["info"]);
+    auto &bNodeInfo = NRef<Dictionary>(bNodeTop["info"]);
     attribute = getString(bNodeInfo, "attr");
     length = getInteger(bNodeInfo, "length");
     name = getString(bNodeInfo, "name");
