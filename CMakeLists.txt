@@ -79,6 +79,8 @@ target_include_directories(${BENCODE_LIBRARY_NAME} PUBLIC
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/variants
   ${PROJECT_SOURCE_DIR}/classes/include/implementation/translator
   ${PROJECT_BINARY_DIR})
+  
+target_precompile_headers(${BENCODE_LIBRARY_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h)
 
 # Add tests
 add_subdirectory(tests)

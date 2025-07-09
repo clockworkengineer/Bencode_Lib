@@ -1,0 +1,19 @@
+#pragma once
+
+#include <string>
+#include <memory>
+#include <variant>
+#include <stdexcept>
+#include <type_traits>
+#include <array>
+#include <limits>
+#include <functional>
+#include <map>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
+#include <utility>
+#include <cstring>
+#include <cstdint>
+#include <filesystem>
+#include <set>

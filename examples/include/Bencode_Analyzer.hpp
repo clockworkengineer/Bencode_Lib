@@ -1,8 +1,5 @@
 #pragma once
 
-#include <set>
-#include <sstream>
-
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
@@ -17,7 +14,7 @@ public:
   }
   // Add string details to analysis
   void onString(const Bencode_Lib::Node &bNode) override {
-    const auto &bNodeString = NRef<Bencode_Lib::String>(bNode);
+    const auto &bNodeString =Bencode_Lib::NRef<Bencode_Lib::String>(bNode);
     totalStrings++;
     sizeInBytes += sizeof(Bencode_Lib::String);
     sizeInBytes += bNodeString.value().size();
@@ -32,7 +29,7 @@ public:
   }
   // Add list details to analysis
   void onList(const Bencode_Lib::Node &bNode) override {
-    const auto &bNodeList = NRef<Bencode_Lib::List>(bNode);
+    const auto &bNodeList =Bencode_Lib::NRef<Bencode_Lib::List>(bNode);
     totalLists++;
     sizeInBytes += sizeof(Bencode_Lib::List);
     maxListSize = std::max(bNodeList.size(), static_cast<int>(maxListSize));
@@ -43,7 +40,7 @@ public:
   // Add dictionary details to analysis
   void onDictionary(const Bencode_Lib::Node &bNode) override {
     const auto &bNodeDictionary =
-        NRef<Bencode_Lib::Dictionary>(bNode);
+       Bencode_Lib::NRef<Bencode_Lib::Dictionary>(bNode);
     totalDictionarys++;
     sizeInBytes += sizeof(Bencode_Lib::Dictionary);
     maxDictionarySize =

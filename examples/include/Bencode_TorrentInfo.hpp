@@ -1,12 +1,5 @@
 #pragma once
 
-#include <cstdlib>
-#include <iostream>
-#include <filesystem>
-#include <string>
-#include <sstream>
-#include <utility>
-
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
@@ -41,13 +34,13 @@ struct TorrentInfo {
 private:
   static std::string_view getString(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
-      return (NRef<String>(bNode[field]).value());
+      return (Bencode_Lib::NRef<String>(bNode[field]).value());
     }
     return ("");
   }
   static std::uint64_t getInteger(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
-      return (NRef<Integer>(bNode[field]).value());
+      return (Bencode_Lib::NRef<Integer>(bNode[field]).value());
     }
     return (0);
   }
@@ -56,9 +49,9 @@ private:
     // string is encased in its own list for an extra level (bug ?).
     if (bNode.contains("announce-list")) {
       std::vector<std::string> servers;
-      for (auto &server : NRef<List>(bNode["announce-list"]).value()) {
-        for (auto &bNodeString : NRef<List>(server).value()) {
-          servers.push_back(std::string(NRef<String>(bNodeString).value()));
+      for (auto &server : Bencode_Lib::NRef<List>(bNode["announce-list"]).value()) {
+        for (auto &bNodeString : Bencode_Lib::NRef<List>(server).value()) {
+          servers.push_back(std::string(Bencode_Lib::NRef<String>(bNodeString).value()));
         }
       }
       return (servers);
@@ -68,8 +61,8 @@ private:
   static std::string getFilePath(const Dictionary &bNode) {
     if (bNode.contains("path")) {
       std::filesystem::path path{};
-      for (auto &folder : NRef<List>(bNode["path"]).value()) {
-        path /= NRef<String>(folder).value();
+      for (auto &folder : Bencode_Lib::NRef<List>(bNode["path"]).value()) {
+        path /= Bencode_Lib::NRef<String>(folder).value();
       }
       return (path.string());
     }
@@ -78,9 +71,9 @@ private:
   static std::vector<TorrentInfo::FileDetails> getFilesList(const Dictionary &bNode) {
     if (bNode.contains("files")) {
       std::vector<FileDetails> fileList;
-      for (auto &file : NRef<List>(bNode["files"]).value()) {
-        fileList.emplace_back(getFilePath(NRef<Dictionary>(file)),
-                              getInteger(NRef<Dictionary>(file), "length"));
+      for (auto &file : Bencode_Lib::NRef<List>(bNode["files"]).value()) {
+        fileList.emplace_back(getFilePath(Bencode_Lib::NRef<Dictionary>(file)),
+                              getInteger(Bencode_Lib::NRef<Dictionary>(file), "length"));
       }
       return (fileList);
     }
@@ -128,7 +121,7 @@ inline void TorrentInfo::populate() {
   if (!isA<Dictionary>(bStringify.root())) {
     throw Bencode_Lib::Error("Valid torrent file not found.");
   }
-  auto &bNodeTop = NRef<Dictionary>(bStringify.root());
+  auto &bNodeTop = Bencode_Lib::NRef<Dictionary>(bStringify.root());
   announce = getString(bNodeTop, "announce");
   announceList = getAnnounceList(bNodeTop);
   encoding = getString(bNodeTop, "encoding");
@@ -136,7 +129,7 @@ inline void TorrentInfo::populate() {
   creationDate = getInteger(bNodeTop, "creation date");
   createdBy = getString(bNodeTop, "created by");
   if (bNodeTop.contains("info")) {
-    auto &bNodeInfo = NRef<Dictionary>(bNodeTop["info"]);
+    auto &bNodeInfo = Bencode_Lib::NRef<Dictionary>(bNodeTop["info"]);
     attribute = getString(bNodeInfo, "attr");
     length = getInteger(bNodeInfo, "length");
     name = getString(bNodeInfo, "name");

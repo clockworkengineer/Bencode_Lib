@@ -1,11 +1,5 @@
 #pragma once
 
-#include <filesystem>
-#include <fstream>
-#include <iterator>
-#include <string>
-#include <sstream>
-#include <map>
 #include <memory>
 
 #include "catch2/catch_all.hpp"
