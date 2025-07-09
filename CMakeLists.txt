@@ -27,7 +27,7 @@ set(BENCODE_SOURCES
   ./classes/source/Bencode.cpp
   ./classes/source/implementation/Bencode_Impl.cpp
   ./classes/source/implementation/file/Bencode_File.cpp
-        classes/source/implementation/parser/Default_Parser.cpp)
+  ./classes/source/implementation/parser/Default_Parser.cpp)
 
 set(BENCODE_INCLUDES
   ./classes/include/Bencode.hpp
