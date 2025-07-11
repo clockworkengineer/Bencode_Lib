@@ -31,6 +31,7 @@ set(BENCODE_SOURCES
 
 set(BENCODE_INCLUDES
   ./classes/include/Bencode.hpp
+  ./classes/include/implementation/Bencode_Core.hpp
   ./classes/include/interface/Bencode_Interfaces.hpp
   ./classes/include/interface/IAction.hpp
   ./classes/include/interface/ISource.hpp
@@ -38,7 +39,6 @@ set(BENCODE_INCLUDES
   ./classes/include/interface/IParser.hpp
   ./classes/include/interface/IStringify.hpp
   ./classes/include/interface/ITranslator.hpp
-  ./classes/include/implementation/Bencode_Core.hpp
   ./classes/include/implementation/common/Bencode_Error.hpp
   ./classes/include/implementation/node/Bencode_Node_Creation.hpp
   ./classes/include/implementation/node/Bencode_Node_Index.hpp
