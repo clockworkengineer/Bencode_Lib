@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "catch2/catch_all.hpp"
 
 #include "Bencode.hpp"
