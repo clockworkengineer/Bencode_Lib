@@ -31,7 +31,7 @@ set(BENCODE_SOURCES
 
 set(BENCODE_INCLUDES
   ./classes/include/Bencode.hpp
-  ./classes/include/implementation/Bencode_Core.hpp
+  ./classes/include/Bencode_Core.hpp
   ./classes/include/interface/Bencode_Interfaces.hpp
   ./classes/include/interface/IAction.hpp
   ./classes/include/interface/ISource.hpp
