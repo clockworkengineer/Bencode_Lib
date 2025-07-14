@@ -9,9 +9,9 @@ file(GLOB EXAMPLE_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/source/ "${CMAKE_
 foreach(EXAMPLE_PROGRAM ${EXAMPLE_SOURCES})
   string(REPLACE ".cpp" "" EXAMPLE_TARGET ${EXAMPLE_PROGRAM})
   add_executable(${EXAMPLE_TARGET} ${CMAKE_CURRENT_SOURCE_DIR}/source/${EXAMPLE_PROGRAM})
+  target_precompile_headers(${EXAMPLE_TARGET} REUSE_FROM Bencode_Lib)
   target_include_directories(${EXAMPLE_TARGET} PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/external)
   target_link_libraries(${EXAMPLE_TARGET} Bencode_Lib)
-  target_precompile_headers(${EXAMPLE_TARGET} REUSE_FROM Bencode_Lib)
   install(TARGETS ${EXAMPLE_TARGET} DESTINATION bin)
 endforeach(EXAMPLE_PROGRAM ${EXAMPLE_SOURCES})
 
