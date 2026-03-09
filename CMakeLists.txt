@@ -87,7 +87,7 @@ target_precompile_headers(${BENCODE_LIBRARY_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_
 add_subdirectory(tests)
 
 # Add examples
-#add_subdirectory(examples)
+add_subdirectory(examples)
 
 # install
 install(TARGETS ${BENCODE_LIBRARY_NAME} DESTINATION lib)
