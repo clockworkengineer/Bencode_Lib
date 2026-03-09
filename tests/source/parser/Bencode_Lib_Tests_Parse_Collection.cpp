@@ -63,8 +63,87 @@ TEST_CASE("Bencode for parse of collection types (list, dictionary) ",
     for (const auto &bNode : NRef<Dictionary>(bStringify.root()).value()) {
       entries[bNode.getKey()] = NRef<String>(bNode.getNode()).value();
     }
-    REQUIRE(entries == std::map<std::string_view, std::string_view>{{"one", "0123456789"},
-                                                          {"two", "asdfghjkl"},
-                                                          {"three", "qwerty"}});
+    REQUIRE(entries ==
+            std::map<std::string_view, std::string_view>{{"one", "0123456789"},
+                                                         {"two", "asdfghjkl"},
+                                                         {"three", "qwerty"}});
+  }
+  SECTION("Parse empty list.", "[Bencode][Parse][List]") {
+    bStringify.parse(BufferSource{"le"});
+    REQUIRE(isA<List>(bStringify.root()));
+    REQUIRE(NRef<List>(bStringify.root()).size() == 0);
+  }
+  SECTION("Parse empty dictionary.", "[Bencode][Parse][Dictionary]") {
+    bStringify.parse(BufferSource{"de"});
+    REQUIRE(isA<Dictionary>(bStringify.root()));
+    REQUIRE(NRef<Dictionary>(bStringify.root()).size() == 0);
+  }
+  SECTION("Parse list containing a single string.", "[Bencode][Parse][List]") {
+    bStringify.parse(BufferSource{"l5:helloe"});
+    REQUIRE(isA<List>(bStringify.root()));
+    REQUIRE(NRef<List>(bStringify.root()).size() == 1);
+    REQUIRE(NRef<String>(bStringify.root()[0]).value() == "hello");
+  }
+  SECTION("Parse list containing a single integer.", "[Bencode][Parse][List]") {
+    bStringify.parse(BufferSource{"li-7ee"});
+    REQUIRE(isA<List>(bStringify.root()));
+    REQUIRE(NRef<List>(bStringify.root()).size() == 1);
+    REQUIRE(NRef<Integer>(bStringify.root()[0]).value() == -7);
+  }
+  SECTION("Parse list containing a nested list.", "[Bencode][Parse][List]") {
+    bStringify.parse(BufferSource{"lli1ei2eee"});
+    REQUIRE(isA<List>(bStringify.root()));
+    REQUIRE(isA<List>(bStringify.root()[0]));
+    REQUIRE(NRef<Integer>(bStringify.root()[0][0]).value() == 1);
+    REQUIRE(NRef<Integer>(bStringify.root()[0][1]).value() == 2);
+  }
+  SECTION("Parse dictionary with a single integer value.",
+          "[Bencode][Parse][Dictionary]") {
+    bStringify.parse(BufferSource{"d3:agei30ee"});
+    REQUIRE(isA<Dictionary>(bStringify.root()));
+    REQUIRE(NRef<Integer>(bStringify.root()["age"]).value() == 30);
+  }
+  SECTION("Parse dictionary with a single string value.",
+          "[Bencode][Parse][Dictionary]") {
+    bStringify.parse(BufferSource{"d4:name5:Alicee"});
+    REQUIRE(isA<Dictionary>(bStringify.root()));
+    REQUIRE(NRef<String>(bStringify.root()["name"]).value() == "Alice");
+  }
+  SECTION("Parse dictionary containing a list value.",
+          "[Bencode][Parse][Dictionary]") {
+    bStringify.parse(BufferSource{"d5:itemsli1ei2ei3eee"});
+    REQUIRE(isA<Dictionary>(bStringify.root()));
+    REQUIRE(isA<List>(bStringify.root()["items"]));
+    REQUIRE(NRef<List>(bStringify.root()["items"]).size() == 3);
+    REQUIRE(NRef<Integer>(bStringify.root()["items"][0]).value() == 1);
+    REQUIRE(NRef<Integer>(bStringify.root()["items"][2]).value() == 3);
+  }
+  SECTION("Parse list containing a dictionary.", "[Bencode][Parse][List]") {
+    bStringify.parse(BufferSource{"ld3:keyi99eee"});
+    REQUIRE(isA<List>(bStringify.root()));
+    REQUIRE(isA<Dictionary>(bStringify.root()[0]));
+    REQUIRE(NRef<Integer>(bStringify.root()[0]["key"]).value() == 99);
+  }
+  SECTION("Parse dictionary keys are in sorted order.",
+          "[Bencode][Parse][Dictionary]") {
+    bStringify.parse(BufferSource{"d1:ai1e1:bi2e1:ci3ee"});
+    const auto &entries = NRef<Dictionary>(bStringify.root()).value();
+    REQUIRE(entries[0].getKey() == "a");
+    REQUIRE(entries[1].getKey() == "b");
+    REQUIRE(entries[2].getKey() == "c");
+  }
+  SECTION("Parse list with mixed types.", "[Bencode][Parse][List]") {
+    bStringify.parse(BufferSource{"li42e5:helloe"});
+    REQUIRE(isA<List>(bStringify.root()));
+    REQUIRE(NRef<List>(bStringify.root()).size() == 2);
+    REQUIRE(NRef<Integer>(bStringify.root()[0]).value() == 42);
+    REQUIRE(NRef<String>(bStringify.root()[1]).value() == "hello");
+  }
+  SECTION("Parse nested dictionary.", "[Bencode][Parse][Dictionary]") {
+    bStringify.parse(BufferSource{"d5:outerd5:inner4:deepee"});
+    REQUIRE(isA<Dictionary>(bStringify.root()));
+    REQUIRE(isA<Dictionary>(bStringify.root()["outer"]));
+    REQUIRE(NRef<String>(bStringify.root()["outer"]["inner"]).value() ==
+            "deep");
   }
 }

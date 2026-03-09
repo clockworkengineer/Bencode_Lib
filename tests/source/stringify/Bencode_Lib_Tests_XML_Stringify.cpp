@@ -4,7 +4,8 @@
 TEST_CASE("XML stringify of simple types (integer, string) ",
           "[Bencode][Stringify]") {
   const Bencode bStringify(makeStringify<XML_Stringify>());
-  SECTION("XML stringify an integer (266).", "[Bencode][Stringify][XML][Integer]") {
+  SECTION("XML stringify an integer (266).",
+          "[Bencode][Stringify][XML][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
     bStringify.parse(source);
@@ -12,7 +13,8 @@ TEST_CASE("XML stringify of simple types (integer, string) ",
     REQUIRE(destination.toString() ==
             R"(<?xml version="1.0" encoding="UTF-8"?><root>266</root>)");
   }
-  SECTION("XML stringify an integer (10000).", "[Bencode][Stringify][XML][Integer]") {
+  SECTION("XML stringify an integer (10000).",
+          "[Bencode][Stringify][XML][Integer]") {
     BufferSource source{"i10000e"};
     BufferDestination destination;
     bStringify.parse(source);
@@ -177,5 +179,92 @@ TEST_CASE("XML stringify of collection types (list, dictionary) ",
     REQUIRE(
         destination.toString() ==
         R"(<?xml version="1.0" encoding="UTF-8"?><root><Row><Row></Row></Row><Row><Row></Row></Row><Row><Row></Row></Row><Row><Row></Row></Row><Row><Row></Row></Row></root>)");
+  }
+  SECTION("XML stringify integer zero.", "[Bencode][Stringify][XML][Integer]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"i0e"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() ==
+            R"(<?xml version="1.0" encoding="UTF-8"?><root>0</root>)");
+  }
+  SECTION("XML stringify a negative integer.",
+          "[Bencode][Stringify][XML][Integer]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"i-1e"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() ==
+            R"(<?xml version="1.0" encoding="UTF-8"?><root>-1</root>)");
+  }
+  SECTION("XML stringify a two-element integer list.",
+          "[Bencode][Stringify][XML][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"li7ei9ee"});
+    bStringify.stringify(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><Row>7</Row><Row>9</Row></root>)");
+  }
+  SECTION("XML stringify a list of strings.",
+          "[Bencode][Stringify][XML][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"l3:foo3:bare"});
+    bStringify.stringify(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><Row>foo</Row><Row>bar</Row></root>)");
+  }
+  SECTION("XML stringify a single-entry dictionary with integer value.",
+          "[Bencode][Stringify][XML][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d3:agei30ee"});
+    bStringify.stringify(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><age>30</age></root>)");
+  }
+  SECTION("XML stringify a single-entry dictionary with string value.",
+          "[Bencode][Stringify][XML][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d4:name5:Alicee"});
+    bStringify.stringify(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><name>Alice</name></root>)");
+  }
+  SECTION("XML stringify a dictionary with a list value.",
+          "[Bencode][Stringify][XML][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d4:numsli1ei2ei3eee"});
+    bStringify.stringify(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><nums><Row>1</Row><Row>2</Row><Row>3</Row></nums></root>)");
+  }
+  SECTION("XML stringify a list containing two dictionaries.",
+          "[Bencode][Stringify][XML][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"ld3:agei1eed3:agei2eee"});
+    bStringify.stringify(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root><Row><age>1</age></Row><Row><age>2</age></Row></root>)");
+  }
+  SECTION("XML stringify a string with an ampersand.",
+          "[Bencode][Stringify][XML][String]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"5:a&b&c"});
+    bStringify.stringify(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root>a&amp;b&amp;c</root>)");
+  }
+  SECTION("XML stringify a string with angle brackets.",
+          "[Bencode][Stringify][XML][String]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"5:<tag>"});
+    bStringify.stringify(destination);
+    REQUIRE(
+        destination.toString() ==
+        R"(<?xml version="1.0" encoding="UTF-8"?><root>&lt;tag&gt;</root>)");
   }
 }

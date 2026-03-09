@@ -35,8 +35,7 @@ TEST_CASE("Check use of Node assigment operators.",
     REQUIRE_FALSE(!isA<Integer>(bNode));
     REQUIRE(NRef<Integer>(bNode).value() == 66666);
   }
-  SECTION("Assign C string to Node.",
-          "[Bencode][Node][Assignment][CString]") {
+  SECTION("Assign C string to Node.", "[Bencode][Node][Assignment][CString]") {
     bNode = "test string";
     REQUIRE_FALSE(!isA<String>(bNode));
     REQUIRE(NRef<String>(bNode).value() == "test string");
@@ -122,5 +121,92 @@ TEST_CASE("Check use of Node assigment operators.",
     REQUIRE(NRef<Integer>(dictionary["key3"][1]).value() == 6);
     REQUIRE(NRef<Integer>(dictionary["key3"][2]).value() == 7);
     REQUIRE(NRef<Integer>(dictionary["key3"][3]).value() == 8);
+  }
+  SECTION("Assign negative integer to Node.",
+          "[Bencode][Node][Assignment][Integer]") {
+    bNode = -42;
+    REQUIRE(isA<Integer>(bNode));
+    REQUIRE(NRef<Integer>(bNode).value() == -42);
+  }
+  SECTION("Assign boolean false to Node maps to integer zero.",
+          "[Bencode][Node][Assignment][Boolean]") {
+    bNode = false;
+    REQUIRE(isA<Integer>(bNode));
+    REQUIRE(NRef<Integer>(bNode).value() == 0);
+  }
+  SECTION("Assign empty string to Node.",
+          "[Bencode][Node][Assignment][String]") {
+    bNode = "";
+    REQUIRE(isA<String>(bNode));
+    REQUIRE(NRef<String>(bNode).value().empty());
+  }
+  SECTION("Reassign Node from integer to string changes type.",
+          "[Bencode][Node][Assignment][Overwrite]") {
+    bNode = 10;
+    REQUIRE(isA<Integer>(bNode));
+    bNode = "hello";
+    REQUIRE(isA<String>(bNode));
+    REQUIRE(NRef<String>(bNode).value() == "hello");
+  }
+  SECTION("Reassign Node from string to integer changes type.",
+          "[Bencode][Node][Assignment][Overwrite]") {
+    bNode = "first";
+    REQUIRE(isA<String>(bNode));
+    bNode = 99;
+    REQUIRE(isA<Integer>(bNode));
+    REQUIRE(NRef<Integer>(bNode).value() == 99);
+  }
+  SECTION("Reassign Node from list to dictionary changes type.",
+          "[Bencode][Node][Assignment][Overwrite]") {
+    bNode = {1, 2, 3};
+    REQUIRE(isA<List>(bNode));
+    bNode = {{"a", 1}, {"b", 2}};
+    REQUIRE(isA<Dictionary>(bNode));
+    REQUIRE(NRef<Integer>(NRef<Dictionary>(bNode)["a"]).value() == 1);
+  }
+  SECTION("Assign list of strings to Node.",
+          "[Bencode][Node][Assignment][List]") {
+    bNode = {"alpha", "beta", "gamma"};
+    REQUIRE(isA<List>(bNode));
+    auto &list = NRef<List>(bNode).value();
+    REQUIRE(NRef<String>(list[0]).value() == "alpha");
+    REQUIRE(NRef<String>(list[1]).value() == "beta");
+    REQUIRE(NRef<String>(list[2]).value() == "gamma");
+  }
+  SECTION("Assign dictionary with string values to Node.",
+          "[Bencode][Node][Assignment][Dictionary]") {
+    bNode = {{"name", "Alice"}, {"city", "London"}};
+    REQUIRE(isA<Dictionary>(bNode));
+    auto &dict = NRef<Dictionary>(bNode);
+    REQUIRE(NRef<String>(dict["name"]).value() == "Alice");
+    REQUIRE(NRef<String>(dict["city"]).value() == "London");
+  }
+  SECTION("Assign Node with deeply nested list of lists.",
+          "[Bencode][Node][Assignment][List]") {
+    bNode = {Node{1, 2}, Node{3, 4}};
+    REQUIRE(isA<List>(bNode));
+    auto &outer = NRef<List>(bNode).value();
+    REQUIRE(NRef<Integer>(outer[0][0]).value() == 1);
+    REQUIRE(NRef<Integer>(outer[0][1]).value() == 2);
+    REQUIRE(NRef<Integer>(outer[1][0]).value() == 3);
+    REQUIRE(NRef<Integer>(outer[1][1]).value() == 4);
+  }
+  SECTION("Assigned list Node stringifies correctly.",
+          "[Bencode][Node][Assignment][Stringify]") {
+    bNode = {10, 20, 30};
+    Bencode bencode;
+    bencode[0] = std::move(bNode);
+    BufferDestination dst;
+    bencode.stringify(dst);
+    REQUIRE(dst.toString() == "lli10ei20ei30eee");
+  }
+  SECTION("Assigned dictionary Node stringifies correctly.",
+          "[Bencode][Node][Assignment][Stringify]") {
+    bNode = {{"x", 1}, {"y", 2}};
+    Bencode bencode;
+    bencode["pt"] = std::move(bNode);
+    BufferDestination dst;
+    bencode.stringify(dst);
+    REQUIRE(dst.toString() == "d2:ptd1:xi1e1:yi2eee");
   }
 }

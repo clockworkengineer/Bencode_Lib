@@ -4,7 +4,8 @@
 TEST_CASE("JSON stringify of simple types (integer, string) ",
           "[Bencode][Stringify]") {
   const Bencode bStringify(makeStringify<JSON_Stringify>());
-  SECTION("JSON stringify an integer (266).", "[Bencode][Stringify][JSON][Integer]") {
+  SECTION("JSON stringify an integer (266).",
+          "[Bencode][Stringify][JSON][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
     bStringify.parse(source);
@@ -43,7 +44,8 @@ TEST_CASE("JSON stringify of simple types (integer, string) ",
     bStringify.stringify(destination);
     REQUIRE(destination.toString() == R"("abcdefghijklmnopqrstuvwxyz")");
   }
-  SECTION("JSON stringify an empty string.", "[Bencode][Stringify][JSON][String]") {
+  SECTION("JSON stringify an empty string.",
+          "[Bencode][Stringify][JSON][String]") {
     BufferSource source{"0:"};
     BufferDestination destination;
     bStringify.parse(source);
@@ -85,7 +87,8 @@ TEST_CASE("JSON stringify of collection types (list, dictionary) ",
     bStringify.stringify(destination);
     REQUIRE(destination.toString() == R"([266,"five",6780,"one",88])");
   }
-  SECTION("JSON stringify an empty List).", "[Bencode][Stringify][JSON][List]") {
+  SECTION("JSON stringify an empty List).",
+          "[Bencode][Stringify][JSON][List]") {
     BufferSource source{"le"};
     BufferDestination destination;
     bStringify.parse(source);
@@ -141,5 +144,67 @@ TEST_CASE("JSON stringify of collection types (list, dictionary) ",
     bStringify.parse(source);
     bStringify.stringify(destination);
     REQUIRE(destination.toString() == R"([[],[],[],[],[]])");
+  }
+  SECTION("JSON stringify integer zero.",
+          "[Bencode][Stringify][JSON][Integer]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"i0e"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "0");
+  }
+  SECTION("JSON stringify a single-element list.",
+          "[Bencode][Stringify][JSON][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"li99ee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == R"([99])");
+  }
+  SECTION("JSON stringify a list of strings.",
+          "[Bencode][Stringify][JSON][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"l3:foo3:bare"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == R"(["foo","bar"])");
+  }
+  SECTION("JSON stringify nested lists.", "[Bencode][Stringify][JSON][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"lli1ei2eeli3ei4eee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == R"([[1,2],[3,4]])");
+  }
+  SECTION("JSON stringify dictionary with list value.",
+          "[Bencode][Stringify][JSON][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d4:numsli1ei2ei3eee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == R"({"nums" : [1,2,3]})");
+  }
+  SECTION("JSON stringify dictionary with nested dictionary.",
+          "[Bencode][Stringify][JSON][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d5:outerd5:inneri42eee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == R"({"outer" : {"inner" : 42}})");
+  }
+  SECTION("JSON stringify list containing a dictionary.",
+          "[Bencode][Stringify][JSON][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"ld3:keyi7eee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == R"([{"key" : 7}])");
+  }
+  SECTION("JSON stringify single-entry dictionary with string value.",
+          "[Bencode][Stringify][JSON][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d4:name5:Alicee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == R"({"name" : "Alice"})");
+  }
+  SECTION("JSON stringify negative integer.",
+          "[Bencode][Stringify][JSON][Integer]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"i-1e"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "-1");
   }
 }

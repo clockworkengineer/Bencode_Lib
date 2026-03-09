@@ -4,7 +4,8 @@
 TEST_CASE("YAML stringify of simple types (integer, string) ",
           "[Bencode][Stringify]") {
   const Bencode bStringify(makeStringify<YAML_Stringify>());
-  SECTION("YAML stringify an integer (266).", "[Bencode][Stringify][YAML][Integer]") {
+  SECTION("YAML stringify an integer (266).",
+          "[Bencode][Stringify][YAML][Integer]") {
     BufferSource source{"i266e"};
     BufferDestination destination;
     bStringify.parse(source);
@@ -41,7 +42,8 @@ TEST_CASE("YAML stringify of simple types (integer, string) ",
     BufferDestination destination;
     bStringify.parse(source);
     bStringify.stringify(destination);
-    REQUIRE(destination.toString() == "---\n\"abcdefghijklmnopqrstuvwxyz\"\n...\n");
+    REQUIRE(destination.toString() ==
+            "---\n\"abcdefghijklmnopqrstuvwxyz\"\n...\n");
   }
   SECTION("YAML stringify an empty string."
           "[Bencode][Stringify][YAML][String]") {
@@ -100,7 +102,8 @@ TEST_CASE("YAML stringify of collection types (list, dictionary) ",
     BufferDestination destination;
     bStringify.parse(source);
     bStringify.stringify(destination);
-    REQUIRE(destination.toString() == "---\n\"one\": 1\n\"three\": 3\n\"two\": 2\n...\n");
+    REQUIRE(destination.toString() ==
+            "---\n\"one\": 1\n\"three\": 3\n\"two\": 2\n...\n");
   }
   SECTION("YAML stringify an Dictionary of strings.",
           "[Bencode][Stringify][YAML][Dictionary]") {
@@ -109,7 +112,8 @@ TEST_CASE("YAML stringify of collection types (list, dictionary) ",
     bStringify.parse(source);
     bStringify.stringify(destination);
     REQUIRE(destination.toString() ==
-            "---\n\"one\": \"0123456789\"\n\"three\": \"qwerty\"\n\"two\": \"asdfghjkl\"\n...\n");
+            "---\n\"one\": \"0123456789\"\n\"three\": \"qwerty\"\n\"two\": "
+            "\"asdfghjkl\"\n...\n");
   }
   SECTION("YAML stringify an Dictionary of arrays.",
           "[Bencode][Stringify][YAML][Dictionary]") {
@@ -117,9 +121,9 @@ TEST_CASE("YAML stringify of collection types (list, dictionary) ",
     BufferDestination destination;
     bStringify.parse(source);
     bStringify.stringify(destination);
-    REQUIRE(
-        destination.toString() ==
-        "---\n\"one\": \n  - 1\n  - 2\n  - 3\n\"two\": \n  - 5555\n  - \"four\"\n...\n");
+    REQUIRE(destination.toString() ==
+            "---\n\"one\": \n  - 1\n  - 2\n  - 3\n\"two\": \n  - 5555\n  - "
+            "\"four\"\n...\n");
   }
   SECTION("YAML stringify an empty Dictionary.",
           "[Bencode][Stringify][YAML][Dictionary]") {
@@ -144,6 +148,77 @@ TEST_CASE("YAML stringify of collection types (list, dictionary) ",
     BufferDestination destination;
     bStringify.parse(source);
     bStringify.stringify(destination);
-    REQUIRE(destination.toString() == "---\n- []\n- []\n- []\n- []\n- []\n...\n");
+    REQUIRE(destination.toString() ==
+            "---\n- []\n- []\n- []\n- []\n- []\n...\n");
+  }
+  SECTION("YAML stringify integer zero.",
+          "[Bencode][Stringify][YAML][Integer]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"i0e"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n0\n...\n");
+  }
+  SECTION("YAML stringify a negative integer.",
+          "[Bencode][Stringify][YAML][Integer]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"i-1e"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n-1\n...\n");
+  }
+  SECTION("YAML stringify max 64-bit integer.",
+          "[Bencode][Stringify][YAML][Integer]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"i9223372036854775807e"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n9223372036854775807\n...\n");
+  }
+  SECTION("YAML stringify a single-string list.",
+          "[Bencode][Stringify][YAML][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"l5:helloe"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n- \"hello\"\n...\n");
+  }
+  SECTION("YAML stringify a single-integer list.",
+          "[Bencode][Stringify][YAML][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"li42ee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n- 42\n...\n");
+  }
+  SECTION("YAML stringify a list of strings.",
+          "[Bencode][Stringify][YAML][List]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"l3:foo3:bare"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n- \"foo\"\n- \"bar\"\n...\n");
+  }
+  SECTION("YAML stringify a single-entry dictionary with integer value.",
+          "[Bencode][Stringify][YAML][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d3:agei30ee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n\"age\": 30\n...\n");
+  }
+  SECTION("YAML stringify a single-entry dictionary with string value.",
+          "[Bencode][Stringify][YAML][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d4:name5:Alicee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n\"name\": \"Alice\"\n...\n");
+  }
+  SECTION("YAML stringify a two-entry dictionary.",
+          "[Bencode][Stringify][YAML][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d1:ai1e1:bi2ee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n\"a\": 1\n\"b\": 2\n...\n");
+  }
+  SECTION("YAML stringify a dictionary with a list value.",
+          "[Bencode][Stringify][YAML][Dictionary]") {
+    BufferDestination destination;
+    bStringify.parse(BufferSource{"d4:numsli1ei2eee"});
+    bStringify.stringify(destination);
+    REQUIRE(destination.toString() == "---\n\"nums\": \n  - 1\n  - 2\n...\n");
   }
 }

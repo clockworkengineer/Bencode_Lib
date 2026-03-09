@@ -94,4 +94,51 @@ TEST_CASE("Bencode for parse of simple types (integer, string) ",
     bStringify.parse(BufferSource("256:" + str));
     REQUIRE(NRef<String>(bStringify.root()).value() == str);
   }
+  SECTION("Parse an integer (32767).", "[Bencode][Parse][Integer]") {
+    bStringify.parse(BufferSource{"i32767e"});
+    REQUIRE(NRef<Integer>(bStringify.root()).value() == 32767);
+  }
+  SECTION("Parse a large negative integer (-1000000).",
+          "[Bencode][Parse][Integer]") {
+    bStringify.parse(BufferSource{"i-1000000e"});
+    REQUIRE(NRef<Integer>(bStringify.root()).value() == -1000000);
+  }
+  SECTION("Parse integer one (1).", "[Bencode][Parse][Integer]") {
+    bStringify.parse(BufferSource{"i1e"});
+    REQUIRE(NRef<Integer>(bStringify.root()).value() == 1);
+  }
+  SECTION("Parse integer minus one (-1).", "[Bencode][Parse][Integer]") {
+    bStringify.parse(BufferSource{"i-1e"});
+    REQUIRE(NRef<Integer>(bStringify.root()).value() == -1);
+  }
+  SECTION("Parsed integer node is not a string.", "[Bencode][Parse][Integer]") {
+    bStringify.parse(BufferSource{"i42e"});
+    REQUIRE_FALSE(isA<String>(bStringify.root()));
+  }
+  SECTION("Parsed integer node is not a list.", "[Bencode][Parse][Integer]") {
+    bStringify.parse(BufferSource{"i42e"});
+    REQUIRE_FALSE(isA<List>(bStringify.root()));
+  }
+  SECTION("Parse a single-character string.", "[Bencode][Parse][String]") {
+    bStringify.parse(BufferSource{"1:z"});
+    REQUIRE(NRef<String>(bStringify.root()).value() == "z");
+  }
+  SECTION("Parse a string with spaces.", "[Bencode][Parse][String]") {
+    bStringify.parse(BufferSource{"11:hello world"});
+    REQUIRE(NRef<String>(bStringify.root()).value() == "hello world");
+  }
+  SECTION("Parse a string with numeric characters.",
+          "[Bencode][Parse][String]") {
+    bStringify.parse(BufferSource{"10:1234567890"});
+    REQUIRE(NRef<String>(bStringify.root()).value() == "1234567890");
+  }
+  SECTION("Parsed string node is not an integer.", "[Bencode][Parse][String]") {
+    bStringify.parse(BufferSource{"5:hello"});
+    REQUIRE_FALSE(isA<Integer>(bStringify.root()));
+  }
+  SECTION("Parsed string node is not a dictionary.",
+          "[Bencode][Parse][String]") {
+    bStringify.parse(BufferSource{"5:hello"});
+    REQUIRE_FALSE(isA<Dictionary>(bStringify.root()));
+  }
 }
