@@ -55,8 +55,10 @@ std::string readBencodedBytesFromFile(const std::string &bencodedFileName) {
 /// </summary>
 /// <returns>Unique torrent file name</returns>
 std::string generateRandomFileName(void) {
-  std::filesystem::path namepath = std::tmpnam(nullptr);
-  std::string result { std::filesystem::temp_directory_path().string() };
+  char buf[L_tmpnam_s];
+  tmpnam_s(buf, L_tmpnam_s);
+  std::filesystem::path namepath = buf;
+  std::string result{std::filesystem::temp_directory_path().string()};
   result.push_back(std::filesystem::path::preferred_separator);
-  return result+namepath.filename().string();
+  return result + namepath.filename().string();
 }

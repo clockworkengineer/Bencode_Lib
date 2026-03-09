@@ -22,6 +22,8 @@ struct Node {
   template <typename T> Node &operator=(T value) {
     return *this = Node(value);
   }
+  Node &operator=(const Bencode::ListInitializerType &list);
+  Node &operator=(const Bencode::DictionaryInitializerType &dictionary);
   // Indexing operators
   Node &operator[](const std::string_view &key);
   const Node &operator[](const std::string_view &key) const;

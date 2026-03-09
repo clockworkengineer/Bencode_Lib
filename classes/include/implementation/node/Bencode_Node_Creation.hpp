@@ -65,5 +65,13 @@ inline Node::Node(const Bencode::DictionaryInitializerType &dictionary) {
         Dictionary::Entry(fst, typeToNode(snd)));
   }
 }
+// Assign Node from a list initializer list
+inline Node &Node::operator=(const Bencode::ListInitializerType &list) {
+  return *this = Node(list);
+}
+// Assign Node from a dictionary initializer list
+inline Node &Node::operator=(const Bencode::DictionaryInitializerType &dictionary) {
+  return *this = Node(dictionary);
+}
 
 } // namespace Bencode_Lib

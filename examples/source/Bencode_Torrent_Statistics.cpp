@@ -29,7 +29,7 @@ std::string fileExtension(const std::string &path) {
   if (ext.empty()) return "(none)";
   std::string lower = ext;
   std::transform(lower.begin(), lower.end(), lower.begin(),
-                 [](unsigned char c) { return std::tolower(c); });
+                 [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
   return lower;
 }
 
