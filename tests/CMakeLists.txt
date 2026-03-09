@@ -50,12 +50,13 @@ add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(${TEST_EXECUTABLE} Bencode_Lib::Bencode_Lib Catch2::Catch2WithMain)
 target_precompile_headers(${TEST_EXECUTABLE} REUSE_FROM Bencode_Lib)
+
 if(MSVC)
   target_compile_options(${TEST_EXECUTABLE} PRIVATE
     /W4
     /permissive-
     /Zc:__cplusplus
-    /wd4324  # Catch2: structure padded due to alignment specifier
+    /wd4324 # Catch2: structure padded due to alignment specifier
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
 else()

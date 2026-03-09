@@ -7,6 +7,7 @@ function(process_file target)
   target_precompile_headers(${target} REUSE_FROM Bencode_Lib)
   target_include_directories(${target} PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/external)
   target_link_libraries(${target} Bencode_Lib::Bencode_Lib)
+
   if(MSVC)
     target_compile_options(${target} PRIVATE
       /W4
@@ -22,6 +23,7 @@ function(process_file target)
       $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
     )
   endif()
+
   install(TARGETS ${target} DESTINATION bin)
 endfunction()
 

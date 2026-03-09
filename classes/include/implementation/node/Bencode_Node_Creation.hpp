@@ -61,8 +61,7 @@ inline Node::Node(const Bencode::ListInitializerType &list) {
 inline Node::Node(const Bencode::DictionaryInitializerType &dictionary) {
   *this = make<Dictionary>();
   for (const auto &[fst, snd] : dictionary) {
-    NRef<Dictionary>(*this).add(
-        Dictionary::Entry(fst, typeToNode(snd)));
+    NRef<Dictionary>(*this).add(Dictionary::Entry(fst, typeToNode(snd)));
   }
 }
 // Assign Node from a list initializer list
@@ -70,7 +69,8 @@ inline Node &Node::operator=(const Bencode::ListInitializerType &list) {
   return *this = Node(list);
 }
 // Assign Node from a dictionary initializer list
-inline Node &Node::operator=(const Bencode::DictionaryInitializerType &dictionary) {
+inline Node &
+Node::operator=(const Bencode::DictionaryInitializerType &dictionary) {
   return *this = Node(dictionary);
 }
 

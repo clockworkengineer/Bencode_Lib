@@ -19,9 +19,7 @@ struct Node {
   Node &operator=(Node &&other) = default;
   ~Node() = default;
   // Assignment operators
-  template <typename T> Node &operator=(T value) {
-    return *this = Node(value);
-  }
+  template <typename T> Node &operator=(T value) { return *this = Node(value); }
   Node &operator=(const Bencode::ListInitializerType &list);
   Node &operator=(const Bencode::DictionaryInitializerType &dictionary);
   // Indexing operators
@@ -32,12 +30,8 @@ struct Node {
   // Interrogate variant
   [[nodiscard]] bool isEmpty() const { return bNodeVariant == nullptr; }
   // Get reference to Node variant
-  [[nodiscard]] Variant &getVariant() {
-    return *bNodeVariant;
-  }
-  [[nodiscard]] const Variant &getVariant() const {
-    return *bNodeVariant;
-  }
+  [[nodiscard]] Variant &getVariant() { return *bNodeVariant; }
+  [[nodiscard]] const Variant &getVariant() const { return *bNodeVariant; }
   // Make Node
   template <typename T, typename... Args> static auto make(Args &&...args) {
     return Node{std::make_unique<T>(std::forward<Args>(args)...)};

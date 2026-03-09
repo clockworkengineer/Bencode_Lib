@@ -62,3 +62,95 @@ std::string generateRandomFileName(void) {
   result.push_back(std::filesystem::path::preferred_separator);
   return result + namepath.filename().string();
 }
+
+TEST_CASE("Check helper functions.", "[Bencode][Helpers]") {
+  SECTION("prefixTestDataPath returns a non-empty path.",
+          "[Bencode][Helpers][prefixTestDataPath]") {
+    const std::string path{prefixTestDataPath(kSingleFileTorrent)};
+    REQUIRE_FALSE(path.empty());
+  }
+  SECTION("prefixTestDataPath result ends with the file name.",
+          "[Bencode][Helpers][prefixTestDataPath]") {
+    const std::string path{prefixTestDataPath(kSingleFileTorrent)};
+    REQUIRE(path.ends_with(kSingleFileTorrent));
+  }
+  SECTION("prefixTestDataPath points to a file that exists.",
+          "[Bencode][Helpers][prefixTestDataPath]") {
+    const std::string path{prefixTestDataPath(kSingleFileTorrent)};
+    REQUIRE(std::filesystem::exists(path));
+  }
+  SECTION("compareFiles returns true for identical files.",
+          "[Bencode][Helpers][compareFiles]") {
+    const std::string file1{generateRandomFileName()};
+    const std::string file2{generateRandomFileName()};
+    const std::string content{"d3:keyi42ee"};
+    Bencode::toFile(file1, content);
+    Bencode::toFile(file2, content);
+    REQUIRE(compareFiles(file1, file2));
+    std::filesystem::remove(file1);
+    std::filesystem::remove(file2);
+  }
+  SECTION("compareFiles returns false for files with different content.",
+          "[Bencode][Helpers][compareFiles]") {
+    const std::string file1{generateRandomFileName()};
+    const std::string file2{generateRandomFileName()};
+    Bencode::toFile(file1, "i1e");
+    Bencode::toFile(file2, "i2e");
+    REQUIRE_FALSE(compareFiles(file1, file2));
+    std::filesystem::remove(file1);
+    std::filesystem::remove(file2);
+  }
+  SECTION("compareFiles returns false for files with different sizes.",
+          "[Bencode][Helpers][compareFiles]") {
+    const std::string file1{generateRandomFileName()};
+    const std::string file2{generateRandomFileName()};
+    Bencode::toFile(file1, "i1e");
+    Bencode::toFile(file2, "li1ei2ee");
+    REQUIRE_FALSE(compareFiles(file1, file2));
+    std::filesystem::remove(file1);
+    std::filesystem::remove(file2);
+  }
+  SECTION("compareFiles returns false if a file does not exist.",
+          "[Bencode][Helpers][compareFiles]") {
+    const std::string file1{generateRandomFileName()};
+    Bencode::toFile(file1, "i1e");
+    REQUIRE_FALSE(compareFiles(file1, "/does/not/exist.ben"));
+    std::filesystem::remove(file1);
+  }
+  SECTION("readBencodedBytesFromFile returns the correct content.",
+          "[Bencode][Helpers][readBencodedBytesFromFile]") {
+    const std::string file{generateRandomFileName()};
+    const std::string content{"d4:name5:Nielse"};
+    Bencode::toFile(file, content);
+    REQUIRE(readBencodedBytesFromFile(file) == content);
+    std::filesystem::remove(file);
+  }
+  SECTION("readBencodedBytesFromFile returns empty string for empty file.",
+          "[Bencode][Helpers][readBencodedBytesFromFile]") {
+    const std::string file{generateRandomFileName()};
+    Bencode::toFile(file, "");
+    REQUIRE(readBencodedBytesFromFile(file).empty());
+    std::filesystem::remove(file);
+  }
+  SECTION("readBencodedBytesFromFile reads real torrent file bytes.",
+          "[Bencode][Helpers][readBencodedBytesFromFile]") {
+    const std::string content{
+        readBencodedBytesFromFile(prefixTestDataPath(kSingleFileTorrent))};
+    REQUIRE_FALSE(content.empty());
+    REQUIRE(content.front() == 'd');
+  }
+  SECTION("generateRandomFileName returns a non-empty path.",
+          "[Bencode][Helpers][generateRandomFileName]") {
+    REQUIRE_FALSE(generateRandomFileName().empty());
+  }
+  SECTION("generateRandomFileName returns unique names on each call.",
+          "[Bencode][Helpers][generateRandomFileName]") {
+    REQUIRE(generateRandomFileName() != generateRandomFileName());
+  }
+  SECTION("generateRandomFileName result is inside the temp directory.",
+          "[Bencode][Helpers][generateRandomFileName]") {
+    const std::string name{generateRandomFileName()};
+    const std::string tempDir{std::filesystem::temp_directory_path().string()};
+    REQUIRE(name.starts_with(tempDir));
+  }
+}

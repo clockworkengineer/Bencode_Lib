@@ -26,10 +26,12 @@ struct TorrentStats {
 std::string fileExtension(const std::string &path) {
   const std::filesystem::path p{path};
   const auto ext = p.extension().string();
-  if (ext.empty()) return "(none)";
+  if (ext.empty())
+    return "(none)";
   std::string lower = ext;
-  std::transform(lower.begin(), lower.end(), lower.begin(),
-                 [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+  std::transform(
+      lower.begin(), lower.end(), lower.begin(),
+      [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
   return lower;
 }
 
@@ -89,10 +91,14 @@ std::string formatBytes(std::uint64_t bytes) {
   constexpr std::uint64_t MB = 1024 * KB;
   constexpr std::uint64_t GB = 1024 * MB;
   std::ostringstream oss;
-  if (bytes >= GB)      oss << (bytes / GB) << " GB";
-  else if (bytes >= MB) oss << (bytes / MB) << " MB";
-  else if (bytes >= KB) oss << (bytes / KB) << " KB";
-  else                  oss << bytes << " B";
+  if (bytes >= GB)
+    oss << (bytes / GB) << " GB";
+  else if (bytes >= MB)
+    oss << (bytes / MB) << " MB";
+  else if (bytes >= KB)
+    oss << (bytes / KB) << " KB";
+  else
+    oss << bytes << " B";
   return oss.str();
 }
 
