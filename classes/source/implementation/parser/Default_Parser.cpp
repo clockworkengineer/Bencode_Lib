@@ -1,18 +1,21 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "Parser_Constants.hpp"
 
 namespace Bencode_Lib {
 
 /// <summary>
-/// Extract an Integer from the input stream of characters referenced by ISource.
+/// Extract an Integer from the input stream of characters referenced by
+/// ISource.
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Positive integers value.</returns>
 Bencode::IntegerType Default_Parser::extractInteger(ISource &source) {
   // Number size of 64 bit int +2 for sign and terminating null
-  std::array<char, std::numeric_limits<Bencode::IntegerType>::digits10 + 2> number{};
+  std::array<char, std::numeric_limits<Bencode::IntegerType>::digits10 + 2>
+      number{};
   std::size_t digits = 0;
-  if (source.current() == '-') {
+  if (source.current() == ParserConstants::STRING_MINUS) {
     number[digits++] = source.current();
     source.next();
   }
@@ -38,19 +41,20 @@ Bencode::IntegerType Default_Parser::extractInteger(ISource &source) {
 /// Parse a byte string from the input stream of characters referenced by
 /// ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
-/// <param name="parserDepth">Current parser depth.</param>
+/// <param name="source">Reference to input interface used to parse Bencoded
+/// stream.</param> <param name="parserDepth">Current parser depth.</param>
 ///  <returns>String Node.</returns>
-Node Default_Parser::parseString(ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
+Node Default_Parser::parseString(
+    ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
   Bencode::IntegerType stringLength = extractInteger(source);
   if (stringLength < 0) {
     throw SyntaxError("Negative string length.");
   }
-  if (source.current() != ':') {
+  if (source.current() != ParserConstants::COLON) {
     throw SyntaxError("Missing colon separator in string value.");
   }
   source.next();
-  if (static_cast<uint64_t>(stringLength)>String::getMaxStringLength()) {
+  if (static_cast<uint64_t>(stringLength) > String::getMaxStringLength()) {
     throw SyntaxError("String size exceeds maximum allowed size.");
   }
   std::string buffer;
@@ -63,28 +67,31 @@ Node Default_Parser::parseString(ISource &source, [[maybe_unused]] const unsigne
 /// <summary>
 /// Parse an integer from the input stream of characters referenced by ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
-/// <param name="parserDepth">Current parser depth.</param>
+/// <param name="source">Reference to input interface used to parse Bencoded
+/// stream.</param> <param name="parserDepth">Current parser depth.</param>
 ///  <returns>Integer Node.</returns>
-Node Default_Parser::parseInteger(ISource &source, [[maybe_unused]]const unsigned long parserDepth) {
+Node Default_Parser::parseInteger(
+    ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
   source.next();
   Bencode::IntegerType integer = extractInteger(source);
-  confirmBoundary(source, 'e');
+  confirmBoundary(source, ParserConstants::END);
   return Node::make<Integer>(integer);
 }
 /// <summary>
 /// Parse a dictionary from the input stream of characters referenced by
 /// ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
-/// <param name="parserDepth">Current parser depth.</param>
+/// <param name="source">Reference to input interface used to parse Bencoded
+/// stream.</param> <param name="parserDepth">Current parser depth.</param>
 /// <returns>Dictionary Node.</returns>
-Node Default_Parser::parseDictionary(ISource &source, const unsigned long parserDepth) {
+Node Default_Parser::parseDictionary(ISource &source,
+                                     const unsigned long parserDepth) {
   Node dictionary = Node::make<Dictionary>();
   std::string lastKey{};
   source.next();
-  while (source.more() && source.current() != 'e') {
-    const std::string_view key = { NRef<String>(parseString(source,parserDepth)).value()} ;
+  while (source.more() && source.current() != ParserConstants::END) {
+    const std::string_view key = {
+        NRef<String>(parseString(source, parserDepth)).value()};
     // Check keys in lexical order
     if (lastKey > key) {
       throw SyntaxError("Dictionary keys not in sequence.");
@@ -93,35 +100,38 @@ Node Default_Parser::parseDictionary(ISource &source, const unsigned long parser
     // Check key not duplicate and insert
     if (!NRef<Dictionary>(dictionary).contains(key)) {
       NRef<Dictionary>(dictionary)
-          .add(Dictionary::Entry(key, parseNodes(source, parserDepth+1)));
+          .add(Dictionary::Entry(key, parseNodes(source, parserDepth + 1)));
     } else {
       throw SyntaxError("Duplicate dictionary key.");
     }
   }
-  confirmBoundary(source, 'e');
+  confirmBoundary(source, ParserConstants::END);
   return dictionary;
 }
 /// <summary>
 /// Parse a list from the input stream of characters referenced by ISource.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
-/// <param name="parserDepth">Current parser depth.</param>
+/// <param name="source">Reference to input interface used to parse Bencoded
+/// stream.</param> <param name="parserDepth">Current parser depth.</param>
 /// <returns>List Node.</returns>
-Node Default_Parser::parseList(ISource &source, const unsigned long parserDepth) {
+Node Default_Parser::parseList(ISource &source,
+                               const unsigned long parserDepth) {
   Node list = Node::make<List>();
   source.next();
-  while (source.more() && source.current() != 'e') {
-    NRef<List>(list).add(parseNodes(source, parserDepth+1));
+  while (source.more() && source.current() != ParserConstants::END) {
+    NRef<List>(list).add(parseNodes(source, parserDepth + 1));
   }
-  confirmBoundary(source, 'e');
+  confirmBoundary(source, ParserConstants::END);
   return list;
 }
 /// <summary>
 /// Generate SyntaxError if the expected boundary character is not found.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
-/// <param name="expectedBoundary">Expected boundary character.</param>
-void Default_Parser::confirmBoundary(ISource &source, const char expectedBoundary) {
+/// <param name="source">Reference to input interface used to parse Bencoded
+/// stream.</param> <param name="expectedBoundary">Expected boundary
+/// character.</param>
+void Default_Parser::confirmBoundary(ISource &source,
+                                     const char expectedBoundary) {
   if (source.current() != expectedBoundary) {
     throw SyntaxError(std::string("Missing end terminator on ") +
                       expectedBoundary);
@@ -131,11 +141,12 @@ void Default_Parser::confirmBoundary(ISource &source, const char expectedBoundar
 /// <summary>
 /// Parse a Node tree root.
 /// </summary>
-/// <param name="source">Reference to input interface used to parse Bencoded stream.</param>
-/// <param name="parserDepth">Current parser depth.</param>
+/// <param name="source">Reference to input interface used to parse Bencoded
+/// stream.</param> <param name="parserDepth">Current parser depth.</param>
 /// <returns>Root Node.</returns>
-Node Default_Parser::parseNodes(ISource &source, const unsigned long parserDepth) {
-  if (parserDepth>=getMaxParserDepth()) {
+Node Default_Parser::parseNodes(ISource &source,
+                                const unsigned long parserDepth) {
+  if (parserDepth >= getMaxParserDepth()) {
     throw SyntaxError("Maximum parser depth exceeded.");
   }
   const auto it = parsers.find(source.current());
