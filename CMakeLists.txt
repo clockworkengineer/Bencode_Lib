@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project("Bencode_Lib" VERSION 1.1.0 DESCRIPTION "Bencode C++ Library" LANGUAGES CXX)
+project("Bencode_Lib" VERSION 1.2.0 DESCRIPTION "Bencode C++ Library" LANGUAGES CXX)
 
 # C++ options
 set(CMAKE_CXX_STANDARD 23)
