@@ -71,6 +71,14 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
 3. Make extra stringifier headers optional with feature macros.
 4. Add new core-only API documentation for embedded mode: parse from buffer, stringify to buffer, root only.
 
+### Phase 2 Status
+
+- Added `BENCODE_EMBEDDED_MODE`, `BENCODE_ENABLE_EXCEPTIONS`, `BENCODE_ENABLE_FILE_IO`, and `BENCODE_ENABLE_DYNAMIC_ALLOCATION` as CMake options.
+- Guarded `Bencode_Sources.hpp` and `Bencode_Destinations.hpp` so file classes are only included when `BENCODE_ENABLE_FILE_IO` is enabled.
+- Wrapped `Bencode` and `Bencode_Impl` file-based API declarations in `#if defined(BENCODE_ENABLE_FILE_IO)`.
+- Conditionally included `Bencode_File.cpp` in the main library sources only when file I/O is enabled.
+- Added compile-time guards to `Bencode_FileSource.hpp` and `Bencode_FileDestination.hpp`.
+
 ### Phase 3: Replace dynamic runtime memory with bounded or arena-based storage
 
 1. Refactor `Node` to use an inline tagged union instead of `std::unique_ptr<Variant>`.

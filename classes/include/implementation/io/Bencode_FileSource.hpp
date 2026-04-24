@@ -1,13 +1,19 @@
 #pragma once
 
+#if defined(BENCODE_ENABLE_FILE_IO)
+
+#include <fstream>
+#include <string>
+#include <string_view>
+
 namespace Bencode_Lib {
 
 class FileSource final : public ISource {
 
 public:
   // Constructors/Destructors
-  explicit FileSource(const std::string_view &sourceFileName) :
-      filename(sourceFileName) {
+  explicit FileSource(const std::string_view &sourceFileName)
+      : filename(sourceFileName) {
     source.open(sourceFileName.data(), std::ios_base::binary);
     if (!source.is_open()) {
       throw Error(
@@ -40,3 +46,5 @@ private:
 };
 
 } // namespace Bencode_Lib
+
+#endif // BENCODE_ENABLE_FILE_IO

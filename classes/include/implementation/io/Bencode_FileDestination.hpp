@@ -1,12 +1,20 @@
 #pragma once
 
+#if defined(BENCODE_ENABLE_FILE_IO)
+
+#include <fstream>
+#include <cstring>
+#include <string>
+#include <string_view>
+
 namespace Bencode_Lib {
 
 class FileDestination final : public IDestination {
 
 public:
   // Constructors/Destructors
-  explicit FileDestination(const std::string_view filename) : filename(filename) {
+  explicit FileDestination(const std::string_view filename)
+      : filename(filename) {
     destination.open(filename.data(), std::ios_base::binary);
     if (!destination.is_open()) {
       throw Error("Bencode file output stream failed to open or could not be "
@@ -24,9 +32,9 @@ public:
     destination.write(bytes.c_str(), bytes.length());
     destination.flush();
     length += bytes.length();
-        lastChar = bytes.back();
+    lastChar = bytes.back();
   }
-  void add( const std::string_view &bytes) override {
+  void add(const std::string_view &bytes) override {
     destination.write(bytes.data(), bytes.length());
     destination.flush();
     length += bytes.length();
@@ -43,7 +51,7 @@ public:
     destination.put(ch);
     destination.flush();
     length++;
-        lastChar = ch;
+    lastChar = ch;
   }
 
   void clear() override {
@@ -56,13 +64,13 @@ public:
       throw Error("File output stream failed to open or could not be created.");
     }
     length = 0;
-        lastChar = 0;
+    lastChar = 0;
   }
 
   std::size_t size() const { return length; }
-    [[nodiscard]] char last() override { return lastChar; }
+  [[nodiscard]] char last() override { return lastChar; }
 
-  std::string getFileName() { return filename;}
+  std::string getFileName() { return filename; }
   void close() { destination.close(); }
 
 private:
@@ -73,3 +81,5 @@ private:
 };
 
 } // namespace Bencode_Lib
+
+#endif // BENCODE_ENABLE_FILE_IO

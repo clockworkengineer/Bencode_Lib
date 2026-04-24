@@ -11,6 +11,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(BENCODE_BUILD_TESTS "Build unit tests" ON)
 option(BENCODE_BUILD_EXAMPLES "Build examples" ON)
 option(BENCODE_BUILD_BENCHMARKS "Build performance benchmark executable" ON)
+option(BENCODE_EMBEDDED_MODE "Enable embedded build mode" OFF)
+option(BENCODE_ENABLE_EXCEPTIONS "Enable exception support" ON)
+option(BENCODE_ENABLE_FILE_IO "Enable file-based I/O support" ON)
+option(BENCODE_ENABLE_DYNAMIC_ALLOCATION "Enable dynamic allocations for containers" ON)
 option(BENCODE_ENABLE_JSON_STRINGIFY "Enable JSON stringify support" ON)
 option(BENCODE_ENABLE_XML_STRINGIFY "Enable XML stringify support" ON)
 option(BENCODE_ENABLE_YAML_STRINGIFY "Enable YAML stringify support" ON)
@@ -26,9 +30,14 @@ set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
 set(BENCODE_SOURCES
   classes/source/Bencode.cpp
   classes/source/implementation/Bencode_Impl.cpp
-  classes/source/implementation/file/Bencode_File.cpp
   classes/source/implementation/parser/Default_Parser.cpp
 )
+
+if(BENCODE_ENABLE_FILE_IO)
+  list(APPEND BENCODE_SOURCES
+    classes/source/implementation/file/Bencode_File.cpp
+  )
+endif()
 
 set(BENCODE_INCLUDES
   classes/include/Bencode.hpp

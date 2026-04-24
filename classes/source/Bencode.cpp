@@ -74,7 +74,9 @@ void Bencode::stringify(IDestination &&destination) const {
 /// </summary>
 /// <param name="action">Action methods to call during traversal.</param>
 /// Traverse using non-const Bencode so can change the Bencode tree
-[[maybe_unused]] void Bencode::traverse(IAction &action) { implementation->traverse(action); }
+[[maybe_unused]] void Bencode::traverse(IAction &action) {
+  implementation->traverse(action);
+}
 // Traverse using const Bencode so cannot change the Bencode tree
 void Bencode::traverse(IAction &action) const {
   std::as_const(*implementation).traverse(action);
@@ -105,14 +107,14 @@ Node &Bencode::operator[](const std::size_t index) {
 const Node &Bencode::operator[](const std::size_t index) const {
   return (*implementation)[index];
 }
+#if defined(BENCODE_ENABLE_FILE_IO)
 /// <summary>
 /// Create a Bencode file and write Bencode string to it.
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
 /// <param name="bencodeString">Bencode string</param>
 void Bencode::toFile(const std::string_view &fileName,
-                     const std::string_view &bencodeString)
-{
+                     const std::string_view &bencodeString) {
   Bencode_Impl::toFile(fileName, bencodeString);
 }
 /// <summary>
@@ -121,5 +123,8 @@ void Bencode::toFile(const std::string_view &fileName,
 /// </summary>
 /// <param name="fileName">Bencode file name</param>
 /// <returns>Bencode string.</returns>
-std::string Bencode::fromFile(const std::string_view &fileName) { return Bencode_Impl::fromFile(fileName); }
+std::string Bencode::fromFile(const std::string_view &fileName) {
+  return Bencode_Impl::fromFile(fileName);
+}
+#endif
 } // namespace Bencode_Lib
