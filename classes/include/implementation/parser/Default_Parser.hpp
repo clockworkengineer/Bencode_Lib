@@ -60,9 +60,8 @@ private:
                                                    Node &destination);
   [[nodiscard]] static ParseStatus
   parseList(ISource &source, unsigned long parserDepth, Node &destination);
-  [[nodiscard]] static ParseStatus parseScalar(ISource &source,
-                                               unsigned long parserDepth,
-                                               Node &destination);
+  [[nodiscard]] static ParseStatus
+  parseScalar(ISource &source, unsigned long parserDepth, Node &destination);
   [[nodiscard]] static ParseStatus confirmBoundary(ISource &source,
                                                    char expectedBoundary);
   [[nodiscard]] static ParseStatus

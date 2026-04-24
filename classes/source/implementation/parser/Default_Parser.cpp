@@ -18,15 +18,12 @@ struct ParserFrame {
   explicit ParserFrame(ContainerType frameType)
       : type(frameType),
         container(frameType == ContainerType::List ? Node::make<List>()
-                                                  : Node::make<Dictionary>()),
-        lastKey(),
-        currentKey(),
-        awaitingValue(false) {}
+                                                   : Node::make<Dictionary>()),
+        lastKey(), currentKey(), awaitingValue(false) {}
 };
 
-static bool convertToInteger(const char *buffer,
-                                const std::size_t digits,
-                                Bencode::IntegerType &value) {
+static bool convertToInteger(const char *buffer, const std::size_t digits,
+                             Bencode::IntegerType &value) {
   const bool negative =
       digits > 0 && buffer[0] == ParserConstants::STRING_MINUS;
   std::size_t start = negative ? 1 : 0;
@@ -183,7 +180,7 @@ Node Default_Parser::parseList(ISource &source,
 }
 
 Node Default_Parser::parseScalar(ISource &source,
-                                   const unsigned long parserDepth) {
+                                 const unsigned long parserDepth) {
   switch (source.current()) {
   case ParserConstants::INTEGER:
     return Default_Parser::parseInteger(source, parserDepth);
@@ -271,7 +268,8 @@ Node Default_Parser::parseIterative(ISource &source) {
         pushFrame(ContainerType::List);
         continue;
       }
-      Node child = parseScalar(source, static_cast<unsigned long>(frameStack.size() + 1));
+      Node child = parseScalar(
+          source, static_cast<unsigned long>(frameStack.size() + 1));
       NRef<List>(frame.container).add(std::move(child));
       continue;
     }
@@ -290,9 +288,11 @@ Node Default_Parser::parseIterative(ISource &source) {
         pushFrame(ContainerType::List);
         continue;
       }
-      Node valueNode = parseScalar(source, static_cast<unsigned long>(frameStack.size() + 1));
+      Node valueNode = parseScalar(
+          source, static_cast<unsigned long>(frameStack.size() + 1));
       NRef<Dictionary>(frame.container)
-          .add(Dictionary::Entry(std::move(frame.currentKey), std::move(valueNode)));
+          .add(Dictionary::Entry(std::move(frame.currentKey),
+                                 std::move(valueNode)));
       frame.awaitingValue = false;
       continue;
     }
@@ -305,7 +305,8 @@ Node Default_Parser::parseIterative(ISource &source) {
       root = completeFrame();
       continue;
     }
-    Node keyNode = parseString(source, static_cast<unsigned long>(frameStack.size() + 1));
+    Node keyNode =
+        parseString(source, static_cast<unsigned long>(frameStack.size() + 1));
     std::string key = std::string(NRef<String>(keyNode).value());
     if (frame.lastKey > key) {
       throw SyntaxError("Dictionary keys not in sequence.");
@@ -525,8 +526,8 @@ ParseStatus Default_Parser::parseList(ISource &source,
 }
 
 ParseStatus Default_Parser::parseScalar(ISource &source,
-                                           const unsigned long parserDepth,
-                                           Node &destination) {
+                                        const unsigned long parserDepth,
+                                        Node &destination) {
   switch (source.current()) {
   case ParserConstants::INTEGER:
     return Default_Parser::parseInteger(source, parserDepth, destination);
@@ -544,12 +545,12 @@ ParseStatus Default_Parser::parseScalar(ISource &source,
   case ParserConstants::STRING_PLUS:
     return Default_Parser::parseString(source, parserDepth, destination);
   default:
-    return makeSyntaxError("Expected integer or string while parsing container.");
+    return makeSyntaxError(
+        "Expected integer or string while parsing container.");
   }
 }
 
-static ParseStatus attachCompletedValue(ParserFrame &parent,
-                                        Node &&completed) {
+static ParseStatus attachCompletedValue(ParserFrame &parent, Node &&completed) {
   if (parent.type == ContainerType::List) {
     NRef<List>(parent.container).add(std::move(completed));
     return ParseStatus::success();
@@ -564,8 +565,7 @@ static ParseStatus attachCompletedValue(ParserFrame &parent,
   return ParseStatus::success();
 }
 
-ParseStatus Default_Parser::parseIterative(ISource &source,
-                                          Node &destination) {
+ParseStatus Default_Parser::parseIterative(ISource &source, Node &destination) {
   if (!source.more()) {
     return makeSyntaxError("Unexpected end of source.");
   }
@@ -618,8 +618,8 @@ ParseStatus Default_Parser::parseIterative(ISource &source,
           destination = std::move(completed);
           return ParseStatus::success();
         }
-        ParseStatus status = attachCompletedValue(frameStack.back(),
-                                                 std::move(completed));
+        ParseStatus status =
+            attachCompletedValue(frameStack.back(), std::move(completed));
         if (!status.ok()) {
           return status;
         }
@@ -642,10 +642,8 @@ ParseStatus Default_Parser::parseIterative(ISource &source,
         continue;
       }
       Node valueNode;
-      ParseStatus status = parseScalar(source,
-                                      static_cast<unsigned long>(frameStack.size() +
-                                                                1),
-                                      valueNode);
+      ParseStatus status = parseScalar(
+          source, static_cast<unsigned long>(frameStack.size() + 1), valueNode);
       if (!status.ok()) {
         return status;
       }
@@ -674,10 +672,8 @@ ParseStatus Default_Parser::parseIterative(ISource &source,
         continue;
       }
       Node valueNode;
-      ParseStatus status = parseScalar(source,
-                                      static_cast<unsigned long>(frameStack.size() +
-                                                                1),
-                                      valueNode);
+      ParseStatus status = parseScalar(
+          source, static_cast<unsigned long>(frameStack.size() + 1), valueNode);
       if (!status.ok()) {
         return status;
       }
@@ -699,18 +695,16 @@ ParseStatus Default_Parser::parseIterative(ISource &source,
         destination = std::move(completed);
         return ParseStatus::success();
       }
-      ParseStatus status = attachCompletedValue(frameStack.back(),
-                                               std::move(completed));
+      ParseStatus status =
+          attachCompletedValue(frameStack.back(), std::move(completed));
       if (!status.ok()) {
         return status;
       }
       continue;
     }
     Node keyNode;
-    ParseStatus status = parseString(source,
-                                    static_cast<unsigned long>(frameStack.size() +
-                                                              1),
-                                    keyNode);
+    ParseStatus status = parseString(
+        source, static_cast<unsigned long>(frameStack.size() + 1), keyNode);
     if (!status.ok()) {
       return status;
     }

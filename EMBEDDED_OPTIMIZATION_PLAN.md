@@ -147,6 +147,13 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
    - Build on `fopen`/`fread`/`fwrite` or custom HAL APIs.
 3. Provide `BufferSource` and `BufferDestination` as the default embedded I/O path.
 
+### Phase 6 Status
+
+- Replaced C++ `std::ifstream`/`std::ofstream` file handling with portable C `FILE*` I/O in file source/destination classes.
+- Kept `FileSource`/`FileDestination` guarded by `BENCODE_ENABLE_FILE_IO` so embedded builds can omit file support entirely.
+- Reimplemented `Bencode_Impl::fromFile` and `Bencode_Impl::toFile` using `fopen`, `fread`, `fwrite`, and `fclose`.
+- Confirmed `BufferSource`/`BufferDestination` remain the default embedded buffer-based I/O path.
+
 ### Phase 7: Add embedded tests and benchmarks
 
 1. Add a new embedded-target test suite or compile-time test configuration.
