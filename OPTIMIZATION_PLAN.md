@@ -137,6 +137,13 @@
 - Optimize string buffer construction and source reads.
 - Verify parser depth and syntax validation still work.
 
+### Phase 4 Status
+
+- Replaced `Default_Parser` dynamic `std::map`/`std::function` routing with switch-based dispatch.
+- Optimized `parseString()` by preallocating the result buffer and reading bytes directly.
+- Preserved existing error semantics for premature string input by relying on `ISource::next()`.
+- Verified phase-four changes with `Bencode_Lib_Unit_Tests`.
+
 ### Phase 5: Optional features and build options
 
 - Introduce feature flags for stringifiers.

@@ -57,12 +57,17 @@ Node Default_Parser::parseString(
   if (static_cast<uint64_t>(stringLength) > String::getMaxStringLength()) {
     throw SyntaxError("String size exceeds maximum allowed size.");
   }
+  if (stringLength == 0) {
+    return Node::make<String>(std::string{});
+  }
   std::string buffer;
-  while (stringLength-- > 0) {
-    buffer += source.current();
+  buffer.resize(static_cast<std::size_t>(stringLength));
+  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
+       ++index) {
+    buffer[index] = source.current();
     source.next();
   }
-  return Node::make<String>(buffer);
+  return Node::make<String>(std::move(buffer));
 }
 /// <summary>
 /// Parse an integer from the input stream of characters referenced by ISource.
@@ -149,12 +154,31 @@ Node Default_Parser::parseNodes(ISource &source,
   if (parserDepth >= getMaxParserDepth()) {
     throw SyntaxError("Maximum parser depth exceeded.");
   }
-  const auto it = parsers.find(source.current());
-  if (it == parsers.end()) {
+
+  switch (source.current()) {
+  case ParserConstants::DICTIONARY:
+    return parseDictionary(source, parserDepth);
+  case ParserConstants::LIST:
+    return parseList(source, parserDepth);
+  case ParserConstants::INTEGER:
+    return parseInteger(source, parserDepth);
+  case ParserConstants::STRING_0:
+  case ParserConstants::STRING_1:
+  case ParserConstants::STRING_2:
+  case ParserConstants::STRING_3:
+  case ParserConstants::STRING_4:
+  case ParserConstants::STRING_5:
+  case ParserConstants::STRING_6:
+  case ParserConstants::STRING_7:
+  case ParserConstants::STRING_8:
+  case ParserConstants::STRING_9:
+  case ParserConstants::STRING_MINUS:
+  case ParserConstants::STRING_PLUS:
+    return parseString(source, parserDepth);
+  default:
     throw SyntaxError(
         "Expected integer, string, list or dictionary not present.");
   }
-  return it->second(source, parserDepth);
 }
 /// <summary>
 /// Parse a Node from the input stream of characters referenced by ISource to

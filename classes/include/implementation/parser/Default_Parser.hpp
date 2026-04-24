@@ -40,24 +40,6 @@ private:
   void static confirmBoundary(ISource &source, char expectedBoundary);
   [[nodiscard]] static Node parseNodes(ISource &source,
                                        unsigned long parserDepth);
-  // Parser routing table
-  using ParserFunc = std::function<Node(ISource &, unsigned long)>;
-  inline static std::map<char, ParserFunc> parsers = {
-      {ParserConstants::DICTIONARY, parseDictionary},
-      {ParserConstants::LIST, parseList},
-      {ParserConstants::INTEGER, parseInteger},
-      {ParserConstants::STRING_0, parseString},
-      {ParserConstants::STRING_1, parseString},
-      {ParserConstants::STRING_2, parseString},
-      {ParserConstants::STRING_3, parseString},
-      {ParserConstants::STRING_4, parseString},
-      {ParserConstants::STRING_5, parseString},
-      {ParserConstants::STRING_6, parseString},
-      {ParserConstants::STRING_7, parseString},
-      {ParserConstants::STRING_8, parseString},
-      {ParserConstants::STRING_9, parseString},
-      {ParserConstants::STRING_MINUS, parseString},
-      {ParserConstants::STRING_PLUS, parseString}};
   inline static unsigned long maxParserDepth{kMaxParserDepth};
 };
 
