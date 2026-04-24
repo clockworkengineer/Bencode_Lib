@@ -150,6 +150,16 @@
 - Make example/test builds optional with `BENCODE_BUILD_EXAMPLES` and `BENCODE_BUILD_TESTS` already present.
 - Make sure minimal consumers can build only core parse/stringify functionality.
 
+### Phase 5 Status
+
+- Added CMake options:
+  - `BENCODE_ENABLE_JSON_STRINGIFY`
+  - `BENCODE_ENABLE_XML_STRINGIFY`
+  - `BENCODE_ENABLE_YAML_STRINGIFY`
+- Configured the library target to export these feature macros to consumers.
+- Wrapped built-in stringifier includes in `classes/include/Bencode_Core.hpp` behind the new compile-time flags.
+- This enables a smaller compile surface for consumers who want a minimal core build.
+
 ### Phase 6: Regression and performance validation
 
 - Re-run unit tests and examples.

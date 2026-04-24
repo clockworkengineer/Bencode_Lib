@@ -10,6 +10,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Build options
 option(BENCODE_BUILD_TESTS "Build unit tests" ON)
 option(BENCODE_BUILD_EXAMPLES "Build examples" ON)
+option(BENCODE_ENABLE_JSON_STRINGIFY "Enable JSON stringify support" ON)
+option(BENCODE_ENABLE_XML_STRINGIFY "Enable XML stringify support" ON)
+option(BENCODE_ENABLE_YAML_STRINGIFY "Enable YAML stringify support" ON)
 option(BENCODE_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
 
 # Setup library version
@@ -105,6 +108,13 @@ endif()
 # Pre-compiled headers (PRIVATE so consumers are not forced to use it)
 target_precompile_headers(${BENCODE_LIBRARY_NAME}
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
+)
+
+target_compile_definitions(${BENCODE_LIBRARY_NAME}
+  PUBLIC
+  $<$<BOOL:${BENCODE_ENABLE_JSON_STRINGIFY}>:BENCODE_ENABLE_JSON_STRINGIFY>
+  $<$<BOOL:${BENCODE_ENABLE_XML_STRINGIFY}>:BENCODE_ENABLE_XML_STRINGIFY>
+  $<$<BOOL:${BENCODE_ENABLE_YAML_STRINGIFY}>:BENCODE_ENABLE_YAML_STRINGIFY>
 )
 
 # Tests
