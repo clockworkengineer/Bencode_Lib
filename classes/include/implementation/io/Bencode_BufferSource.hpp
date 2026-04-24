@@ -1,5 +1,11 @@
 #pragma once
 
+#include "ISource.hpp"
+
+#include <cstddef>
+#include <string_view>
+#include <vector>
+
 namespace Bencode_Lib {
 
 class BufferSource final : public ISource {

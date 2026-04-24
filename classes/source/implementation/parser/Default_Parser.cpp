@@ -48,7 +48,7 @@ static bool convertToInteger(const char *buffer, const std::size_t digits,
   return true;
 }
 
-#if defined(BENCODE_ENABLE_EXCEPTIONS)
+#if BENCODE_ENABLE_EXCEPTIONS
 
 /// <summary>
 /// Extract an Integer from the input stream of characters referenced by

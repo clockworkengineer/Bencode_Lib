@@ -1,6 +1,8 @@
 #pragma once
 
-#if defined(BENCODE_ENABLE_FILE_IO)
+#if BENCODE_ENABLE_FILE_IO
+
+#include "IDestination.hpp"
 
 #include <cstddef>
 #include <cstdio>

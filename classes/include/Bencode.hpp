@@ -1,5 +1,7 @@
 #pragma once
 
+#include "implementation/common/Bencode_Status.hpp"
+
 namespace Bencode_Lib {
 
 // ============================
@@ -48,7 +50,7 @@ public:
   Bencode &operator=(Bencode &&other) = delete;
   ~Bencode();
   // Parse Bencode into Node tree
-#if defined(BENCODE_ENABLE_EXCEPTIONS)
+#if BENCODE_ENABLE_EXCEPTIONS
   void parse(ISource &source) const;
   void parse(ISource &&source) const;
 #else
@@ -72,7 +74,7 @@ public:
   // Get Bencode list entry at index
   Node &operator[](std::size_t index);
   const Node &operator[](std::size_t index) const;
-#if defined(BENCODE_ENABLE_FILE_IO)
+#if BENCODE_ENABLE_FILE_IO
   // Read/Write Bencode from the file
   static std::string fromFile(const std::string_view &fileName);
   static void toFile(const std::string_view &fileName,

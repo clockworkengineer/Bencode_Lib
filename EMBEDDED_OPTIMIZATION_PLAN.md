@@ -161,6 +161,15 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
 3. Add benchmarks for heap-free parsing and stringification.
 4. Verify low-memory behavior and no-heap correctness via tests.
 
+### Phase 7 Status
+
+- Added dedicated embedded-mode static library target `Bencode_Lib_Embedded` in `CMakeLists.txt`.
+- Added an embedded-only unit test executable `Bencode_Lib_Embedded_Unit_Tests` in `tests/CMakeLists.txt`.
+- Added `tests/source/embedded/Bencode_Lib_Tests_Embedded.cpp` to validate embedded compilation, fixed-capacity list behavior, disabled file I/O, and disabled exception support.
+- Added an embedded benchmark target `Bencode_Lib_Embedded_Benchmark` for heap-free parse/stringify profiling.
+- Verified `Bencode_Lib_Embedded_Unit_Tests` builds and passes successfully.
+- Verified `Bencode_Lib_Embedded_Benchmark` builds successfully.
+
 ### Phase 8: Document and validate
 
 1. Add an `EMBEDDED.md` guide describing:

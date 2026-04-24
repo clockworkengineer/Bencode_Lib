@@ -16,7 +16,7 @@ public:
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
   ~Bencode_Impl();
   // Parse Bencoded source into Node tree
-#if defined(BENCODE_ENABLE_EXCEPTIONS)
+#if BENCODE_ENABLE_EXCEPTIONS
   void parse(ISource &source);
 #else
   ParseStatus parse(ISource &source);
@@ -37,7 +37,7 @@ public:
   // Get Bencode list element at index
   Node &operator[](std::size_t index);
   const Node &operator[](std::size_t index) const;
-#if defined(BENCODE_ENABLE_FILE_IO)
+#if BENCODE_ENABLE_FILE_IO
   // Read/Write Bencode from a file
   static std::string fromFile(const std::string_view &fileName);
   static void toFile(const std::string_view &fileName,

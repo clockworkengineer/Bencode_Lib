@@ -29,7 +29,7 @@ Bencode::~Bencode() = default;
 /// </summary>
 /// <param name="bencodeString">Bencode string.</param>
 Bencode::Bencode(const std::string_view &bencodeString) : Bencode() {
-#if defined(BENCODE_ENABLE_EXCEPTIONS)
+#if BENCODE_ENABLE_EXCEPTIONS
   parse(BufferSource{bencodeString});
 #else
   [[maybe_unused]] ParseStatus status = parse(BufferSource{bencodeString});
@@ -58,7 +58,7 @@ std::string Bencode::version() { return Bencode_Impl::version(); }
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns></returns>
-#if defined(BENCODE_ENABLE_EXCEPTIONS)
+#if BENCODE_ENABLE_EXCEPTIONS
 void Bencode::parse(ISource &source) const { implementation->parse(source); }
 void Bencode::parse(ISource &&source) const { implementation->parse(source); }
 #else
@@ -120,7 +120,7 @@ Node &Bencode::operator[](const std::size_t index) {
 const Node &Bencode::operator[](const std::size_t index) const {
   return (*implementation)[index];
 }
-#if defined(BENCODE_ENABLE_FILE_IO)
+#if BENCODE_ENABLE_FILE_IO
 /// <summary>
 /// Create a Bencode file and write Bencode string to it.
 /// </summary>

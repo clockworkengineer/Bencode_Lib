@@ -34,7 +34,7 @@ std::string Bencode_Impl::version() {
   return versionString.str();
 }
 
-#if defined(BENCODE_ENABLE_EXCEPTIONS)
+#if BENCODE_ENABLE_EXCEPTIONS
 void Bencode_Impl::parse(ISource &source) {
   bNodeRoot = bNodeParser->parse(source);
   if (source.more()) {

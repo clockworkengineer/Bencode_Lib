@@ -1,6 +1,16 @@
 #pragma once
 
+#include "IDestination.hpp"
+
+#include <cstddef>
+#include <cstring>
+#include <string>
+#include <string_view>
+#include <vector>
+
 namespace Bencode_Lib {
+
+class FileSource;
 
 class BufferDestination final : public IDestination {
 

@@ -29,7 +29,7 @@ public:
   // ==========================================
   // Parse Bencode into Node tree from source
   // ==========================================
-#if defined(BENCODE_ENABLE_EXCEPTIONS)
+#if BENCODE_ENABLE_EXCEPTIONS
   virtual Node parse(ISource &source) = 0;
 #else
   virtual ParseStatus parse(ISource &source, Node &destination) = 0;

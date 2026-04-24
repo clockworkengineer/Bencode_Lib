@@ -39,6 +39,9 @@ public:
   reference operator[](size_type index) { return data_[index]; }
   const_reference operator[](size_type index) const { return data_[index]; }
 
+  reference back() { return data_[size_ - 1]; }
+  const_reference back() const { return data_[size_ - 1]; }
+
   void push_back(const T &value) { insert(end(), value); }
   void push_back(T &&value) { insert(end(), std::move(value)); }
 

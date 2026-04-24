@@ -51,6 +51,20 @@ target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/inclu
 target_link_libraries(${TEST_EXECUTABLE} Bencode_Lib::Bencode_Lib Catch2::Catch2WithMain)
 target_precompile_headers(${TEST_EXECUTABLE} REUSE_FROM Bencode_Lib)
 
+# Embedded test suite: compile the library and a minimal embedded-focused test harness
+set(EMBEDDED_TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Embedded_Unit_Tests)
+add_executable(${EMBEDDED_TEST_EXECUTABLE} source/embedded/Bencode_Lib_Tests_Embedded.cpp)
+target_include_directories(${EMBEDDED_TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(${EMBEDDED_TEST_EXECUTABLE} Bencode_Lib::Bencode_Lib_Embedded Catch2::Catch2WithMain)
+target_precompile_headers(${EMBEDDED_TEST_EXECUTABLE} PRIVATE ${CMAKE_SOURCE_DIR}/stdafx.h)
+target_compile_definitions(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
+  BENCODE_EMBEDDED_MODE
+  BENCODE_ENABLE_EXCEPTIONS=0
+  BENCODE_ENABLE_FILE_IO=0
+  BENCODE_ENABLE_DYNAMIC_ALLOCATION=0
+)
+add_test(NAME ${EMBEDDED_TEST_EXECUTABLE} COMMAND ${EMBEDDED_TEST_EXECUTABLE})
+
 if(MSVC)
   target_compile_options(${TEST_EXECUTABLE} PRIVATE
     /W4
@@ -59,8 +73,21 @@ if(MSVC)
     /wd4324 # Catch2: structure padded due to alignment specifier
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
+  target_compile_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
+    /W4
+    /permissive-
+    /Zc:__cplusplus
+    /wd4324 # Catch2: structure padded due to alignment specifier
+    $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
+  )
 else()
   target_compile_options(${TEST_EXECUTABLE} PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
+  )
+  target_compile_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
     -Wall
     -Wextra
     -Wpedantic
@@ -76,6 +103,17 @@ if(BENCODE_BUILD_BENCHMARKS)
   target_link_libraries(Bencode_Lib_Benchmark Bencode_Lib::Bencode_Lib)
   target_precompile_headers(Bencode_Lib_Benchmark REUSE_FROM Bencode_Lib)
 
+  add_executable(Bencode_Lib_Embedded_Benchmark source/benchmark/Bencode_Lib_Benchmark.cpp)
+  target_include_directories(Bencode_Lib_Embedded_Benchmark PUBLIC ${PROJECT_SOURCE_DIR}/include)
+  target_link_libraries(Bencode_Lib_Embedded_Benchmark Bencode_Lib::Bencode_Lib_Embedded)
+  target_precompile_headers(Bencode_Lib_Embedded_Benchmark PRIVATE ${CMAKE_SOURCE_DIR}/stdafx.h)
+  target_compile_definitions(Bencode_Lib_Embedded_Benchmark PRIVATE
+    BENCODE_EMBEDDED_MODE
+    BENCODE_ENABLE_EXCEPTIONS=0
+    BENCODE_ENABLE_FILE_IO=0
+    BENCODE_ENABLE_DYNAMIC_ALLOCATION=0
+  )
+
   if(MSVC)
     target_compile_options(Bencode_Lib_Benchmark PRIVATE
       /W4
@@ -83,8 +121,20 @@ if(BENCODE_BUILD_BENCHMARKS)
       /Zc:__cplusplus
       $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
     )
+    target_compile_options(Bencode_Lib_Embedded_Benchmark PRIVATE
+      /W4
+      /permissive-
+      /Zc:__cplusplus
+      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
+    )
   else()
     target_compile_options(Bencode_Lib_Benchmark PRIVATE
+      -Wall
+      -Wextra
+      -Wpedantic
+      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
+    )
+    target_compile_options(Bencode_Lib_Embedded_Benchmark PRIVATE
       -Wall
       -Wextra
       -Wpedantic

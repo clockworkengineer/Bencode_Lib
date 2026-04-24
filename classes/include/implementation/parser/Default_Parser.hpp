@@ -19,7 +19,7 @@ public:
   Default_Parser &operator=(Default_Parser &&other) = delete;
   ~Default_Parser() override = default;
   // Parse bencode Node tree
-#if defined(BENCODE_ENABLE_EXCEPTIONS)
+#if BENCODE_ENABLE_EXCEPTIONS
   Node parse(ISource &source) override;
 #else
   ParseStatus parse(ISource &source, Node &destination) override;
@@ -32,7 +32,7 @@ public:
 
 private:
   // Parser functions
-#if defined(BENCODE_ENABLE_EXCEPTIONS)
+#if BENCODE_ENABLE_EXCEPTIONS
   [[nodiscard]] static Bencode::IntegerType extractInteger(ISource &source);
   [[nodiscard]] static Node parseString(ISource &source,
                                         unsigned long parserDepth);

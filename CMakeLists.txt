@@ -36,6 +36,12 @@ set(BENCODE_SOURCES
   classes/source/implementation/parser/Default_Parser.cpp
 )
 
+set(BENCODE_EMBEDDED_SOURCES
+  classes/source/Bencode.cpp
+  classes/source/implementation/Bencode_Impl.cpp
+  classes/source/implementation/parser/Default_Parser.cpp
+)
+
 if(BENCODE_ENABLE_FILE_IO)
   list(APPEND BENCODE_SOURCES
     classes/source/implementation/file/Bencode_File.cpp
@@ -83,10 +89,30 @@ set(BENCODE_INCLUDES
 # Bencode library target
 add_library(${BENCODE_LIBRARY_NAME} ${BENCODE_SOURCES} ${BENCODE_INCLUDES})
 
+# Embedded-mode variant of the library for dedicated embedded testing and benchmarking
+add_library(${BENCODE_LIBRARY_NAME}_Embedded STATIC ${BENCODE_EMBEDDED_SOURCES} ${BENCODE_INCLUDES})
+add_library(Bencode_Lib::Bencode_Lib_Embedded ALIAS ${BENCODE_LIBRARY_NAME}_Embedded)
+
 # Namespaced alias for consistent use in examples, tests, and by consumers
 add_library(Bencode_Lib::Bencode_Lib ALIAS ${BENCODE_LIBRARY_NAME})
 
 target_include_directories(${BENCODE_LIBRARY_NAME}
+  PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
+  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  $<INSTALL_INTERFACE:include>
+)
+
+target_include_directories(${BENCODE_LIBRARY_NAME}_Embedded
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
@@ -110,8 +136,20 @@ if(MSVC)
     /Zc:__cplusplus
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
+  target_compile_options(${BENCODE_LIBRARY_NAME}_Embedded PRIVATE
+    /W4
+    /permissive-
+    /Zc:__cplusplus
+    $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
+  )
 else()
   target_compile_options(${BENCODE_LIBRARY_NAME} PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
+  )
+  target_compile_options(${BENCODE_LIBRARY_NAME}_Embedded PRIVATE
     -Wall
     -Wextra
     -Wpedantic
@@ -124,12 +162,30 @@ target_precompile_headers(${BENCODE_LIBRARY_NAME}
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
 )
 
+target_precompile_headers(${BENCODE_LIBRARY_NAME}_Embedded
+  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
+)
+
 target_compile_definitions(${BENCODE_LIBRARY_NAME}
   PUBLIC
   $<$<BOOL:${BENCODE_EMBEDDED_MODE}>:BENCODE_EMBEDDED_MODE>
   $<$<BOOL:${BENCODE_ENABLE_EXCEPTIONS}>:BENCODE_ENABLE_EXCEPTIONS>
   $<$<BOOL:${BENCODE_ENABLE_FILE_IO}>:BENCODE_ENABLE_FILE_IO>
   $<$<BOOL:${BENCODE_ENABLE_DYNAMIC_ALLOCATION}>:BENCODE_ENABLE_DYNAMIC_ALLOCATION>
+  $<$<BOOL:${BENCODE_ENABLE_JSON_STRINGIFY}>:BENCODE_ENABLE_JSON_STRINGIFY>
+  $<$<BOOL:${BENCODE_ENABLE_XML_STRINGIFY}>:BENCODE_ENABLE_XML_STRINGIFY>
+  $<$<BOOL:${BENCODE_ENABLE_YAML_STRINGIFY}>:BENCODE_ENABLE_YAML_STRINGIFY>
+  BENCODE_MAX_NODE_COUNT=${BENCODE_MAX_NODE_COUNT}
+  BENCODE_MAX_CONTAINER_SIZE=${BENCODE_MAX_CONTAINER_SIZE}
+  BENCODE_MAX_STRING_LENGTH=${BENCODE_MAX_STRING_LENGTH}
+)
+
+target_compile_definitions(${BENCODE_LIBRARY_NAME}_Embedded
+  PUBLIC
+  BENCODE_EMBEDDED_MODE
+  BENCODE_ENABLE_EXCEPTIONS=0
+  BENCODE_ENABLE_FILE_IO=0
+  BENCODE_ENABLE_DYNAMIC_ALLOCATION=0
   $<$<BOOL:${BENCODE_ENABLE_JSON_STRINGIFY}>:BENCODE_ENABLE_JSON_STRINGIFY>
   $<$<BOOL:${BENCODE_ENABLE_XML_STRINGIFY}>:BENCODE_ENABLE_XML_STRINGIFY>
   $<$<BOOL:${BENCODE_ENABLE_YAML_STRINGIFY}>:BENCODE_ENABLE_YAML_STRINGIFY>
