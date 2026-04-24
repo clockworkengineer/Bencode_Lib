@@ -19,7 +19,11 @@ public:
   Default_Parser &operator=(Default_Parser &&other) = delete;
   ~Default_Parser() override = default;
   // Parse bencode Node tree
+#if defined(BENCODE_ENABLE_EXCEPTIONS)
   Node parse(ISource &source) override;
+#else
+  ParseStatus parse(ISource &source, Node &destination) override;
+#endif
   // Get/Set parser max recursion depth
   static void setMaxParserDepth(const unsigned long depth) {
     maxParserDepth = depth;
@@ -28,6 +32,7 @@ public:
 
 private:
   // Parser functions
+#if defined(BENCODE_ENABLE_EXCEPTIONS)
   [[nodiscard]] static Bencode::IntegerType extractInteger(ISource &source);
   [[nodiscard]] static Node parseString(ISource &source,
                                         unsigned long parserDepth);
@@ -40,6 +45,23 @@ private:
   void static confirmBoundary(ISource &source, char expectedBoundary);
   [[nodiscard]] static Node parseNodes(ISource &source,
                                        unsigned long parserDepth);
+#else
+  [[nodiscard]] static ParseStatus extractInteger(ISource &source,
+                                                  Bencode::IntegerType &value);
+  [[nodiscard]] static ParseStatus
+  parseString(ISource &source, unsigned long parserDepth, Node &destination);
+  [[nodiscard]] static ParseStatus
+  parseInteger(ISource &source, unsigned long parserDepth, Node &destination);
+  [[nodiscard]] static ParseStatus parseDictionary(ISource &source,
+                                                   unsigned long parserDepth,
+                                                   Node &destination);
+  [[nodiscard]] static ParseStatus
+  parseList(ISource &source, unsigned long parserDepth, Node &destination);
+  [[nodiscard]] static ParseStatus confirmBoundary(ISource &source,
+                                                   char expectedBoundary);
+  [[nodiscard]] static ParseStatus
+  parseNodes(ISource &source, unsigned long parserDepth, Node &destination);
+#endif
   inline static unsigned long maxParserDepth{kMaxParserDepth};
 };
 

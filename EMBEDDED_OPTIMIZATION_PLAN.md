@@ -113,6 +113,14 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
 3. Replace `throw Error(...)` and `throw SyntaxError(...)` with macros that map to `return ErrorCode` in embedded mode.
 4. Maintain a compatibility layer so high-level API still works in normal builds.
 
+### Phase 4 Status
+
+- Added `ParseStatus` and `ErrorCode` result types in `classes/include/implementation/common/Bencode_Status.hpp`.
+- Added conditionally compiled parser overloads in `classes/include/interface/IParser.hpp`.
+- Updated `classes/include/implementation/parser/Default_Parser.hpp` and `classes/source/implementation/parser/Default_Parser.cpp` to support both exception and status return modes.
+- Updated `classes/include/Bencode.hpp`, `classes/source/Bencode.cpp`, `classes/include/implementation/Bencode_Impl.hpp`, and `classes/source/implementation/Bencode_Impl.cpp` to provide status-based parse APIs when `BENCODE_ENABLE_EXCEPTIONS` is disabled.
+- Verified editor diagnostics for the modified files and preserved existing exception behavior in standard builds.
+
 ### Phase 5: Add embedded parser/stringifier optimizations
 
 1. Remove `std::function`+`std::map` dispatch from `Default_Parser` in embedded mode.

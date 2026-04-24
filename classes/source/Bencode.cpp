@@ -29,7 +29,11 @@ Bencode::~Bencode() = default;
 /// </summary>
 /// <param name="bencodeString">Bencode string.</param>
 Bencode::Bencode(const std::string_view &bencodeString) : Bencode() {
+#if defined(BENCODE_ENABLE_EXCEPTIONS)
   parse(BufferSource{bencodeString});
+#else
+  [[maybe_unused]] ParseStatus status = parse(BufferSource{bencodeString});
+#endif
 }
 /// <summary>
 /// Bencode constructor (list).
@@ -54,8 +58,17 @@ std::string Bencode::version() { return Bencode_Impl::version(); }
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns></returns>
+#if defined(BENCODE_ENABLE_EXCEPTIONS)
 void Bencode::parse(ISource &source) const { implementation->parse(source); }
 void Bencode::parse(ISource &&source) const { implementation->parse(source); }
+#else
+ParseStatus Bencode::parse(ISource &source) const {
+  return implementation->parse(source);
+}
+ParseStatus Bencode::parse(ISource &&source) const {
+  return implementation->parse(source);
+}
+#endif
 /// <summary>
 /// Take Node structure and create a Bencode encoding for it in the
 /// destination stream.

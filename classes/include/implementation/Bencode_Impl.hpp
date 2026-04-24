@@ -16,7 +16,11 @@ public:
   Bencode_Impl &operator=(Bencode_Impl &&other) = delete;
   ~Bencode_Impl();
   // Parse Bencoded source into Node tree
+#if defined(BENCODE_ENABLE_EXCEPTIONS)
   void parse(ISource &source);
+#else
+  ParseStatus parse(ISource &source);
+#endif
   // Stringify Node tree
   void stringify(IDestination &destination) const;
   // Bencode version

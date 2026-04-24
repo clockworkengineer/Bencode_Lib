@@ -34,12 +34,26 @@ std::string Bencode_Impl::version() {
   return versionString.str();
 }
 
+#if defined(BENCODE_ENABLE_EXCEPTIONS)
 void Bencode_Impl::parse(ISource &source) {
   bNodeRoot = bNodeParser->parse(source);
   if (source.more()) {
     throw SyntaxError("Source stream terminated early.");
   }
 }
+#else
+ParseStatus Bencode_Impl::parse(ISource &source) {
+  ParseStatus status = bNodeParser->parse(source, bNodeRoot);
+  if (!status.ok()) {
+    return status;
+  }
+  if (source.more()) {
+    return ParseStatus::failure(ErrorCode::SourceTerminatedEarly,
+                                "Source stream terminated early.");
+  }
+  return ParseStatus::success();
+}
+#endif
 
 void Bencode_Impl::stringify(IDestination &destination) const {
   if (bNodeRoot.isEmpty()) {
@@ -69,8 +83,7 @@ Node &Bencode_Impl::operator[](const std::string_view &key) {
     }
     return bNodeRoot[key];
   } catch ([[maybe_unused]] Node::Error &error) {
-    NRef<Dictionary>(bNodeRoot).add(
-        Dictionary::Entry(key, Node::make<Hole>()));
+    NRef<Dictionary>(bNodeRoot).add(Dictionary::Entry(key, Node::make<Hole>()));
     return bNodeRoot[key];
   }
 }

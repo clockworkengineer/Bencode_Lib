@@ -48,8 +48,13 @@ public:
   Bencode &operator=(Bencode &&other) = delete;
   ~Bencode();
   // Parse Bencode into Node tree
+#if defined(BENCODE_ENABLE_EXCEPTIONS)
   void parse(ISource &source) const;
   void parse(ISource &&source) const;
+#else
+  ParseStatus parse(ISource &source) const;
+  ParseStatus parse(ISource &&source) const;
+#endif
   // Stringify Bencode from Node tree
   void stringify(IDestination &destination) const;
   void stringify(IDestination &&destination) const;
