@@ -1,10 +1,16 @@
 #pragma once
 
+#include "Bencode_FixedVector.hpp"
+
 namespace Bencode_Lib {
 
 struct List : Variant {
   using Entry = Node;
+#if defined(BENCODE_ENABLE_DYNAMIC_ALLOCATION)
   using ListEntries = std::vector<Entry>;
+#else
+  using ListEntries = FixedVector<Entry, BENCODE_MAX_CONTAINER_SIZE>;
+#endif
   // Constructors/Destructors
   List() : Variant(Type::list){}
   List(const List &other) = default;

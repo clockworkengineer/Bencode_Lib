@@ -6,7 +6,11 @@
 namespace Bencode_Lib {
 
 struct String : Variant {
+#if defined(BENCODE_MAX_STRING_LENGTH)
+  constexpr static Bencode::IntegerType kMaxLength = BENCODE_MAX_STRING_LENGTH;
+#else
   constexpr static Bencode::IntegerType kMaxLength = 16 * 1024;
+#endif
   // Constructors/Destructors
   String() : Variant(Type::string), bNodeString("") {}
   explicit String(const std::string_view string)

@@ -81,6 +81,14 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
 
 ### Phase 3: Replace dynamic runtime memory with bounded or arena-based storage
 
+### Phase 3 Status
+
+- Added embedded compile-time capacity macros in `CMakeLists.txt`: `BENCODE_MAX_NODE_COUNT`, `BENCODE_MAX_CONTAINER_SIZE`, and `BENCODE_MAX_STRING_LENGTH`.
+- Added `classes/include/implementation/variants/Bencode_FixedVector.hpp` and used it to implement bounded list and dictionary storage when `BENCODE_ENABLE_DYNAMIC_ALLOCATION` is disabled.
+- Added `BENCODE_MAX_STRING_LENGTH` support to `classes/include/implementation/variants/Bencode_String.hpp`.
+- Verified the library builds successfully after the bounded-container changes.
+- Remaining phase 3 work: inline node storage and allocator abstractions are still pending.
+
 1. Refactor `Node` to use an inline tagged union instead of `std::unique_ptr<Variant>`.
    - Use a custom variant-like type with explicit storage, or `std::variant` only in non-embedded mode.
 2. Introduce an `Allocator` abstraction for embedded mode.

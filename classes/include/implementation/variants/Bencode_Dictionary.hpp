@@ -1,14 +1,19 @@
 #pragma once
 
+#include "Bencode_FixedVector.hpp"
+
 #include <algorithm>
 #include <string>
 #include <string_view>
+#if defined(BENCODE_ENABLE_DYNAMIC_ALLOCATION)
 #include <vector>
+#endif
 
 namespace Bencode_Lib {
 
 // Dictionary entry
 struct DictionaryEntry {
+  DictionaryEntry() = default;
   DictionaryEntry(const std::string_view key, Node &&bNode)
       : key(key), bNode(std::move(bNode)) {}
   [[nodiscard]] std::string_view getKey() const { return key; }
@@ -23,7 +28,11 @@ private:
 // Dictionary variant
 struct Dictionary : Variant {
   using Entry = DictionaryEntry;
+#if defined(BENCODE_ENABLE_DYNAMIC_ALLOCATION)
   using Entries = std::vector<Entry>;
+#else
+  using Entries = FixedVector<Entry, BENCODE_MAX_CONTAINER_SIZE>;
+#endif
   // Constructors/Destructors
   Dictionary() : Variant(Type::dictionary) {}
   Dictionary(const Dictionary &other) = default;

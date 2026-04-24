@@ -15,6 +15,9 @@ option(BENCODE_EMBEDDED_MODE "Enable embedded build mode" OFF)
 option(BENCODE_ENABLE_EXCEPTIONS "Enable exception support" ON)
 option(BENCODE_ENABLE_FILE_IO "Enable file-based I/O support" ON)
 option(BENCODE_ENABLE_DYNAMIC_ALLOCATION "Enable dynamic allocations for containers" ON)
+set(BENCODE_MAX_NODE_COUNT 256 CACHE STRING "Maximum total node count in embedded mode")
+set(BENCODE_MAX_CONTAINER_SIZE 64 CACHE STRING "Maximum number of elements in embedded lists/dictionaries")
+set(BENCODE_MAX_STRING_LENGTH 16384 CACHE STRING "Maximum string length in embedded mode" FORCE)
 option(BENCODE_ENABLE_JSON_STRINGIFY "Enable JSON stringify support" ON)
 option(BENCODE_ENABLE_XML_STRINGIFY "Enable XML stringify support" ON)
 option(BENCODE_ENABLE_YAML_STRINGIFY "Enable YAML stringify support" ON)
@@ -69,6 +72,7 @@ set(BENCODE_INCLUDES
   classes/include/implementation/io/Bencode_BufferDestination.hpp
   classes/include/implementation/io/Bencode_FileDestination.hpp
   classes/include/implementation/variants/Bencode_Dictionary.hpp
+  classes/include/implementation/variants/Bencode_FixedVector.hpp
   classes/include/implementation/variants/Bencode_Hole.hpp
   classes/include/implementation/variants/Bencode_Integer.hpp
   classes/include/implementation/variants/Bencode_List.hpp
@@ -129,6 +133,9 @@ target_compile_definitions(${BENCODE_LIBRARY_NAME}
   $<$<BOOL:${BENCODE_ENABLE_JSON_STRINGIFY}>:BENCODE_ENABLE_JSON_STRINGIFY>
   $<$<BOOL:${BENCODE_ENABLE_XML_STRINGIFY}>:BENCODE_ENABLE_XML_STRINGIFY>
   $<$<BOOL:${BENCODE_ENABLE_YAML_STRINGIFY}>:BENCODE_ENABLE_YAML_STRINGIFY>
+  BENCODE_MAX_NODE_COUNT=${BENCODE_MAX_NODE_COUNT}
+  BENCODE_MAX_CONTAINER_SIZE=${BENCODE_MAX_CONTAINER_SIZE}
+  BENCODE_MAX_STRING_LENGTH=${BENCODE_MAX_STRING_LENGTH}
 )
 
 # Tests
