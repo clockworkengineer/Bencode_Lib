@@ -64,7 +64,16 @@ Bencode is a data serialization format with the following encoding rules:
 |--------|---------|-------------|
 | `BENCODE_BUILD_TESTS` | `ON` | Build the Catch2 unit tests |
 | `BENCODE_BUILD_EXAMPLES` | `ON` | Build the example programs |
+| `BENCODE_EMBEDDED_MODE` | `OFF` | Enable the embedded build configuration |
+| `BENCODE_ENABLE_EXCEPTIONS` | `ON` | Enable exception support |
+| `BENCODE_ENABLE_FILE_IO` | `ON` | Enable file-based I/O support |
+| `BENCODE_ENABLE_DYNAMIC_ALLOCATION` | `ON` | Enable dynamic allocations for containers |
+| `BENCODE_MAX_NODE_COUNT` | `256` | Maximum total node count in embedded mode |
+| `BENCODE_MAX_CONTAINER_SIZE` | `64` | Maximum number of elements in embedded lists/dictionaries |
+| `BENCODE_MAX_STRING_LENGTH` | `16384` | Maximum string length in embedded mode |
 | `BENCODE_WARNINGS_AS_ERRORS` | `OFF` | Treat compiler warnings as errors |
+
+For embedded mode details, see `docs/EMBEDDED.md`.
 
 ### Consuming via CMake
 

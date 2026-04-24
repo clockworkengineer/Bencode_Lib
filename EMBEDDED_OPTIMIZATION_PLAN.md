@@ -185,6 +185,17 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
    - stack depth
    - parse/stringify throughput on target hardware
 
+### Phase 8 Status
+
+- Added `docs/EMBEDDED.md` describing embedded usage, configuration macros, no-exceptions builds, and fixed-capacity containers.
+- Added a sample embedded consumer CMake configuration in `examples/embedded/CMakeLists.txt`.
+- Validated embedded mode locally by building `Bencode_Lib_Embedded`, `Bencode_Lib_Embedded_Unit_Tests`, and `Bencode_Lib_Embedded_Benchmark`.
+- Measured embedded build artifact sizes:
+  - `Bencode_Lib_Embedded.lib`: 1708.27 KB
+  - `Bencode_Lib_Embedded_Unit_Tests.exe`: 2000.5 KB
+  - `Bencode_Lib_Embedded_Benchmark.exe`: 213 KB
+- Confirmed `Bencode_Lib_Embedded_Unit_Tests` execution passes successfully.
+
 ## Suggested Embedded-Friendly API Changes
 
 - `Bencode::parse(ISource &source)` -> `Bencode::parse(const BufferSource &source, ParseResult &result)` in embedded mode.

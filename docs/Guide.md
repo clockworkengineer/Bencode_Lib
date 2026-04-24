@@ -78,6 +78,11 @@ public:
 Bencode doc(new MyStringify());
 ```
 
+## Embedded Mode
+For embedded builds, see `docs/EMBEDDED.md` for configuration details, no-exceptions usage, and fixed-capacity container guidance.
+
+In embedded mode, use `BufferSource` and `BufferDestination` instead of file-based I/O, and link against `Bencode_Lib::Bencode_Lib_Embedded` for the embedded library variant.
+
 ## Advanced Tips
 - Use `setMaxParserDepth()` and `setMaxStringLength()` to control parsing limits.
 - Use `traverse()` to walk the node tree with an `IAction` implementation.
