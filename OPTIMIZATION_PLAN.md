@@ -122,6 +122,15 @@
 - Keep insertion sorted only when necessary.
 - Add unit tests for dictionary order, duplicate detection, and performance-critical paths.
 
+### Phase 3 Status
+
+- Implemented `Dictionary::add()` duplicate key detection and ordered insertion via `std::lower_bound`.
+- Added unit tests verifying:
+  - keys remain sorted after out-of-order insertion,
+  - dictionary lookup returns correct nodes,
+  - duplicate keys raise `Node::Error`.
+- Verified phase-three changes with `Bencode_Lib_Unit_Tests`.
+
 ### Phase 4: Parser optimization
 
 - Replace dynamic dispatch map with a switch-based parser.

@@ -39,6 +39,9 @@ struct Dictionary : Variant {
                          [](const Entry &lhs, const std::string_view rhsKey) {
                            return lhs.getKey() < rhsKey;
                          });
+    if (it != bNodeDictionary.end() && it->getKey() == key) {
+      throw Node::Error("Duplicate dictionary key.");
+    }
     bNodeDictionary.insert(it, std::forward<T>(entry));
   }
   [[nodiscard]] bool contains(const std::string_view key) const {

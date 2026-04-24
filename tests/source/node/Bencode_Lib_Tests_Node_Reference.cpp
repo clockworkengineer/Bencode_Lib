@@ -93,6 +93,23 @@ TEST_CASE("Check Node reference functions work.",
     auto &dict = NRef<Dictionary>(bStringify.root());
     REQUIRE(NRef<String>(dict["key"]).value() == "value");
   }
+  SECTION("Dictionary insertion keeps keys sorted and rejects duplicates.",
+          "[Bencode][Node][Reference]") {
+    Node dictNode = Node::make<Dictionary>();
+    auto &dict = NRef<Dictionary>(dictNode);
+    dict.add(Dictionary::Entry("b", Node::make<Integer>(2)));
+    dict.add(Dictionary::Entry("a", Node::make<Integer>(1)));
+    REQUIRE(dict.size() == 2);
+    REQUIRE(dict.value()[0].getKey() == "a");
+    REQUIRE(dict.value()[1].getKey() == "b");
+    REQUIRE(NRef<Integer>(dict["a"]).value() == 1);
+    REQUIRE(NRef<Integer>(dict["b"]).value() == 2);
+    REQUIRE_THROWS_AS(dict.add(Dictionary::Entry("a", Node::make<Integer>(3))),
+                      Node::Error);
+    REQUIRE_THROWS_WITH(
+        dict.add(Dictionary::Entry("a", Node::make<Integer>(3))),
+        "Node Error: Duplicate dictionary key.");
+  }
   SECTION("Const NRef on Integer returns correct value.",
           "[Bencode][Node][Reference]") {
     bStringify.parse(BufferSource{"i7e"});
