@@ -90,8 +90,8 @@ Node Default_Parser::parseDictionary(ISource &source,
   std::string lastKey{};
   source.next();
   while (source.more() && source.current() != ParserConstants::END) {
-    const std::string_view key = {
-        NRef<String>(parseString(source, parserDepth)).value()};
+    Node keyNode = parseString(source, parserDepth);
+    std::string key = std::string(NRef<String>(keyNode).value());
     // Check keys in lexical order
     if (lastKey > key) {
       throw SyntaxError("Dictionary keys not in sequence.");

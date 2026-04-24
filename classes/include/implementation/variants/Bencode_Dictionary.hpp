@@ -1,24 +1,22 @@
 #pragma once
 
+#include <algorithm>
+#include <string>
+#include <string_view>
+#include <vector>
+
 namespace Bencode_Lib {
 
 // Dictionary entry
 struct DictionaryEntry {
   DictionaryEntry(const std::string_view key, Node &&bNode)
-      : key(Node::make<String>(key)), bNode(std::move(bNode)) {}
-  [[nodiscard]] std::string_view getKey() {
-    return static_cast<String &>(key.getVariant()).value();
-  }
-  [[nodiscard]] std::string_view getKey() const {
-    return static_cast<const String &>(key.getVariant()).value();
-  }
-  [[nodiscard]] Node &getKeyNode() { return key; }
-  [[nodiscard]] const Node &getKeyNode() const { return key; }
+      : key(key), bNode(std::move(bNode)) {}
+  [[nodiscard]] std::string_view getKey() const { return key; }
   [[nodiscard]] Node &getNode() { return bNode; }
   [[nodiscard]] const Node &getNode() const { return bNode; }
 
 private:
-  Node key{};
+  std::string key;
   Node bNode{};
 };
 
@@ -35,18 +33,21 @@ struct Dictionary : Variant {
   ~Dictionary() = default;
   // Add Entry to Dictionary
   template <typename T> void add(T &&entry) {
-    bNodeDictionary.emplace_back(std::forward<T>(entry));
-    std::ranges::sort(bNodeDictionary, [](const Entry &a, const Entry &b) {
-      return a.getKey() < b.getKey();
-    });
+    const auto &key = entry.getKey();
+    auto it =
+        std::lower_bound(bNodeDictionary.begin(), bNodeDictionary.end(), key,
+                         [](const Entry &lhs, const std::string_view rhsKey) {
+                           return lhs.getKey() < rhsKey;
+                         });
+    bNodeDictionary.insert(it, std::forward<T>(entry));
   }
   [[nodiscard]] bool contains(const std::string_view key) const {
-    try {
-      findEntryWithKey(bNodeDictionary, key);
-    } catch ([[maybe_unused]] const Node::Error &error) {
-      return false;
-    }
-    return true;
+    auto it =
+        std::lower_bound(bNodeDictionary.begin(), bNodeDictionary.end(), key,
+                         [](const Entry &lhs, const std::string_view rhsKey) {
+                           return lhs.getKey() < rhsKey;
+                         });
+    return it != bNodeDictionary.end() && it->getKey() == key;
   }
   [[nodiscard]] int size() const {
     return static_cast<int>(bNodeDictionary.size());
@@ -60,31 +61,29 @@ struct Dictionary : Variant {
   }
 
   [[nodiscard]] Entries &value() { return bNodeDictionary; }
-  [[nodiscard]] const Entries &value() const {
-    return bNodeDictionary;
-  }
+  [[nodiscard]] const Entries &value() const { return bNodeDictionary; }
 
 private:
   template <typename T>
   static auto findEntry(T &dictionary, const std::string_view &key) {
     auto it =
-        std::ranges::find_if(dictionary, [&key](const auto &entry) -> bool {
-          return entry.getKey() == key;
-        });
-    if (it == dictionary.end()) {
+        std::lower_bound(dictionary.begin(), dictionary.end(), key,
+                         [](const Entry &lhs, const std::string_view rhsKey) {
+                           return lhs.getKey() < rhsKey;
+                         });
+    if (it == dictionary.end() || it->getKey() != key) {
       throw Node::Error("Invalid key used in dictionary.");
     }
     return it;
   }
 
-  static Entries::const_iterator
-  findEntryWithKey(const Entries &dictionary,
-                    const std::string_view &key) {
+  static Entries::const_iterator findEntryWithKey(const Entries &dictionary,
+                                                  const std::string_view &key) {
     return findEntry(dictionary, key);
   }
 
-  static Entries::iterator
-  findEntryWithKey(Entries &dictionary, const std::string_view key) {
+  static Entries::iterator findEntryWithKey(Entries &dictionary,
+                                            const std::string_view key) {
     return findEntry(dictionary, key);
   }
 

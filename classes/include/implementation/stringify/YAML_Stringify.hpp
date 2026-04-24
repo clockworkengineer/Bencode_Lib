@@ -9,8 +9,9 @@ class YAML_Stringify final : public IStringify {
 public:
   // Constructors/destructors
   explicit YAML_Stringify(std::unique_ptr<ITranslator> translator =
-                            std::make_unique<Default_Translator>())
-      {yamlTranslator = std::move(translator);}
+                              std::make_unique<Default_Translator>()) {
+    yamlTranslator = std::move(translator);
+  }
   YAML_Stringify(const YAML_Stringify &other) = delete;
   YAML_Stringify &operator=(const YAML_Stringify &other) = delete;
   YAML_Stringify(YAML_Stringify &&other) = delete;
@@ -38,7 +39,7 @@ private:
     return std::string("");
   }
   static void stringifyNodes(const Node &bNode, IDestination &destination,
-                  const unsigned long indent) {
+                             const unsigned long indent) {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination, indent);
     } else if (isA<List>(bNode)) {
@@ -53,12 +54,12 @@ private:
     }
   }
   static void stringifyDictionary(const Node &bNode, IDestination &destination,
-                        const unsigned long indent)  {
+                                  const unsigned long indent) {
     if (!NRef<Dictionary>(bNode).value().empty()) {
       for (const auto &entryNode : NRef<Dictionary>(bNode).value()) {
         destination.add(calculateIndent(destination, indent));
         destination.add("\"");
-        destination.add(NRef<String>(entryNode.getKeyNode()).value());
+        destination.add(entryNode.getKey());
         destination.add("\"");
         destination.add(": ");
         if (isA<List>(entryNode.getNode()) ||
@@ -72,7 +73,7 @@ private:
     }
   }
   static void stringifyList(const Node &bNode, IDestination &destination,
-                  const unsigned long indent) {
+                            const unsigned long indent) {
     if (!NRef<List>(bNode).value().empty()) {
       for (const auto &bNodeNext : NRef<List>(bNode).value()) {
         destination.add(calculateIndent(destination, indent) + "- ");
@@ -85,7 +86,7 @@ private:
   static void stringifyInteger(const Node &bNode, IDestination &destination) {
     destination.add(std::to_string(NRef<Integer>(bNode).value()) + "\n");
   }
-  static void stringifyString(const Node &bNode, IDestination &destination)  {
+  static void stringifyString(const Node &bNode, IDestination &destination) {
     destination.add("\"" + yamlTranslator->to(NRef<String>(bNode).value()) +
                     "\"" + "\n");
   }
