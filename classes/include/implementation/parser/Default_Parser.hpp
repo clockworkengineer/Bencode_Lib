@@ -42,9 +42,12 @@ private:
                                             unsigned long parserDepth);
   [[nodiscard]] static Node parseList(ISource &source,
                                       unsigned long parserDepth);
+  [[nodiscard]] static Node parseScalar(ISource &source,
+                                        unsigned long parserDepth);
   void static confirmBoundary(ISource &source, char expectedBoundary);
   [[nodiscard]] static Node parseNodes(ISource &source,
                                        unsigned long parserDepth);
+  [[nodiscard]] static Node parseIterative(ISource &source);
 #else
   [[nodiscard]] static ParseStatus extractInteger(ISource &source,
                                                   Bencode::IntegerType &value);
@@ -57,10 +60,15 @@ private:
                                                    Node &destination);
   [[nodiscard]] static ParseStatus
   parseList(ISource &source, unsigned long parserDepth, Node &destination);
+  [[nodiscard]] static ParseStatus parseScalar(ISource &source,
+                                               unsigned long parserDepth,
+                                               Node &destination);
   [[nodiscard]] static ParseStatus confirmBoundary(ISource &source,
                                                    char expectedBoundary);
   [[nodiscard]] static ParseStatus
   parseNodes(ISource &source, unsigned long parserDepth, Node &destination);
+  [[nodiscard]] static ParseStatus parseIterative(ISource &source,
+                                                  Node &destination);
 #endif
   inline static unsigned long maxParserDepth{kMaxParserDepth};
 };

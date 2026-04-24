@@ -131,6 +131,14 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
    - Use integer-to-ascii helpers that write into a destination buffer.
 4. Provide a non-recursive parse option or explicit max-depth stack to reduce stack usage.
 
+### Phase 5 Status
+
+- Replaced `std::to_string` in `Default_Stringify` with low-level integer-to-ASCII helpers.
+- Replaced parser numeric conversion from `std::stoll` with a manual digit-based integer parser.
+- Added an explicit non-recursive parsing path in `Default_Parser` to reduce stack usage for nested containers.
+- Kept switch-based Bencode type dispatch in `Default_Parser` and preserved explicit parser depth enforcement.
+- Reduced temporary string allocation in `parseString()` by building the result buffer directly.
+
 ### Phase 6: Make File I/O optional and portable
 
 1. Wrap `FileSource` and `FileDestination` behind `BENCODE_ENABLE_FILE_IO`.
