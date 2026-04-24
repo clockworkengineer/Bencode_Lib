@@ -10,6 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Build options
 option(BENCODE_BUILD_TESTS "Build unit tests" ON)
 option(BENCODE_BUILD_EXAMPLES "Build examples" ON)
+option(BENCODE_BUILD_BENCHMARKS "Build performance benchmark executable" ON)
 option(BENCODE_ENABLE_JSON_STRINGIFY "Enable JSON stringify support" ON)
 option(BENCODE_ENABLE_XML_STRINGIFY "Enable XML stringify support" ON)
 option(BENCODE_ENABLE_YAML_STRINGIFY "Enable YAML stringify support" ON)

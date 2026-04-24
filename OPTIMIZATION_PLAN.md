@@ -170,6 +170,19 @@
   - memory allocations count
   - dictionary access latency
 
+### Phase 6 Status
+
+- Added benchmark harness in `tests/source/benchmark/Bencode_Lib_Benchmark.cpp`.
+- Registered optional benchmark target `Bencode_Lib_Benchmark` in `tests/CMakeLists.txt`.
+- Measured current library artifacts:
+  - Release `Bencode_Lib.lib`: `455,436` bytes
+  - Debug `Bencode_Lib.lib`: `2,383,736` bytes
+- Executed full unit test suite and benchmark harness successfully.
+- Benchmark results for 5 iterations on a 695,002-byte dictionary payload:
+  - Parse throughput: `4.91684 MB/s`.
+  - Stringify throughput: `7.88872 MB/s`.
+- Observed round-trip string size: `695,002` bytes.
+
 ## Expected Benefits
 
 - Lower runtime memory usage in nested Bencode trees.

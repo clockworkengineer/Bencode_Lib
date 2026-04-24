@@ -70,4 +70,27 @@ endif()
 
 add_test(NAME ${TEST_EXECUTABLE} COMMAND ${TEST_EXECUTABLE})
 
+if(BENCODE_BUILD_BENCHMARKS)
+  add_executable(Bencode_Lib_Benchmark source/benchmark/Bencode_Lib_Benchmark.cpp)
+  target_include_directories(Bencode_Lib_Benchmark PUBLIC ${PROJECT_SOURCE_DIR}/include)
+  target_link_libraries(Bencode_Lib_Benchmark Bencode_Lib::Bencode_Lib)
+  target_precompile_headers(Bencode_Lib_Benchmark REUSE_FROM Bencode_Lib)
+
+  if(MSVC)
+    target_compile_options(Bencode_Lib_Benchmark PRIVATE
+      /W4
+      /permissive-
+      /Zc:__cplusplus
+      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
+    )
+  else()
+    target_compile_options(Bencode_Lib_Benchmark PRIVATE
+      -Wall
+      -Wextra
+      -Wpedantic
+      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
+    )
+  endif()
+endif()
+
 add_custom_command(TARGET ${TEST_EXECUTABLE} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/files files)
