@@ -12,22 +12,18 @@ struct List : Variant {
   using ListEntries = FixedVector<Entry, BENCODE_MAX_CONTAINER_SIZE>;
 #endif
   // Constructors/Destructors
-  List() : Variant(Type::list){}
+  List() : Variant(Type::list) {}
   List(const List &other) = default;
   List &operator=(const List &other) = default;
   List(List &&other) = default;
   List &operator=(List &&other) = default;
   ~List() = default;
   // Add array element
-  void add(Entry bNode) {
-    bNodeList.emplace_back(std::move(bNode));
-  }
+  void add(Entry bNode) { bNodeList.emplace_back(std::move(bNode)); }
   // Get Node size
-  [[nodiscard]] int size() const {
-    return static_cast<int>(bNodeList.size());
-  }
+  [[nodiscard]] int size() const { return static_cast<int>(bNodeList.size()); }
   // Get Node value
-  [[nodiscard]]ListEntries &value() { return bNodeList; }
+  [[nodiscard]] ListEntries &value() { return bNodeList; }
   [[nodiscard]] const ListEntries &value() const { return bNodeList; }
   // Get Node at index
   Node &operator[](const int index) {
@@ -56,6 +52,6 @@ private:
     }
   }
 
- ListEntries bNodeList {};
+  ListEntries bNodeList{};
 };
 } // namespace Bencode_Lib
