@@ -12,8 +12,12 @@ template <typename T> Node::Node(T value) {
   } else if constexpr (std::is_same_v<T, const char *> ||
                        std::is_same_v<T, std::string>) {
     *this = make<String>(value);
-  } else if constexpr (std::is_convertible_v<T, std::unique_ptr<Variant>>) {
+  } else if constexpr (std::is_same_v<T, std::unique_ptr<List>> ||
+                       std::is_same_v<T, std::unique_ptr<Dictionary>>) {
     bNodeVariant = std::move(value);
+  } else {
+    static_assert(std::is_same_v<T, void>,
+                  "Node of unsupported type could not be created.");
   }
 }
 // Convert the initializer list to Node

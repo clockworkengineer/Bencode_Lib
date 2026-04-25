@@ -79,6 +79,12 @@ Analyze the current library architecture and provide a concrete, implementation-
 
 Objective: eliminate the per-node heap allocation.
 
+### Phase 2 Status
+
+- Implemented a new `Node` storage strategy where scalar variants are stored inline.
+- List and dictionary nodes now use `std::unique_ptr<List>` / `std::unique_ptr<Dictionary>` in the `Node` variant, preserving container semantics while removing per-node `Variant` allocation.
+- Rebuilt `Bencode_Lib` and `Bencode_Lib_Unit_Tests` successfully in Debug.
+
 1. Replace `Node::bNodeVariant` from `std::unique_ptr<Variant>` to an inline tagged union.
 2. Example structure:
    - `enum class Type { Empty, Integer, String, List, Dictionary, Hole }`.
