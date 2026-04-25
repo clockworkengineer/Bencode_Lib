@@ -58,19 +58,28 @@ struct Node {
       Variant &operator()(const std::unique_ptr<Dictionary> &value) const {
         return dereferenceDictionary(value);
       }
-      Variant &operator()(std::monostate &) const { throw Error("Node is empty."); }
+      Variant &operator()(std::monostate &) const {
+        throw Error("Node is empty.");
+      }
     };
     return std::visit(Visitor{}, bNodeVariant);
   }
   [[nodiscard]] const Variant &getVariant() const {
     struct Visitor {
-      const Variant &operator()(const Hole &value) const noexcept { return value; }
-      const Variant &operator()(const Integer &value) const noexcept { return value; }
-      const Variant &operator()(const String &value) const noexcept { return value; }
+      const Variant &operator()(const Hole &value) const noexcept {
+        return value;
+      }
+      const Variant &operator()(const Integer &value) const noexcept {
+        return value;
+      }
+      const Variant &operator()(const String &value) const noexcept {
+        return value;
+      }
       const Variant &operator()(const std::unique_ptr<List> &value) const {
         return dereferenceList(value);
       }
-      const Variant &operator()(const std::unique_ptr<Dictionary> &value) const {
+      const Variant &
+      operator()(const std::unique_ptr<Dictionary> &value) const {
         return dereferenceDictionary(value);
       }
       const Variant &operator()(const std::monostate &) const {
@@ -93,12 +102,12 @@ private:
   }
 
   static Variant &dereferenceList(const std::unique_ptr<List> &value);
-  static Variant &dereferenceDictionary(
-      const std::unique_ptr<Dictionary> &value);
+  static Variant &
+  dereferenceDictionary(const std::unique_ptr<Dictionary> &value);
 
-  using Storage = std::variant<std::monostate, Hole, Integer, String,
-                               std::unique_ptr<List>,
-                               std::unique_ptr<Dictionary>>;
+  using Storage =
+      std::variant<std::monostate, Hole, Integer, String, std::unique_ptr<List>,
+                   std::unique_ptr<Dictionary>>;
   Storage bNodeVariant{};
 };
 
@@ -112,13 +121,12 @@ namespace Bencode_Lib {
 inline Variant &Node::dereferenceList(const std::unique_ptr<List> &value) {
   return *value;
 }
-inline Variant &Node::dereferenceDictionary(
-    const std::unique_ptr<Dictionary> &value) {
+inline Variant &
+Node::dereferenceDictionary(const std::unique_ptr<Dictionary> &value) {
   return *value;
 }
 
-template <typename T, typename... Args>
-Node Node::make(Args &&...args) {
+template <typename T, typename... Args> Node Node::make(Args &&...args) {
   if constexpr (std::is_same_v<T, List> || std::is_same_v<T, Dictionary>) {
     return Node(std::make_unique<T>(std::forward<Args>(args)...));
   } else {
