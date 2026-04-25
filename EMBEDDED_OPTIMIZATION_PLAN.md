@@ -113,14 +113,6 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
 3. Replace `throw Error(...)` and `throw SyntaxError(...)` with macros that map to `return ErrorCode` in embedded mode.
 4. Maintain a compatibility layer so high-level API still works in normal builds.
 
-### Phase 4 Status
-
-- Added `ParseStatus` and `ErrorCode` result types in `classes/include/implementation/common/Bencode_Status.hpp`.
-- Added conditionally compiled parser overloads in `classes/include/interface/IParser.hpp`.
-- Updated `classes/include/implementation/parser/Default_Parser.hpp` and `classes/source/implementation/parser/Default_Parser.cpp` to support both exception and status return modes.
-- Updated `classes/include/Bencode.hpp`, `classes/source/Bencode.cpp`, `classes/include/implementation/Bencode_Impl.hpp`, and `classes/source/implementation/Bencode_Impl.cpp` to provide status-based parse APIs when `BENCODE_ENABLE_EXCEPTIONS` is disabled.
-- Verified editor diagnostics for the modified files and preserved existing exception behavior in standard builds.
-
 ### Phase 5: Add embedded parser/stringifier optimizations
 
 1. Remove `std::function`+`std::map` dispatch from `Default_Parser` in embedded mode.
@@ -131,14 +123,6 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
    - Use integer-to-ascii helpers that write into a destination buffer.
 4. Provide a non-recursive parse option or explicit max-depth stack to reduce stack usage.
 
-### Phase 5 Status
-
-- Replaced `std::to_string` in `Default_Stringify` with low-level integer-to-ASCII helpers.
-- Replaced parser numeric conversion from `std::stoll` with a manual digit-based integer parser.
-- Added an explicit non-recursive parsing path in `Default_Parser` to reduce stack usage for nested containers.
-- Kept switch-based Bencode type dispatch in `Default_Parser` and preserved explicit parser depth enforcement.
-- Reduced temporary string allocation in `parseString()` by building the result buffer directly.
-
 ### Phase 6: Make File I/O optional and portable
 
 1. Wrap `FileSource` and `FileDestination` behind `BENCODE_ENABLE_FILE_IO`.
@@ -147,28 +131,12 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
    - Build on `fopen`/`fread`/`fwrite` or custom HAL APIs.
 3. Provide `BufferSource` and `BufferDestination` as the default embedded I/O path.
 
-### Phase 6 Status
-
-- Replaced C++ `std::ifstream`/`std::ofstream` file handling with portable C `FILE*` I/O in file source/destination classes.
-- Kept `FileSource`/`FileDestination` guarded by `BENCODE_ENABLE_FILE_IO` so embedded builds can omit file support entirely.
-- Reimplemented `Bencode_Impl::fromFile` and `Bencode_Impl::toFile` using `fopen`, `fread`, `fwrite`, and `fclose`.
-- Confirmed `BufferSource`/`BufferDestination` remain the default embedded buffer-based I/O path.
-
 ### Phase 7: Add embedded tests and benchmarks
 
 1. Add a new embedded-target test suite or compile-time test configuration.
 2. Include tests for fixed-capacity node/list/dictionary behavior.
 3. Add benchmarks for heap-free parsing and stringification.
 4. Verify low-memory behavior and no-heap correctness via tests.
-
-### Phase 7 Status
-
-- Added dedicated embedded-mode static library target `Bencode_Lib_Embedded` in `CMakeLists.txt`.
-- Added an embedded-only unit test executable `Bencode_Lib_Embedded_Unit_Tests` in `tests/CMakeLists.txt`.
-- Added `tests/source/embedded/Bencode_Lib_Tests_Embedded.cpp` to validate embedded compilation, fixed-capacity list behavior, disabled file I/O, and disabled exception support.
-- Added an embedded benchmark target `Bencode_Lib_Embedded_Benchmark` for heap-free parse/stringify profiling.
-- Verified `Bencode_Lib_Embedded_Unit_Tests` builds and passes successfully.
-- Verified `Bencode_Lib_Embedded_Benchmark` builds successfully.
 
 ### Phase 8: Document and validate
 
@@ -184,17 +152,6 @@ Make `Bencode_Lib` suitable for constrained embedded systems by reducing dynamic
    - heap allocations (ideally zero)
    - stack depth
    - parse/stringify throughput on target hardware
-
-### Phase 8 Status
-
-- Added `docs/EMBEDDED.md` describing embedded usage, configuration macros, no-exceptions builds, and fixed-capacity containers.
-- Added a sample embedded consumer CMake configuration in `examples/embedded/CMakeLists.txt`.
-- Validated embedded mode locally by building `Bencode_Lib_Embedded`, `Bencode_Lib_Embedded_Unit_Tests`, and `Bencode_Lib_Embedded_Benchmark`.
-- Measured embedded build artifact sizes:
-  - `Bencode_Lib_Embedded.lib`: 1708.27 KB
-  - `Bencode_Lib_Embedded_Unit_Tests.exe`: 2000.5 KB
-  - `Bencode_Lib_Embedded_Benchmark.exe`: 213 KB
-- Confirmed `Bencode_Lib_Embedded_Unit_Tests` execution passes successfully.
 
 ## Suggested Embedded-Friendly API Changes
 
