@@ -36,17 +36,17 @@ set(BENCODE_SOURCES
   classes/source/implementation/parser/Default_Parser.cpp
 )
 
-set(BENCODE_EMBEDDED_SOURCES
-  classes/source/Bencode.cpp
-  classes/source/implementation/Bencode_Impl.cpp
-  classes/source/implementation/parser/Default_Parser.cpp
-)
-
 if(BENCODE_ENABLE_FILE_IO)
   list(APPEND BENCODE_SOURCES
     classes/source/implementation/file/Bencode_File.cpp
   )
 endif()
+
+set(BENCODE_EMBEDDED_SOURCES
+  classes/source/Bencode.cpp
+  classes/source/implementation/Bencode_Impl.cpp
+  classes/source/implementation/parser/Default_Parser.cpp
+)
 
 set(BENCODE_INCLUDES
   classes/include/Bencode.hpp
@@ -89,8 +89,8 @@ set(BENCODE_INCLUDES
 # Bencode library target
 add_library(${BENCODE_LIBRARY_NAME} ${BENCODE_SOURCES} ${BENCODE_INCLUDES})
 
-# Embedded-mode variant of the library for dedicated embedded testing and benchmarking
-add_library(${BENCODE_LIBRARY_NAME}_Embedded STATIC ${BENCODE_EMBEDDED_SOURCES} ${BENCODE_INCLUDES})
+# Embedded library variant for examples and embedded tests
+add_library(${BENCODE_LIBRARY_NAME}_Embedded ${BENCODE_EMBEDDED_SOURCES} ${BENCODE_INCLUDES})
 add_library(Bencode_Lib::Bencode_Lib_Embedded ALIAS ${BENCODE_LIBRARY_NAME}_Embedded)
 
 # Namespaced alias for consistent use in examples, tests, and by consumers
@@ -136,12 +136,6 @@ if(MSVC)
     /Zc:__cplusplus
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
-  target_compile_options(${BENCODE_LIBRARY_NAME}_Embedded PRIVATE
-    /W4
-    /permissive-
-    /Zc:__cplusplus
-    $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
-  )
 else()
   target_compile_options(${BENCODE_LIBRARY_NAME} PRIVATE
     -Wall
@@ -182,7 +176,7 @@ target_compile_definitions(${BENCODE_LIBRARY_NAME}
 
 target_compile_definitions(${BENCODE_LIBRARY_NAME}_Embedded
   PUBLIC
-  BENCODE_EMBEDDED_MODE
+  BENCODE_EMBEDDED_MODE=1
   BENCODE_ENABLE_EXCEPTIONS=0
   BENCODE_ENABLE_FILE_IO=0
   BENCODE_ENABLE_DYNAMIC_ALLOCATION=0
