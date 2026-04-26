@@ -97,6 +97,12 @@ Objective: eliminate the per-node heap allocation.
 - Added direct dictionary key parsing to avoid temporary `Node` allocations during parse.
 - Preserved sorted-key lookup while reducing dictionary parse and insertion overhead.
 
+### Phase 5 Status
+
+- Conditionally added file I/O and optional stringify headers in `CMakeLists.txt` only when the corresponding feature flags are enabled.
+- Kept `Bencode_Core.hpp` and `Bencode_Sources.hpp`/`Bencode_Destinations.hpp` as thin wrappers so the minimal build still provides buffer-based I/O without file support.
+- Left `Bencode` public file API behind `BENCODE_ENABLE_FILE_IO` and stringify API behind their feature macros.
+
 1. Replace `Node::bNodeVariant` from `std::unique_ptr<Variant>` to an inline tagged union.
 2. Example structure:
    - `enum class Type { Empty, Integer, String, List, Dictionary, Hole }`.

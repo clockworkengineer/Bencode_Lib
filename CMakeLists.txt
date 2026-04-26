@@ -66,17 +66,12 @@ set(BENCODE_INCLUDES
   classes/include/implementation/Bencode_Impl.hpp
   classes/include/implementation/parser/Default_Parser.hpp
   classes/include/implementation/stringify/Default_Stringify.hpp
-  classes/include/implementation/stringify/JSON_Stringify.hpp
-  classes/include/implementation/stringify/XML_Stringify.hpp
-  classes/include/implementation/stringify/YAML_Stringify.hpp
   classes/include/implementation/translator/Default_Translator.hpp
   classes/include/implementation/translator/XML_Translator.hpp
   classes/include/implementation/io/Bencode_Sources.hpp
   classes/include/implementation/io/Bencode_BufferSource.hpp
-  classes/include/implementation/io/Bencode_FileSource.hpp
   classes/include/implementation/io/Bencode_Destinations.hpp
   classes/include/implementation/io/Bencode_BufferDestination.hpp
-  classes/include/implementation/io/Bencode_FileDestination.hpp
   classes/include/implementation/variants/Bencode_Dictionary.hpp
   classes/include/implementation/variants/Bencode_FixedVector.hpp
   classes/include/implementation/variants/Bencode_Hole.hpp
@@ -85,6 +80,31 @@ set(BENCODE_INCLUDES
   classes/include/implementation/variants/Bencode_String.hpp
   classes/include/implementation/variants/Bencode_Variant.hpp
 )
+
+if(BENCODE_ENABLE_FILE_IO)
+  list(APPEND BENCODE_INCLUDES
+    classes/include/implementation/io/Bencode_FileSource.hpp
+    classes/include/implementation/io/Bencode_FileDestination.hpp
+  )
+endif()
+
+if(BENCODE_ENABLE_JSON_STRINGIFY)
+  list(APPEND BENCODE_INCLUDES
+    classes/include/implementation/stringify/JSON_Stringify.hpp
+  )
+endif()
+
+if(BENCODE_ENABLE_XML_STRINGIFY)
+  list(APPEND BENCODE_INCLUDES
+    classes/include/implementation/stringify/XML_Stringify.hpp
+  )
+endif()
+
+if(BENCODE_ENABLE_YAML_STRINGIFY)
+  list(APPEND BENCODE_INCLUDES
+    classes/include/implementation/stringify/YAML_Stringify.hpp
+  )
+endif()
 
 # Bencode library target
 add_library(${BENCODE_LIBRARY_NAME} ${BENCODE_SOURCES} ${BENCODE_INCLUDES})
