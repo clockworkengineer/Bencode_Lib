@@ -36,6 +36,8 @@ private:
   [[nodiscard]] static Bencode::IntegerType extractInteger(ISource &source);
   [[nodiscard]] static Node parseString(ISource &source,
                                         unsigned long parserDepth);
+  [[nodiscard]] static std::string parseStringKey(ISource &source,
+                                                  unsigned long parserDepth);
   [[nodiscard]] static Node parseInteger(ISource &source,
                                          unsigned long parserDepth);
   [[nodiscard]] static Node parseDictionary(ISource &source,
@@ -53,6 +55,9 @@ private:
                                                   Bencode::IntegerType &value);
   [[nodiscard]] static ParseStatus
   parseString(ISource &source, unsigned long parserDepth, Node &destination);
+  [[nodiscard]] static ParseStatus
+  parseStringKey(ISource &source, unsigned long parserDepth,
+                 std::string &destination);
   [[nodiscard]] static ParseStatus
   parseInteger(ISource &source, unsigned long parserDepth, Node &destination);
   [[nodiscard]] static ParseStatus parseDictionary(ISource &source,

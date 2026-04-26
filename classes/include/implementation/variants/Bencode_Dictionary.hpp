@@ -14,13 +14,15 @@ namespace Bencode_Lib {
 // Dictionary entry
 struct DictionaryEntry {
   DictionaryEntry() = default;
-  DictionaryEntry(const std::string_view key, Node &&bNode)
-      : key(key), bNode(std::move(bNode)) {}
+
+  template <typename Key>
+  DictionaryEntry(Key &&key, Node &&bNode)
+      : key(std::forward<Key>(key)), bNode(std::move(bNode)) {}
+
   [[nodiscard]] std::string_view getKey() const { return key; }
   [[nodiscard]] Node &getNode() { return bNode; }
   [[nodiscard]] const Node &getNode() const { return bNode; }
 
-private:
   std::string key;
   Node bNode{};
 };
@@ -42,13 +44,13 @@ struct Dictionary : Variant {
   ~Dictionary() = default;
   // Add Entry to Dictionary
   template <typename T> void add(T &&entry) {
-    const auto &key = entry.getKey();
+    const auto &key = entry.key;
     auto it =
         std::lower_bound(bNodeDictionary.begin(), bNodeDictionary.end(), key,
                          [](const Entry &lhs, const std::string_view rhsKey) {
-                           return lhs.getKey() < rhsKey;
+                           return lhs.key < rhsKey;
                          });
-    if (it != bNodeDictionary.end() && it->getKey() == key) {
+    if (it != bNodeDictionary.end() && it->key == key) {
       throw Node::Error("Duplicate dictionary key.");
     }
     bNodeDictionary.insert(it, std::forward<T>(entry));
@@ -57,19 +59,19 @@ struct Dictionary : Variant {
     auto it =
         std::lower_bound(bNodeDictionary.begin(), bNodeDictionary.end(), key,
                          [](const Entry &lhs, const std::string_view rhsKey) {
-                           return lhs.getKey() < rhsKey;
+                           return lhs.key < rhsKey;
                          });
-    return it != bNodeDictionary.end() && it->getKey() == key;
+    return it != bNodeDictionary.end() && it->key == key;
   }
   [[nodiscard]] int size() const {
     return static_cast<int>(bNodeDictionary.size());
   }
 
   Node &operator[](const std::string_view key) {
-    return findEntryWithKey(bNodeDictionary, key)->getNode();
+    return findEntryWithKey(bNodeDictionary, key)->bNode;
   }
   const Node &operator[](const std::string_view key) const {
-    return findEntryWithKey(bNodeDictionary, key)->getNode();
+    return findEntryWithKey(bNodeDictionary, key)->bNode;
   }
 
   [[nodiscard]] Entries &value() { return bNodeDictionary; }
@@ -81,9 +83,9 @@ private:
     auto it =
         std::lower_bound(dictionary.begin(), dictionary.end(), key,
                          [](const Entry &lhs, const std::string_view rhsKey) {
-                           return lhs.getKey() < rhsKey;
+                           return lhs.key < rhsKey;
                          });
-    if (it == dictionary.end() || it->getKey() != key) {
+    if (it == dictionary.end() || it->key != key) {
       throw Node::Error("Invalid key used in dictionary.");
     }
     return it;

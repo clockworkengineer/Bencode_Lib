@@ -119,6 +119,29 @@ Node Default_Parser::parseString(
   }
   return result;
 }
+
+std::string Default_Parser::parseStringKey(
+    ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
+  Bencode::IntegerType stringLength = extractInteger(source);
+  if (stringLength < 0) {
+    throw SyntaxError("Negative string length.");
+  }
+  if (source.current() != ParserConstants::COLON) {
+    throw SyntaxError("Missing colon separator in string value.");
+  }
+  source.next();
+  if (static_cast<uint64_t>(stringLength) > String::getMaxStringLength()) {
+    throw SyntaxError("String size exceeds maximum allowed size.");
+  }
+  std::string key;
+  key.resize(static_cast<std::size_t>(stringLength));
+  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
+       ++index) {
+    key[index] = source.current();
+    source.next();
+  }
+  return key;
+}
 /// <summary>
 /// Parse an integer from the input stream of characters referenced by ISource.
 /// </summary>
@@ -145,17 +168,14 @@ Node Default_Parser::parseDictionary(ISource &source,
   std::string lastKey{};
   source.next();
   while (source.more() && source.current() != ParserConstants::END) {
-    Node keyNode = parseString(source, parserDepth);
-    std::string key = std::string(NRef<String>(keyNode).value());
-    // Check keys in lexical order
+    std::string key = Default_Parser::parseStringKey(source, parserDepth);
     if (lastKey > key) {
       throw SyntaxError("Dictionary keys not in sequence.");
     }
     lastKey = key;
-    // Check key not duplicate and insert
     if (!NRef<Dictionary>(dictionary).contains(key)) {
       NRef<Dictionary>(dictionary)
-          .add(Dictionary::Entry(key, parseNodes(source, parserDepth + 1)));
+          .add(Dictionary::Entry(std::move(key), parseNodes(source, parserDepth + 1)));
     } else {
       throw SyntaxError("Duplicate dictionary key.");
     }
@@ -306,9 +326,8 @@ Node Default_Parser::parseIterative(ISource &source) {
       root = completeFrame();
       continue;
     }
-    Node keyNode =
-        parseString(source, static_cast<unsigned long>(frameStack.size() + 1));
-    std::string key = std::string(NRef<String>(keyNode).value());
+    std::string key = Default_Parser::parseStringKey(
+        source, static_cast<unsigned long>(frameStack.size() + 1));
     if (frame.lastKey > key) {
       throw SyntaxError("Dictionary keys not in sequence.");
     }
@@ -450,6 +469,33 @@ Default_Parser::parseString(ISource &source,
   return ParseStatus::success();
 }
 
+ParseStatus Default_Parser::parseStringKey(
+    ISource &source, [[maybe_unused]] const unsigned long parserDepth,
+    std::string &destination) {
+  Bencode::IntegerType stringLength = 0;
+  ParseStatus status = extractInteger(source, stringLength);
+  if (!status.ok()) {
+    return status;
+  }
+  if (stringLength < 0) {
+    return makeSyntaxError("Negative string length.");
+  }
+  if (source.current() != ParserConstants::COLON) {
+    return makeSyntaxError("Missing colon separator in string value.");
+  }
+  source.next();
+  if (static_cast<uint64_t>(stringLength) > String::getMaxStringLength()) {
+    return makeSyntaxError("String size exceeds maximum allowed size.");
+  }
+  destination.resize(static_cast<std::size_t>(stringLength));
+  for (std::size_t index = 0;
+       index < static_cast<std::size_t>(stringLength); ++index) {
+    destination[index] = source.current();
+    source.next();
+  }
+  return ParseStatus::success();
+}
+
 ParseStatus
 Default_Parser::parseInteger(ISource &source,
                              [[maybe_unused]] const unsigned long parserDepth,
@@ -475,12 +521,11 @@ ParseStatus Default_Parser::parseDictionary(ISource &source,
   std::string lastKey{};
   source.next();
   while (source.more() && source.current() != ParserConstants::END) {
-    Node keyNode;
-    ParseStatus status = parseString(source, parserDepth, keyNode);
+    std::string key;
+    ParseStatus status = parseStringKey(source, parserDepth, key);
     if (!status.ok()) {
       return status;
     }
-    std::string key = std::string(NRef<String>(keyNode).value());
     if (lastKey > key) {
       return makeSyntaxError("Dictionary keys not in sequence.");
     }
@@ -492,7 +537,7 @@ ParseStatus Default_Parser::parseDictionary(ISource &source,
         return status;
       }
       NRef<Dictionary>(dictionary)
-          .add(Dictionary::Entry(key, std::move(valueNode)));
+          .add(Dictionary::Entry(std::move(key), std::move(valueNode)));
     } else {
       return makeSyntaxError("Duplicate dictionary key.");
     }
@@ -703,13 +748,12 @@ ParseStatus Default_Parser::parseIterative(ISource &source, Node &destination) {
       }
       continue;
     }
-    Node keyNode;
-    ParseStatus status = parseString(
-        source, static_cast<unsigned long>(frameStack.size() + 1), keyNode);
+    std::string key;
+    ParseStatus status = parseStringKey(
+        source, static_cast<unsigned long>(frameStack.size() + 1), key);
     if (!status.ok()) {
       return status;
     }
-    std::string key = std::string(NRef<String>(keyNode).value());
     if (frame.lastKey > key) {
       return makeSyntaxError("Dictionary keys not in sequence.");
     }

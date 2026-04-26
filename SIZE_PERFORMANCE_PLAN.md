@@ -91,6 +91,12 @@ Objective: eliminate the per-node heap allocation.
 - Updated parser string handling to allocate string storage once and write bytes directly into `String` payload.
 - Eliminated temporary parse-buffer copies for Bencode string values.
 
+### Phase 4 Status
+
+- Simplified dictionary entry storage by moving key and node into a lightweight `DictionaryEntry` struct.
+- Added direct dictionary key parsing to avoid temporary `Node` allocations during parse.
+- Preserved sorted-key lookup while reducing dictionary parse and insertion overhead.
+
 1. Replace `Node::bNodeVariant` from `std::unique_ptr<Variant>` to an inline tagged union.
 2. Example structure:
    - `enum class Type { Empty, Integer, String, List, Dictionary, Hole }`.
