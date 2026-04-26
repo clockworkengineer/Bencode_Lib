@@ -78,8 +78,7 @@ struct String : Variant {
       : Variant(Type::string), mSize(other.mSize),
         mHeapActive(other.mHeapActive) {
     if (mHeapActive) {
-      new (&mStorage.heapString)
-          std::string(std::move(other.heapData()));
+      new (&mStorage.heapString) std::string(std::move(other.heapData()));
       other.heapData().~basic_string();
     } else {
       std::memcpy(inlineData(), other.inlineData(), mSize + 1);
@@ -109,8 +108,7 @@ struct String : Variant {
       mSize = other.mSize;
       mHeapActive = other.mHeapActive;
       if (mHeapActive) {
-        new (&mStorage.heapString)
-            std::string(std::move(other.heapData()));
+        new (&mStorage.heapString) std::string(std::move(other.heapData()));
         other.heapData().~basic_string();
       } else {
         std::memcpy(inlineData(), other.inlineData(), mSize + 1);
@@ -197,9 +195,7 @@ private:
     return mStorage.inlineStorage.data();
   }
 
-  [[nodiscard]] std::string &heapData() noexcept {
-    return mStorage.heapString;
-  }
+  [[nodiscard]] std::string &heapData() noexcept { return mStorage.heapString; }
 
   [[nodiscard]] const std::string &heapData() const noexcept {
     return mStorage.heapString;

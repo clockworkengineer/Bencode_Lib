@@ -112,8 +112,8 @@ Node Default_Parser::parseString(
   }
   Node result = Node::make<String>(static_cast<std::size_t>(stringLength));
   char *payload = NRef<String>(result).data();
-  for (std::size_t index = 0;
-       index < static_cast<std::size_t>(stringLength); ++index) {
+  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
+       ++index) {
     payload[index] = source.current();
     source.next();
   }
@@ -442,8 +442,8 @@ Default_Parser::parseString(ISource &source,
   }
   destination = Node::make<String>(static_cast<std::size_t>(stringLength));
   char *payload = NRef<String>(destination).data();
-  for (std::size_t index = 0;
-       index < static_cast<std::size_t>(stringLength); ++index) {
+  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
+       ++index) {
     payload[index] = source.current();
     source.next();
   }
