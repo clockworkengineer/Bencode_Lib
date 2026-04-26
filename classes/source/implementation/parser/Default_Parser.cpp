@@ -108,15 +108,16 @@ Node Default_Parser::parseString(
     throw SyntaxError("String size exceeds maximum allowed size.");
   }
   if (stringLength == 0) {
-    return Node::make<String>(std::string{});
+    return Node::make<String>();
   }
-  std::string buffer(static_cast<std::size_t>(stringLength), '\0');
-  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
-       ++index) {
-    buffer[index] = source.current();
+  Node result = Node::make<String>(static_cast<std::size_t>(stringLength));
+  char *payload = NRef<String>(result).data();
+  for (std::size_t index = 0;
+       index < static_cast<std::size_t>(stringLength); ++index) {
+    payload[index] = source.current();
     source.next();
   }
-  return Node::make<String>(std::move(buffer));
+  return result;
 }
 /// <summary>
 /// Parse an integer from the input stream of characters referenced by ISource.
@@ -436,16 +437,16 @@ Default_Parser::parseString(ISource &source,
     return makeSyntaxError("String size exceeds maximum allowed size.");
   }
   if (stringLength == 0) {
-    destination = Node::make<String>(std::string{});
+    destination = Node::make<String>();
     return ParseStatus::success();
   }
-  std::string buffer(static_cast<std::size_t>(stringLength), '\0');
-  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
-       ++index) {
-    buffer[index] = source.current();
+  destination = Node::make<String>(static_cast<std::size_t>(stringLength));
+  char *payload = NRef<String>(destination).data();
+  for (std::size_t index = 0;
+       index < static_cast<std::size_t>(stringLength); ++index) {
+    payload[index] = source.current();
     source.next();
   }
-  destination = Node::make<String>(std::move(buffer));
   return ParseStatus::success();
 }
 

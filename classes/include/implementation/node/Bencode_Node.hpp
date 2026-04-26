@@ -97,7 +97,7 @@ private:
     if constexpr (std::is_same_v<T, List> || std::is_same_v<T, Dictionary>) {
       bNodeVariant = std::make_unique<T>(std::forward<Args>(args)...);
     } else {
-      bNodeVariant.emplace<T>(std::forward<Args>(args)...);
+      bNodeVariant = T(std::forward<Args>(args)...);
     }
   }
 

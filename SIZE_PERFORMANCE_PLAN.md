@@ -85,6 +85,12 @@ Objective: eliminate the per-node heap allocation.
 - List and dictionary nodes now use `std::unique_ptr<List>` / `std::unique_ptr<Dictionary>` in the `Node` variant, preserving container semantics while removing per-node `Variant` allocation.
 - Rebuilt `Bencode_Lib` and `Bencode_Lib_Unit_Tests` successfully in Debug.
 
+### Phase 3 Status
+
+- Added a compact `String` variant with inline storage for short strings and heap fallback for larger strings.
+- Updated parser string handling to allocate string storage once and write bytes directly into `String` payload.
+- Eliminated temporary parse-buffer copies for Bencode string values.
+
 1. Replace `Node::bNodeVariant` from `std::unique_ptr<Variant>` to an inline tagged union.
 2. Example structure:
    - `enum class Type { Empty, Integer, String, List, Dictionary, Hole }`.
