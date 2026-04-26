@@ -184,6 +184,12 @@ Expected benefit:
 - Objective validation of improvements.
 - Faster detection of regressions.
 
+Status:
+- Benchmark harness exists in `tests/source/benchmark/Bencode_Lib_Benchmark.cpp`.
+- Optional benchmark targets are registered in `tests/CMakeLists.txt`.
+- Added CTest registration for benchmark executables to allow repeated benchmark execution.
+- Harness now supports runtime arguments for count, value size, and iterations.
+
 ## Recommended implementation tasks
 
 1. Add or extend a benchmark executable in `tests`.

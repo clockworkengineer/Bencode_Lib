@@ -141,6 +141,9 @@ if(BENCODE_BUILD_BENCHMARKS)
       $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
     )
   endif()
+
+  add_test(NAME Bencode_Lib_Benchmark COMMAND Bencode_Lib_Benchmark)
+  add_test(NAME Bencode_Lib_Embedded_Benchmark COMMAND Bencode_Lib_Embedded_Benchmark)
 endif()
 
 add_custom_command(TARGET ${TEST_EXECUTABLE} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/files files)
