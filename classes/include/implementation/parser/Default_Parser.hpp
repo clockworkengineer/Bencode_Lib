@@ -55,9 +55,9 @@ private:
                                                   Bencode::IntegerType &value);
   [[nodiscard]] static ParseStatus
   parseString(ISource &source, unsigned long parserDepth, Node &destination);
-  [[nodiscard]] static ParseStatus
-  parseStringKey(ISource &source, unsigned long parserDepth,
-                 std::string &destination);
+  [[nodiscard]] static ParseStatus parseStringKey(ISource &source,
+                                                  unsigned long parserDepth,
+                                                  std::string &destination);
   [[nodiscard]] static ParseStatus
   parseInteger(ISource &source, unsigned long parserDepth, Node &destination);
   [[nodiscard]] static ParseStatus parseDictionary(ISource &source,

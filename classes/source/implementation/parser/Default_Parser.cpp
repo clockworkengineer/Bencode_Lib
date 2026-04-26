@@ -175,7 +175,8 @@ Node Default_Parser::parseDictionary(ISource &source,
     lastKey = key;
     if (!NRef<Dictionary>(dictionary).contains(key)) {
       NRef<Dictionary>(dictionary)
-          .add(Dictionary::Entry(std::move(key), parseNodes(source, parserDepth + 1)));
+          .add(Dictionary::Entry(std::move(key),
+                                 parseNodes(source, parserDepth + 1)));
     } else {
       throw SyntaxError("Duplicate dictionary key.");
     }
@@ -469,9 +470,10 @@ Default_Parser::parseString(ISource &source,
   return ParseStatus::success();
 }
 
-ParseStatus Default_Parser::parseStringKey(
-    ISource &source, [[maybe_unused]] const unsigned long parserDepth,
-    std::string &destination) {
+ParseStatus
+Default_Parser::parseStringKey(ISource &source,
+                               [[maybe_unused]] const unsigned long parserDepth,
+                               std::string &destination) {
   Bencode::IntegerType stringLength = 0;
   ParseStatus status = extractInteger(source, stringLength);
   if (!status.ok()) {
@@ -488,8 +490,8 @@ ParseStatus Default_Parser::parseStringKey(
     return makeSyntaxError("String size exceeds maximum allowed size.");
   }
   destination.resize(static_cast<std::size_t>(stringLength));
-  for (std::size_t index = 0;
-       index < static_cast<std::size_t>(stringLength); ++index) {
+  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
+       ++index) {
     destination[index] = source.current();
     source.next();
   }
