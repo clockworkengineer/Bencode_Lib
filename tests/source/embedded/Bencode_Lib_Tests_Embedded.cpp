@@ -39,6 +39,22 @@ TEST_CASE("Embedded mode disables file I/O support", "[Bencode][Embedded]") {
 #endif
 }
 
+TEST_CASE("Embedded mode returns parse status instead of throwing",
+          "[Bencode][Embedded]") {
+#if defined(BENCODE_ENABLE_EXCEPTIONS) && (BENCODE_ENABLE_EXCEPTIONS == 0)
+  Bencode bencoder;
+  BufferSource source{"i42e"};
+  ParseStatus status = bencoder.parse(source);
+  REQUIRE(status.ok());
+  BufferSource badSource{"i42"};
+  ParseStatus badStatus = bencoder.parse(badSource);
+  REQUIRE_FALSE(badStatus.ok());
+  REQUIRE(badStatus.code == ErrorCode::MissingEndTerminator);
+#else
+  FAIL("Embedded test target must compile with exception support disabled");
+#endif
+}
+
 TEST_CASE("Embedded test target defines exception support off",
           "[Bencode][Embedded]") {
 #if defined(BENCODE_ENABLE_EXCEPTIONS) && (BENCODE_ENABLE_EXCEPTIONS == 0)

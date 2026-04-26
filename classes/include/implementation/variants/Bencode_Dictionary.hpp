@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <string>
 #include <string_view>
-#if defined(BENCODE_ENABLE_DYNAMIC_ALLOCATION)
+#if BENCODE_ENABLE_DYNAMIC_ALLOCATION
 #include <vector>
 #endif
 
@@ -30,7 +30,7 @@ struct DictionaryEntry {
 // Dictionary variant
 struct Dictionary : Variant {
   using Entry = DictionaryEntry;
-#if defined(BENCODE_ENABLE_DYNAMIC_ALLOCATION)
+#if BENCODE_ENABLE_DYNAMIC_ALLOCATION
   using Entries = std::vector<Entry>;
 #else
   using Entries = FixedVector<Entry, BENCODE_MAX_CONTAINER_SIZE>;
