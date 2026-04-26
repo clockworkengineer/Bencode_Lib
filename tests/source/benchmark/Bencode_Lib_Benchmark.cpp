@@ -32,11 +32,12 @@ static std::string makeLargeBencode(size_t count, size_t valueSize) {
 }
 
 static void printUsage(const char *programName) {
-  std::cout << "Usage: " << programName
-            << " [count] [value-size] [iterations]" << "\n"
-            << "  count: number of dictionary entries (default 5000)\n"
-            << "  value-size: bytes per value string (default 128)\n"
-            << "  iterations: number of parse/stringify iterations (default 5)\n";
+  std::cout
+      << "Usage: " << programName << " [count] [value-size] [iterations]"
+      << "\n"
+      << "  count: number of dictionary entries (default 5000)\n"
+      << "  value-size: bytes per value string (default 128)\n"
+      << "  iterations: number of parse/stringify iterations (default 5)\n";
 }
 
 static bool parseArg(const char *arg, size_t &output) {
@@ -96,10 +97,11 @@ int main(int argc, char *argv[]) {
       const auto end = high_resolution_clock::now();
       const double iterationTime = duration<double>(end - start).count();
       parseSeconds += iterationTime;
-      std::cout << "Parse iteration " << (i + 1) << ": " << iterationTime << " s\n";
+      std::cout << "Parse iteration " << (i + 1) << ": " << iterationTime
+                << " s\n";
     } catch (const std::exception &ex) {
-      std::cerr << "Parse iteration " << (i + 1)
-                << " failed: " << ex.what() << "\n";
+      std::cerr << "Parse iteration " << (i + 1) << " failed: " << ex.what()
+                << "\n";
       return 1;
     }
 #else
@@ -115,7 +117,8 @@ int main(int argc, char *argv[]) {
       return 1;
     }
     parseSeconds += iterationTime;
-    std::cout << "Parse iteration " << (i + 1) << ": " << iterationTime << " s\n";
+    std::cout << "Parse iteration " << (i + 1) << ": " << iterationTime
+              << " s\n";
 #endif
   }
 
@@ -140,14 +143,15 @@ int main(int argc, char *argv[]) {
       const auto end = high_resolution_clock::now();
       const double iterationTime = duration<double>(end - start).count();
       stringifySeconds += iterationTime;
-      std::cout << "Stringify iteration " << (i + 1) << ": " << iterationTime << " s\n";
+      std::cout << "Stringify iteration " << (i + 1) << ": " << iterationTime
+                << " s\n";
       if (destination.toString().size() != encoded.size()) {
         std::cerr << "Stringify output size mismatch\n";
         return 1;
       }
     } catch (const std::exception &ex) {
-      std::cerr << "Stringify iteration " << (i + 1)
-                << " failed: " << ex.what() << "\n";
+      std::cerr << "Stringify iteration " << (i + 1) << " failed: " << ex.what()
+                << "\n";
       return 1;
     }
   }
