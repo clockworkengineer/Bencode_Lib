@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18.1)
 
-project("Bencode_Lib Unit Tests" VERSION 1.2.0 DESCRIPTION "Bencode C++ Library Catch Unit Tests" LANGUAGES CXX)
+project("Bencode_Lib Unit Tests" VERSION 1.3.0 DESCRIPTION "Bencode C++ Library Catch Unit Tests" LANGUAGES CXX)
 
 # Get Catch2 from repository
 include(FetchContent)

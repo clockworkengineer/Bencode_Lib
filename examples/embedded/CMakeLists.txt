@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 
-project("Bencode_Lib Embedded Example" VERSION 1.2.0 DESCRIPTION "Bencode_Lib Embedded Configuration Example" LANGUAGES CXX)
+project("Bencode_Lib Embedded Example" VERSION 1.3.0 DESCRIPTION "Bencode_Lib Embedded Configuration Example" LANGUAGES CXX)
 
 # Embedded mode settings
 set(BENCODE_EMBEDDED_MODE ON CACHE BOOL "Enable embedded build mode")
