@@ -4,9 +4,15 @@ project("Bencode_Lib Examples" VERSION 1.2.0 DESCRIPTION "Bencode_Lib example pr
 
 function(process_file target)
   add_executable(${target} ${CMAKE_CURRENT_SOURCE_DIR}/source/${target})
-  target_precompile_headers(${target} REUSE_FROM Bencode_Lib)
   target_include_directories(${target} PUBLIC ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/include/external)
-  target_link_libraries(${target} Bencode_Lib::Bencode_Lib)
+
+  if(BENCODE_BUILD_MINIMAL AND target STREQUAL "Bencode_Minimal_Encode_Decode.cpp")
+    target_link_libraries(${target} Bencode_Lib::Bencode_Lib_Minimal)
+    target_precompile_headers(${target} REUSE_FROM Bencode_Lib_Minimal)
+  else()
+    target_link_libraries(${target} Bencode_Lib::Bencode_Lib)
+    target_precompile_headers(${target} REUSE_FROM Bencode_Lib)
+  endif()
 
   if(MSVC)
     target_compile_options(${target} PRIVATE

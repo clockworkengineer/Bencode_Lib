@@ -11,6 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(BENCODE_BUILD_TESTS "Build unit tests" ON)
 option(BENCODE_BUILD_EXAMPLES "Build examples" ON)
 option(BENCODE_BUILD_BENCHMARKS "Build performance benchmark executable" ON)
+option(BENCODE_BUILD_MINIMAL "Build minimal library variant with core parse/stringify and buffer-based I/O" OFF)
 option(BENCODE_EMBEDDED_MODE "Enable embedded build mode" OFF)
 option(BENCODE_ENABLE_EXCEPTIONS "Enable exception support" ON)
 option(BENCODE_ENABLE_FILE_IO "Enable file-based I/O support" ON)
@@ -41,6 +42,12 @@ if(BENCODE_ENABLE_FILE_IO)
     classes/source/implementation/file/Bencode_File.cpp
   )
 endif()
+
+set(BENCODE_MINIMAL_SOURCES
+  classes/source/Bencode.cpp
+  classes/source/implementation/Bencode_Impl.cpp
+  classes/source/implementation/parser/Default_Parser.cpp
+)
 
 set(BENCODE_EMBEDDED_SOURCES
   classes/source/Bencode.cpp
@@ -109,6 +116,12 @@ endif()
 # Bencode library target
 add_library(${BENCODE_LIBRARY_NAME} ${BENCODE_SOURCES} ${BENCODE_INCLUDES})
 
+# Minimal core-only library variant for consumers who do not need file-based I/O or optional stringifiers
+if(BENCODE_BUILD_MINIMAL)
+  add_library(${BENCODE_LIBRARY_NAME}_Minimal ${BENCODE_MINIMAL_SOURCES} ${BENCODE_INCLUDES})
+  add_library(Bencode_Lib::Bencode_Lib_Minimal ALIAS ${BENCODE_LIBRARY_NAME}_Minimal)
+endif()
+
 # Embedded library variant for examples and embedded tests
 add_library(${BENCODE_LIBRARY_NAME}_Embedded ${BENCODE_EMBEDDED_SOURCES} ${BENCODE_INCLUDES})
 add_library(Bencode_Lib::Bencode_Lib_Embedded ALIAS ${BENCODE_LIBRARY_NAME}_Embedded)
@@ -148,6 +161,24 @@ target_include_directories(${BENCODE_LIBRARY_NAME}_Embedded
   $<INSTALL_INTERFACE:include>
 )
 
+if(BENCODE_BUILD_MINIMAL)
+  target_include_directories(${BENCODE_LIBRARY_NAME}_Minimal
+    PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+    $<INSTALL_INTERFACE:include>
+  )
+endif()
+
 # Target-scoped warnings (replaces global add_compile_options)
 if(MSVC)
   target_compile_options(${BENCODE_LIBRARY_NAME} PRIVATE
@@ -156,6 +187,15 @@ if(MSVC)
     /Zc:__cplusplus
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
+
+  if(BENCODE_BUILD_MINIMAL)
+    target_compile_options(${BENCODE_LIBRARY_NAME}_Minimal PRIVATE
+      /W4
+      /permissive-
+      /Zc:__cplusplus
+      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
+    )
+  endif()
 else()
   target_compile_options(${BENCODE_LIBRARY_NAME} PRIVATE
     -Wall
@@ -163,6 +203,16 @@ else()
     -Wpedantic
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
   )
+
+  if(BENCODE_BUILD_MINIMAL)
+    target_compile_options(${BENCODE_LIBRARY_NAME}_Minimal PRIVATE
+      -Wall
+      -Wextra
+      -Wpedantic
+      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
+    )
+  endif()
+
   target_compile_options(${BENCODE_LIBRARY_NAME}_Embedded PRIVATE
     -Wall
     -Wextra
@@ -179,6 +229,12 @@ target_precompile_headers(${BENCODE_LIBRARY_NAME}
 target_precompile_headers(${BENCODE_LIBRARY_NAME}_Embedded
   PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
 )
+
+if(BENCODE_BUILD_MINIMAL)
+  target_precompile_headers(${BENCODE_LIBRARY_NAME}_Minimal
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
+  )
+endif()
 
 target_compile_definitions(${BENCODE_LIBRARY_NAME}
   PUBLIC
@@ -207,6 +263,22 @@ target_compile_definitions(${BENCODE_LIBRARY_NAME}_Embedded
   BENCODE_MAX_CONTAINER_SIZE=${BENCODE_MAX_CONTAINER_SIZE}
   BENCODE_MAX_STRING_LENGTH=${BENCODE_MAX_STRING_LENGTH}
 )
+
+if(BENCODE_BUILD_MINIMAL)
+  target_compile_definitions(${BENCODE_LIBRARY_NAME}_Minimal
+    PUBLIC
+    BENCODE_EMBEDDED_MODE=$<IF:$<BOOL:${BENCODE_EMBEDDED_MODE}>,1,0>
+    BENCODE_ENABLE_EXCEPTIONS=$<IF:$<BOOL:${BENCODE_ENABLE_EXCEPTIONS}>,1,0>
+    BENCODE_ENABLE_FILE_IO=0
+    BENCODE_ENABLE_DYNAMIC_ALLOCATION=$<IF:$<BOOL:${BENCODE_ENABLE_DYNAMIC_ALLOCATION}>,1,0>
+    BENCODE_ENABLE_JSON_STRINGIFY=0
+    BENCODE_ENABLE_XML_STRINGIFY=0
+    BENCODE_ENABLE_YAML_STRINGIFY=0
+    BENCODE_MAX_NODE_COUNT=${BENCODE_MAX_NODE_COUNT}
+    BENCODE_MAX_CONTAINER_SIZE=${BENCODE_MAX_CONTAINER_SIZE}
+    BENCODE_MAX_STRING_LENGTH=${BENCODE_MAX_STRING_LENGTH}
+  )
+endif()
 
 # Tests
 include(CTest)

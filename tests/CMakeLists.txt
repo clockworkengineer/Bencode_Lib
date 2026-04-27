@@ -65,6 +65,15 @@ target_compile_definitions(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
 )
 add_test(NAME ${EMBEDDED_TEST_EXECUTABLE} COMMAND ${EMBEDDED_TEST_EXECUTABLE})
 
+if(BENCODE_BUILD_MINIMAL)
+  set(MINIMAL_TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Minimal_Unit_Tests)
+  add_executable(${MINIMAL_TEST_EXECUTABLE} source/minimal/Bencode_Lib_Tests_Minimal.cpp)
+  target_include_directories(${MINIMAL_TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+  target_link_libraries(${MINIMAL_TEST_EXECUTABLE} Bencode_Lib::Bencode_Lib_Minimal Catch2::Catch2WithMain)
+  target_precompile_headers(${MINIMAL_TEST_EXECUTABLE} PRIVATE ${CMAKE_SOURCE_DIR}/stdafx.h)
+  add_test(NAME ${MINIMAL_TEST_EXECUTABLE} COMMAND ${MINIMAL_TEST_EXECUTABLE})
+endif()
+
 if(MSVC)
   target_compile_options(${TEST_EXECUTABLE} PRIVATE
     /W4
@@ -80,6 +89,16 @@ if(MSVC)
     /wd4324 # Catch2: structure padded due to alignment specifier
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
+
+  if(BENCODE_BUILD_MINIMAL)
+    target_compile_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE
+      /W4
+      /permissive-
+      /Zc:__cplusplus
+      /wd4324 # Catch2: structure padded due to alignment specifier
+      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
+    )
+  endif()
 else()
   target_compile_options(${TEST_EXECUTABLE} PRIVATE
     -Wall
@@ -93,6 +112,15 @@ else()
     -Wpedantic
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
   )
+
+  if(BENCODE_BUILD_MINIMAL)
+    target_compile_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE
+      -Wall
+      -Wextra
+      -Wpedantic
+      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
+    )
+  endif()
 endif()
 
 add_test(NAME ${TEST_EXECUTABLE} COMMAND ${TEST_EXECUTABLE})
