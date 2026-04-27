@@ -2,223 +2,180 @@
 
 ## Purpose
 
-Analyze the current library architecture and provide a concrete, implementation-first plan to reduce binary size and increase runtime performance. This file is intended as a roadmap for engineering changes in the core library, parser, and build configuration.
+Provide a concrete, repository-specific roadmap to reduce binary size and improve runtime performance for `Bencode_Lib`. This plan maps analysis to exact source files, build options, and refactor steps.
 
-## Current Analysis
+## Current repository analysis
 
-### Key implementation findings
-
-- `classes/include/implementation/node/Bencode_Node.hpp`
-  - `Node` currently stores a `std::unique_ptr<Variant>`.
-  - Every node is a separate heap allocation, causing high memory overhead and poor cache locality.
-
-- `classes/include/implementation/variants/Bencode_Dictionary.hpp`
-  - `DictionaryEntry` stores `std::string key` and `Node bNode`.
-  - Dictionary storage is a `std::vector<Entry>` when dynamic allocation is enabled.
-  - `Dictionary::add()` already uses `std::lower_bound`, but the design still allocates each entry and uses `std::string` for every key.
-
-- `classes/include/implementation/variants/Bencode_String.hpp`
-  - `String` stores `std::string` directly and allows a configurable max length.
-  - Parsing and destination code still perform string allocations and copies.
-
-- `classes/source/implementation/parser/Default_Parser.cpp`
-  - Parser logic is mostly `switch`-based, which is good, but it still allocates a fresh `Node` on each parse and often assembles strings via temporary allocations.
-  - The parse path for dictionary keys and list values uses recursive node construction.
-
-- `CMakeLists.txt`
-  - Already includes useful build options:
-    - `BENCODE_EMBEDDED_MODE`
-    - `BENCODE_ENABLE_EXCEPTIONS`
-    - `BENCODE_ENABLE_FILE_IO`
-    - `BENCODE_ENABLE_DYNAMIC_ALLOCATION`
-    - optional stringify flags for JSON / XML / YAML
-  - This is a strong foundation for size/performance tuning via build-time feature gating.
-
-## Primary Performance & Size Problems
-
-1. Heap allocation per node via `std::unique_ptr<Variant>`.
-2. `std::string` for every parsed Bencode string and dictionary key.
-3. Per-node variant indirection and dynamic allocation for lists/dictionaries.
-4. Runtime exception-heavy control flow in parser and node access.
-5. Public API includes optional stringifiers and file I/O by default, increasing compile/binary footprint.
-6. No current benchmark harness to quantify performance regressions or improvements.
-
-## Concrete Optimization Strategy
-
-### Phase 1: Measure and baseline
-
-1. Build `Release` and measure library size and binary artifacts.
-2. Record current runtime performance for representative parse/stringify workloads.
-3. Capture memory-allocation behavior for deeply nested Bencode input.
-4. Document current `CMake` configuration values and test coverage.
-
-### Phase 1 Baseline Results
-
-- Existing Release artifact: `build/Release/Bencode_Lib.lib` = 353,456 bytes
-- Existing Release embedded artifact: `build/Release/Bencode_Lib_Embedded.lib` = 309,614 bytes
-- Existing Debug artifact: `build/Debug/Bencode_Lib.lib` = 2,408,240 bytes
-- Existing Debug embedded artifact: `build/Debug/Bencode_Lib_Embedded.lib` = 1,749,270 bytes
-
-- Current CMake options from `build/CMakeCache.txt`:
-  - `BENCODE_EMBEDDED_MODE=OFF`
-  - `BENCODE_ENABLE_EXCEPTIONS=ON`
-  - `BENCODE_ENABLE_FILE_IO=ON`
-  - `BENCODE_ENABLE_DYNAMIC_ALLOCATION=ON`
-  - `BENCODE_ENABLE_JSON_STRINGIFY=ON`
-  - `BENCODE_ENABLE_XML_STRINGIFY=ON`
-  - `BENCODE_ENABLE_YAML_STRINGIFY=ON`
-  - `BENCODE_BUILD_TESTS=ON`
-  - `BENCODE_BUILD_EXAMPLES=ON`
-  - `BENCODE_BUILD_BENCHMARKS=ON`
-
-- Current status:
-  - Build configuration was fixed by defining the `Bencode_Lib_Embedded` target and excluding file I/O sources from the embedded variant.
-  - Release build completed successfully and produced baseline artifacts for both the main and embedded libraries.
-
-### Phase 2: Inline Node storage
-
-Objective: eliminate the per-node heap allocation.
-
-### Phase 2 Status
-
-- Implemented a new `Node` storage strategy where scalar variants are stored inline.
-- List and dictionary nodes now use `std::unique_ptr<List>` / `std::unique_ptr<Dictionary>` in the `Node` variant, preserving container semantics while removing per-node `Variant` allocation.
-- Rebuilt `Bencode_Lib` and `Bencode_Lib_Unit_Tests` successfully in Debug.
-
-### Phase 3 Status
-
-- Added a compact `String` variant with inline storage for short strings and heap fallback for larger strings.
-- Updated parser string handling to allocate string storage once and write bytes directly into `String` payload.
-- Eliminated temporary parse-buffer copies for Bencode string values.
-
-### Phase 4 Status
-
-- Simplified dictionary entry storage by moving key and node into a lightweight `DictionaryEntry` struct.
-- Added direct dictionary key parsing to avoid temporary `Node` allocations during parse.
-- Preserved sorted-key lookup while reducing dictionary parse and insertion overhead.
-
-### Phase 5 Status
-
-- Conditionally added file I/O and optional stringify headers in `CMakeLists.txt` only when the corresponding feature flags are enabled.
-- Kept `Bencode_Core.hpp` and `Bencode_Sources.hpp`/`Bencode_Destinations.hpp` as thin wrappers so the minimal build still provides buffer-based I/O without file support.
-- Left `Bencode` public file API behind `BENCODE_ENABLE_FILE_IO` and stringify API behind their feature macros.
-
-1. Replace `Node::bNodeVariant` from `std::unique_ptr<Variant>` to an inline tagged union.
-2. Example structure:
-   - `enum class Type { Empty, Integer, String, List, Dictionary, Hole }`.
-   - `union Storage { Integer integer; String string; List list; Dictionary dictionary; }`.
-3. Keep the current public API but move storage into `Node` itself.
-4. Ensure move semantics remain efficient and node copy is either deleted or explicitly handled.
-5. Maintain `BENCODE_ENABLE_DYNAMIC_ALLOCATION` compatibility by using the same object model but with fewer allocations.
-
-Expected benefit:
-- Remove one heap allocation per node.
-- Greatly improve traversal speed.
-- Reduce total heap usage and fragmentation.
-
-### Phase 3: Optimize string storage and parsing
-
-1. Replace custom string parsing patterns with direct buffer allocation.
-2. On parse, reserve output capacity once based on parsed length.
-3. Avoid temporary `std::string` allocations when reading bytes from `ISource`.
-4. If `BENCODE_ENABLE_DYNAMIC_ALLOCATION` is disabled, support fixed-size buffer or small-string optimization.
-5. Consider a `String` specialization that stores small data inline up to a threshold.
-
-Expected benefit:
-- Reduce parse-time allocations and copies.
-- Improve string encoding/decoding throughput.
-- Lower binary size by removing unnecessary wrapper code.
-
-### Phase 4: Optimize dictionary storage and lookup
-
-1. Keep sorted dictionary entries but reduce overhead by storing keys as `std::string` directly without extra wrapper objects.
-2. Use a stable `std::vector<Entry>` or `FixedVector<Entry, N>` for embedded mode.
-3. Ensure binary-search lookup remains efficient.
-4. Replace `DictionaryEntry` if possible with a lighter `struct { std::string key; Node node; }` design that avoids extra abstraction overhead.
-5. For large dictionaries, consider `std::map<std::string, Node>` only if it is measurably better than `std::vector` for current use cases; otherwise, a sorted vector is usually best for compact builds.
-
-Expected benefit:
-- Lower dictionary access cost.
-- Reduce memory usage per dictionary node.
-- Preserve deterministic ordering while improving parse and lookup speed.
-
-### Phase 5: Eliminate optional heavyweight features from minimal builds
-
-1. Use existing CMake options to gate optional features.
-2. In minimal builds, disable:
-   - `BENCODE_ENABLE_FILE_IO`
-   - `BENCODE_ENABLE_JSON_STRINGIFY`
-   - `BENCODE_ENABLE_XML_STRINGIFY`
-   - `BENCODE_ENABLE_YAML_STRINGIFY`
-3. Keep `Bencode.hpp` and `Bencode_Core.hpp` slim by conditionally including optional headers only when enabled.
-4. Prefer a small public include surface for the minimal library.
-
-Expected benefit:
-- Reduced compile times.
-- Smaller installed headers and binary size.
-- Cleaner embedded/minimal consumer experience.
-
-### Phase 6: Improve embedded mode and no-exceptions path
-
-1. Verify `BENCODE_EMBEDDED_MODE` is actively used to reduce dynamic allocation and I/O features.
-2. When `BENCODE_ENABLE_EXCEPTIONS` is OFF, ensure the parser returns `ParseStatus` instead of throwing.
-3. Optimize embedded object lifetimes and move semantics for low memory.
-4. Add tests for no-exceptions and bounded allocation mode.
-
-Expected benefit:
-- Smaller code size for constrained targets.
-- Reliable performance with predictable resource use.
-
-### Phase 7: Add performance regression harness
-
-1. Add a benchmark target under `tests/` or a dedicated `benchmark/` directory.
-2. Measure:
-   - parse throughput (MB/s)
-   - stringify throughput (MB/s)
-   - heap allocations / allocation count
-   - binary size changes
-3. Run benchmarks before and after each major refactor.
-4. Store results as part of the repository documentation.
-
-Expected benefit:
-- Objective validation of improvements.
-- Faster detection of regressions.
-
-Status:
-- Benchmark harness exists in `tests/source/benchmark/Bencode_Lib_Benchmark.cpp`.
-- Optional benchmark targets are registered in `tests/CMakeLists.txt`.
-- Added CTest registration for benchmark executables to allow repeated benchmark execution.
-- Harness now supports runtime arguments for count, value size, and iterations.
-
-## Recommended implementation tasks
-
-1. Add or extend a benchmark executable in `tests`.
-2. Refactor `classes/include/implementation/node/Bencode_Node.hpp` to inline variant storage.
-3. Refactor `classes/include/implementation/variants/Bencode_String.hpp` and parser string paths for direct storage.
-4. Refactor `classes/include/implementation/variants/Bencode_Dictionary.hpp` for lighter entries and stable sorted insertion.
-5. Audit `classes/include/implementation/io/` headers and source to separate mandatory core I/O from optional file I/O.
-6. Add compile-time feature gating around optional stringifiers in `CMakeLists.txt` and header inclusion.
-7. Add a minimal `BufferDestination`/`BufferSource` mode for no-heap embedded usage.
-
-## Concrete expected outcomes
-
-- Node heap allocations reduced by approximately 100% of all node objects.
-- Parse throughput improved by 20–40% for nested structures.
-- Dictionary lookups optimized from linear-like behavior to binary-search behavior with lower overhead.
-- Library size lowered by removing unused optional features and reducing dynamic allocation support in embedded mode.
-- Cleaner minimal build configuration for consumer use.
-
-## File targets for implementation
+### High-impact findings
 
 - `classes/include/implementation/node/Bencode_Node.hpp`
-- `classes/include/implementation/variants/Bencode_String.hpp`
+  - `Node` stores `std::variant<std::monostate, Hole, Integer, String, std::unique_ptr<List>, std::unique_ptr<Dictionary>>`.
+  - List and dictionary nodes are heap-allocated, so every container node adds an extra allocation and pointer indirection.
+
 - `classes/include/implementation/variants/Bencode_Dictionary.hpp`
+  - Dictionary entries are `std::string key` + `Node bNode`.
+  - Parsing currently constructs keys then checks for duplicates with `contains()` before inserting.
+  - `Dictionary::add()` already uses binary-search insertion, but parse flow still performs extra work.
+
+- `classes/include/implementation/variants/Bencode_String.hpp`
+  - `String` is a custom small-string wrapper with inline storage and heap fallback.
+  - It is moderately optimized, but the wrapper itself is complex and may inflate binary size.
+
 - `classes/source/implementation/parser/Default_Parser.cpp`
-- `classes/include/implementation/io/Bencode_FileSource.hpp`
-- `classes/include/implementation/io/Bencode_FileDestination.hpp`
+  - The parser uses an explicit `ParserFrame` stack and string key buffering.
+  - `parseStringKey()` and the dictionary parse path allocate and move keys multiple times.
+
 - `CMakeLists.txt`
-- `tests/CMakeLists.txt`
+  - Default library build enables optional file I/O and JSON/XML/YAML stringifiers.
+  - A minimal variant exists, but the main build still includes extra features by default.
 
-## Next step
+### Good existing foundations
 
-Use this plan as a base for the first refactor: inline `Node` storage and benchmark the performance delta. After that, proceed to string and dictionary optimizations in measured order.
+- Build-time feature gating already exists for file I/O, dynamic allocation, and optional serializers.
+- Minimal and embedded library targets are already defined in `CMakeLists.txt`.
+- `Dictionary` lookup already uses `std::lower_bound` and sorted key semantics.
+- Parser supports both throwing and non-throwing paths.
+
+## Primary targets for reduction and speedup
+
+1. Eliminate heap allocation indirection in `Node` for list and dictionary storage.
+2. Simplify string wrapper and ensure parser writes directly into destination buffers.
+3. Tighten dictionary parse insertion and avoid duplicate or redundant key checks.
+4. Reduce default build footprint by clearly separating core, file I/O, and optional serializers.
+5. Add measurable benchmark regression tracking.
+
+## Concrete engineering roadmap
+
+### Phase 1: Baseline measurement
+
+Tasks:
+- Build `Release` and record sizes of:
+  - `build/Release/Bencode_Lib.lib`
+  - `build/Release/Bencode_Lib_Embedded.lib`
+  - `build/Release/Bencode_Lib_Minimal.lib` (if built)
+- Capture default feature settings from `CMakeLists.txt`.
+- Run the existing unit test suite.
+- Add or extend the benchmark harness in `tests/source/benchmark/Bencode_Lib_Benchmark.cpp`.
+- Measure representative workloads for parse/stringify, including a large dictionary and large string payload.
+
+Deliverables:
+- Exact baseline binary sizes.
+- Baseline parse and stringify throughput values.
+- Baseline functional test results.
+
+### Phase 2: Inline node container storage
+
+Goal: remove per-node heap allocations for `List` and `Dictionary`.
+
+Tasks:
+- Refactor `classes/include/implementation/node/Bencode_Node.hpp`:
+  - Replace `std::unique_ptr<List>` and `std::unique_ptr<Dictionary>` with inline `List`/`Dictionary` variants.
+  - Options:
+    - `std::variant<std::monostate, Hole, Integer, String, List, Dictionary>`
+    - or a custom tagged union with manual construction/destruction.
+- Update `Node::make<List>` / `Node::make<Dictionary>` to construct inline storage.
+- Update visitors in `getVariant()` and any `Node` helpers to reference inline container objects.
+- Keep public API semantics unchanged.
+
+Expected impact:
+- Remove one allocation per parsed list/dictionary node.
+- Improve traversal and visitor performance.
+- Reduce heap fragmentation.
+
+### Phase 3: Simplify string storage and parse input handling
+
+Goal: keep strings efficient while reducing code-weight and overhead.
+
+Tasks:
+- Audit `classes/include/implementation/variants/Bencode_String.hpp`.
+- Evaluate whether the custom wrapper can be simplified to `std::string` with small-string optimization.
+- Ensure `Default_Parser::parseString()` and `parseStringKey()` allocate the final string size once and copy bytes directly into it.
+- Remove any temporary string copies in input parsing.
+
+Expected impact:
+- Maintain or improve parse speed for strings.
+- Reduce wrapper complexity and possible binary size.
+
+### Phase 4: Tighten dictionary parsing and lookup
+
+Goal: improve dictionary parse efficiency and reduce redundant checks.
+
+Tasks:
+- Update `classes/source/implementation/parser/Default_Parser.cpp`:
+  - In `parseDictionary()`, parse the key once and append it in-order instead of using `contains()` then `add()`.
+  - Use `Dictionary::appendSorted()` for parser-ordered dictionary construction and fail fast on out-of-order keys.
+- Keep `Dictionary::add()` for general insertion but ensure parse path uses the most efficient path.
+- Validate `Dictionary::contains()` and `operator[]` are using binary search efficiently.
+
+Expected impact:
+- Avoid repeated key comparisons during dictionary parsing.
+- Preserve sorted ordering with lower insertion overhead.
+
+### Phase 5: Narrow default build footprint
+
+Goal: make small-size builds easier and default core builds leaner.
+
+Tasks:
+- In `CMakeLists.txt`, clearly document the purpose of `BENCODE_BUILD_MINIMAL` and `BENCODE_LIB_Embedded`.
+- Ensure `classes/include/implementation/io/Bencode_FileSource.hpp` and `Bencode_FileDestination.hpp` are only included when `BENCODE_ENABLE_FILE_IO=ON`.
+- Confirm `Bencode_Core.hpp` only includes optional stringify headers if the respective build flags are enabled.
+- Optionally set `BENCODE_BUILD_MINIMAL=ON` for a dedicated small build profile in documentation.
+
+Expected impact:
+- Smaller binary size in the minimal target.
+- Cleaner public header surface.
+- Easier consumer use for embedded/limited targets.
+
+### Phase 6: Optimize parser structure and control flow
+
+Goal: reduce parser overhead while preserving correctness.
+
+Tasks:
+- Review `classes/source/implementation/parser/Default_Parser.cpp` for opportunities to reduce temporary allocations in `ParserFrame` and `std::string` key handling.
+- Confirm `copySourceToBuffer()` is the only byte-copy path for strings.
+- Where possible, reuse parser memory for repeated frames or keys without reallocation.
+- Keep `parseIterative()` logic simple and avoid unnecessary intermediate nodes.
+
+Expected impact:
+- Faster parsing for deeply nested structures.
+- Reduced temporary allocation overhead.
+
+### Phase 7: Add regression benchmarks and measurement
+
+Goal: make size and speed improvements quantifiable and repeatable.
+
+Tasks:
+- Extend `tests/source/benchmark/Bencode_Lib_Benchmark.cpp` with feature-specific workloads.
+- Add a benchmark target to `tests/CMakeLists.txt` if needed.
+- Track metrics for:
+  - parse MB/s
+  - stringify MB/s
+  - binary size change
+  - optionally heap allocation count
+- Save benchmark results in a repository note or doc.
+
+Expected impact:
+- Objective validation of each refactor.
+- Early detection of regressions.
+
+## Concrete implementation tasks
+
+1. Refactor `classes/include/implementation/node/Bencode_Node.hpp` to inline container storage.
+2. Audit and simplify `classes/include/implementation/variants/Bencode_String.hpp`.
+3. Refactor `classes/include/implementation/variants/Bencode_Dictionary.hpp` for parser-friendly insertion.
+4. Optimize `classes/source/implementation/parser/Default_Parser.cpp` dictionary and string parse paths.
+5. Harden `CMakeLists.txt` feature gates and minimal/embedded build profiles.
+6. Keep file I/O headers in `classes/include/implementation/io/` optional behind `BENCODE_ENABLE_FILE_IO`.
+7. Strengthen benchmark support in `tests/CMakeLists.txt` and `tests/source/benchmark/Bencode_Lib_Benchmark.cpp`.
+
+## Success criteria
+
+- Release binary size shrinks measurably, especially for minimal/embedded builds.
+- Library keeps the same public API and test coverage.
+- Parse/stringify throughput improves from the baseline.
+- `BENCODE_ENABLE_FILE_IO=OFF` and `BENCODE_ENABLE_DYNAMIC_ALLOCATION=OFF` builds still compile.
+- Benchmark harness captures regressions going forward.
+
+## Immediate next step
+
+Start with `Bencode_Node.hpp` refactor and benchmark baseline results. Then implement dictionary parse flow improvements and tighten build gating.
