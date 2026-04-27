@@ -24,6 +24,14 @@ std::string fileData = Bencode::fromFile("example.torrent");
 Bencode doc(fileData);
 ```
 
+## Writing raw Bencode to a file
+```cpp
+#include "Bencode.hpp"
+using namespace Bencode_Lib;
+
+Bencode::toFile("output.bencode", "d3:foo3:bare");
+```
+
 ## Error Handling Example
 ```cpp
 try {
@@ -54,7 +62,7 @@ public:
         destination.add("custom output");
     }
 };
-Bencode doc(new MyStringify());
+Bencode doc(makeStringify<MyStringify>());
 ```
 
 ## Traversing the Node Tree

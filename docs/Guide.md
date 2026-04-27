@@ -44,6 +44,8 @@ Bencode doc(fileData);
 Bencode::toFile("output.torrent", doc.root().toString());
 ```
 
+> Note: file-based helpers require `BENCODE_ENABLE_FILE_IO=ON`.
+
 ## Error Handling
 All parsing errors throw `SyntaxError` exceptions. Use try/catch to handle errors.
 ```cpp
@@ -75,7 +77,7 @@ public:
         // Custom encoding logic
     }
 };
-Bencode doc(new MyStringify());
+Bencode doc(makeStringify<MyStringify>());
 ```
 
 ## Embedded Mode

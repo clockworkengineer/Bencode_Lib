@@ -56,6 +56,7 @@ Interface for custom parsers.
 **Usage:**
 - Implement this interface to provide custom parsing logic.
 - Pass your parser to the `Bencode` constructor.
+- If exceptions are disabled, a parser implementation should return `ParseStatus` and populate the destination node instead.
 
 ### ISource / IDestination
 Abstract interfaces for reading/writing data.
@@ -68,6 +69,7 @@ Interface for custom stringification (encoding) logic.
 
 - `virtual void stringify(const Node &bNode, IDestination &destination) const = 0;`
 - Implement and pass to `Bencode` for custom output formats.
+- Use `makeStringify<T>()` to create an `IStringify *` instance for the `Bencode` constructor.
 
 ## Variants
 - `Integer`, `String`, `List`, `Dictionary` — Node types, each with their own value accessors and constructors.

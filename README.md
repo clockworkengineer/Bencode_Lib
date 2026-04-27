@@ -53,6 +53,8 @@ Bencode is a data serialization format with the following encoding rules:
    cmake --build .
    ```
 
+   The default build includes unit tests, examples, and benchmarks. To customize the build, pass CMake options such as `-DBENCODE_BUILD_MINIMAL=ON`, `-DBENCODE_EMBEDDED_MODE=ON`, or `-DBENCODE_ENABLE_FILE_IO=OFF`.
+
 4. (Optional) Install the library:
    ```bash
    cmake --install .
@@ -64,10 +66,14 @@ Bencode is a data serialization format with the following encoding rules:
 |--------|---------|-------------|
 | `BENCODE_BUILD_TESTS` | `ON` | Build the Catch2 unit tests |
 | `BENCODE_BUILD_EXAMPLES` | `ON` | Build the example programs |
-| `BENCODE_EMBEDDED_MODE` | `OFF` | Enable the embedded build configuration |
+| `BENCODE_BUILD_BENCHMARKS` | `ON` | Build the performance benchmark executable |
 | `BENCODE_BUILD_MINIMAL` | `OFF` | Build a smaller, buffer-only library variant without optional file I/O or stringifiers |
+| `BENCODE_EMBEDDED_MODE` | `OFF` | Enable the embedded build configuration |
 | `BENCODE_ENABLE_EXCEPTIONS` | `ON` | Enable exception support |
 | `BENCODE_ENABLE_FILE_IO` | `ON` | Enable file-based I/O support |
+| `BENCODE_ENABLE_JSON_STRINGIFY` | `ON` | Enable JSON stringify support |
+| `BENCODE_ENABLE_XML_STRINGIFY` | `ON` | Enable XML stringify support |
+| `BENCODE_ENABLE_YAML_STRINGIFY` | `ON` | Enable YAML stringify support |
 | `BENCODE_ENABLE_DYNAMIC_ALLOCATION` | `ON` | Enable dynamic allocations for containers |
 | `BENCODE_MAX_NODE_COUNT` | `256` | Maximum total node count in embedded mode |
 | `BENCODE_MAX_CONTAINER_SIZE` | `64` | Maximum number of elements in embedded lists/dictionaries |
@@ -125,6 +131,18 @@ int main() {
     be::BufferDestination destination;
     bencode.stringify(destination);
     std::cout << destination.toString() << "\n"; // d3:age2:303:name4:Johne
+}
+```
+
+### Library Version
+
+```cpp
+#include "Bencode.hpp"
+
+namespace be = Bencode_Lib;
+
+int main() {
+    std::cout << "Bencode_Lib version: " << be::Bencode::version() << "\n";
 }
 ```
 
