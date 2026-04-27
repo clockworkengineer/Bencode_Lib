@@ -3,10 +3,7 @@
 // Description: Minimal example of encoding and decoding using Bencode_Lib.
 // Dependencies: C++20, Bencode_Lib.
 
-
-#include "Bencode.hpp"
-#include "Bencode_Core.hpp"
-#include <iostream>
+#include "Bencode_Utility.hpp"
 
 namespace be = Bencode_Lib;
 
@@ -21,7 +18,7 @@ int main() {
         bencodeDict.stringify(dest);
         encoded = dest.toString();
     }
-    std::cout << "Bencoded string: " << encoded << std::endl;
+    PLOG_INFO << "Bencoded string: " << encoded << std::endl;
 
     // Decode the string
     be::Bencode decoded;
@@ -29,7 +26,7 @@ int main() {
         be::BufferSource src(encoded);
         decoded.parse(src);
     }
-    std::cout << "Decoded name: " << be::NRef<be::String>(decoded["name"]).value() << std::endl;
-    std::cout << "Decoded age: " << be::NRef<be::String>(decoded["age"]).value() << std::endl;
+    PLOG_INFO << "Decoded name: " << be::NRef<be::String>(decoded["name"]).value() << std::endl;
+    PLOG_INFO << "Decoded age: " << be::NRef<be::String>(decoded["age"]).value() << std::endl;
     return 0;
 }

@@ -2,9 +2,7 @@
 // Description: Demonstrates encoding and decoding nested lists and dictionaries
 // with Bencode_Lib. Dependencies: C++20, Bencode_Lib.
 
-#include "Bencode.hpp"
-#include "Bencode_Core.hpp"
-#include <iostream>
+#include "Bencode_Utility.hpp"
 
 namespace be = Bencode_Lib;
 
@@ -22,13 +20,13 @@ int main() {
   be::BufferDestination dest;
   doc.stringify(dest);
   std::string encoded = dest.toString();
-  std::cout << "Bencoded nested structure: " << encoded << std::endl;
+  PLOG_INFO << "Bencoded nested structure: " << encoded << std::endl;
 
   // Decode
   be::Bencode decoded(encoded);
-  std::cout << "Decoded user: " << be::NRef<be::String>(decoded["user"]).value()
+  PLOG_INFO << "Decoded user: " << be::NRef<be::String>(decoded["user"]).value()
             << std::endl;
-  std::cout << "Decoded profile age: "
+  PLOG_INFO << "Decoded profile age: "
             << be::NRef<be::Integer>(decoded["profile"]["age"]).value()
             << std::endl;
   return 0;
