@@ -63,6 +63,24 @@ Deliverables:
 - Baseline parse and stringify throughput values.
 - Baseline functional test results.
 
+Baseline results:
+- Release build artifacts:
+  - `build/Release/Bencode_Lib.lib` = 345.17 KB
+  - `build/Release/Bencode_Lib_Embedded.lib` = 302.36 KB
+- Debug build artifacts:
+  - `build/Debug/Bencode_Lib.lib` = 3329.23 KB
+  - `build/Debug/Bencode_Lib_Embedded.lib` = 2687.21 KB
+  - `build/Debug/Bencode_Lib_Minimal.lib` = 3058.10 KB
+- Benchmark throughput (`Bencode_Lib_Benchmark`):
+  - Parse = 6.31829 MB/s
+  - Stringify = 13.241 MB/s
+- Validation results:
+  - `Bencode_Lib_Unit_Tests` passed
+  - `Bencode_Lib_Minimal_Unit_Tests` passed
+  - `Bencode_Lib_Embedded_Unit_Tests` passed
+  - `Bencode_Lib_Benchmark` passed
+  - `Bencode_Lib_Embedded_Benchmark` passed
+
 ### Phase 2: Inline node container storage
 
 Goal: remove per-node heap allocations for `List` and `Dictionary`.
