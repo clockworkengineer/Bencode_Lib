@@ -526,17 +526,13 @@ ParseStatus Default_Parser::parseDictionary(ISource &source,
       return makeSyntaxError("Dictionary keys not in sequence.");
     }
     lastKey = key;
-    if (!NRef<Dictionary>(dictionary).contains(key)) {
-      Node valueNode;
-      status = parseNodes(source, parserDepth + 1, valueNode);
-      if (!status.ok()) {
-        return status;
-      }
-      NRef<Dictionary>(dictionary)
-          .add(Dictionary::Entry(std::move(key), std::move(valueNode)));
-    } else {
-      return makeSyntaxError("Duplicate dictionary key.");
+    Node valueNode;
+    status = parseNodes(source, parserDepth + 1, valueNode);
+    if (!status.ok()) {
+      return status;
     }
+    NRef<Dictionary>(dictionary)
+        .appendSorted(Dictionary::Entry(std::move(key), std::move(valueNode)));
   }
   ParseStatus boundaryStatus = confirmBoundary(source, ParserConstants::END);
   if (!boundaryStatus.ok()) {

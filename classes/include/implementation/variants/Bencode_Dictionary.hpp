@@ -55,6 +55,21 @@ struct Dictionary : Variant {
     }
     bNodeDictionary.insert(it, std::forward<T>(entry));
   }
+
+  template <typename T> void appendSorted(T &&entry) {
+    const auto &key = entry.key;
+    if (!bNodeDictionary.empty()) {
+      const auto &previousKey = bNodeDictionary.back().key;
+      if (previousKey == key) {
+        throw Node::Error("Duplicate dictionary key.");
+      }
+      if (previousKey > key) {
+        throw Node::Error("Dictionary keys not in sequence.");
+      }
+    }
+    bNodeDictionary.push_back(std::forward<T>(entry));
+  }
+
   [[nodiscard]] bool contains(const std::string_view key) const {
     auto it =
         std::lower_bound(bNodeDictionary.begin(), bNodeDictionary.end(), key,
