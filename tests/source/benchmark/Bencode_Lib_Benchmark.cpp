@@ -50,6 +50,9 @@ static bool parseArg(const char *arg, size_t &output) {
   }
 }
 
+static constexpr double kBaselineParseMBs = 6.31829;
+static constexpr double kBaselineStringifyMBs = 13.241;
+
 int main(int argc, char *argv[]) {
 #if BENCODE_ENABLE_DYNAMIC_ALLOCATION
   size_t dictionarySize = 5000;
@@ -82,6 +85,9 @@ int main(int argc, char *argv[]) {
 
   const std::string encoded = makeLargeBencode(dictionarySize, valueSize);
   const double dataMB = static_cast<double>(encoded.size()) / (1024.0 * 1024.0);
+
+  ObjectPool<List>::resetStats();
+  ObjectPool<Dictionary>::resetStats();
 
   std::cout << "Benchmark: parsing and stringifying " << dictionarySize
             << " dictionary entries (" << encoded.size() << " bytes)\n";
@@ -164,6 +170,26 @@ int main(int argc, char *argv[]) {
   std::cout << "Stringify time: " << stringifySeconds << " s"
             << " (" << stringifyThroughput << " MB/s)\n";
   std::cout << "Average round-trip size: " << encoded.size() << " bytes\n";
+
+  const auto listStats = ObjectPool<List>::getStats();
+  const auto dictStats = ObjectPool<Dictionary>::getStats();
+  std::cout << "List pool: acquired=" << listStats.acquired
+            << ", created=" << listStats.created
+            << ", reused=" << listStats.reused
+            << ", released=" << listStats.released << "\n";
+  std::cout << "Dictionary pool: acquired=" << dictStats.acquired
+            << ", created=" << dictStats.created
+            << ", reused=" << dictStats.reused
+            << ", released=" << dictStats.released << "\n";
+
+  std::cout << "Baseline parse throughput: " << kBaselineParseMBs << " MB/s\n";
+  std::cout << "Baseline stringify throughput: " << kBaselineStringifyMBs
+            << " MB/s\n";
+  std::cout << "Parse improvement: "
+            << ((parseThroughput / kBaselineParseMBs - 1.0) * 100.0) << " %\n";
+  std::cout << "Stringify improvement: "
+            << ((stringifyThroughput / kBaselineStringifyMBs - 1.0) * 100.0)
+            << " %\n";
 
   return 0;
 }

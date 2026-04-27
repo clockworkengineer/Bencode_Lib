@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -16,6 +17,69 @@ namespace Bencode_Lib {
 class Bencode;
 struct List;
 struct Dictionary;
+
+template <typename T> class ObjectPool {
+public:
+  struct FreeNode {
+    FreeNode *next = nullptr;
+  };
+
+  struct Stats {
+    size_t acquired = 0;
+    size_t created = 0;
+    size_t reused = 0;
+    size_t released = 0;
+  };
+
+  static T *acquire() noexcept {
+    ++totalAcquired;
+    if (freeList) {
+      ++totalReused;
+      FreeNode *node = freeList;
+      freeList = node->next;
+      return reinterpret_cast<T *>(node);
+    }
+    ++totalCreated;
+    return static_cast<T *>(::operator new(sizeof(T)));
+  }
+
+  static void release(T *value) noexcept {
+    if (!value) {
+      return;
+    }
+    ++totalReleased;
+    value->~T();
+    FreeNode *node = reinterpret_cast<FreeNode *>(value);
+    node->next = freeList;
+    freeList = node;
+  }
+
+  static Stats getStats() noexcept {
+    return Stats{totalAcquired, totalCreated, totalReused, totalReleased};
+  }
+
+  static void resetStats() noexcept {
+    totalAcquired = 0;
+    totalCreated = 0;
+    totalReused = 0;
+    totalReleased = 0;
+  }
+
+private:
+  inline static std::atomic<size_t> totalAcquired = 0;
+  inline static std::atomic<size_t> totalCreated = 0;
+  inline static std::atomic<size_t> totalReused = 0;
+  inline static std::atomic<size_t> totalReleased = 0;
+  static thread_local FreeNode *freeList;
+};
+
+template <typename T>
+thread_local typename ObjectPool<T>::FreeNode *ObjectPool<T>::freeList =
+    nullptr;
+
+template <typename T> struct PoolDeleter {
+  void operator()(T *value) const noexcept { ObjectPool<T>::release(value); }
+};
 
 struct Node {
   // Node Error
@@ -52,10 +116,13 @@ struct Node {
       Variant &operator()(Hole &value) const noexcept { return value; }
       Variant &operator()(Integer &value) const noexcept { return value; }
       Variant &operator()(String &value) const noexcept { return value; }
-      Variant &operator()(const std::unique_ptr<List> &value) const {
+      Variant &
+      operator()(const std::unique_ptr<List, PoolDeleter<List>> &value) const {
         return dereferenceList(value);
       }
-      Variant &operator()(const std::unique_ptr<Dictionary> &value) const {
+      Variant &operator()(
+          const std::unique_ptr<Dictionary, PoolDeleter<Dictionary>> &value)
+          const {
         return dereferenceDictionary(value);
       }
       Variant &operator()(std::monostate &) const {
@@ -75,11 +142,13 @@ struct Node {
       const Variant &operator()(const String &value) const noexcept {
         return value;
       }
-      const Variant &operator()(const std::unique_ptr<List> &value) const {
+      const Variant &
+      operator()(const std::unique_ptr<List, PoolDeleter<List>> &value) const {
         return dereferenceList(value);
       }
-      const Variant &
-      operator()(const std::unique_ptr<Dictionary> &value) const {
+      const Variant &operator()(
+          const std::unique_ptr<Dictionary, PoolDeleter<Dictionary>> &value)
+          const {
         return dereferenceDictionary(value);
       }
       const Variant &operator()(const std::monostate &) const {
@@ -95,19 +164,28 @@ private:
   template <typename T, typename... Args>
   explicit Node(std::in_place_type_t<T>, Args &&...args) {
     if constexpr (std::is_same_v<T, List> || std::is_same_v<T, Dictionary>) {
-      bNodeVariant = std::make_unique<T>(std::forward<Args>(args)...);
+      T *raw = ObjectPool<T>::acquire();
+      new (raw) T(std::forward<Args>(args)...);
+      if constexpr (std::is_same_v<T, List>) {
+        bNodeVariant = std::unique_ptr<List, PoolDeleter<List>>(raw);
+      } else {
+        bNodeVariant =
+            std::unique_ptr<Dictionary, PoolDeleter<Dictionary>>(raw);
+      }
     } else {
       bNodeVariant = T(std::forward<Args>(args)...);
     }
   }
 
-  static Variant &dereferenceList(const std::unique_ptr<List> &value);
   static Variant &
-  dereferenceDictionary(const std::unique_ptr<Dictionary> &value);
+  dereferenceList(const std::unique_ptr<List, PoolDeleter<List>> &value);
+  static Variant &dereferenceDictionary(
+      const std::unique_ptr<Dictionary, PoolDeleter<Dictionary>> &value);
 
   using Storage =
-      std::variant<std::monostate, Hole, Integer, String, std::unique_ptr<List>,
-                   std::unique_ptr<Dictionary>>;
+      std::variant<std::monostate, Hole, Integer, String,
+                   std::unique_ptr<List, PoolDeleter<List>>,
+                   std::unique_ptr<Dictionary, PoolDeleter<Dictionary>>>;
   Storage bNodeVariant{};
 };
 
@@ -118,20 +196,17 @@ private:
 
 namespace Bencode_Lib {
 
-inline Variant &Node::dereferenceList(const std::unique_ptr<List> &value) {
-  return *value;
-}
-inline Variant &
-Node::dereferenceDictionary(const std::unique_ptr<Dictionary> &value) {
-  return *value;
+template <typename T, typename... Args> Node Node::make(Args &&...args) {
+  return Node(std::in_place_type<T>, std::forward<Args>(args)...);
 }
 
-template <typename T, typename... Args> Node Node::make(Args &&...args) {
-  if constexpr (std::is_same_v<T, List> || std::is_same_v<T, Dictionary>) {
-    return Node(std::make_unique<T>(std::forward<Args>(args)...));
-  } else {
-    return Node(std::in_place_type<T>, std::forward<Args>(args)...);
-  }
+inline Variant &
+Node::dereferenceList(const std::unique_ptr<List, PoolDeleter<List>> &value) {
+  return *value;
+}
+inline Variant &Node::dereferenceDictionary(
+    const std::unique_ptr<Dictionary, PoolDeleter<Dictionary>> &value) {
+  return *value;
 }
 
 } // namespace Bencode_Lib

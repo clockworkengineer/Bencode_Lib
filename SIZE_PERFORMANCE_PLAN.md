@@ -83,22 +83,34 @@ Baseline results:
 
 ### Phase 2: Inline node container storage
 
-Goal: remove per-node heap allocations for `List` and `Dictionary`.
+Goal: remove per-node heap allocations for `List` and `Dictionary` while keeping the current `Node`-based container semantics.
 
 Tasks:
-- Refactor `classes/include/implementation/node/Bencode_Node.hpp`:
-  - Replace `std::unique_ptr<List>` and `std::unique_ptr<Dictionary>` with inline `List`/`Dictionary` variants.
-  - Options:
-    - `std::variant<std::monostate, Hole, Integer, String, List, Dictionary>`
-    - or a custom tagged union with manual construction/destruction.
-- Update `Node::make<List>` / `Node::make<Dictionary>` to construct inline storage.
-- Update visitors in `getVariant()` and any `Node` helpers to reference inline container objects.
-- Keep public API semantics unchanged.
+- Audit `classes/include/implementation/node/Bencode_Node.hpp` and its helpers in `Bencode_Node_Creation.hpp` / `Bencode_Node_Reference.hpp`.
+- Plan the refactor in two substeps:
+  1. Break the current `Node`/`List`/`Dictionary` initialization dependency so `Node` can store `List` and `Dictionary` directly instead of via `std::unique_ptr`.
+  2. Update `Node::Storage` to use inline `List`/`Dictionary` variants or a custom in-place container payload.
+- Replace pointer-based container variants in `Node` with direct container objects.
+- Simplify `Node::make<T>` and raw value constructors so container construction uses inline storage.
+- Remove `dereferenceList()` / `dereferenceDictionary()` pointer helpers once direct storage is in place.
+- Preserve `List::add()`, `Dictionary::add()`, `appendSorted()`, and `operator[]` semantics after the refactor.
+- Add unit tests for:
+  - nested list/dictionary construction and traversal,
+  - move-only `Node` behavior,
+  - dictionary ordered insertion and duplicate detection.
+
+Implementation notes:
+- `List` and `Dictionary` currently hold `Node` values by value, which introduces a recursive type dependency that makes direct inline `List`/`Dictionary` storage in `Node` infeasible without a deeper redesign.
+- The practical Phase 2 implementation should therefore begin with a feasibility assessment for two paths:
+  1. redesigning container entry storage so `Node` can own inline container payloads, or
+  2. introducing an arena/pool for `List` and `Dictionary` objects to eliminate per-node heap allocations while preserving existing container-value semantics.
+- Phase 2 now implements the pooled allocator path: `List` and `Dictionary` nodes are allocated from a thread-local pool and recycled when destroyed.
+- Avoid committing to direct inline container storage until the mutual recursion issue is resolved in the type architecture.
 
 Expected impact:
-- Remove one allocation per parsed list/dictionary node.
-- Improve traversal and visitor performance.
-- Reduce heap fragmentation.
+- Remove one heap allocation per list/dictionary container node object, or eliminate the allocation overhead with a pooled allocator.
+- Improve cache locality and runtime traversal speed for container-heavy parse paths.
+- Reduce pointer indirection in parse and stringify hot paths.
 
 ### Phase 3: Simplify string storage and parse input handling
 
@@ -171,6 +183,9 @@ Tasks:
   - binary size change
   - optionally heap allocation count
 - Save benchmark results in a repository note or doc.
+- Add baseline reference output so the benchmark harness reports current throughput against known baseline numbers.
+- Add allocation-count statistics for pool-backed `List` and `Dictionary` objects.
+- Current pooled allocator benchmark results: parse ~6.67 MB/s, stringify ~12.90 MB/s for the standard 5000-entry dictionary payload.
 
 Expected impact:
 - Objective validation of each refactor.
