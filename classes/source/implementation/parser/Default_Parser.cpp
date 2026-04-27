@@ -22,6 +22,14 @@ struct ParserFrame {
         lastKey(), currentKey(), awaitingValue(false) {}
 };
 
+static void copySourceToBuffer(ISource &source, char *buffer,
+                               const std::size_t length) {
+  for (std::size_t index = 0; index < length; ++index) {
+    buffer[index] = source.current();
+    source.next();
+  }
+}
+
 static bool convertToInteger(const char *buffer, const std::size_t digits,
                              Bencode::IntegerType &value) {
   const bool negative =
@@ -112,11 +120,7 @@ Node Default_Parser::parseString(
   }
   Node result = Node::make<String>(static_cast<std::size_t>(stringLength));
   char *payload = NRef<String>(result).data();
-  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
-       ++index) {
-    payload[index] = source.current();
-    source.next();
-  }
+  copySourceToBuffer(source, payload, static_cast<std::size_t>(stringLength));
   return result;
 }
 
@@ -135,11 +139,8 @@ std::string Default_Parser::parseStringKey(
   }
   std::string key;
   key.resize(static_cast<std::size_t>(stringLength));
-  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
-       ++index) {
-    key[index] = source.current();
-    source.next();
-  }
+  copySourceToBuffer(source, key.data(),
+                     static_cast<std::size_t>(stringLength));
   return key;
 }
 /// <summary>
@@ -462,11 +463,7 @@ Default_Parser::parseString(ISource &source,
   }
   destination = Node::make<String>(static_cast<std::size_t>(stringLength));
   char *payload = NRef<String>(destination).data();
-  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
-       ++index) {
-    payload[index] = source.current();
-    source.next();
-  }
+  copySourceToBuffer(source, payload, static_cast<std::size_t>(stringLength));
   return ParseStatus::success();
 }
 
@@ -490,11 +487,8 @@ Default_Parser::parseStringKey(ISource &source,
     return makeSyntaxError("String size exceeds maximum allowed size.");
   }
   destination.resize(static_cast<std::size_t>(stringLength));
-  for (std::size_t index = 0; index < static_cast<std::size_t>(stringLength);
-       ++index) {
-    destination[index] = source.current();
-    source.next();
-  }
+  copySourceToBuffer(source, destination.data(),
+                     static_cast<std::size_t>(stringLength));
   return ParseStatus::success();
 }
 

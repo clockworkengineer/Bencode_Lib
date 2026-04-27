@@ -174,6 +174,25 @@ struct String : Variant {
     mSize = string.size();
   }
 
+  void assign(const char *data, const std::size_t length) {
+    if (length > kInlineCapacity) {
+      if (mHeapActive) {
+        heapData().assign(data, length);
+      } else {
+        new (&mStorage.heapString) std::string(data, length);
+        mHeapActive = true;
+      }
+    } else {
+      if (mHeapActive) {
+        heapData().~basic_string();
+        mHeapActive = false;
+      }
+      std::memcpy(inlineData(), data, length);
+      inlineData()[length] = '\0';
+    }
+    mSize = length;
+  }
+
   // Set/get maximum string length
   static void setMaxStringLength(const uint64_t length) {
     maxStringLength = length;
