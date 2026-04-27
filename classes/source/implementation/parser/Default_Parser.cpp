@@ -174,12 +174,17 @@ Node Default_Parser::parseDictionary(ISource &source,
       throw SyntaxError("Dictionary keys not in sequence.");
     }
     lastKey = key;
-    if (!NRef<Dictionary>(dictionary).contains(key)) {
+    try {
       NRef<Dictionary>(dictionary)
-          .add(Dictionary::Entry(std::move(key),
-                                 parseNodes(source, parserDepth + 1)));
-    } else {
-      throw SyntaxError("Duplicate dictionary key.");
+          .appendSorted(Dictionary::Entry(std::move(key),
+                                          parseNodes(source, parserDepth + 1)));
+    } catch (const Node::Error &error) {
+      std::string message = error.what();
+      constexpr std::string_view prefix("Node Error: ");
+      if (message.rfind(prefix, 0) == 0) {
+        message.erase(0, prefix.size());
+      }
+      throw SyntaxError(message);
     }
   }
   confirmBoundary(source, ParserConstants::END);
@@ -251,9 +256,18 @@ Node Default_Parser::parseIterative(ISource &source) {
       if (!parent.awaitingValue) {
         throw SyntaxError("Dictionary value missing key.");
       }
-      NRef<Dictionary>(parent.container)
-          .add(Dictionary::Entry(std::move(parent.currentKey),
-                                 std::move(completed)));
+      try {
+        NRef<Dictionary>(parent.container)
+            .appendSorted(Dictionary::Entry(std::move(parent.currentKey),
+                                            std::move(completed)));
+      } catch (const Node::Error &error) {
+        std::string message = error.what();
+        constexpr std::string_view prefix("Node Error: ");
+        if (message.rfind(prefix, 0) == 0) {
+          message.erase(0, prefix.size());
+        }
+        throw SyntaxError(message);
+      }
       parent.awaitingValue = false;
     }
     return Node{};
@@ -313,9 +327,18 @@ Node Default_Parser::parseIterative(ISource &source) {
       }
       Node valueNode = parseScalar(
           source, static_cast<unsigned long>(frameStack.size() + 1));
-      NRef<Dictionary>(frame.container)
-          .add(Dictionary::Entry(std::move(frame.currentKey),
-                                 std::move(valueNode)));
+      try {
+        NRef<Dictionary>(frame.container)
+            .appendSorted(Dictionary::Entry(std::move(frame.currentKey),
+                                            std::move(valueNode)));
+      } catch (const Node::Error &error) {
+        std::string message = error.what();
+        constexpr std::string_view prefix("Node Error: ");
+        if (message.rfind(prefix, 0) == 0) {
+          message.erase(0, prefix.size());
+        }
+        throw SyntaxError(message);
+      }
       frame.awaitingValue = false;
       continue;
     }
@@ -334,9 +357,6 @@ Node Default_Parser::parseIterative(ISource &source) {
       throw SyntaxError("Dictionary keys not in sequence.");
     }
     frame.lastKey = key;
-    if (NRef<Dictionary>(frame.container).contains(key)) {
-      throw SyntaxError("Duplicate dictionary key.");
-    }
     frame.currentKey = std::move(key);
     frame.awaitingValue = true;
   }
@@ -597,8 +617,8 @@ static ParseStatus attachCompletedValue(ParserFrame &parent, Node &&completed) {
     return makeSyntaxError("Dictionary value missing key.");
   }
   NRef<Dictionary>(parent.container)
-      .add(Dictionary::Entry(std::move(parent.currentKey),
-                             std::move(completed)));
+      .appendSorted(Dictionary::Entry(std::move(parent.currentKey),
+                                      std::move(completed)));
   parent.awaitingValue = false;
   return ParseStatus::success();
 }
@@ -707,8 +727,8 @@ ParseStatus Default_Parser::parseIterative(ISource &source, Node &destination) {
         return status;
       }
       NRef<Dictionary>(frame.container)
-          .add(Dictionary::Entry(std::move(frame.currentKey),
-                                 std::move(valueNode)));
+          .appendSorted(Dictionary::Entry(std::move(frame.currentKey),
+                                          std::move(valueNode)));
       frame.awaitingValue = false;
       continue;
     }
@@ -741,9 +761,6 @@ ParseStatus Default_Parser::parseIterative(ISource &source, Node &destination) {
       return makeSyntaxError("Dictionary keys not in sequence.");
     }
     frame.lastKey = key;
-    if (NRef<Dictionary>(frame.container).contains(key)) {
-      return makeSyntaxError("Duplicate dictionary key.");
-    }
     frame.currentKey = std::move(key);
     frame.awaitingValue = true;
   }

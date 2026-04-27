@@ -155,11 +155,14 @@ Expected impact:
 
 Goal: improve dictionary parse efficiency and reduce redundant checks.
 
+Status: Implemented.
+
 Tasks:
 - Update `classes/source/implementation/parser/Default_Parser.cpp`:
   - In `parseDictionary()`, parse the key once and append it in-order instead of using `contains()` then `add()`.
   - Use `Dictionary::appendSorted()` for parser-ordered dictionary construction and fail fast on out-of-order keys.
-- Keep `Dictionary::add()` for general insertion but ensure parse path uses the most efficient path.
+- In `parseIterative()`, use `appendSorted()` for dictionary entry insertion so nested dictionary parsing also avoids redundant lookup.
+- Keep `Dictionary::add()` for general insertion but ensure parser path uses the most efficient path.
 - Validate `Dictionary::contains()` and `operator[]` are using binary search efficiently.
 
 Expected impact:
