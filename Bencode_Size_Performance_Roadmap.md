@@ -159,6 +159,8 @@ Why:
 
 ### Phase 7: Regression benchmark harness
 
+Status: Implemented.
+
 Actions:
 - Use the existing benchmark executable as the regression harness.
 - Add CTest entries so benchmarks can be invoked consistently.
@@ -168,6 +170,7 @@ Actions:
   - binary size
   - allocation behavior
 - Document benchmark results in the repository.
+- Support `roundtrip`, `parse`, and `stringify` benchmark modes for targeted regression measurement.
 
 Why:
 - Provides objective feedback for each refactor.

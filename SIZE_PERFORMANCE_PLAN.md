@@ -202,6 +202,8 @@ Expected impact:
 
 ### Phase 7: Add regression benchmarks and measurement
 
+Status: Implemented.
+
 Goal: make size and speed improvements quantifiable and repeatable.
 
 Tasks:
@@ -216,6 +218,7 @@ Tasks:
 - Add baseline reference output so the benchmark harness reports current throughput against known baseline numbers.
 - Add allocation-count statistics for pool-backed `List` and `Dictionary` objects.
 - Current pooled allocator benchmark results: parse ~6.67 MB/s, stringify ~12.90 MB/s for the standard 5000-entry dictionary payload.
+- Benchmark harness now supports `roundtrip`, `parse`, and `stringify` modes and reports baseline speed comparisons.
 
 Expected impact:
 - Objective validation of each refactor.
