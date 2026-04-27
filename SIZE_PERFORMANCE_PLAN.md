@@ -114,17 +114,42 @@ Expected impact:
 
 ### Phase 3: Simplify string storage and parse input handling
 
-Goal: keep strings efficient while reducing code-weight and overhead.
+Goal: keep strings efficient while reducing code weight, copies, and allocation overhead.
 
 Tasks:
-- Audit `classes/include/implementation/variants/Bencode_String.hpp`.
-- Evaluate whether the custom wrapper can be simplified to `std::string` with small-string optimization.
-- Ensure `Default_Parser::parseString()` and `parseStringKey()` allocate the final string size once and copy bytes directly into it.
-- Remove any temporary string copies in input parsing.
+- Audit `classes/include/implementation/variants/Bencode_String.hpp` and its public API.
+  - Confirm current wrapper size, heap fallback threshold, and embedded-friendly behavior.
+  - Identify where the wrapper can be simplified to a `std::string`-backed representation or a smaller custom inline buffer.
+- Define a target string storage design:
+  - option A: use `std::string` with small-string optimization for general use,
+  - option B: keep the current wrapper but reduce its heap fallback complexity.
+- Update the parser string path in `classes/source/implementation/parser/Default_Parser.cpp`:
+  - parse the string length first,
+  - allocate the final string size once,
+  - read raw bytes directly into the destination buffer,
+  - for dictionary keys, reserve and fill the key buffer directly rather than using temporary strings.
+- Consolidate exception and no-exception parse flows so the string path shares the same allocation logic.
+- Add or update unit tests to ensure:
+  - strings parse correctly with exact length allocation,
+  - no intermediate string copies occur in the parser path,
+  - embedded mode still honors `BENCODE_MAX_STRING_LENGTH`.
+- Add a benchmark workload to validate string parse/stringify performance and allocation behavior.
+
+Status:
+- Implemented string wrapper simplification to use `std::string` with built-in SSO.
+- Parser already uses direct `resize()` + `data()` writes for both string values and dictionary keys.
+- Verified `Bencode_Lib` build and `Bencode_Lib_Unit_Tests`.
+
+Implementation notes:
+- If using `std::string`, prefer `resize()` + direct `data()` writes over incremental append.
+- For the custom wrapper, expose a `reserveForParse(size_t length)` helper and a `data()` pointer for parser fills.
+- Keep the string node API compatible with existing `Bencode` consumers.
 
 Expected impact:
 - Maintain or improve parse speed for strings.
-- Reduce wrapper complexity and possible binary size.
+- Reduce parser temporary allocations and copy overhead.
+- Simplify wrapper code and reduce binary size from fewer allocation helpers.
+- Preserve embedded and no-exceptions build correctness.
 
 ### Phase 4: Tighten dictionary parsing and lookup
 
