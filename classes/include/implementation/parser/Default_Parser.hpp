@@ -38,8 +38,7 @@ private:
                                         unsigned long parserDepth);
   [[nodiscard]] static std::string parseStringKey(ISource &source,
                                                   unsigned long parserDepth);
-  static void parseStringKey(ISource &source,
-                             unsigned long parserDepth,
+  static void parseStringKey(ISource &source, unsigned long parserDepth,
                              std::string &destination);
   [[nodiscard]] static Node parseInteger(ISource &source,
                                          unsigned long parserDepth);
