@@ -19,7 +19,10 @@ struct ParserFrame {
       : type(frameType),
         container(frameType == ContainerType::List ? Node::make<List>()
                                                    : Node::make<Dictionary>()),
-        lastKey(), currentKey(), awaitingValue(false) {}
+        lastKey(), currentKey(), awaitingValue(false) {
+    lastKey.reserve(64);
+    currentKey.reserve(64);
+  }
 };
 
 static void copySourceToBuffer(ISource &source, char *buffer,
@@ -126,6 +129,14 @@ Node Default_Parser::parseString(
 
 std::string Default_Parser::parseStringKey(
     ISource &source, [[maybe_unused]] const unsigned long parserDepth) {
+  std::string key;
+  parseStringKey(source, parserDepth, key);
+  return key;
+}
+
+void Default_Parser::parseStringKey(
+    ISource &source, [[maybe_unused]] const unsigned long parserDepth,
+    std::string &destination) {
   Bencode::IntegerType stringLength = extractInteger(source);
   if (stringLength < 0) {
     throw SyntaxError("Negative string length.");
@@ -137,11 +148,9 @@ std::string Default_Parser::parseStringKey(
   if (static_cast<uint64_t>(stringLength) > String::getMaxStringLength()) {
     throw SyntaxError("String size exceeds maximum allowed size.");
   }
-  std::string key;
-  key.resize(static_cast<std::size_t>(stringLength));
-  copySourceToBuffer(source, key.data(),
+  destination.resize(static_cast<std::size_t>(stringLength));
+  copySourceToBuffer(source, destination.data(),
                      static_cast<std::size_t>(stringLength));
-  return key;
 }
 /// <summary>
 /// Parse an integer from the input stream of characters referenced by ISource.
@@ -167,9 +176,12 @@ Node Default_Parser::parseDictionary(ISource &source,
                                      const unsigned long parserDepth) {
   Node dictionary = Node::make<Dictionary>();
   std::string lastKey{};
+  std::string key;
+  lastKey.reserve(64);
+  key.reserve(64);
   source.next();
   while (source.more() && source.current() != ParserConstants::END) {
-    std::string key = Default_Parser::parseStringKey(source, parserDepth);
+    parseStringKey(source, parserDepth, key);
     if (lastKey > key) {
       throw SyntaxError("Dictionary keys not in sequence.");
     }
@@ -186,6 +198,7 @@ Node Default_Parser::parseDictionary(ISource &source,
       }
       throw SyntaxError(message);
     }
+    key.clear();
   }
   confirmBoundary(source, ParserConstants::END);
   return dictionary;
@@ -236,6 +249,7 @@ Node Default_Parser::parseIterative(ISource &source) {
   }
 
   std::vector<ParserFrame> frameStack;
+  frameStack.reserve(16);
   auto pushFrame = [&](ContainerType type) {
     if (frameStack.size() + 1 >= getMaxParserDepth()) {
       throw SyntaxError("Maximum parser depth exceeded.");
@@ -351,13 +365,12 @@ Node Default_Parser::parseIterative(ISource &source) {
       root = completeFrame();
       continue;
     }
-    std::string key = Default_Parser::parseStringKey(
-        source, static_cast<unsigned long>(frameStack.size() + 1));
-    if (frame.lastKey > key) {
+    parseStringKey(source, static_cast<unsigned long>(frameStack.size() + 1),
+                   frame.currentKey);
+    if (frame.lastKey > frame.currentKey) {
       throw SyntaxError("Dictionary keys not in sequence.");
     }
-    frame.lastKey = key;
-    frame.currentKey = std::move(key);
+    frame.lastKey = frame.currentKey;
     frame.awaitingValue = true;
   }
 
@@ -535,9 +548,11 @@ ParseStatus Default_Parser::parseDictionary(ISource &source,
                                             Node &destination) {
   Node dictionary = Node::make<Dictionary>();
   std::string lastKey{};
+  std::string key;
+  lastKey.reserve(64);
+  key.reserve(64);
   source.next();
   while (source.more() && source.current() != ParserConstants::END) {
-    std::string key;
     ParseStatus status = parseStringKey(source, parserDepth, key);
     if (!status.ok()) {
       return status;
@@ -553,6 +568,7 @@ ParseStatus Default_Parser::parseDictionary(ISource &source,
     }
     NRef<Dictionary>(dictionary)
         .appendSorted(Dictionary::Entry(std::move(key), std::move(valueNode)));
+    key.clear();
   }
   ParseStatus boundaryStatus = confirmBoundary(source, ParserConstants::END);
   if (!boundaryStatus.ok()) {
@@ -629,6 +645,7 @@ ParseStatus Default_Parser::parseIterative(ISource &source, Node &destination) {
   }
 
   std::vector<ParserFrame> frameStack;
+  frameStack.reserve(16);
   auto pushFrame = [&](ContainerType type) -> ParseStatus {
     if (frameStack.size() + 1 >= getMaxParserDepth()) {
       return makeSyntaxError("Maximum parser depth exceeded.");
@@ -751,17 +768,16 @@ ParseStatus Default_Parser::parseIterative(ISource &source, Node &destination) {
       }
       continue;
     }
-    std::string key;
     ParseStatus status = parseStringKey(
-        source, static_cast<unsigned long>(frameStack.size() + 1), key);
+        source, static_cast<unsigned long>(frameStack.size() + 1),
+        frame.currentKey);
     if (!status.ok()) {
       return status;
     }
-    if (frame.lastKey > key) {
+    if (frame.lastKey > frame.currentKey) {
       return makeSyntaxError("Dictionary keys not in sequence.");
     }
-    frame.lastKey = key;
-    frame.currentKey = std::move(key);
+    frame.lastKey = frame.currentKey;
     frame.awaitingValue = true;
   }
 
