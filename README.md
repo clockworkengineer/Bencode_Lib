@@ -65,6 +65,7 @@ Bencode is a data serialization format with the following encoding rules:
 | `BENCODE_BUILD_TESTS` | `ON` | Build the Catch2 unit tests |
 | `BENCODE_BUILD_EXAMPLES` | `ON` | Build the example programs |
 | `BENCODE_EMBEDDED_MODE` | `OFF` | Enable the embedded build configuration |
+| `BENCODE_BUILD_MINIMAL` | `OFF` | Build a smaller, buffer-only library variant without optional file I/O or stringifiers |
 | `BENCODE_ENABLE_EXCEPTIONS` | `ON` | Enable exception support |
 | `BENCODE_ENABLE_FILE_IO` | `ON` | Enable file-based I/O support |
 | `BENCODE_ENABLE_DYNAMIC_ALLOCATION` | `ON` | Enable dynamic allocations for containers |

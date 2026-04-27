@@ -173,6 +173,8 @@ Expected impact:
 
 Goal: make small-size builds easier and default core builds leaner.
 
+Status: Implemented.
+
 Tasks:
 - In `CMakeLists.txt`, clearly document the purpose of `BENCODE_BUILD_MINIMAL` and `BENCODE_LIB_Embedded`.
 - Ensure `classes/include/implementation/io/Bencode_FileSource.hpp` and `Bencode_FileDestination.hpp` are only included when `BENCODE_ENABLE_FILE_IO=ON`.
