@@ -37,8 +37,6 @@ struct Dictionary : Variant {
 #endif
   // Constructors/Destructors
   Dictionary() : Variant(Type::dictionary) {}
-  Dictionary(const Dictionary &other) = default;
-  Dictionary &operator=(const Dictionary &other) = default;
   Dictionary(Dictionary &&other) = default;
   Dictionary &operator=(Dictionary &&other) = default;
   ~Dictionary() = default;
@@ -48,7 +46,7 @@ struct Dictionary : Variant {
     auto it =
         std::lower_bound(bNodeDictionary.begin(), bNodeDictionary.end(), key,
                          [](const Entry &lhs, const std::string_view rhsKey) {
-                           return lhs.key < rhsKey;
+                           return std::string_view(lhs.key) < rhsKey;
                          });
     if (it != bNodeDictionary.end() && it->key == key) {
       throw Node::Error("Duplicate dictionary key.");
@@ -74,7 +72,7 @@ struct Dictionary : Variant {
     auto it =
         std::lower_bound(bNodeDictionary.begin(), bNodeDictionary.end(), key,
                          [](const Entry &lhs, const std::string_view rhsKey) {
-                           return lhs.key < rhsKey;
+                           return std::string_view(lhs.key) < rhsKey;
                          });
     return it != bNodeDictionary.end() && it->key == key;
   }
@@ -98,7 +96,7 @@ private:
     auto it =
         std::lower_bound(dictionary.begin(), dictionary.end(), key,
                          [](const Entry &lhs, const std::string_view rhsKey) {
-                           return lhs.key < rhsKey;
+                           return std::string_view(lhs.key) < rhsKey;
                          });
     if (it == dictionary.end() || it->key != key) {
       throw Node::Error("Invalid key used in dictionary.");

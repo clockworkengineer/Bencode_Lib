@@ -16,8 +16,6 @@ struct List : Variant {
 #endif
   // Constructors/Destructors
   List() : Variant(Type::list) {}
-  List(const List &other) = default;
-  List &operator=(const List &other) = default;
   List(List &&other) = default;
   List &operator=(List &&other) = default;
   ~List() = default;

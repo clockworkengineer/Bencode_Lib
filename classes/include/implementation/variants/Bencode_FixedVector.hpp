@@ -19,8 +19,6 @@ public:
   static_assert(Capacity > 0, "FixedVector capacity must be positive.");
 
   FixedVector() = default;
-  FixedVector(const FixedVector &other) = default;
-  FixedVector &operator=(const FixedVector &other) = default;
   FixedVector(FixedVector &&other) = default;
   FixedVector &operator=(FixedVector &&other) = default;
   ~FixedVector() = default;

@@ -15,8 +15,8 @@ class FileSource final : public ISource {
 public:
   // Constructors/Destructors
   explicit FileSource(const std::string_view &sourceFileName)
-      : filename(sourceFileName), source(nullptr), currentChar(EOF),
-        hasPeek(false) {
+      : source(nullptr), currentChar(EOF), hasPeek(false),
+        filename(sourceFileName) {
 #ifdef _MSC_VER
     if (fopen_s(&source, filename.c_str(), "rb") != 0 || !source) {
 #else

@@ -17,7 +17,7 @@ class FileDestination final : public IDestination {
 public:
   // Constructors/Destructors
   explicit FileDestination(const std::string_view filename)
-      : filename(filename), destination(nullptr), length(0), lastChar(0) {
+      : destination(nullptr), filename(filename), length(0), lastChar(0) {
 #ifdef _MSC_VER
     if (fopen_s(&destination, this->filename.c_str(), "wb") != 0 ||
         !destination) {

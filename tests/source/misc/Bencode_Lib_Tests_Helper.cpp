@@ -1,4 +1,6 @@
 #include "Bencode_Lib_Tests.hpp"
+#include <chrono>
+#include <random>
 
 /// <summary>
 /// Prefix path to test data file name.
@@ -55,12 +57,16 @@ std::string readBencodedBytesFromFile(const std::string &bencodedFileName) {
 /// </summary>
 /// <returns>Unique torrent file name</returns>
 std::string generateRandomFileName(void) {
-  char buf[L_tmpnam_s];
-  tmpnam_s(buf, L_tmpnam_s);
-  std::filesystem::path namepath = buf;
-  std::string result{std::filesystem::temp_directory_path().string()};
-  result.push_back(std::filesystem::path::preferred_separator);
-  return result + namepath.filename().string();
+  const auto tempDir = std::filesystem::temp_directory_path();
+  std::mt19937_64 rng(
+      static_cast<unsigned long long>(
+          std::chrono::high_resolution_clock::now().time_since_epoch().count()));
+  std::uniform_int_distribution<unsigned long long> dist;
+  std::filesystem::path namepath;
+  do {
+    namepath = tempDir / ("bencode-test-" + std::to_string(dist(rng)) + ".tmp");
+  } while (std::filesystem::exists(namepath));
+  return namepath.string();
 }
 
 TEST_CASE("Check helper functions.", "[Bencode][Helpers]") {

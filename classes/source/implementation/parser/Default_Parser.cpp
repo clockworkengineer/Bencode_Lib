@@ -617,15 +617,6 @@ ParseStatus Default_Parser::parseIterative(ISource &source, Node &destination) {
     return ParseStatus::success();
   };
 
-  auto completeFrame = [&](Node &&completed) -> ParseStatus {
-    if (frameStack.empty()) {
-      destination = std::move(completed);
-      return ParseStatus::success();
-    }
-    ParserFrame &parent = frameStack.back();
-    return attachCompletedValue(parent, std::move(completed));
-  };
-
   if (source.current() == ParserConstants::DICTIONARY) {
     source.next();
     ParseStatus status = pushFrame(ContainerType::Dictionary);
