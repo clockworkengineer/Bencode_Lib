@@ -5,7 +5,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Parser_Constants.hpp"
+#include "Bencode_Parser_Constants.hpp"
 
 #include <vector>
 

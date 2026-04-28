@@ -1,4 +1,4 @@
-// File: Parser_Constants.hpp
+// File: Bencode_Parser_Constants.hpp
 //
 // Description: Constants and token definitions used by the Bencode parser implementation.
 //
