@@ -1,3 +1,8 @@
+// File: Default_Translator.hpp
+//
+// Description: Header declaring the default translator used to escape Bencode string content.
+//
+
 #pragma once
 
 #include "ITranslator.hpp"

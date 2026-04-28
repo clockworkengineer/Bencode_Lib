@@ -1,3 +1,8 @@
+// File: XML_Stringify.hpp
+//
+// Description: Header declaring conversion of Bencode node trees into XML-formatted output.
+//
+
 #pragma once
 
 #include "Bencode.hpp"

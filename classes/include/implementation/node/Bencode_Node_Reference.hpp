@@ -1,3 +1,8 @@
+// File: Bencode_Node_Reference.hpp
+//
+// Description: Reference helpers for accessing and manipulating Bencode node contents safely.
+//
+
 #pragma once
 
 namespace Bencode_Lib {

@@ -1,3 +1,8 @@
+// File: Bencode_Core.hpp
+//
+// Description: Core Bencode type aliases, configuration macros, and internal support utilities for the library.
+//
+
 #pragma once
 // ============
 // Bencode Core

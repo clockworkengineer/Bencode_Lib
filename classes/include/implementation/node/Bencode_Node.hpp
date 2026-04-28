@@ -1,3 +1,8 @@
+// File: Bencode_Node.hpp
+//
+// Description: Definition of the Bencode node variant and core operations for managing Bencode values.
+//
+
 #pragma once
 
 #include <atomic>

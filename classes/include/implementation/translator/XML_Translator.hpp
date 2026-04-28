@@ -1,3 +1,8 @@
+// File: XML_Translator.hpp
+//
+// Description: Header declaring XML-specific escaping for string content in XML output.
+//
+
 #pragma once
 
 #include "ITranslator.hpp"

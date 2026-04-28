@@ -1,3 +1,8 @@
+// File: Bencode_BufferSource.hpp
+//
+// Description: Source adapter that exposes a string or memory buffer as Bencode input data.
+//
+
 #pragma once
 
 #include "ISource.hpp"

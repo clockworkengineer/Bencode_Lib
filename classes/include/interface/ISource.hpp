@@ -1,3 +1,8 @@
+// File: ISource.hpp
+//
+// Description: Interface defining how Bencode input data is provided to a parser.
+//
+
 #pragma once
 
 #include <stdexcept>

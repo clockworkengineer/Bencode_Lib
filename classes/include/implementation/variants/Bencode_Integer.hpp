@@ -1,3 +1,8 @@
+// File: Bencode_Integer.hpp
+//
+// Description: Integer variant implementation representing numeric Bencode values.
+//
+
 #pragma once
 
 namespace Bencode_Lib {

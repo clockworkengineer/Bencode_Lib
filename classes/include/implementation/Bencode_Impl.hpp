@@ -1,3 +1,8 @@
+// File: Bencode_Impl.hpp
+//
+// Description: Private Bencode implementation class that manages parser, stringifier, and root node state.
+//
+
 #pragma once
 
 #include "Bencode.hpp"

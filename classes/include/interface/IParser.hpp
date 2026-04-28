@@ -1,3 +1,8 @@
+// File: IParser.hpp
+//
+// Description: Interface defining Bencode parser behavior for decoding from a source.
+//
+
 #pragma once
 
 #include "implementation/common/Bencode_Status.hpp"

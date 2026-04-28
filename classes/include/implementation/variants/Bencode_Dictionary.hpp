@@ -1,3 +1,8 @@
+// File: Bencode_Dictionary.hpp
+//
+// Description: Implementation of the dictionary variant type for Bencode key/value collections.
+//
+
 #pragma once
 
 #include "Bencode_FixedVector.hpp"

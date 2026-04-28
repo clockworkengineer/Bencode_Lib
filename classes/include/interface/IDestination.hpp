@@ -1,3 +1,8 @@
+// File: IDestination.hpp
+//
+// Description: Interface that defines how Bencode output is delivered to a destination sink.
+//
+
 #pragma once
 
 #include <stdexcept>

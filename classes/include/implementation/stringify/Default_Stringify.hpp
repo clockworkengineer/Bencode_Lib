@@ -1,3 +1,8 @@
+// File: Default_Stringify.hpp
+//
+// Description: Header declaring the default stringifier for serializing Bencode nodes back into text.
+//
+
 #pragma once
 
 #include "Bencode.hpp"

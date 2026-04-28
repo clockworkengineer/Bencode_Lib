@@ -1,3 +1,8 @@
+// File: Default_Parser.hpp
+//
+// Description: Header declaring the default Bencode parser implementation for decoding input streams.
+//
+
 #pragma once
 
 #include "Bencode.hpp"

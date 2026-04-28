@@ -1,3 +1,8 @@
+// File: IAction.hpp
+//
+// Description: Interface for traversal callback actions invoked while walking Bencode node trees.
+//
+
 #pragma once
 
 namespace Bencode_Lib {

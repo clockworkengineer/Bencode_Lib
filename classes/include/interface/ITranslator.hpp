@@ -1,3 +1,8 @@
+// File: ITranslator.hpp
+//
+// Description: Interface defining string translation and escape handling for output writers.
+//
+
 #pragma once
 
 namespace Bencode_Lib {

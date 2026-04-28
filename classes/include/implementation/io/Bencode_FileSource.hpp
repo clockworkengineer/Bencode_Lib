@@ -1,3 +1,8 @@
+// File: Bencode_FileSource.hpp
+//
+// Description: Source adapter for reading Bencode input from a filesystem file path.
+//
+
 #pragma once
 
 #if BENCODE_ENABLE_FILE_IO

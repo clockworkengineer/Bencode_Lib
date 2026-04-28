@@ -1,3 +1,8 @@
+// File: Bencode_Node_Creation.hpp
+//
+// Description: Helpers for constructing Bencode node values from initializer lists and raw C++ types.
+//
+
 #pragma once
 
 namespace Bencode_Lib {

@@ -1,3 +1,8 @@
+// File: Bencode_FileDestination.hpp
+//
+// Description: Destination adapter for writing stringified Bencode output to a filesystem file.
+//
+
 #pragma once
 
 #if BENCODE_ENABLE_FILE_IO

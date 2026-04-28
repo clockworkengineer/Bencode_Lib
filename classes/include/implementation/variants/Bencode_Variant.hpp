@@ -1,3 +1,8 @@
+// File: Bencode_Variant.hpp
+//
+// Description: Variant helper definitions used by the Bencode node value system.
+//
+
 #pragma once
 
 namespace Bencode_Lib {

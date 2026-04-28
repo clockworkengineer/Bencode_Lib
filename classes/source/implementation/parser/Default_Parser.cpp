@@ -1,3 +1,8 @@
+// File: Default_Parser.cpp
+//
+// Description: Source implementation of the default Bencode parser that builds node trees from Bencode text.
+//
+
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 #include "Parser_Constants.hpp"

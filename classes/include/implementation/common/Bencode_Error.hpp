@@ -1,3 +1,8 @@
+// File: Bencode_Error.hpp
+//
+// Description: Exception and error object definitions used for Bencode runtime failure reporting.
+//
+
 #pragma once
 
 namespace Bencode_Lib {

@@ -1,3 +1,8 @@
+// File: Bencode_String.hpp
+//
+// Description: String variant implementation representing raw byte string values in Bencode.
+//
+
 #pragma once
 
 #include <cstdint>

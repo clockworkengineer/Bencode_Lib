@@ -1,3 +1,8 @@
+// File: IStringify.hpp
+//
+// Description: Interface defining how Bencode nodes are serialized to an output destination.
+//
+
 #pragma once
 
 namespace Bencode_Lib {

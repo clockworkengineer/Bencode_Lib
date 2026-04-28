@@ -1,3 +1,8 @@
+// File: Bencode_BufferDestination.hpp
+//
+// Description: Destination adapter that collects Bencoded output into an in-memory buffer string.
+//
+
 #pragma once
 
 #include "IDestination.hpp"

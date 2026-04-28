@@ -1,3 +1,8 @@
+// File: Bencode_FixedVector.hpp
+//
+// Description: Internal fixed-size vector utility used to store variant-backed Bencode values.
+//
+
 #pragma once
 
 #include <array>

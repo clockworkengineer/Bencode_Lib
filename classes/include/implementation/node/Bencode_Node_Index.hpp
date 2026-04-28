@@ -1,3 +1,8 @@
+// File: Bencode_Node_Index.hpp
+//
+// Description: Utility functions for indexing into Bencode lists and dictionary nodes.
+//
+
 #pragma once
 
 namespace Bencode_Lib {

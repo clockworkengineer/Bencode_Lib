@@ -1,3 +1,8 @@
+// File: Bencode.hpp
+//
+// Description: Public Bencode API header defining the Bencode class and library entry points for encode/decode operations.
+//
+
 #pragma once
 
 #include "implementation/common/Bencode_Status.hpp"

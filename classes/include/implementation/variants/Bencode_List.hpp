@@ -1,3 +1,8 @@
+// File: Bencode_List.hpp
+//
+// Description: List variant implementation representing ordered collections of Bencode nodes.
+//
+
 #pragma once
 
 #include "Bencode_FixedVector.hpp"

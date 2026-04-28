@@ -1,3 +1,8 @@
+// File: Bencode_Status.hpp
+//
+// Description: Status codes and result types used by parse/stringify operations throughout the library.
+//
+
 #pragma once
 
 #include <string>
