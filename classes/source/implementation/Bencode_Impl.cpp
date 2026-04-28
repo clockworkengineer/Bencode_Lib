@@ -28,10 +28,8 @@ Bencode_Impl::Bencode_Impl(IStringify *stringify, IParser *parser) {
 Bencode_Impl::~Bencode_Impl() = default;
 
 std::string Bencode_Impl::version() {
-  std::stringstream versionString;
-  versionString << "Bencode_Lib Version " << BENCODE_VERSION_MAJOR << "."
-                << BENCODE_VERSION_MINOR << "." << BENCODE_VERSION_PATCH;
-  return versionString.str();
+  return std::string("Bencode_Lib Version ") + std::to_string(BENCODE_VERSION_MAJOR) + "." +
+         std::to_string(BENCODE_VERSION_MINOR) + "." + std::to_string(BENCODE_VERSION_PATCH);
 }
 
 Bencode_Impl::ParseResultType Bencode_Impl::parse(ISource &source) {
