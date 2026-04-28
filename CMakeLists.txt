@@ -39,18 +39,51 @@ set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
 set(BENCODE_COMMON_SOURCES
   classes/source/Bencode.cpp
   classes/source/implementation/Bencode_Impl.cpp
-  classes/source/implementation/parser/Default_Parser.cpp
 )
 
-set(BENCODE_FILE_IO_SOURCES
-  classes/source/implementation/file/Bencode_File.cpp
+set(BENCODE_PARSER_EXCEPTION_SOURCES
+  classes/source/implementation/parser/Default_Parser_Exceptions.cpp
+)
+
+set(BENCODE_PARSER_STATUS_SOURCES
+  classes/source/implementation/parser/Default_Parser_Status.cpp
+)
+
+if(BENCODE_ENABLE_EXCEPTIONS)
+  list(APPEND BENCODE_COMMON_SOURCES ${BENCODE_PARSER_EXCEPTION_SOURCES})
+else()
+  list(APPEND BENCODE_COMMON_SOURCES ${BENCODE_PARSER_STATUS_SOURCES})
+endif()
+
+set(BENCODE_FILE_IO_WRAPPER_SOURCES
+  classes/source/implementation/file/Bencode_FileIO.cpp
+)
+
+set(BENCODE_FILE_IO_POSIX_SOURCES
+  classes/source/implementation/file/Bencode_File_POSIX.cpp
+)
+
+set(BENCODE_FILE_IO_MSVC_SOURCES
+  classes/source/implementation/file/Bencode_File_MSVC.cpp
+)
+
+set(BENCODE_FILE_IO_DISABLED_SOURCES
+  classes/source/implementation/file/Bencode_File_Disabled.cpp
 )
 
 set(BENCODE_SOURCES ${BENCODE_COMMON_SOURCES})
 
 if(BENCODE_ENABLE_FILE_IO)
   # File-based I/O support is only compiled into the main library when enabled.
-  list(APPEND BENCODE_SOURCES ${BENCODE_FILE_IO_SOURCES})
+  list(APPEND BENCODE_SOURCES ${BENCODE_FILE_IO_WRAPPER_SOURCES})
+
+  if(MSVC)
+    list(APPEND BENCODE_SOURCES ${BENCODE_FILE_IO_MSVC_SOURCES})
+  else()
+    list(APPEND BENCODE_SOURCES ${BENCODE_FILE_IO_POSIX_SOURCES})
+  endif()
+else()
+  list(APPEND BENCODE_SOURCES ${BENCODE_FILE_IO_DISABLED_SOURCES})
 endif()
 
 set(BENCODE_MINIMAL_SOURCES ${BENCODE_COMMON_SOURCES})
