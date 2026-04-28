@@ -60,17 +60,17 @@ std::string Bencode::version() { return Bencode_Impl::version(); }
 /// stream.</param> <returns></returns>
 Bencode::ParseResultType Bencode::parse(ISource &source) const {
   if constexpr (std::is_void_v<ParseResultType>) {
-    implementation->parse(source);
+    implementation->parseSource(source);
   } else {
-    return implementation->parse(source);
+    return implementation->parseSource(source);
   }
 }
 
 Bencode::ParseResultType Bencode::parse(ISource &&source) const {
   if constexpr (std::is_void_v<ParseResultType>) {
-    implementation->parse(source);
+    implementation->parseSource(std::move(source));
   } else {
-    return implementation->parse(source);
+    return implementation->parseSource(std::move(source));
   }
 }
 /// <summary>
@@ -80,10 +80,10 @@ Bencode::ParseResultType Bencode::parse(ISource &&source) const {
 /// <param name="destination">Reference to interface used to facilitate the
 /// output stream.</param> <returns></returns>
 void Bencode::stringify(IDestination &destination) const {
-  implementation->stringify(destination);
+  implementation->stringifyDestination(destination);
 }
 void Bencode::stringify(IDestination &&destination) const {
-  implementation->stringify(destination);
+  implementation->stringifyDestination(std::move(destination));
 }
 /// <summary>
 /// Recursively traverse JNode structure calling IAction methods (read-only)

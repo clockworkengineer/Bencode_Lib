@@ -35,6 +35,14 @@ std::string Bencode_Impl::version() {
 }
 
 Bencode_Impl::ParseResultType Bencode_Impl::parse(ISource &source) {
+  return parseImpl(source);
+}
+
+Bencode_Impl::ParseResultType Bencode_Impl::parse(ISource &&source) {
+  return parseImpl(source);
+}
+
+Bencode_Impl::ParseResultType Bencode_Impl::parseImpl(ISource &source) {
 #if BENCODE_ENABLE_EXCEPTIONS
   bNodeRoot = bNodeParser->parse(source);
   if (source.more()) {
@@ -53,6 +61,20 @@ Bencode_Impl::ParseResultType Bencode_Impl::parse(ISource &source) {
 #endif
 }
 
+Node &Bencode_Impl::ensureDictionaryRoot() {
+  if (bNodeRoot.isEmpty()) {
+    bNodeRoot = Node::make<Dictionary>();
+  }
+  return bNodeRoot;
+}
+
+Node &Bencode_Impl::ensureListRoot() {
+  if (bNodeRoot.isEmpty()) {
+    bNodeRoot = Node::make<List>();
+  }
+  return bNodeRoot;
+}
+
 void Bencode_Impl::stringify(IDestination &destination) const {
   if (bNodeRoot.isEmpty()) {
     throw Error("No Bencoded data to stringify.");
@@ -60,26 +82,32 @@ void Bencode_Impl::stringify(IDestination &destination) const {
   bNodeStringify->stringify(bNodeRoot, destination);
 }
 
-void Bencode_Impl::traverse(IAction &action) {
+void Bencode_Impl::stringify(IDestination &&destination) const {
+  stringify(destination);
+}
+
+void Bencode_Impl::ensureNotEmpty() const {
   if (bNodeRoot.isEmpty()) {
     throw Error("No Bencode to traverse.");
   }
+}
+
+void Bencode_Impl::traverseImpl(IAction &action) const {
+  ensureNotEmpty();
   traverseNodes(bNodeRoot, action);
 }
 
+void Bencode_Impl::traverse(IAction &action) {
+  traverseImpl(action);
+}
+
 void Bencode_Impl::traverse(IAction &action) const {
-  if (bNodeRoot.isEmpty()) {
-    throw Error("No Bencode to traverse.");
-  }
-  traverseNodes(bNodeRoot, action);
+  traverseImpl(action);
 }
 
 Node &Bencode_Impl::operator[](const std::string_view &key) {
   try {
-    if (bNodeRoot.isEmpty()) {
-      bNodeRoot = Node::make<Dictionary>();
-    }
-    return bNodeRoot[key];
+    return ensureDictionaryRoot()[key];
   } catch ([[maybe_unused]] Node::Error &error) {
     NRef<Dictionary>(bNodeRoot).add(Dictionary::Entry(key, Node::make<Hole>()));
     return bNodeRoot[key];
@@ -92,10 +120,7 @@ const Node &Bencode_Impl::operator[](const std::string_view &key) const {
 
 Node &Bencode_Impl::operator[](const std::size_t index) {
   try {
-    if (bNodeRoot.isEmpty()) {
-      bNodeRoot = Node::make<List>();
-    }
-    return bNodeRoot[index];
+    return ensureListRoot()[index];
   } catch ([[maybe_unused]] Node::Error &error) {
     NRef<List>(bNodeRoot).resize(index);
     return bNodeRoot[index];

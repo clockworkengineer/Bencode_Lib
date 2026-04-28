@@ -8,6 +8,8 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
+#include <utility>
+
 namespace Bencode_Lib {
 
 class Bencode_Impl {
@@ -25,8 +27,22 @@ public:
 
   // Parse Bencoded source into Node tree
   ParseResultType parse(ISource &source);
+  ParseResultType parse(ISource &&source);
+
+  template <typename Source>
+  ParseResultType parseSource(Source &&source) {
+    return parse(std::forward<Source>(source));
+  }
+
   // Stringify Node tree
   void stringify(IDestination &destination) const;
+  void stringify(IDestination &&destination) const;
+
+  template <typename Destination>
+  void stringifyDestination(Destination &&destination) const {
+    stringify(std::forward<Destination>(destination));
+  }
+
   // Bencode version
   static std::string version();
   // Return root Node of the tree
@@ -38,6 +54,9 @@ public:
   // Search for Bencode dictionary entry with a given key
   Node &operator[](const std::string_view &key);
   const Node &operator[](const std::string_view &key) const;
+  // Ensure the root is a dictionary or list, creating it if empty.
+  Node &ensureDictionaryRoot();
+  Node &ensureListRoot();
   // Get Bencode list element at index
   Node &operator[](std::size_t index);
   const Node &operator[](std::size_t index) const;
@@ -47,6 +66,10 @@ public:
                      const std::string_view &bencodeString);
 
 private:
+  ParseResultType parseImpl(ISource &source);
+  void traverseImpl(IAction &action) const;
+  void ensureNotEmpty() const;
+
   // Traverse Bencode Node tree
   template <typename T> static void traverseNodes(T &bNode, IAction &action);
   // Root of Node tree
