@@ -25,9 +25,9 @@ public:
   ~Default_Parser() override = default;
   // Parse bencode Node tree
 #if BENCODE_ENABLE_EXCEPTIONS
-  Node parse(ISource &source) override;
+  Node parseImpl(ISource &source) override;
 #else
-  ParseStatus parse(ISource &source, Node &destination) override;
+  ParseStatus parseImpl(ISource &source, Node &destination) override;
 #endif
   // Get/Set parser max recursion depth
   static void setMaxParserDepth(const unsigned long depth) {

@@ -26,12 +26,4 @@
 #include "Default_Translator.hpp"
 #include "Default_Parser.hpp"
 #include "Default_Stringify.hpp"
-#if BENCODE_ENABLE_JSON_STRINGIFY
-#include "JSON_Stringify.hpp"
-#endif
-#if BENCODE_ENABLE_XML_STRINGIFY
-#include "XML_Stringify.hpp"
-#endif
-#if BENCODE_ENABLE_YAML_STRINGIFY
-#include "YAML_Stringify.hpp"
-#endif
+#include "Bencode_Optional_Stringify.hpp"

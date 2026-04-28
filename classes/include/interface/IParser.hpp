@@ -34,14 +34,33 @@ public:
   // ==========================================
   // Parse Bencode into Node tree from source
   // ==========================================
-#if BENCODE_ENABLE_EXCEPTIONS
-  virtual Node parse(ISource &source) = 0;
+  virtual Node parse(ISource &source) {
+#if !BENCODE_ENABLE_EXCEPTIONS
+    Node destination;
+    ParseStatus status = parse(source, destination);
+    if (!status.ok()) {
+      throw Error("IParser parse failed.");
+    }
+    return destination;
+#else
+    return parseImpl(source);
+#endif
+  }
+
   virtual ParseStatus parse(ISource &source, Node &destination) {
+#if BENCODE_ENABLE_EXCEPTIONS
     destination = parse(source);
     return ParseStatus::success();
-  }
 #else
-  virtual ParseStatus parse(ISource &source, Node &destination) = 0;
+    return parseImpl(source, destination);
+#endif
+  }
+
+protected:
+#if BENCODE_ENABLE_EXCEPTIONS
+  virtual Node parseImpl(ISource &source) = 0;
+#else
+  virtual ParseStatus parseImpl(ISource &source, Node &destination) = 0;
 #endif
 };
 } // namespace Bencode_Lib

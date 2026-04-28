@@ -387,7 +387,7 @@ Node Default_Parser::parseNodes(ISource &source,
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns>Root Node.</returns>
-Node Default_Parser::parse(ISource &source) { return parseIterative(source); }
+Node Default_Parser::parseImpl(ISource &source) { return parseIterative(source); }
 
 #else
 
@@ -766,7 +766,7 @@ ParseStatus Default_Parser::parseNodes(ISource &source,
   }
 }
 
-ParseStatus Default_Parser::parse(ISource &source, Node &destination) {
+ParseStatus Default_Parser::parseImpl(ISource &source, Node &destination) {
   return parseIterative(source, destination);
 }
 
