@@ -29,7 +29,7 @@ Bencode::~Bencode() = default;
 /// </summary>
 /// <param name="bencodeString">Bencode string.</param>
 Bencode::Bencode(const std::string_view &bencodeString) : Bencode() {
-  if constexpr (BENCODE_ENABLE_EXCEPTIONS) {
+  if constexpr (std::is_void_v<ParseResultType>) {
     parse(BufferSource{bencodeString});
   } else {
     (void)parse(BufferSource{bencodeString});
