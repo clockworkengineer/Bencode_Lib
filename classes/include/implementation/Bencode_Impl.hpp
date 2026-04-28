@@ -70,6 +70,8 @@ private:
   ParseResultType parseImpl(ISource &source);
   void traverseImpl(IAction &action) const;
   void ensureNotEmpty() const;
+  Node &getOrCreateDictionaryEntry(const std::string_view &key);
+  Node &getOrCreateListEntry(std::size_t index);
 #if BENCODE_ENABLE_EXCEPTIONS
   ParseResultType handleParseResult(ISource &source);
 #else

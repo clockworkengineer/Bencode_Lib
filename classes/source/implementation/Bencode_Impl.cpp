@@ -116,6 +116,22 @@ void Bencode_Impl::traverse(IAction &action) const {
 }
 
 Node &Bencode_Impl::operator[](const std::string_view &key) {
+  return getOrCreateDictionaryEntry(key);
+}
+
+const Node &Bencode_Impl::operator[](const std::string_view &key) const {
+  return bNodeRoot[key];
+}
+
+Node &Bencode_Impl::operator[](const std::size_t index) {
+  return getOrCreateListEntry(index);
+}
+
+const Node &Bencode_Impl::operator[](const std::size_t index) const {
+  return bNodeRoot[index];
+}
+
+Node &Bencode_Impl::getOrCreateDictionaryEntry(const std::string_view &key) {
   try {
     return ensureDictionaryRoot()[key];
   } catch ([[maybe_unused]] Node::Error &error) {
@@ -124,21 +140,13 @@ Node &Bencode_Impl::operator[](const std::string_view &key) {
   }
 }
 
-const Node &Bencode_Impl::operator[](const std::string_view &key) const {
-  return bNodeRoot[key];
-}
-
-Node &Bencode_Impl::operator[](const std::size_t index) {
+Node &Bencode_Impl::getOrCreateListEntry(std::size_t index) {
   try {
     return ensureListRoot()[index];
   } catch ([[maybe_unused]] Node::Error &error) {
     NRef<List>(bNodeRoot).resize(index);
     return bNodeRoot[index];
   }
-}
-
-const Node &Bencode_Impl::operator[](const std::size_t index) const {
-  return bNodeRoot[index];
 }
 
 } // namespace Bencode_Lib

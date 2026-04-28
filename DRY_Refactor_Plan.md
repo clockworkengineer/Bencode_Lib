@@ -1,85 +1,109 @@
 # DRY Refactor Plan for Bencode_Lib
 
 ## Objective
-Create a more maintainable, less duplicated codebase by centralizing common logic, reducing repeated interface forwarding, and improving shared file I/O and traversal behavior.
+Create a more maintainable, lower-risk Bencode library by removing duplicated behavior, centralizing shared helpers, and isolating configuration-specific code paths.
 
-## High-level findings
-- `classes/source/Bencode.cpp` contains repeated overloads for `parse`, `stringify`, and forwarding logic to `Bencode_Impl`.
-- `classes/source/implementation/Bencode_Impl.cpp` duplicates validation and traversal behavior across const/non-const methods and list/dictionary root creation.
-- File I/O support is split between platform-specific source files and duplicated `fromFile`/`toFile` wrappers.
-- There is repeated error-handling and stream management logic in `classes/source/implementation/file/Bencode_FileIO.cpp`.
-- Public API header `classes/include/Bencode.hpp` exposes multiple overloads and type aliases that can be simplified with helper functions or forwarding utilities.
+## Library architecture summary
+- Public API in `classes/include/Bencode.hpp` and wrapper implementation in `classes/source/Bencode.cpp`.
+- Core behavior is delegated to `Bencode_Impl` in `classes/include/implementation/Bencode_Impl.hpp` and `classes/source/implementation/Bencode_Impl.cpp`.
+- Parser and stringify behavior are implemented through `IParser`, `IStringify`, `ISource`, and `IDestination` interfaces.
+- File I/O support is platform-specific and conditionally compiled via `Bencode_FileIO.cpp`, `Bencode_File_POSIX.cpp`, `Bencode_File_MSVC.cpp`, and `Bencode_File_Disabled.cpp`.
+- Optional build variants are supported through CMake flags: `BENCODE_ENABLE_FILE_IO`, `BENCODE_ENABLE_EXCEPTIONS`, `BENCODE_BUILD_MINIMAL`, and `BENCODE_EMBEDDED_MODE`.
+
+## Key DRY issues
+- `Bencode.cpp` duplicates overload forwarding for `parse` and `stringify`.
+- `Bencode_Impl.cpp` duplicates traversal validation across const and non-const variants and replicate `operator[]` root initialization logic.
+- File I/O error handling and buffer management are duplicated in `Bencode_FileIO.cpp` and appear across platform-specific wrappers.
+- Parser mode branching exists in separate exception and status source files, but the core parse flow is conceptually the same.
+- CMake source and include lists duplicate build configuration details across normal, minimal, and embedded targets.
 
 ## Refactor targets
 
-### 1. Centralize `Bencode` overload forwarding
-Files: `classes/source/Bencode.cpp`, `classes/include/Bencode.hpp`
+### 1. Public forwarding helpers
+Files:
+- `classes/source/Bencode.cpp`
+- `classes/include/Bencode.hpp`
 
-- Replace duplicate `parse(ISource&)` and `parse(ISource&&)` code with a single forwarding helper template.
-- Do the same for `stringify(IDestination&)` and `stringify(IDestination&&)`.
-- Remove direct duplication by forwarding both ref and rvalue overloads to a common implementation method, e.g. `parseImpl(source)` / `stringifyImpl(destination)`.
-- Consider `std::conditional_t` / `if constexpr` factoring into one helper rather than repeating the branch twice.
+Goals:
+- Replace duplicate `parse(ISource&)` / `parse(ISource&&)` and `stringify(IDestination&)` / `stringify(IDestination&&)` with shared forwarding helpers.
+- Keep public overloads simple and stable while centralizing `if constexpr`/return behavior.
+- Prefer `implementation->parseSource(...)` / `implementation->stringifyDestination(...)` to repeated code.
 
-### 2. Consolidate traversal and root access logic in `Bencode_Impl`
-Files: `classes/source/implementation/Bencode_Impl.cpp`, `classes/include/implementation/Bencode_Impl.hpp`
+### 2. Shared `Bencode_Impl` behavior
+Files:
+- `classes/source/implementation/Bencode_Impl.cpp`
+- `classes/include/implementation/Bencode_Impl.hpp`
 
-- Create a single private helper for traversal that handles empty-root checks and then delegates to `traverseNodes`.
-- Use the same helper from both const and non-const `traverse(IAction&)` methods.
-- Extract repeated root initialization code from `operator[](string_view)` and `operator[](size_t)` into helpers like `ensureDictionaryRoot()` and `ensureListRoot()`.
-- Factor the duplicate catch/retry logic into `Bencode_Impl::getOrCreateDictionaryEntry` / `getOrCreateListEntry`.
+Goals:
+- Centralize parse validation via a single `parseImpl` helper.
+- Unify const and non-const traversal through a shared helper that checks emptiness.
+- Extract repeated root creation logic into `ensureDictionaryRoot()` and `ensureListRoot()`.
+- Optionally add helpers like `ensureDictionaryOrList` for mixed entry path handling.
 
-### 3. Unify file I/O platform abstraction and helpers
-Files: `classes/source/implementation/file/Bencode_FileIO.cpp`, `classes/source/implementation/file/Bencode_File_Disabled.cpp`, `classes/include/implementation/io/Bencode_FileIO_Internal.hpp`
+### 3. File I/O helper unification
+Files:
+- `classes/include/implementation/io/Bencode_FileIO_Internal.hpp`
+- `classes/source/implementation/file/Bencode_FileIO.cpp`
+- `classes/source/implementation/file/Bencode_File_Disabled.cpp`
+- `classes/source/implementation/file/Bencode_File_POSIX.cpp`
+- `classes/source/implementation/file/Bencode_File_MSVC.cpp`
 
-- Introduce an RAII file wrapper or helper class to manage open/read/write/close and reduce repeated `FILE*` logic.
-- Centralize `readBencodeString` and `writeBencodeString` behavior for both enabled and disabled variants, perhaps by moving common logic into `Bencode_FileIO_Internal.hpp`.
-- Standardize error messages and remove duplicated `throw Error(...)` code paths.
-- Consider using `std::ifstream` / `std::ofstream` if portable behavior is acceptable, removing the need for platform-specific open helpers.
+Goals:
+- Move file-open, read, and write helpers into a single shared internal header.
+- Introduce an RAII `Bencode_FileHandle` wrapper for `FILE*` to manage lifetime and reduce manual `fclose` calls.
+- Keep platform-open logic isolated to `openBencodeFileForRead` / `openBencodeFileForWrite` while centralizing `readBencodeString` / `writeBencodeString`.
+- Standardize `Error` message construction across file I/O errors.
 
-### 4. Reduce duplicated parser/exception status handling
-Files: `classes/source/implementation/Bencode_Impl.cpp`, `classes/source/implementation/parser/Default_Parser_*.cpp`
+### 4. Parser mode consolidation
+Files:
+- `classes/source/implementation/parser/Default_Parser_Body.hpp`
+- `classes/include/implementation/parser/Default_Parser.hpp`
+- `classes/source/implementation/Bencode_Impl.cpp`
 
-- Factor common parse validation into a helper method that returns a status or throws depending on build configuration.
-- For `BENCODE_ENABLE_EXCEPTIONS` and non-exception builds, use one implementation with compile-time branching instead of separate code bodies.
+Goals:
+- Factor shared parse semantics into a single helper regardless of exception support.
+- Keep `BENCODE_ENABLE_EXCEPTIONS` and non-exception build-specific details only where behavior differs.
+- Avoid duplicate parse state and boundary checks in separate code paths.
+- Preserve the current public API and build-mode behavior while reducing maintenance burden.
 
-### 5. Improve `version()` and common helper code clarity
-Files: `classes/source/implementation/Bencode_Impl.cpp`
+### 5. Build configuration and CMake cleanup
+Files:
+- `CMakeLists.txt`
 
-- Replace repeated `std::stringstream` usage with a smaller helper or `std::format` (C++23) if available.
-- If `Bencode_Impl::version` is the only place building version strings, keep it centralized to avoid future duplication.
+Goals:
+- Reduce duplicated include directory declarations by using a grouped include list or function.
+- Avoid repeated source list duplication between main, minimal, and embedded variants by using shared source groups and conditionally appending platform-specific or disabled implementations.
+- Keep optional target feature flags and aliases readable and easy to extend.
 
-## Suggested refactor steps
+## Suggested implementation plan
 
-1. Add a small helper API in `classes/include/implementation/Bencode_Impl.hpp`:
-   - `template <typename Source> static ParseResultType parseSource(Source &&source);`
-   - `template <typename Dest> void stringifyDestination(Dest &&destination) const;`
+1. Add DRY helpers in `classes/include/implementation/Bencode_Impl.hpp`:
+   - `template <typename Source> ParseResultType parseSource(Source &&source);`
+   - `template <typename Destination> void stringifyDestination(Destination &&destination) const;`
    - `Node &ensureDictionaryRoot();`
    - `Node &ensureListRoot();`
-2. Refactor `classes/source/Bencode.cpp` to forward through the helper instead of repeating `if constexpr` logic.
+   - `ParseResultType parseImpl(ISource &source);`
+   - `void traverseImpl(IAction &action) const;`
+2. Refactor `classes/source/Bencode.cpp` to use the new forwarding helpers.
 3. Refactor `classes/source/implementation/Bencode_Impl.cpp`:
-   - Implement shared traversal and root-creation helpers.
-   - Implement single parse helper for exception/status branches.
-4. Refactor file I/O implementation:
-   - Move `writeBencodeString` and `readBencodeString` into reusable helpers.
-   - Introduce RAII file open class or use standard streams behind a unified interface.
-5. Update tests as necessary to ensure all public overloads still behave identically.
-6. Add a small regression test for refactored traversal/common helper behavior if not already covered.
+   - Implement shared traversal and root creation helpers.
+   - Centralize exception/status parse validation with a single `handleParseResult` variant.
+4. Refactor file I/O support:
+   - Add `Bencode_FileHandle` and shared helpers in `Bencode_FileIO_Internal.hpp`.
+   - Update `Bencode_FileIO.cpp` to use RAII and shared helpers.
+   - Keep platform helpers minimal and isolated to open semantics.
+5. Review CMake lists for repeated patterns and extract common source/include groups.
+6. Run existing unit tests and examples after each step to verify behavior.
 
 ## Benefits
-- Stronger DRY compliance in public API and implementation layers.
-- Easier maintenance of parse/stringify forwarding logic.
-- Reduced risk of inconsistencies between const/ref overloads.
-- Cleaner file-based I/O support with one central error-handling path.
-- Better future extensibility for optional build variants (`BENCODE_ENABLE_FILE_IO`, `BENCODE_BUILD_MINIMAL`, `BENCODE_EMBEDDED_MODE`).
+- Reduced duplicated code paths across public API, implementation, parser, and file I/O.
+- Faster maintenance and lower risk of behavioral drift between builds.
+- More consistent error handling and fewer platform-specific branches.
+- Easier future extension for new stringify modes, parser options, or embedded/minimal builds.
 
-## Recommended file for follow-up
+## Next files to inspect after refactor
 - `classes/source/Bencode.cpp`
 - `classes/source/implementation/Bencode_Impl.cpp`
 - `classes/source/implementation/file/Bencode_FileIO.cpp`
-- `classes/include/implementation/Bencode_Impl.hpp`
-- `classes/include/Bencode.hpp`
-
-## Notes
-- The current code already uses C++23 and modern idioms; the refactor should preserve that style.
-- The plan intentionally avoids changing public behavior while cleaning implementation duplication.
-- If the library adopts `std::span` or `std::string_view` more uniformly, additional DRY opportunities will likely emerge in parser/stringify internals.
+- `classes/include/implementation/Bencode_FileIO_Internal.hpp`
+- `CMakeLists.txt`
