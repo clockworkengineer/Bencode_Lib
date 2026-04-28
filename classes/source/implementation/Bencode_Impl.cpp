@@ -45,21 +45,33 @@ Bencode_Impl::ParseResultType Bencode_Impl::parse(ISource &&source) {
 Bencode_Impl::ParseResultType Bencode_Impl::parseImpl(ISource &source) {
 #if BENCODE_ENABLE_EXCEPTIONS
   bNodeRoot = bNodeParser->parse(source);
+  return handleParseResult(source);
+#else
+  ParseStatus result = bNodeParser->parse(source, bNodeRoot);
+  return handleParseResult(std::move(result), source);
+#endif
+}
+
+#if BENCODE_ENABLE_EXCEPTIONS
+Bencode_Impl::ParseResultType Bencode_Impl::handleParseResult(
+    ISource &source) {
   if (source.more()) {
     throw SyntaxError("Source stream terminated early.");
   }
+}
 #else
-  ParseStatus status = bNodeParser->parse(source, bNodeRoot);
-  if (!status.ok()) {
-    return status;
+Bencode_Impl::ParseResultType Bencode_Impl::handleParseResult(
+    ParseStatus result, ISource &source) {
+  if (!result.ok()) {
+    return result;
   }
   if (source.more()) {
     return ParseStatus::failure(ErrorCode::SourceTerminatedEarly,
                                 "Source stream terminated early.");
   }
   return ParseStatus::success();
-#endif
 }
+#endif
 
 Node &Bencode_Impl::ensureDictionaryRoot() {
   if (bNodeRoot.isEmpty()) {

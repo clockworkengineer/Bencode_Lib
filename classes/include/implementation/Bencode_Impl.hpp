@@ -8,6 +8,7 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
+#include <type_traits>
 #include <utility>
 
 namespace Bencode_Lib {
@@ -69,6 +70,11 @@ private:
   ParseResultType parseImpl(ISource &source);
   void traverseImpl(IAction &action) const;
   void ensureNotEmpty() const;
+#if BENCODE_ENABLE_EXCEPTIONS
+  ParseResultType handleParseResult(ISource &source);
+#else
+  ParseResultType handleParseResult(ParseStatus result, ISource &source);
+#endif
 
   // Traverse Bencode Node tree
   template <typename T> static void traverseNodes(T &bNode, IAction &action);
