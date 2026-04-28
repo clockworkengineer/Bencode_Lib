@@ -46,6 +46,7 @@ public:
 
   // Bencode version
   static std::string version();
+  static std::string makeVersionString();
   // Return root Node of the tree
   [[nodiscard]] Node &root() { return bNodeRoot; }
   [[nodiscard]] const Node &root() const { return bNodeRoot; }
