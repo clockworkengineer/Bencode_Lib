@@ -36,30 +36,25 @@ configure_file(Bencode_Config.h.in Bencode_Config.hpp @ONLY)
 set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
 
 # Bencode sources and includes
-set(BENCODE_SOURCES
+set(BENCODE_COMMON_SOURCES
   classes/source/Bencode.cpp
   classes/source/implementation/Bencode_Impl.cpp
   classes/source/implementation/parser/Default_Parser.cpp
 )
+
+set(BENCODE_FILE_IO_SOURCES
+  classes/source/implementation/file/Bencode_File.cpp
+)
+
+set(BENCODE_SOURCES ${BENCODE_COMMON_SOURCES})
 
 if(BENCODE_ENABLE_FILE_IO)
   # File-based I/O support is only compiled into the main library when enabled.
-  list(APPEND BENCODE_SOURCES
-    classes/source/implementation/file/Bencode_File.cpp
-  )
+  list(APPEND BENCODE_SOURCES ${BENCODE_FILE_IO_SOURCES})
 endif()
 
-set(BENCODE_MINIMAL_SOURCES
-  classes/source/Bencode.cpp
-  classes/source/implementation/Bencode_Impl.cpp
-  classes/source/implementation/parser/Default_Parser.cpp
-)
-
-set(BENCODE_EMBEDDED_SOURCES
-  classes/source/Bencode.cpp
-  classes/source/implementation/Bencode_Impl.cpp
-  classes/source/implementation/parser/Default_Parser.cpp
-)
+set(BENCODE_MINIMAL_SOURCES ${BENCODE_COMMON_SOURCES})
+set(BENCODE_EMBEDDED_SOURCES ${BENCODE_COMMON_SOURCES})
 
 set(BENCODE_INCLUDES
   classes/include/Bencode.hpp
