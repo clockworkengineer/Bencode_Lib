@@ -9,6 +9,7 @@
 //
 
 #include "Bencode_Impl.hpp"
+#include "Bencode_Error.hpp"
 #include "Bencode_FileIO_Internal.hpp"
 
 #include <cstdio>
@@ -17,8 +18,45 @@
 
 namespace Bencode_Lib {
 
-static void writeBencodeString(FILE *bencodeFile,
-                               const std::string_view bencodeString) {
+Bencode_FileHandle::Bencode_FileHandle(const std::string_view &path, Mode mode)
+    : file_(nullptr) {
+  std::string pathString(path);
+  if (mode == Mode::Read) {
+    openBencodeFileForRead(pathString, file_);
+  } else {
+    openBencodeFileForWrite(pathString, file_);
+  }
+}
+
+Bencode_FileHandle::~Bencode_FileHandle() {
+  if (file_) {
+    std::fclose(file_);
+  }
+}
+
+Bencode_FileHandle::Bencode_FileHandle(Bencode_FileHandle &&other) noexcept
+    : file_(other.file_) {
+  other.file_ = nullptr;
+}
+
+Bencode_FileHandle &Bencode_FileHandle::operator=(
+    Bencode_FileHandle &&other) noexcept {
+  if (this != &other) {
+    if (file_) {
+      std::fclose(file_);
+    }
+    file_ = other.file_;
+    other.file_ = nullptr;
+  }
+  return *this;
+}
+
+bool Bencode_FileHandle::isOpen() const noexcept { return file_ != nullptr; }
+FILE *Bencode_FileHandle::get() const noexcept { return file_; }
+Bencode_FileHandle::operator FILE *() const noexcept { return file_; }
+
+void writeBencodeString(FILE *bencodeFile,
+                        const std::string_view bencodeString) {
   if (!bencodeFile) {
     throw Error("File stream is not open for writing.");
   }
@@ -29,7 +67,7 @@ static void writeBencodeString(FILE *bencodeFile,
   }
 }
 
-static std::string readBencodeString(FILE *bencodeFile) {
+std::string readBencodeString(FILE *bencodeFile) {
   if (!bencodeFile) {
     throw Error("File stream is not open for reading.");
   }
@@ -52,28 +90,23 @@ static std::string readBencodeString(FILE *bencodeFile) {
 }
 
 std::string Bencode_Impl::fromFile(const std::string_view &fileName) {
-  std::string path(fileName);
-  FILE *file = nullptr;
-  if (!openBencodeFileForRead(path, file) || !file) {
+  Bencode_FileHandle file(fileName, Bencode_FileHandle::Mode::Read);
+  if (!file.isOpen()) {
     throw Error("Bencode file input stream failed to open or does not exist.");
   }
 
-  std::string result = readBencodeString(file);
-  std::fclose(file);
-  return result;
+  return readBencodeString(file.get());
 }
 
 void Bencode_Impl::toFile(const std::string_view &fileName,
                           const std::string_view &bencodeString) {
-  std::string path(fileName);
-  FILE *file = nullptr;
-  if (!openBencodeFileForWrite(path, file) || !file) {
+  Bencode_FileHandle file(fileName, Bencode_FileHandle::Mode::Write);
+  if (!file.isOpen()) {
     throw Error(
         "Bencode file output stream failed to open or could not be created.");
   }
 
-  writeBencodeString(file, bencodeString);
-  std::fclose(file);
+  writeBencodeString(file.get(), bencodeString);
 }
 
 } // namespace Bencode_Lib
