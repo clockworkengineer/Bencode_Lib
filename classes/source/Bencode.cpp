@@ -59,7 +59,7 @@ std::string Bencode::version() { return Bencode_Impl::version(); }
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns></returns>
 Bencode::ParseResultType Bencode::parse(ISource &source) const {
-  if constexpr (BENCODE_ENABLE_EXCEPTIONS) {
+  if constexpr (std::is_void_v<ParseResultType>) {
     implementation->parse(source);
   } else {
     return implementation->parse(source);
@@ -67,7 +67,7 @@ Bencode::ParseResultType Bencode::parse(ISource &source) const {
 }
 
 Bencode::ParseResultType Bencode::parse(ISource &&source) const {
-  if constexpr (BENCODE_ENABLE_EXCEPTIONS) {
+  if constexpr (std::is_void_v<ParseResultType>) {
     implementation->parse(source);
   } else {
     return implementation->parse(source);

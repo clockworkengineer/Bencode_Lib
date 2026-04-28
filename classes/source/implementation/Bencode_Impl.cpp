@@ -10,40 +10,6 @@
 
 namespace Bencode_Lib {
 
-namespace {
-
-template <bool EnableExceptions>
-struct ParserExecutor;
-
-#if BENCODE_ENABLE_EXCEPTIONS
-template <>
-struct ParserExecutor<true> {
-  static void parse(IParser *parser, ISource &source, Node &root) {
-    root = parser->parse(source);
-    if (source.more()) {
-      throw SyntaxError("Source stream terminated early.");
-    }
-  }
-};
-#else
-template <>
-struct ParserExecutor<false> {
-  static ParseStatus parse(IParser *parser, ISource &source, Node &root) {
-    ParseStatus status = parser->parse(source, root);
-    if (!status.ok()) {
-      return status;
-    }
-    if (source.more()) {
-      return ParseStatus::failure(ErrorCode::SourceTerminatedEarly,
-                                  "Source stream terminated early.");
-    }
-    return ParseStatus::success();
-  }
-};
-#endif
-
-} // namespace
-
 // Need size information for destructor to clean up unique_ptr to
 // stringify/parser.
 Bencode_Impl::Bencode_Impl(IStringify *stringify, IParser *parser) {
@@ -70,9 +36,20 @@ std::string Bencode_Impl::version() {
 
 Bencode_Impl::ParseResultType Bencode_Impl::parse(ISource &source) {
 #if BENCODE_ENABLE_EXCEPTIONS
-  ParserExecutor<true>::parse(bNodeParser.get(), source, bNodeRoot);
+  bNodeRoot = bNodeParser->parse(source);
+  if (source.more()) {
+    throw SyntaxError("Source stream terminated early.");
+  }
 #else
-  return ParserExecutor<false>::parse(bNodeParser.get(), source, bNodeRoot);
+  ParseStatus status = bNodeParser->parse(source, bNodeRoot);
+  if (!status.ok()) {
+    return status;
+  }
+  if (source.more()) {
+    return ParseStatus::failure(ErrorCode::SourceTerminatedEarly,
+                                "Source stream terminated early.");
+  }
+  return ParseStatus::success();
 #endif
 }
 

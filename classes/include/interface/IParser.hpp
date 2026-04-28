@@ -6,6 +6,7 @@
 #pragma once
 
 #include "implementation/common/Bencode_Status.hpp"
+#include "implementation/node/Bencode_Node.hpp"
 
 namespace Bencode_Lib {
 
@@ -13,7 +14,6 @@ namespace Bencode_Lib {
 // Forward declarations
 // ====================
 class ISource;
-struct Node;
 
 // =============================
 // Interface for Bencode parser
@@ -36,6 +36,10 @@ public:
   // ==========================================
 #if BENCODE_ENABLE_EXCEPTIONS
   virtual Node parse(ISource &source) = 0;
+  virtual ParseStatus parse(ISource &source, Node &destination) {
+    destination = parse(source);
+    return ParseStatus::success();
+  }
 #else
   virtual ParseStatus parse(ISource &source, Node &destination) = 0;
 #endif
