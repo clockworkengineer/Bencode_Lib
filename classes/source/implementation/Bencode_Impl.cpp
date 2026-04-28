@@ -27,21 +27,25 @@ Bencode_Impl::Bencode_Impl(IStringify *stringify, IParser *parser) {
 
 Bencode_Impl::~Bencode_Impl() = default;
 
-std::string Bencode_Impl::version() {
-  return makeVersionString();
-}
+namespace {
 
-std::string Bencode_Impl::makeVersionString() {
+std::string makeVersionString() {
   return std::string("Bencode_Lib Version ") + std::to_string(BENCODE_VERSION_MAJOR) + "." +
          std::to_string(BENCODE_VERSION_MINOR) + "." + std::to_string(BENCODE_VERSION_PATCH);
 }
 
+} // namespace
+
+std::string Bencode_Impl::version() {
+  return makeVersionString();
+}
+
 Bencode_Impl::ParseResultType Bencode_Impl::parse(ISource &source) {
-  return parseImpl(source);
+  return parseSource(source);
 }
 
 Bencode_Impl::ParseResultType Bencode_Impl::parse(ISource &&source) {
-  return parseImpl(source);
+  return parseSource(std::move(source));
 }
 
 Bencode_Impl::ParseResultType Bencode_Impl::parseImpl(ISource &source) {
@@ -76,28 +80,26 @@ Bencode_Impl::ParseResultType Bencode_Impl::handleParseResult(
 #endif
 
 Node &Bencode_Impl::ensureDictionaryRoot() {
-  if (bNodeRoot.isEmpty()) {
-    bNodeRoot = Node::make<Dictionary>();
-  }
-  return bNodeRoot;
+  return ensureRoot<Dictionary>();
 }
 
 Node &Bencode_Impl::ensureListRoot() {
-  if (bNodeRoot.isEmpty()) {
-    bNodeRoot = Node::make<List>();
-  }
-  return bNodeRoot;
+  return ensureRoot<List>();
 }
 
 void Bencode_Impl::stringify(IDestination &destination) const {
+  stringifyImpl(destination);
+}
+
+void Bencode_Impl::stringify(IDestination &&destination) const {
+  stringifyImpl(destination);
+}
+
+void Bencode_Impl::stringifyImpl(IDestination &destination) const {
   if (bNodeRoot.isEmpty()) {
     throw Error("No Bencoded data to stringify.");
   }
   bNodeStringify->stringify(bNodeRoot, destination);
-}
-
-void Bencode_Impl::stringify(IDestination &&destination) const {
-  stringify(destination);
 }
 
 void Bencode_Impl::ensureNotEmpty() const {
@@ -136,20 +138,34 @@ const Node &Bencode_Impl::operator[](const std::size_t index) const {
 }
 
 Node &Bencode_Impl::getOrCreateDictionaryEntry(const std::string_view &key) {
-  try {
-    return ensureDictionaryRoot()[key];
-  } catch ([[maybe_unused]] Node::Error &error) {
-    NRef<Dictionary>(bNodeRoot).add(Dictionary::Entry(key, Node::make<Hole>()));
-    return bNodeRoot[key];
-  }
+  return getOrCreateRootEntry<Dictionary>(key);
 }
 
 Node &Bencode_Impl::getOrCreateListEntry(std::size_t index) {
+  return getOrCreateRootEntry<List>(static_cast<int>(index));
+}
+
+template <typename Container>
+Node &Bencode_Impl::ensureRoot() {
+  if (bNodeRoot.isEmpty()) {
+    bNodeRoot = Node::make<Container>();
+  }
+  return bNodeRoot;
+}
+
+template <typename Container, typename Key>
+Node &Bencode_Impl::getOrCreateRootEntry(Key &&key) {
   try {
-    return ensureListRoot()[index];
+    return ensureRoot<Container>()[std::forward<Key>(key)];
   } catch ([[maybe_unused]] Node::Error &error) {
-    NRef<List>(bNodeRoot).resize(index);
-    return bNodeRoot[index];
+    if constexpr (std::is_same_v<Container, Dictionary>) {
+      NRef<Dictionary>(bNodeRoot).add(
+          Dictionary::Entry(std::forward<Key>(key), Node::make<Hole>()));
+      return bNodeRoot[std::forward<Key>(key)];
+    } else {
+      NRef<List>(bNodeRoot).resize(std::forward<Key>(key));
+      return bNodeRoot[std::forward<Key>(key)];
+    }
   }
 }
 

@@ -32,7 +32,7 @@ public:
 
   template <typename Source>
   ParseResultType parseSource(Source &&source) {
-    return parse(std::forward<Source>(source));
+    return parseImpl(static_cast<ISource &>(source));
   }
 
   // Stringify Node tree
@@ -41,12 +41,11 @@ public:
 
   template <typename Destination>
   void stringifyDestination(Destination &&destination) const {
-    stringify(std::forward<Destination>(destination));
+    stringifyImpl(static_cast<IDestination &>(destination));
   }
 
   // Bencode version
   static std::string version();
-  static std::string makeVersionString();
   // Return root Node of the tree
   [[nodiscard]] Node &root() { return bNodeRoot; }
   [[nodiscard]] const Node &root() const { return bNodeRoot; }
@@ -69,8 +68,13 @@ public:
 
 private:
   ParseResultType parseImpl(ISource &source);
+  template <typename Container>
+  Node &ensureRoot();
+  template <typename Container, typename Key>
+  Node &getOrCreateRootEntry(Key &&key);
   void traverseImpl(IAction &action) const;
   void ensureNotEmpty() const;
+  void stringifyImpl(IDestination &destination) const;
   Node &getOrCreateDictionaryEntry(const std::string_view &key);
   Node &getOrCreateListEntry(std::size_t index);
 #if BENCODE_ENABLE_EXCEPTIONS

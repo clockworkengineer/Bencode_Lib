@@ -29,11 +29,7 @@ Bencode::~Bencode() = default;
 /// </summary>
 /// <param name="bencodeString">Bencode string.</param>
 Bencode::Bencode(const std::string_view &bencodeString) : Bencode() {
-  if constexpr (std::is_void_v<ParseResultType>) {
-    parse(BufferSource{bencodeString});
-  } else {
-    (void)parse(BufferSource{bencodeString});
-  }
+  (void)parse(BufferSource{bencodeString});
 }
 /// <summary>
 /// Bencode constructor (list).
@@ -59,19 +55,11 @@ std::string Bencode::version() { return Bencode_Impl::version(); }
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns></returns>
 Bencode::ParseResultType Bencode::parse(ISource &source) const {
-  if constexpr (std::is_void_v<ParseResultType>) {
-    implementation->parseSource(source);
-  } else {
-    return implementation->parseSource(source);
-  }
+  return implementation->parse(source);
 }
 
 Bencode::ParseResultType Bencode::parse(ISource &&source) const {
-  if constexpr (std::is_void_v<ParseResultType>) {
-    implementation->parseSource(std::move(source));
-  } else {
-    return implementation->parseSource(std::move(source));
-  }
+  return implementation->parse(std::move(source));
 }
 /// <summary>
 /// Take Node structure and create a Bencode encoding for it in the
@@ -80,10 +68,10 @@ Bencode::ParseResultType Bencode::parse(ISource &&source) const {
 /// <param name="destination">Reference to interface used to facilitate the
 /// output stream.</param> <returns></returns>
 void Bencode::stringify(IDestination &destination) const {
-  implementation->stringifyDestination(destination);
+  implementation->stringify(destination);
 }
 void Bencode::stringify(IDestination &&destination) const {
-  implementation->stringifyDestination(std::move(destination));
+  implementation->stringify(std::move(destination));
 }
 /// <summary>
 /// Recursively traverse JNode structure calling IAction methods (read-only)
