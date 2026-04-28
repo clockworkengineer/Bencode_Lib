@@ -1,4 +1,4 @@
-# Bencode_Lib DRY Refactor Plan
+`# Bencode_Lib DRY Refactor Plan
 
 ## Goal
 Create a cleaner, less repetitive implementation for the library by removing scattered `#if` logic from source and header files and moving build-variant behavior into separate translation units and CMake source selection.

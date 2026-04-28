@@ -2,6 +2,8 @@
 //
 // Description: POSIX-compatible file open functions used by the Bencode file I/O wrapper.
 
+#include "Bencode_FileIO_Internal.hpp"
+
 #include <cstdio>
 #include <string>
 

@@ -29,11 +29,11 @@ Bencode::~Bencode() = default;
 /// </summary>
 /// <param name="bencodeString">Bencode string.</param>
 Bencode::Bencode(const std::string_view &bencodeString) : Bencode() {
-#if BENCODE_ENABLE_EXCEPTIONS
-  parse(BufferSource{bencodeString});
-#else
-  [[maybe_unused]] ParseStatus status = parse(BufferSource{bencodeString});
-#endif
+  if constexpr (BENCODE_ENABLE_EXCEPTIONS) {
+    parse(BufferSource{bencodeString});
+  } else {
+    (void)parse(BufferSource{bencodeString});
+  }
 }
 /// <summary>
 /// Bencode constructor (list).
@@ -58,17 +58,21 @@ std::string Bencode::version() { return Bencode_Impl::version(); }
 /// </summary>
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns></returns>
-#if BENCODE_ENABLE_EXCEPTIONS
-void Bencode::parse(ISource &source) const { implementation->parse(source); }
-void Bencode::parse(ISource &&source) const { implementation->parse(source); }
-#else
-ParseStatus Bencode::parse(ISource &source) const {
-  return implementation->parse(source);
+Bencode::ParseResultType Bencode::parse(ISource &source) const {
+  if constexpr (BENCODE_ENABLE_EXCEPTIONS) {
+    implementation->parse(source);
+  } else {
+    return implementation->parse(source);
+  }
 }
-ParseStatus Bencode::parse(ISource &&source) const {
-  return implementation->parse(source);
+
+Bencode::ParseResultType Bencode::parse(ISource &&source) const {
+  if constexpr (BENCODE_ENABLE_EXCEPTIONS) {
+    implementation->parse(source);
+  } else {
+    return implementation->parse(source);
+  }
 }
-#endif
 /// <summary>
 /// Take Node structure and create a Bencode encoding for it in the
 /// destination stream.
@@ -120,7 +124,6 @@ Node &Bencode::operator[](const std::size_t index) {
 const Node &Bencode::operator[](const std::size_t index) const {
   return (*implementation)[index];
 }
-#if BENCODE_ENABLE_FILE_IO
 /// <summary>
 /// Create a Bencode file and write Bencode string to it.
 /// </summary>
@@ -139,5 +142,4 @@ void Bencode::toFile(const std::string_view &fileName,
 std::string Bencode::fromFile(const std::string_view &fileName) {
   return Bencode_Impl::fromFile(fileName);
 }
-#endif
 } // namespace Bencode_Lib

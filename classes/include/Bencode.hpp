@@ -7,6 +7,8 @@
 
 #include "implementation/common/Bencode_Status.hpp"
 
+#include <type_traits>
+
 namespace Bencode_Lib {
 
 // ============================
@@ -54,14 +56,12 @@ public:
   Bencode(Bencode &&other) = delete;
   Bencode &operator=(Bencode &&other) = delete;
   ~Bencode();
+
+  using ParseResultType = std::conditional_t<BENCODE_ENABLE_EXCEPTIONS, void, ParseStatus>;
+
   // Parse Bencode into Node tree
-#if BENCODE_ENABLE_EXCEPTIONS
-  void parse(ISource &source) const;
-  void parse(ISource &&source) const;
-#else
-  ParseStatus parse(ISource &source) const;
-  ParseStatus parse(ISource &&source) const;
-#endif
+  ParseResultType parse(ISource &source) const;
+  ParseResultType parse(ISource &&source) const;
   // Stringify Bencode from Node tree
   void stringify(IDestination &destination) const;
   void stringify(IDestination &&destination) const;
@@ -79,12 +79,10 @@ public:
   // Get Bencode list entry at index
   Node &operator[](std::size_t index);
   const Node &operator[](std::size_t index) const;
-#if BENCODE_ENABLE_FILE_IO
   // Read/Write Bencode from the file
   static std::string fromFile(const std::string_view &fileName);
   static void toFile(const std::string_view &fileName,
                      const std::string_view &bencodeString);
-#endif
 
 private:
   const std::unique_ptr<Bencode_Impl> implementation;

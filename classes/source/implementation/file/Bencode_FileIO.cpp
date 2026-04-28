@@ -9,15 +9,13 @@
 //
 
 #include "Bencode_Impl.hpp"
+#include "Bencode_FileIO_Internal.hpp"
 
 #include <cstdio>
 #include <string>
 #include <vector>
 
 namespace Bencode_Lib {
-
-bool openBencodeFileForRead(const std::string &path, FILE *&file);
-bool openBencodeFileForWrite(const std::string &path, FILE *&file);
 
 static void writeBencodeString(FILE *bencodeFile,
                                const std::string_view bencodeString) {

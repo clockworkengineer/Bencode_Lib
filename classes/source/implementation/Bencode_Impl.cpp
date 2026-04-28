@@ -10,6 +10,40 @@
 
 namespace Bencode_Lib {
 
+namespace {
+
+template <bool EnableExceptions>
+struct ParserExecutor;
+
+#if BENCODE_ENABLE_EXCEPTIONS
+template <>
+struct ParserExecutor<true> {
+  static void parse(IParser *parser, ISource &source, Node &root) {
+    root = parser->parse(source);
+    if (source.more()) {
+      throw SyntaxError("Source stream terminated early.");
+    }
+  }
+};
+#else
+template <>
+struct ParserExecutor<false> {
+  static ParseStatus parse(IParser *parser, ISource &source, Node &root) {
+    ParseStatus status = parser->parse(source, root);
+    if (!status.ok()) {
+      return status;
+    }
+    if (source.more()) {
+      return ParseStatus::failure(ErrorCode::SourceTerminatedEarly,
+                                  "Source stream terminated early.");
+    }
+    return ParseStatus::success();
+  }
+};
+#endif
+
+} // namespace
+
 // Need size information for destructor to clean up unique_ptr to
 // stringify/parser.
 Bencode_Impl::Bencode_Impl(IStringify *stringify, IParser *parser) {
@@ -34,26 +68,13 @@ std::string Bencode_Impl::version() {
   return versionString.str();
 }
 
+Bencode_Impl::ParseResultType Bencode_Impl::parse(ISource &source) {
 #if BENCODE_ENABLE_EXCEPTIONS
-void Bencode_Impl::parse(ISource &source) {
-  bNodeRoot = bNodeParser->parse(source);
-  if (source.more()) {
-    throw SyntaxError("Source stream terminated early.");
-  }
-}
+  ParserExecutor<true>::parse(bNodeParser.get(), source, bNodeRoot);
 #else
-ParseStatus Bencode_Impl::parse(ISource &source) {
-  ParseStatus status = bNodeParser->parse(source, bNodeRoot);
-  if (!status.ok()) {
-    return status;
-  }
-  if (source.more()) {
-    return ParseStatus::failure(ErrorCode::SourceTerminatedEarly,
-                                "Source stream terminated early.");
-  }
-  return ParseStatus::success();
-}
+  return ParserExecutor<false>::parse(bNodeParser.get(), source, bNodeRoot);
 #endif
+}
 
 void Bencode_Impl::stringify(IDestination &destination) const {
   if (bNodeRoot.isEmpty()) {
