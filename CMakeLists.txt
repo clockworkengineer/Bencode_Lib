@@ -168,15 +168,6 @@ add_library(Bencode_Lib::Bencode_Lib ALIAS ${BENCODE_LIBRARY_NAME})
 target_include_directories(${BENCODE_LIBRARY_NAME}
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
   $<INSTALL_INTERFACE:include>
 )
@@ -184,15 +175,6 @@ target_include_directories(${BENCODE_LIBRARY_NAME}
 target_include_directories(${BENCODE_LIBRARY_NAME}_Embedded
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
   $<INSTALL_INTERFACE:include>
 )
@@ -201,15 +183,6 @@ if(BENCODE_BUILD_MINIMAL)
   target_include_directories(${BENCODE_LIBRARY_NAME}_Minimal
     PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
     $<INSTALL_INTERFACE:include>
   )
