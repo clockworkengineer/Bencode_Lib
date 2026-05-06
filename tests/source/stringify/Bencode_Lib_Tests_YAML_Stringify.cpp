@@ -1,5 +1,5 @@
 #include "Bencode_Lib_Tests.hpp"
-#include "YAML_Stringify.hpp"
+#include "implementation/stringify/YAML_Stringify.hpp"
 
 TEST_CASE("YAML stringify of simple types (integer, string) ",
           "[Bencode][Stringify]") {

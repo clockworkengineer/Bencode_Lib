@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "IDestination.hpp"
+#include "interface/IDestination.hpp"
 
 #include <cstddef>
 #include <cstring>

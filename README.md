@@ -47,6 +47,22 @@ The public API is exposed through the top-level headers under `classes/include`.
 
 Internal implementation headers are intentionally hidden from public include paths.
 
+## Compatibility and Portability
+
+Bencode_Lib is designed to compile cleanly with modern C++23 toolchains on:
+
+- GCC
+- Clang
+- MSVC
+
+The build supports both Debug and Release profiles. The library selects file I/O implementation automatically:
+
+- `classes/source/implementation/file/Bencode_File_POSIX.cpp` for POSIX platforms
+- `classes/source/implementation/file/Bencode_File_MSVC.cpp` for MSVC
+- `classes/source/implementation/file/Bencode_File_Disabled.cpp` when `BENCODE_ENABLE_FILE_IO=OFF`
+
+The `BENCODE_BUILD_MINIMAL` variant disables optional stringifiers and file-based I/O, while `BENCODE_EMBEDDED_MODE` additionally disables exceptions and dynamic allocation.
+
 ## What is Bencode?
 
 Bencode is a data serialization format with the following encoding rules:

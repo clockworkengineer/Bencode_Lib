@@ -1,5 +1,5 @@
 #include "Bencode_Lib_Tests.hpp"
-#include "JSON_Stringify.hpp"
+#include "implementation/stringify/JSON_Stringify.hpp"
 
 TEST_CASE("JSON stringify of simple types (integer, string) ",
           "[Bencode][Stringify]") {

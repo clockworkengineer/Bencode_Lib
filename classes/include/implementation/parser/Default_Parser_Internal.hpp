@@ -7,7 +7,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
-#include "Bencode_Parser_Constants.hpp"
+#include "../common/Bencode_Parser_Constants.hpp"
 
 #include <array>
 #include <limits>

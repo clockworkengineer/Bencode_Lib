@@ -13,10 +13,10 @@
 #include <type_traits>
 #include <variant>
 
-#include "Bencode_Variant.hpp"
-#include "Bencode_Hole.hpp"
-#include "Bencode_Integer.hpp"
-#include "Bencode_String.hpp"
+#include "../variants/Bencode_Variant.hpp"
+#include "../variants/Bencode_Hole.hpp"
+#include "../variants/Bencode_Integer.hpp"
+#include "../variants/Bencode_String.hpp"
 
 namespace Bencode_Lib {
 class Bencode;
@@ -196,8 +196,8 @@ private:
 
 } // namespace Bencode_Lib
 
-#include "Bencode_List.hpp"
-#include "Bencode_Dictionary.hpp"
+#include "../variants/Bencode_List.hpp"
+#include "../variants/Bencode_Dictionary.hpp"
 
 namespace Bencode_Lib {
 

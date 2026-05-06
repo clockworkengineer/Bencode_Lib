@@ -7,7 +7,7 @@
 
 #if BENCODE_ENABLE_FILE_IO
 
-#include "ISource.hpp"
+#include "interface/ISource.hpp"
 
 #include <cstdio>
 #include <string>

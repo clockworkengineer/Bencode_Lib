@@ -7,7 +7,7 @@
 
 #if BENCODE_ENABLE_FILE_IO
 
-#include "IDestination.hpp"
+#include "interface/IDestination.hpp"
 
 #include <cstddef>
 #include <cstdio>

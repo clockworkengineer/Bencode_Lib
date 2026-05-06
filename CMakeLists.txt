@@ -170,6 +170,7 @@ target_include_directories(${BENCODE_LIBRARY_NAME}
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  PRIVATE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
@@ -185,6 +186,7 @@ target_include_directories(${BENCODE_LIBRARY_NAME}_Embedded
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  PRIVATE
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
@@ -201,6 +203,7 @@ if(BENCODE_BUILD_MINIMAL)
     PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+    PRIVATE
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>

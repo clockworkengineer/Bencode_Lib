@@ -1,5 +1,5 @@
 #include "Bencode_Lib_Tests.hpp"
-#include "XML_Stringify.hpp"
+#include "implementation/stringify/XML_Stringify.hpp"
 
 TEST_CASE("XML stringify of simple types (integer, string) ",
           "[Bencode][Stringify]") {

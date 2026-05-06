@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "ITranslator.hpp"
+#include "interface/ITranslator.hpp"
 
 namespace Bencode_Lib {
 
