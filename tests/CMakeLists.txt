@@ -39,6 +39,7 @@ set(TEST_SOURCES
   source/io/Bencode_Lib_Tests_ISource_File.cpp
   source/io/Bencode_Lib_Tests_IDestination_Buffer.cpp
   source/io/Bencode_Lib_Tests_IDestination_File.cpp
+  source/io/Bencode_Lib_Tests_FileIO_Failure.cpp
   source/misc/Bencode_Lib_Tests_Helper.cpp
   source/misc/Bencode_Lib_Tests_Misc.cpp
   source/traverse/Bencode_lib_Tests_Traverse.cpp
@@ -120,6 +121,27 @@ else()
       -Wpedantic
       $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
     )
+  endif()
+
+  if(BENCODE_ENABLE_SANITIZERS AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(${TEST_EXECUTABLE} PRIVATE
+      -fsanitize=address,undefined
+      -fno-omit-frame-pointer
+    )
+    target_link_options(${TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined)
+    target_compile_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
+      -fsanitize=address,undefined
+      -fno-omit-frame-pointer
+    )
+    target_link_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined)
+
+    if(BENCODE_BUILD_MINIMAL)
+      target_compile_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE
+        -fsanitize=address,undefined
+        -fno-omit-frame-pointer
+      )
+      target_link_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined)
+    endif()
   endif()
 endif()
 

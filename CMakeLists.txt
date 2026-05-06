@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Build options
 option(BENCODE_BUILD_TESTS "Build unit tests" ON)
-option(BENCODE_BUILD_EXAMPLES "Build examples" ON)
+option(BENCODE_BUILD_EXAMPLES "Build examples" OFF)
 option(BENCODE_BUILD_BENCHMARKS "Build performance benchmark executable" ON)
 option(BENCODE_BUILD_MINIMAL "Build minimal library variant with core parse/stringify and buffer-based I/O" OFF)
 
@@ -28,6 +28,7 @@ option(BENCODE_ENABLE_JSON_STRINGIFY "Enable JSON stringify support" ON)
 option(BENCODE_ENABLE_XML_STRINGIFY "Enable XML stringify support" ON)
 option(BENCODE_ENABLE_YAML_STRINGIFY "Enable YAML stringify support" ON)
 option(BENCODE_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
+option(BENCODE_ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer for test targets" OFF)
 
 # Setup library version
 configure_file(Bencode_Config.h.in Bencode_Config.hpp @ONLY)
@@ -169,14 +170,30 @@ target_include_directories(${BENCODE_LIBRARY_NAME}
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-  $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
 )
 
 target_include_directories(${BENCODE_LIBRARY_NAME}_Embedded
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-  $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
 )
 
 if(BENCODE_BUILD_MINIMAL)
@@ -184,7 +201,15 @@ if(BENCODE_BUILD_MINIMAL)
     PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
   )
 endif()
 
