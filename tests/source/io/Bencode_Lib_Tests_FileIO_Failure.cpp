@@ -11,7 +11,7 @@ TEST_CASE("Bencode::fromFile throws on missing file", "[Bencode][IO][Error]") {
 
 TEST_CASE("Bencode::toFile throws when the target path is a directory",
           "[Bencode][IO][Error]") {
-  const std::string directoryPath = std::filesystem::current_path().string();
+  const std::string directoryPath = std::filesystem::temp_directory_path().string();
   REQUIRE_THROWS_AS(Bencode::toFile(directoryPath, "i42e"), Error);
   REQUIRE_THROWS_WITH(
       Bencode::toFile(directoryPath, "i42e"),

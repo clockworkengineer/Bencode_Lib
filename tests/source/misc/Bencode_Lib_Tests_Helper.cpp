@@ -8,13 +8,19 @@
 /// <param name="bencodeFileName">Test data file name</param>
 /// <returns>Full path to test data file</returns>
 std::string prefixTestDataPath(const std::string &bencodeFileName) {
-  if (std::filesystem::is_directory("./files")) {
-    return (std::filesystem::current_path() / "./files" / bencodeFileName)
-        .string();
-  } else {
-    return (std::filesystem::current_path() / "../files" / bencodeFileName)
-        .string();
+  std::filesystem::path sourcePath{__FILE__};
+  if (!sourcePath.is_absolute()) {
+    try {
+      sourcePath = std::filesystem::current_path() / sourcePath;
+    } catch (const std::filesystem::filesystem_error &) {
+      // Fall back to the source path as provided by the compiler if the
+      // current working directory is unavailable.
+    }
   }
+
+  const std::filesystem::path testsDir = sourcePath.parent_path().parent_path().parent_path();
+  const std::filesystem::path testDataDir = testsDir / "files";
+  return (testDataDir / bencodeFileName).string();
 }
 /// <summary>
 /// Compare two Bencoded files.
