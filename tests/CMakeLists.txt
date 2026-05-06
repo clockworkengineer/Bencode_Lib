@@ -45,12 +45,19 @@ set(TEST_SOURCES
   source/traverse/Bencode_lib_Tests_Traverse.cpp
   source/stringify/Bencode_Lib_Tests_YAML_Stringify.cpp
   source/io/Bencode_Tests_File_FromFile.cpp
-  source/io/Bencode_Lib_Tests_ToFile.cpp)
+  source/io/Bencode_Lib_Tests_ToFile.cpp
+  source/io/Bencode_Lib_Tests_CustomParserStringify.cpp)
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(${TEST_EXECUTABLE} Bencode_Lib::Bencode_Lib Catch2::Catch2WithMain)
 target_precompile_headers(${TEST_EXECUTABLE} REUSE_FROM Bencode_Lib)
+
+add_executable(Bencode_Lib_PublicHeader_CompileTest
+  source/misc/Bencode_Lib_Tests_PublicHeaderCompile.cpp)
+target_include_directories(Bencode_Lib_PublicHeader_CompileTest PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(Bencode_Lib_PublicHeader_CompileTest Bencode_Lib::Bencode_Lib)
+add_test(NAME Bencode_Lib_PublicHeader_CompileTest COMMAND Bencode_Lib_PublicHeader_CompileTest)
 
 # Embedded test suite: compile the library and a minimal embedded-focused test harness
 set(EMBEDDED_TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Embedded_Unit_Tests)
@@ -83,6 +90,13 @@ if(MSVC)
     /wd4324 # Catch2: structure padded due to alignment specifier
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
+  target_compile_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE
+    /W4
+    /permissive-
+    /Zc:__cplusplus
+    /wd4324 # Catch2: structure padded due to alignment specifier
+    $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
+  )
   target_compile_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
     /W4
     /permissive-
@@ -102,6 +116,12 @@ if(MSVC)
   endif()
 else()
   target_compile_options(${TEST_EXECUTABLE} PRIVATE
+    -Wall
+    -Wextra
+    -Wpedantic
+    $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
+  )
+  target_compile_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE
     -Wall
     -Wextra
     -Wpedantic
@@ -129,6 +149,11 @@ else()
       -fno-omit-frame-pointer
     )
     target_link_options(${TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined)
+    target_compile_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE
+      -fsanitize=address,undefined
+      -fno-omit-frame-pointer
+    )
+    target_link_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE -fsanitize=address,undefined)
     target_compile_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
       -fsanitize=address,undefined
       -fno-omit-frame-pointer

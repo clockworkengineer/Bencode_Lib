@@ -95,6 +95,23 @@ Bencode is a data serialization format with the following encoding rules:
    cmake --install .
    ```
 
+### CI / Continuous Integration
+
+For CI pipelines, use a clean out-of-source build and run the full test suite with output on failure:
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --target Bencode_Lib_Unit_Tests
+ctest --test-dir build --output-on-failure
+```
+
+To verify the public header boundary in CI, add:
+
+```bash
+cmake --build build --target Bencode_Lib_PublicHeader_CompileTest
+ctest -R Bencode_Lib_PublicHeader_CompileTest --output-on-failure
+```
+
 ### CMake Options
 
 | Option | Default | Description |

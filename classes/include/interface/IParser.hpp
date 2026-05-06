@@ -5,6 +5,10 @@
 
 #pragma once
 
+#include <stdexcept>
+#include <string>
+#include <string_view>
+
 #include "implementation/common/Bencode_Status.hpp"
 #include "implementation/node/Bencode_Node.hpp"
 

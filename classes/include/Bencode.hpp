@@ -7,6 +7,14 @@
 
 #include "implementation/common/Bencode_Status.hpp"
 
+#include <cstdint>
+#include <initializer_list>
+#include <map>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <variant>
+#include <vector>
 #include <type_traits>
 
 namespace Bencode_Lib {
