@@ -10,6 +10,37 @@ This guide explains how to use the Bencode_Lib library to parse, create, and man
    ```
 2. **Link against the library** (if building separately).
 
+## Quick Start
+
+1. Create a build directory and configure the library:
+   ```bash
+   mkdir build
+   cd build
+   cmake .. -DCMAKE_BUILD_TYPE=Release
+   cmake --build .
+   ```
+2. Install the library if desired:
+   ```bash
+   cmake --install .
+   ```
+3. Consume the installed package from another project:
+   ```cmake
+   find_package(Bencode_Lib REQUIRED)
+   target_link_libraries(my_target PRIVATE Bencode_Lib::Bencode_Lib)
+   ```
+
+## Public Header Boundary
+
+Only the public root headers are intended for consumer inclusion:
+
+- `Bencode.hpp`
+- `Bencode_Core.hpp`
+- `Bencode_Optional_Stringify.hpp`
+
+All implementation-specific headers remain hidden from public include paths.
+
+For installation and `find_package()` usage, see `docs/Package.md`.
+
 ## Parsing Bencode Data
 ```cpp
 #include "Bencode.hpp"
@@ -84,6 +115,16 @@ Bencode doc(makeStringify<MyStringify>());
 For embedded builds, see `docs/EMBEDDED.md` for configuration details, no-exceptions usage, and fixed-capacity container guidance.
 
 In embedded mode, use `BufferSource` and `BufferDestination` instead of file-based I/O, and link against `Bencode_Lib::Bencode_Lib_Embedded` for the embedded library variant.
+
+## Build Profiles
+
+Recommended CMake profiles:
+
+- **Default**: `cmake .. -DCMAKE_BUILD_TYPE=Release`
+- **Minimal**: `cmake .. -DBENCODE_BUILD_MINIMAL=ON -DBENCODE_ENABLE_FILE_IO=OFF -DBENCODE_ENABLE_JSON_STRINGIFY=OFF -DBENCODE_ENABLE_XML_STRINGIFY=OFF -DBENCODE_ENABLE_YAML_STRINGIFY=OFF`
+- **Embedded**: `cmake .. -DBENCODE_EMBEDDED_MODE=ON -DBENCODE_ENABLE_EXCEPTIONS=OFF -DBENCODE_ENABLE_DYNAMIC_ALLOCATION=OFF -DBENCODE_ENABLE_FILE_IO=OFF`
+
+These profiles help keep the library small and appropriate for the target deployment environment.
 
 ## Advanced Tips
 - Use `setMaxParserDepth()` and `setMaxStringLength()` to control parsing limits.

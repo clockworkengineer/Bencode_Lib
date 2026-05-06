@@ -12,6 +12,41 @@ Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode 
 - **Traversal**: Walk the node tree with a custom `IAction` visitor.
 - **Error Handling**: Parsing and stringification errors throw typed exceptions with descriptive messages.
 
+## Quick Start
+
+1. Create a build directory and configure the project:
+   ```bash
+   mkdir build
+   cd build
+   cmake .. -DCMAKE_BUILD_TYPE=Release
+   cmake --build .
+   ```
+2. Link against the installed target:
+   ```cmake
+   find_package(Bencode_Lib REQUIRED)
+   target_link_libraries(my_target PRIVATE Bencode_Lib::Bencode_Lib)
+   ```
+3. In your code include just the public root header:
+   ```cpp
+   #include "Bencode.hpp"
+   ```
+
+## Recommended Build Profiles
+
+- **Default**: `-DBENCODE_BUILD_TESTS=ON -DBENCODE_BUILD_EXAMPLES=ON`
+- **Minimal**: `-DBENCODE_BUILD_MINIMAL=ON -DBENCODE_ENABLE_FILE_IO=OFF -DBENCODE_ENABLE_JSON_STRINGIFY=OFF -DBENCODE_ENABLE_XML_STRINGIFY=OFF -DBENCODE_ENABLE_YAML_STRINGIFY=OFF`
+- **Embedded**: `-DBENCODE_EMBEDDED_MODE=ON -DBENCODE_ENABLE_EXCEPTIONS=OFF -DBENCODE_ENABLE_DYNAMIC_ALLOCATION=OFF -DBENCODE_ENABLE_FILE_IO=OFF`
+
+## Public Header Boundary
+
+The public API is exposed through the top-level headers under `classes/include`. Consumers should include only:
+
+- `Bencode.hpp`
+- `Bencode_Core.hpp`
+- `Bencode_Optional_Stringify.hpp` (optional helper)
+
+Internal implementation headers are intentionally hidden from public include paths.
+
 ## What is Bencode?
 
 Bencode is a data serialization format with the following encoding rules:
@@ -81,6 +116,8 @@ Bencode is a data serialization format with the following encoding rules:
 | `BENCODE_WARNINGS_AS_ERRORS` | `OFF` | Treat compiler warnings as errors |
 
 For embedded mode details, see `docs/EMBEDDED.md`.
+
+For package and installation guidance, see `docs/Package.md`.
 
 ### Consuming via CMake
 
