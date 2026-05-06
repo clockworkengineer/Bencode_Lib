@@ -46,6 +46,12 @@ add_executable(my_app src/main.cpp)
 target_link_libraries(my_app PRIVATE Bencode_Lib::Bencode_Lib)
 ```
 
+This project installs CMake package configuration files to:
+
+- `lib/cmake/Bencode_Lib/Bencode_LibConfig.cmake`
+- `lib/cmake/Bencode_Lib/Bencode_LibConfigVersion.cmake`
+- `lib/cmake/Bencode_Lib/BencodeTargets.cmake`
+
 For the minimal or embedded variants, use:
 
 ```cmake

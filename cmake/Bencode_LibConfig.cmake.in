@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/BencodeTargets.cmake")
+
+set(Bencode_Lib_INCLUDE_DIR "${PACKAGE_INCLUDE_INSTALL_DIR}")

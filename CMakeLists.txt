@@ -328,6 +328,10 @@ endif()
 
 # Install rules
 include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+set(CMAKECONFIG_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+set(PACKAGE_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})
 
 install(TARGETS ${BENCODE_LIBRARY_NAME}
   EXPORT BencodeTargets
@@ -335,6 +339,22 @@ install(TARGETS ${BENCODE_LIBRARY_NAME}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+install(TARGETS ${BENCODE_LIBRARY_NAME}_Embedded
+  EXPORT BencodeTargets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+if(BENCODE_BUILD_MINIMAL)
+  install(TARGETS ${BENCODE_LIBRARY_NAME}_Minimal
+    EXPORT BencodeTargets
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  )
+endif()
 
 # Install headers preserving directory structure
 install(DIRECTORY classes/include/
@@ -350,5 +370,24 @@ install(FILES ${PROJECT_BINARY_DIR}/Bencode_Config.hpp
 install(EXPORT BencodeTargets
   FILE BencodeTargets.cmake
   NAMESPACE Bencode_Lib::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Bencode_Lib
+  DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+)
+
+configure_package_config_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Bencode_LibConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/Bencode_LibConfig.cmake
+  INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+  NO_SET_AND_CHECK_MACRO
+)
+
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/Bencode_LibConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/Bencode_LibConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/Bencode_LibConfigVersion.cmake
+  DESTINATION ${CMAKECONFIG_INSTALL_DIR}
 )
