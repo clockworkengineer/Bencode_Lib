@@ -28,4 +28,22 @@ inline Node &Node::operator[](const std::string_view &key) {
 inline const Node &Node::operator[](const std::string_view &key) const {
   return NRef<const Dictionary>(*this)[key];
 }
+
+inline bool Node::contains(std::string_view key) const noexcept {
+  if (isEmpty()) {
+    return false;
+  }
+  if (!isA<Dictionary>(*this)) {
+    return false;
+  }
+  return NRef<const Dictionary>(*this).contains(key);
+}
+
+inline Node &Node::at(std::string_view key) {
+  return NRef<Dictionary>(*this).at(key);
+}
+
+inline const Node &Node::at(std::string_view key) const {
+  return NRef<const Dictionary>(*this).at(key);
+}
 } // namespace Bencode_Lib

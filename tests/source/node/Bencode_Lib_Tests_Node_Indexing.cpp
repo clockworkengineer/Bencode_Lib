@@ -97,6 +97,26 @@ TEST_CASE("Use of Node indexing operators", "[Bencode][Node][Index]") {
     const Node &root = bStringify.root();
     REQUIRE(NRef<Integer>(root["value"]).value() == 42);
   }
+  SECTION("Dictionary contains/at helpers return existing values.",
+            "[Bencode][Node][Index]") {
+    bStringify.parse(BufferSource{"d3:key5:valuee"});
+    REQUIRE(bStringify.root().contains("key"));
+    REQUIRE_FALSE(bStringify.root().contains("missing"));
+    REQUIRE(NRef<String>(bStringify.root().at("key")).value() == "value");
+  }
+  SECTION("Dictionary at throws on missing key.",
+            "[Bencode][Node][Index]") {
+    bStringify.parse(BufferSource{"d3:key5:valuee"});
+    REQUIRE_THROWS_AS(bStringify.root().at("missing"), Node::Error);
+    REQUIRE_THROWS_WITH(bStringify.root().at("missing"),
+                                "Node Error: Invalid key used in dictionary.");
+  }
+  SECTION("Dictionary at on non-dictionary throws type error.",
+            "[Bencode][Node][Index]") {
+    bStringify.parse(BufferSource{"li1ee"});
+    REQUIRE_FALSE(bStringify.root().contains("key"));
+    REQUIRE_THROWS_AS(bStringify.root().at("key"), Node::Error);
+  }
   SECTION("Const reference indexing on list returns correct value.",
           "[Bencode][Node][Index]") {
     bStringify.parse(BufferSource{"li7ei8ei9ee"});

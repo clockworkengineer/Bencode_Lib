@@ -73,7 +73,7 @@ struct Dictionary : Variant {
     bNodeDictionary.push_back(std::forward<T>(entry));
   }
 
-  [[nodiscard]] bool contains(const std::string_view key) const {
+  [[nodiscard]] bool contains(const std::string_view key) const noexcept {
     auto it =
         std::lower_bound(bNodeDictionary.begin(), bNodeDictionary.end(), key,
                          [](const Entry &lhs, const std::string_view rhsKey) {
@@ -89,6 +89,12 @@ struct Dictionary : Variant {
     return findEntryWithKey(bNodeDictionary, key)->bNode;
   }
   const Node &operator[](const std::string_view key) const {
+    return findEntryWithKey(bNodeDictionary, key)->bNode;
+  }
+  Node &at(const std::string_view key) {
+    return findEntryWithKey(bNodeDictionary, key)->bNode;
+  }
+  const Node &at(const std::string_view key) const {
     return findEntryWithKey(bNodeDictionary, key)->bNode;
   }
 

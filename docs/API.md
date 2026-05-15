@@ -45,6 +45,8 @@ Represents a value in the Bencode tree (integer, string, list, dictionary).
 - `Type getNodeType() const` — Get the type of node (enum: integer, string, list, dictionary).
 - `template <typename T> T &as()` — Cast to a specific type.
 - `bool isEmpty() const` — Check if the node is empty.
+- `bool contains(std::string_view key) const noexcept` — Returns true if a dictionary node has the key.
+- `Node &at(std::string_view key)` / `const Node &at(std::string_view key) const` — Dictionary lookup that throws on missing key.
 - `Variant &getVariant()` / `const Variant &getVariant() const` — Access the underlying variant.
 - `static Node make<T>(Args &&...args)` — Create a node of type T.
 

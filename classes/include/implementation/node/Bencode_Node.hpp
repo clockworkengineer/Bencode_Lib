@@ -111,6 +111,9 @@ struct Node {
   const Node &operator[](const std::string_view &key) const;
   Node &operator[](int index);
   const Node &operator[](int index) const;
+  [[nodiscard]] bool contains(std::string_view key) const noexcept;
+  Node &at(std::string_view key);
+  const Node &at(std::string_view key) const;
   // Interrogate variant
   [[nodiscard]] bool isEmpty() const {
     return std::holds_alternative<std::monostate>(bNodeVariant);
