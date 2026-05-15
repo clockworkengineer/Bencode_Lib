@@ -14,9 +14,9 @@ This guide explains how to use the Bencode_Lib library to parse, create, and man
 
 1. Create a build directory and configure the library:
    ```bash
-   mkdir build
+   mkdir -p build
    cd build
-   cmake .. -DCMAKE_BUILD_TYPE=Release
+   cmake .. -DCMAKE_BUILD_TYPE=Release -DBENCODE_BUILD_TESTS=ON -DBENCODE_BUILD_EXAMPLES=ON
    cmake --build .
    ```
 2. Install the library if desired:
@@ -29,6 +29,8 @@ This guide explains how to use the Bencode_Lib library to parse, create, and man
    target_link_libraries(my_target PRIVATE Bencode_Lib::Bencode_Lib)
    ```
 
+> For a smaller footprint, use `Bencode_Lib::Bencode_Lib_Minimal`. For embedded environments, use `Bencode_Lib::Bencode_Lib_Embedded`.
+
 ## Public Header Boundary
 
 Only the public root headers are intended for consumer inclusion:
@@ -38,6 +40,10 @@ Only the public root headers are intended for consumer inclusion:
 - `Bencode_Optional_Stringify.hpp`
 
 All implementation-specific headers remain hidden from public include paths.
+
+## API Stability
+
+The stable public API consists of the top-level headers listed above. Headers under `classes/include/implementation/` are private and may change between releases.
 
 For installation and `find_package()` usage, see `docs/Package.md`.
 
@@ -109,6 +115,23 @@ public:
     }
 };
 Bencode doc(makeStringify<MyStringify>());
+```
+
+## Minimal Mode Example
+For a minimal build without file I/O or optional stringifiers, configure the project like:
+
+```bash
+cmake .. -DBENCODE_BUILD_MINIMAL=ON -DBENCODE_ENABLE_FILE_IO=OFF \
+  -DBENCODE_ENABLE_JSON_STRINGIFY=OFF -DBENCODE_ENABLE_XML_STRINGIFY=OFF \
+  -DBENCODE_ENABLE_YAML_STRINGIFY=OFF
+cmake --build .
+```
+
+Use the minimal target in CMake:
+
+```cmake
+find_package(Bencode_Lib REQUIRED)
+target_link_libraries(my_target PRIVATE Bencode_Lib::Bencode_Lib_Minimal)
 ```
 
 ## Embedded Mode

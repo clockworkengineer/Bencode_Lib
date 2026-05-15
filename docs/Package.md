@@ -36,6 +36,12 @@ cmake --install .
 
 If you use package managers or a custom install prefix, pass `-DCMAKE_INSTALL_PREFIX=/your/install/path`.
 
+If you install from a build directory, use the same `CMAKE_INSTALL_PREFIX` in the `cmake --install` step:
+
+```bash
+cmake --install . --prefix /your/install/path
+```
+
 ## Using `find_package`
 
 After installation, consume the library like this:

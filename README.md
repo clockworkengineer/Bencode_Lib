@@ -16,20 +16,26 @@ Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode 
 
 1. Create a build directory and configure the project:
    ```bash
-   mkdir build
+   mkdir -p build
    cd build
-   cmake .. -DCMAKE_BUILD_TYPE=Release
+   cmake .. -DCMAKE_BUILD_TYPE=Release -DBENCODE_BUILD_TESTS=ON -DBENCODE_BUILD_EXAMPLES=ON
    cmake --build .
    ```
-2. Link against the installed target:
+2. Install the library (optional):
+   ```bash
+   cmake --install .
+   ```
+3. Link against the installed target:
    ```cmake
    find_package(Bencode_Lib REQUIRED)
    target_link_libraries(my_target PRIVATE Bencode_Lib::Bencode_Lib)
    ```
-3. In your code include just the public root header:
+4. In your code include only the public root header:
    ```cpp
    #include "Bencode.hpp"
    ```
+
+> Use `Bencode_Core.hpp` when you need node types, buffer I/O helpers, or low-level access. Keep implementation headers private.
 
 ## Recommended Build Profiles
 
@@ -94,7 +100,7 @@ Bencode is a data serialization format with the following encoding rules:
 
 2. Create a build directory:
    ```bash
-   mkdir build
+   mkdir -p build
    cd build
    ```
 
@@ -110,6 +116,28 @@ Bencode is a data serialization format with the following encoding rules:
    ```bash
    cmake --install .
    ```
+
+### Install and Export Usage
+
+After installation, the library exports CMake package files under the install prefix. Use the installed target from a downstream project like this:
+
+```cmake
+find_package(Bencode_Lib REQUIRED)
+add_executable(my_app src/main.cpp)
+target_link_libraries(my_app PRIVATE Bencode_Lib::Bencode_Lib)
+```
+
+To explicitly use the minimal or embedded variant:
+
+```cmake
+find_package(Bencode_Lib REQUIRED)
+# Minimal variant
+target_link_libraries(my_app PRIVATE Bencode_Lib::Bencode_Lib_Minimal)
+# Embedded variant
+target_link_libraries(my_app PRIVATE Bencode_Lib::Bencode_Lib_Embedded)
+```
+
+If you install to a custom prefix, use `-DCMAKE_INSTALL_PREFIX=/your/install/path` when configuring the build.
 
 ### CI / Continuous Integration
 
