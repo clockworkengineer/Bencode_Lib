@@ -107,13 +107,36 @@ struct Node {
   Node &operator=(const Bencode::ListInitializerType &list);
   Node &operator=(const Bencode::DictionaryInitializerType &dictionary);
   // Indexing operators
+  // operator[] for dictionary: returns value for key, throws if not found
   Node &operator[](const std::string_view &key);
   const Node &operator[](const std::string_view &key) const;
+  // operator[] for list: returns value at index, throws if out of bounds
   Node &operator[](int index);
   const Node &operator[](int index) const;
+  // Check if dictionary contains key
   [[nodiscard]] bool contains(std::string_view key) const noexcept;
+  // Safe access: throws if key not found
   Node &at(std::string_view key);
   const Node &at(std::string_view key) const;
+  // Try to get value for key as type T, returns pointer or nullptr if not found or type mismatch
+  template <typename T>
+  const T* try_get(const std::string_view& key) const noexcept {
+    if (!contains(key)) return nullptr;
+    const Node& n = (*this)[key];
+    if (auto val = std::get_if<T>(&n.getVariant())) {
+      return val;
+    }
+    return nullptr;
+  }
+  template <typename T>
+  T* try_get(const std::string_view& key) noexcept {
+    if (!contains(key)) return nullptr;
+    Node& n = (*this)[key];
+    if (auto val = std::get_if<T>(&n.getVariant())) {
+      return val;
+    }
+    return nullptr;
+  }
   // Interrogate variant
   [[nodiscard]] bool isEmpty() const {
     return std::holds_alternative<std::monostate>(bNodeVariant);

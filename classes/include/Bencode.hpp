@@ -1,7 +1,11 @@
+
 // File: Bencode.hpp
 //
 // Description: Public Bencode API header defining the Bencode class and library entry points for encode/decode operations.
 //
+// Only include this header (and Bencode_Core.hpp, Bencode_Optional_Stringify.hpp) for public API usage.
+// All implementation details are internal and not required for users.
+
 
 #pragma once
 
@@ -32,6 +36,7 @@ struct Node;
 
 class Bencode {
 
+
 public:
   // Bencode maximum integer type
   using IntegerType = int64_t;
@@ -43,21 +48,23 @@ public:
   using DictionaryType = std::map<std::string, Node>;
   // Possible Bencode Node initializer types
   using InitializerListTypes =
-      std::variant<int, long, long long, float, double, long double, bool,
-                   std::string, std::nullptr_t, Node>;
+    std::variant<int, long, long long, float, double, long double, bool,
+           std::string, std::nullptr_t, Node>;
   // List initializer list
   using ListInitializerType = std::initializer_list<InitializerListTypes>;
   // Dictionary initializer list
   using DictionaryInitializerType =
-      std::initializer_list<std::pair<std::string, InitializerListTypes>>;
+    std::initializer_list<std::pair<std::string, InitializerListTypes>>;
+
   // Constructors/Destructors
+  // Construct with optional custom stringify/parser (ownership transferred via unique_ptr)
   explicit Bencode(std::unique_ptr<IStringify> stringify = nullptr,
-                   std::unique_ptr<IParser> parser = nullptr);
-  // Pass in default JSON to parse
+           std::unique_ptr<IParser> parser = nullptr);
+  // Construct and parse from Bencode string
   explicit Bencode(const std::string_view &bencodeString);
-  // Construct an array
+  // Construct from list
   Bencode(const ListInitializerType &list);
-  // Construct object
+  // Construct from dictionary
   Bencode(const DictionaryInitializerType &dictionary);
   Bencode(const Bencode &other) = delete;
   Bencode &operator=(const Bencode &other) = delete;
@@ -81,16 +88,16 @@ public:
   // Traverse Bencode tree
   [[maybe_unused]] void traverse(IAction &action);
   void traverse(IAction &action) const;
-  // Search for Bencode dictionary entry with a given key
+  // operator[] for dictionary: returns value for key, throws if not found
   Node &operator[](const std::string_view &key);
   const Node &operator[](const std::string_view &key) const;
-  // Get Bencode list entry at index
+  // operator[] for list: returns value at index, throws if out of bounds
   Node &operator[](std::size_t index);
   const Node &operator[](std::size_t index) const;
   // Read/Write Bencode from the file
   static std::string fromFile(const std::string_view &fileName);
   static void toFile(const std::string_view &fileName,
-                     const std::string_view &bencodeString);
+           const std::string_view &bencodeString);
 
 private:
   const std::unique_ptr<Bencode_Impl> implementation;
