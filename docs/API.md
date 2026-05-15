@@ -19,7 +19,7 @@ Represents a Bencode document (the root node of a Bencode tree).
 - `DictionaryInitializerType` — `std::initializer_list<std::pair<std::string, InitializerListTypes>>`
 
 **Constructors:**
-- `Bencode([[maybe_unused]] IStringify *stringify = nullptr, [[maybe_unused]] IParser *parser = nullptr)` — Create with optional custom stringify/parser.
+- `Bencode(std::unique_ptr<IStringify> stringify = nullptr, std::unique_ptr<IParser> parser = nullptr)` — Create with optional custom stringify/parser.
 - `explicit Bencode(const std::string_view &bencodeString)` — Parse from a Bencode string.
 - `Bencode(const ListInitializerType &list)` — Create from a list.
 - `Bencode(const DictionaryInitializerType &dictionary)` — Create from a dictionary.
@@ -69,7 +69,8 @@ Interface for custom stringification (encoding) logic.
 
 - `virtual void stringify(const Node &bNode, IDestination &destination) const = 0;`
 - Implement and pass to `Bencode` for custom output formats.
-- Use `makeStringify<T>()` to create an `IStringify *` instance for the `Bencode` constructor.
+- Use `makeStringify<T>()` to create a `std::unique_ptr<IStringify>` for the `Bencode` constructor.
+- If you store the result in a variable, pass it with `std::move(...)`.
 
 ## Variants
 - `Integer`, `String`, `List`, `Dictionary` — Node types, each with their own value accessors and constructors.

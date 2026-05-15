@@ -12,17 +12,16 @@ namespace Bencode_Lib {
 
 // Need size information for destructor to clean up unique_ptr to
 // stringify/parser.
-Bencode_Impl::Bencode_Impl(IStringify *stringify, IParser *parser) {
-  if (stringify == nullptr) {
-    bNodeStringify = std::make_unique<Default_Stringify>();
-  } else {
-    bNodeStringify.reset(stringify);
+Bencode_Impl::Bencode_Impl(std::unique_ptr<IStringify> stringify,
+                           std::unique_ptr<IParser> parser) {
+  if (!stringify) {
+    stringify = std::make_unique<Default_Stringify>();
   }
-  if (parser == nullptr) {
-    bNodeParser = std::make_unique<Default_Parser>();
-  } else {
-    bNodeParser.reset(parser);
+  if (!parser) {
+    parser = std::make_unique<Default_Parser>();
   }
+  bNodeStringify = std::move(stringify);
+  bNodeParser = std::move(parser);
 }
 
 Bencode_Impl::~Bencode_Impl() = default;

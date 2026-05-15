@@ -39,9 +39,9 @@ public:
   // =====================================
   virtual void stringify(const Node &bNode, IDestination &destination) const = 0;
 };
-// Make custom stringify
-// to pass to Bencode constructor:The note pointer is tidied up internally.
-template <typename T> IStringify *makeStringify() {
-  return std::make_unique<T>().release();
+// Make custom stringify to pass to the Bencode constructor.
+// Ownership is transferred to Bencode when passed by move.
+template <typename T> std::unique_ptr<IStringify> makeStringify() {
+  return std::make_unique<T>();
 }
 } // namespace Bencode_Lib

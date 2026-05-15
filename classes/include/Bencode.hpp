@@ -51,8 +51,8 @@ public:
   using DictionaryInitializerType =
       std::initializer_list<std::pair<std::string, InitializerListTypes>>;
   // Constructors/Destructors
-  explicit Bencode([[maybe_unused]] IStringify *stringify = nullptr,
-                   [[maybe_unused]] IParser *parser = nullptr);
+  explicit Bencode(std::unique_ptr<IStringify> stringify = nullptr,
+                   std::unique_ptr<IParser> parser = nullptr);
   // Pass in default JSON to parse
   explicit Bencode(const std::string_view &bencodeString);
   // Construct an array

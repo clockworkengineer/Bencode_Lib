@@ -20,9 +20,10 @@ namespace Bencode_Lib {
 /// <summary>
 /// Initialise the implementation layer.
 /// </summary>
-Bencode::Bencode([[maybe_unused]] IStringify *stringify,
-                 [[maybe_unused]] IParser *parser)
-    : implementation(std::make_unique<Bencode_Impl>(stringify, parser)) {}
+Bencode::Bencode(std::unique_ptr<IStringify> stringify,
+         std::unique_ptr<IParser> parser)
+    : implementation(
+      std::make_unique<Bencode_Impl>(std::move(stringify), std::move(parser))) {}
 Bencode::~Bencode() = default;
 /// <summary>
 /// Bencode constructor. Pass a Bencode string to be initially parsed.

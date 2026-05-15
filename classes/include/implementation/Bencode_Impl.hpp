@@ -17,7 +17,8 @@ class Bencode_Impl {
 
 public:
   // Constructors/Destructors
-  Bencode_Impl(IStringify *stringify, IParser *parser);
+  Bencode_Impl(std::unique_ptr<IStringify> stringify,
+               std::unique_ptr<IParser> parser);
   Bencode_Impl(const Bencode_Impl &other) = delete;
   Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
   Bencode_Impl(Bencode_Impl &&other) = delete;

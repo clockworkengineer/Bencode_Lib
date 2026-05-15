@@ -1,5 +1,6 @@
 #include "Bencode_Lib_Tests.hpp"
 #include <cctype>
+#include <memory>
 #include <string>
 
 namespace {
@@ -91,8 +92,8 @@ private:
 
 TEST_CASE("Custom IParser implementation is invoked by Bencode",
           "[Bencode][IParser][Integration]") {
-  auto *parser = new CustomParser();
-  Bencode b(nullptr, parser);
+  auto parser = std::make_unique<CustomParser>();
+  Bencode b(nullptr, std::move(parser));
   b.parse(BufferSource("i73e"));
 
   REQUIRE(isA<Integer>(b.root()));
