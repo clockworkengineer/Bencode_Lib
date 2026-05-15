@@ -109,6 +109,13 @@ TEST_CASE("Use of Node indexing operators", "[Bencode][Node][Index]") {
     bStringify.parse(BufferSource{"llli42eeee"});
     REQUIRE(NRef<Integer>(bStringify.root()[0][0][0]).value() == 42);
   }
+        SECTION("Mutable list indexing out-of-range throws and does not grow list.",
+                                        "[Bencode][Node][Index]") {
+                Bencode mutableBencode;
+                mutableBencode.parse(BufferSource{"li7ei8ei9ee"});
+                REQUIRE_THROWS_AS(mutableBencode.root()[3], Node::Error);
+                REQUIRE(NRef<List>(mutableBencode.root()).size() == 3);
+        }
   SECTION("Index 0 on single-element list returns its only item.",
           "[Bencode][Node][Index]") {
     bStringify.parse(BufferSource{"l6:onlymee"});

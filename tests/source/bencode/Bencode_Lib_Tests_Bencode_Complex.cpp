@@ -30,7 +30,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
     Bencode bencode;
     bencode["pi"] = 3.141;
     bencode["happy"] = true;
-    bencode["name"][5] = "Niels";
+            bencode["name"] = Node{"Niels"};
     bencode["nothing"] = nullptr;
     bencode["answer"]["everything"]["last"] = 42;
     BufferDestination destination;
@@ -248,8 +248,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
   SECTION("Nested list inside a dictionary built via index and key operators.",
           "[Bencode][Create][Complex]") {
     Bencode bencode;
-    bencode["outer"]["inner"][0] = 10;
-    bencode["outer"]["inner"][1] = 20;
+            bencode["outer"]["inner"] = Node{10, 20};
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.stringify(destination));
     REQUIRE(destination.toString() == R"(d5:outerd5:innerli10ei20eeee)");
@@ -281,9 +280,7 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
   SECTION("Deeply nested three-level list inside a dictionary.",
           "[Bencode][Create][Complex]") {
     Bencode bencode;
-    bencode["a"]["b"][0] = "x";
-    bencode["a"]["b"][1] = "y";
-    bencode["a"]["b"][2] = "z";
+            bencode["a"]["b"] = Node{"x", "y", "z"};
     REQUIRE(isA<Dictionary>(bencode.root()));
     REQUIRE(isA<Dictionary>(bencode["a"]));
     REQUIRE(isA<List>(bencode["a"]["b"]));

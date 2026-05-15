@@ -8,15 +8,10 @@
 namespace Bencode_Lib {
 // List
 inline Node &Node::operator[](const int index) {
-  try {
-    if (isA<Hole>(*this)) {
-      *this = make<List>();
-    }
-    return NRef<List>(*this)[index];
-  } catch ([[maybe_unused]] const Error &error) {
-    NRef<List>(*this).resize(index);
-    return NRef<List>(*this)[index];
+  if (isA<Hole>(*this)) {
+    *this = make<List>();
   }
+  return NRef<List>(*this)[index];
 }
 inline const Node &Node::operator[](const int index) const {
   return NRef<const List>(*this)[index];

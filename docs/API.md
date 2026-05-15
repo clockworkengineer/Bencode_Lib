@@ -36,6 +36,7 @@ Represents a Bencode document (the root node of a Bencode tree).
 **Usage Notes:**
 - The root node can be a dictionary, list, integer, or string.
 - Use `NRef<T>(node)` or `isA<T>(node)` to cast or check node types.
+- List indexing with `operator[]` does not auto-expand; out-of-range access throws `Node::Error`.
 
 ### Node
 Represents a value in the Bencode tree (integer, string, list, dictionary).

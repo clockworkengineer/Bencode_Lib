@@ -98,7 +98,7 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
   SECTION("Create two level list with an integer at the base and stringify it.",
           "[Bencode][Create][List][Integer]") {
     Bencode bencode;
-    bencode[0][0] = 3000;
+    bencode[0] = Node{3000};
     REQUIRE_FALSE(!isA<Integer>(bencode[0][0]));
     REQUIRE(NRef<Integer>(bencode[0][0]).value() == 3000);
     BufferDestination destination;
@@ -228,7 +228,11 @@ TEST_CASE("Check Bencode list creation api.", "[Bencode][Create][List]") {
   SECTION("Three level nested list stringifies correctly.",
           "[Bencode][Create][List][Nested]") {
     Bencode bencode;
-    bencode[0][0][0] = 7;
+    Node innerList;
+    innerList = Bencode::ListInitializerType{7};
+    Node outerList;
+    outerList = Bencode::ListInitializerType{std::move(innerList)};
+    bencode[0] = std::move(outerList);
     REQUIRE(isA<Integer>(bencode[0][0][0]));
     REQUIRE(NRef<Integer>(bencode[0][0][0]).value() == 7);
     BufferDestination destination;
