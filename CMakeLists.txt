@@ -166,11 +166,12 @@ add_library(Bencode_Lib::Bencode_Lib_Embedded ALIAS ${BENCODE_LIBRARY_NAME}_Embe
 # Namespaced alias for consistent use in examples, tests, and by consumers
 add_library(Bencode_Lib::Bencode_Lib ALIAS ${BENCODE_LIBRARY_NAME})
 
-target_include_directories(${BENCODE_LIBRARY_NAME}
-  PUBLIC
+set(BENCODE_PUBLIC_INCLUDE_DIRS
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-  PRIVATE
+)
+
+set(BENCODE_PRIVATE_INCLUDE_DIRS
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
@@ -182,75 +183,15 @@ target_include_directories(${BENCODE_LIBRARY_NAME}
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
 )
 
-target_include_directories(${BENCODE_LIBRARY_NAME}_Embedded
-  PUBLIC
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
-  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-  PRIVATE
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
-)
-
-if(BENCODE_BUILD_MINIMAL)
-  target_include_directories(${BENCODE_LIBRARY_NAME}_Minimal
-    PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
-    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-    PRIVATE
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/common>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/node>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/parser>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/stringify>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/io>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/variants>
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation/translator>
-  )
-endif()
-
-# Target-scoped warnings (replaces global add_compile_options)
 if(MSVC)
-  target_compile_options(${BENCODE_LIBRARY_NAME} PRIVATE
+  set(BENCODE_WARNING_OPTIONS
     /W4
     /permissive-
     /Zc:__cplusplus
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
-
-  if(BENCODE_BUILD_MINIMAL)
-    target_compile_options(${BENCODE_LIBRARY_NAME}_Minimal PRIVATE
-      /W4
-      /permissive-
-      /Zc:__cplusplus
-      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
-    )
-  endif()
 else()
-  target_compile_options(${BENCODE_LIBRARY_NAME} PRIVATE
-    -Wall
-    -Wextra
-    -Wpedantic
-    $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
-  )
-
-  if(BENCODE_BUILD_MINIMAL)
-    target_compile_options(${BENCODE_LIBRARY_NAME}_Minimal PRIVATE
-      -Wall
-      -Wextra
-      -Wpedantic
-      $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
-    )
-  endif()
-
-  target_compile_options(${BENCODE_LIBRARY_NAME}_Embedded PRIVATE
+  set(BENCODE_WARNING_OPTIONS
     -Wall
     -Wextra
     -Wpedantic
@@ -258,20 +199,28 @@ else()
   )
 endif()
 
-# Pre-compiled headers (PRIVATE so consumers are not forced to use it)
-target_precompile_headers(${BENCODE_LIBRARY_NAME}
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
+set(BENCODE_LIBRARY_TARGETS
+  ${BENCODE_LIBRARY_NAME}
+  ${BENCODE_LIBRARY_NAME}_Embedded
 )
-
-target_precompile_headers(${BENCODE_LIBRARY_NAME}_Embedded
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
-)
-
 if(BENCODE_BUILD_MINIMAL)
-  target_precompile_headers(${BENCODE_LIBRARY_NAME}_Minimal
+  list(APPEND BENCODE_LIBRARY_TARGETS ${BENCODE_LIBRARY_NAME}_Minimal)
+endif()
+
+foreach(target IN LISTS BENCODE_LIBRARY_TARGETS)
+  target_include_directories(${target}
+    PUBLIC
+    ${BENCODE_PUBLIC_INCLUDE_DIRS}
+    PRIVATE
+    ${BENCODE_PRIVATE_INCLUDE_DIRS}
+  )
+
+  target_compile_features(${target} PUBLIC cxx_std_23)
+  target_compile_options(${target} PRIVATE ${BENCODE_WARNING_OPTIONS})
+  target_precompile_headers(${target}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
   )
-endif()
+endforeach()
 
 target_compile_definitions(${BENCODE_LIBRARY_NAME}
   PUBLIC
