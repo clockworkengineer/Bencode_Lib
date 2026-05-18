@@ -6,6 +6,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "Bencode_Optional_Stringify.hpp"
 
 using namespace Bencode_Lib;
 
@@ -27,6 +28,7 @@ protected:
     if (!source.more() || source.current() != 'e') {
       throw Error("Expected integer terminator.");
     }
+    source.next();
     return Node(value);
   }
 #else
@@ -45,6 +47,7 @@ protected:
       return ParseStatus::failure(ErrorCode::SyntaxError,
                                   "Expected integer terminator.");
     }
+    source.next();
     destination = Node(value);
     return ParseStatus::success();
   }
@@ -125,4 +128,9 @@ TEST_CASE("Minimal build supports custom parser and custom stringify",
   BufferDestination destination;
   b.stringify(destination);
   REQUIRE(destination.toString() == "custom:77");
+}
+
+TEST_CASE("Minimal build optional stringify header is safe to include when disabled",
+          "[Bencode][Minimal][OptionalStringify]") {
+  SUCCEED("Bencode_Optional_Stringify.hpp compiles successfully in minimal mode");
 }
