@@ -91,6 +91,24 @@ Recommended runtime profiles:
   - `-DBENCODE_ENABLE_DYNAMIC_ALLOCATION=OFF`
   - `-DBENCODE_ENABLE_FILE_IO=OFF`
 
+## Compatibility and Portability
+
+Bencode_Lib is compatible with modern C++23 compilers and supports the following toolchains:
+
+- GCC
+- Clang
+- MSVC
+
+All library targets request C++23 support directly using `target_compile_features(... PUBLIC cxx_std_23)`.
+
+File I/O is selected based on the platform and build options:
+
+- `Bencode_File_POSIX.cpp` on POSIX-compatible systems.
+- `Bencode_File_MSVC.cpp` on Microsoft Visual C++.
+- `Bencode_File_Disabled.cpp` when `BENCODE_ENABLE_FILE_IO=OFF`.
+
+The installed CMake package configuration is generated consistently for all builds and exports separate targets for the standard, minimal, and embedded variants.
+
 ## API Stability
 
 The stable, published API includes:

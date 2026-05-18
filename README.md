@@ -87,11 +87,21 @@ Bencode_Lib is designed to compile cleanly with modern C++23 toolchains on:
 - Clang
 - MSVC
 
-The build supports both Debug and Release profiles. The library selects file I/O implementation automatically:
+The build supports both Debug and Release profiles, and all library targets request C++23 via `target_compile_features(... PUBLIC cxx_std_23)`.
+
+The library selects file I/O implementation automatically:
 
 - `classes/source/implementation/file/Bencode_File_POSIX.cpp` for POSIX platforms
 - `classes/source/implementation/file/Bencode_File_MSVC.cpp` for MSVC
 - `classes/source/implementation/file/Bencode_File_Disabled.cpp` when `BENCODE_ENABLE_FILE_IO=OFF`
+
+Build variants are exposed as separate targets in installed CMake package configuration files:
+
+- `Bencode_Lib::Bencode_Lib`
+- `Bencode_Lib::Bencode_Lib_Minimal`
+- `Bencode_Lib::Bencode_Lib_Embedded`
+
+The package config files are installed under `lib/cmake/Bencode_Lib/`, and downstream consumers can select the appropriate variant regardless of the build profile.
 
 The `BENCODE_BUILD_MINIMAL` variant disables optional stringifiers and file-based I/O, while `BENCODE_EMBEDDED_MODE` additionally disables exceptions and dynamic allocation.
 
