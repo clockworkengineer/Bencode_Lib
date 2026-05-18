@@ -78,6 +78,16 @@ TEST_CASE("Parse generated Exception", "[Bencode][Parse][Exception]") {
   SECTION("Parse completely empty input.", "[Bencode][Parse][Exception]") {
     REQUIRE_THROWS_AS(bStringify.parse(BufferSource{""}), std::runtime_error);
   }
+  SECTION("Failed parse does not alter previously parsed root.",
+          "[Bencode][Parse][Exception][Reliability]") {
+    Bencode doc;
+    doc.parse(BufferSource{"i1e"});
+    REQUIRE(isA<Integer>(doc.root()));
+    REQUIRE(NRef<Integer>(doc.root()).value() == 1);
+    REQUIRE_THROWS_AS(doc.parse(BufferSource{"i0"}), SyntaxError);
+    REQUIRE(isA<Integer>(doc.root()));
+    REQUIRE(NRef<Integer>(doc.root()).value() == 1);
+  }
   SECTION("Parse an unknown type tag.", "[Bencode][Parse][Exception]") {
     REQUIRE_THROWS_AS(bStringify.parse(BufferSource{"x99e"}), SyntaxError);
   }

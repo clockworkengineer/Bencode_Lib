@@ -50,5 +50,6 @@ ctest --output-on-failure
 
 - The public-header compile test helps detect unintended internal include dependencies.
 - `fromFile()` / `toFile()` helpers are validated through integration-style tests that use temporary filesystem artifacts.
+- Regression tests cover malformed input, truncated data, invalid file paths, empty trees, and parse failure safety.
 - `IParser` and `IStringify` interfaces are covered with custom implementations so the extension points remain stable.
 - Benchmark targets are optional for CI, but they are configured as CTest targets and can be included in performance-oriented pipelines.
