@@ -29,19 +29,25 @@ public:
   ~BufferDestination() override = default;
 
   void add(const std::string &sourceBuffer) override {
-    for (auto ch : sourceBuffer) {
-      encodeBuffer.push_back(static_cast<std::byte>(ch));
-    }
+    const std::size_t size = sourceBuffer.size();
+    encodeBuffer.reserve(encodeBuffer.size() + size);
+    const auto *begin = reinterpret_cast<const std::byte *>(sourceBuffer.data());
+    const auto *end = begin + size;
+    encodeBuffer.insert(encodeBuffer.end(), begin, end);
   }
   void add(const std::string_view &sourceBuffer) override {
-    for (auto ch : sourceBuffer) {
-      encodeBuffer.push_back(static_cast<std::byte>(ch));
-    }
+    const std::size_t size = sourceBuffer.size();
+    encodeBuffer.reserve(encodeBuffer.size() + size);
+    const auto *begin = reinterpret_cast<const std::byte *>(sourceBuffer.data());
+    const auto *end = begin + size;
+    encodeBuffer.insert(encodeBuffer.end(), begin, end);
   }
   void add(const char *sourceBuffer) override {
-    for (std::size_t index = 0; index < strlen(sourceBuffer); index++) {
-      encodeBuffer.push_back(static_cast<std::byte>(sourceBuffer[index]));
-    }
+    const std::size_t size = std::strlen(sourceBuffer);
+    encodeBuffer.reserve(encodeBuffer.size() + size);
+    const auto *begin = reinterpret_cast<const std::byte *>(sourceBuffer);
+    const auto *end = begin + size;
+    encodeBuffer.insert(encodeBuffer.end(), begin, end);
   }
   void add(const char ch) override {
     encodeBuffer.push_back(static_cast<std::byte>(ch));
@@ -51,8 +57,9 @@ public:
   [[nodiscard]] std::size_t size() const { return encodeBuffer.size(); }
   std::string toString() const {
     std::string destination;
-    for (auto ch : encodeBuffer) {
-      destination.push_back(static_cast<char>(ch));
+    destination.resize(encodeBuffer.size());
+    if (!encodeBuffer.empty()) {
+      std::memcpy(destination.data(), encodeBuffer.data(), encodeBuffer.size());
     }
     return destination;
   }

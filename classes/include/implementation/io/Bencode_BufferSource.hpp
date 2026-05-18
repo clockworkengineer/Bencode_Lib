@@ -8,6 +8,7 @@
 #include "interface/ISource.hpp"
 
 #include <cstddef>
+#include <cstring>
 #include <string_view>
 #include <vector>
 
@@ -21,9 +22,8 @@ public:
     if (sourceBuffer.empty()) {
       throw Error("Empty source buffer passed to be parsed.");
     }
-    for (auto ch : sourceBuffer) {
-      parseBuffer.push_back(static_cast<std::byte>(ch));
-    }
+    parseBuffer.resize(sourceBuffer.size());
+    std::memcpy(parseBuffer.data(), sourceBuffer.data(), sourceBuffer.size());
   }
   BufferSource() = delete;
   BufferSource(const BufferSource &other) = delete;

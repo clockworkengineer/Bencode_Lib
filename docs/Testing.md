@@ -53,3 +53,4 @@ ctest --output-on-failure
 - Regression tests cover malformed input, truncated data, invalid file paths, empty trees, and parse failure safety.
 - `IParser` and `IStringify` interfaces are covered with custom implementations so the extension points remain stable.
 - Benchmark targets are optional for CI, but they are configured as CTest targets and can be included in performance-oriented pipelines.
+- `Bencode_Lib_Benchmark` exercises parse/stringify throughput and validates buffer-based I/O performance for large documents.
