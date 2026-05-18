@@ -99,6 +99,38 @@ TEST_CASE("Check Bencode root() access.", "[Bencode][Root]") {
   }
 }
 
+TEST_CASE("Check normal build definitions are active.", "[Bencode][Build][Normal]") {
+#if defined(BENCODE_ENABLE_EXCEPTIONS) && (BENCODE_ENABLE_EXCEPTIONS == 1)
+  SUCCEED("Exception support is enabled in the normal build target");
+#else
+  FAIL("The normal build target must compile with exceptions enabled");
+#endif
+#if defined(BENCODE_ENABLE_FILE_IO) && (BENCODE_ENABLE_FILE_IO == 1)
+  SUCCEED("File I/O support is enabled in the normal build target");
+#else
+  FAIL("The normal build target must compile with file I/O enabled");
+#endif
+}
+
+TEST_CASE("Check Bencode operator[] access.", "[Bencode][Operator]") {
+  SECTION("operator[] returns a dictionary value by key.", "[Bencode][Operator][Dictionary]") {
+    Bencode bencode;
+    bencode.parse(BufferSource{"d3:onei1e3:twoi2ee"});
+    REQUIRE(isA<Integer>(bencode["one"]));
+    REQUIRE(NRef<Integer>(bencode["one"]).value() == 1);
+    REQUIRE(isA<Integer>(bencode["two"]));
+    REQUIRE(NRef<Integer>(bencode["two"]).value() == 2);
+  }
+  SECTION("operator[] returns a list value by index.", "[Bencode][Operator][List]") {
+    Bencode bencode;
+    bencode.parse(BufferSource{"li1ei2ei3ee"});
+    REQUIRE(isA<Integer>(bencode[0]));
+    REQUIRE(NRef<Integer>(bencode[0]).value() == 1);
+    REQUIRE(NRef<Integer>(bencode[1]).value() == 2);
+    REQUIRE(NRef<Integer>(bencode[2]).value() == 3);
+  }
+}
+
 TEST_CASE("Check Bencode parse/stringify round-trips.",
           "[Bencode][RoundTrip]") {
   SECTION("Integer round-trips correctly.", "[Bencode][RoundTrip]") {

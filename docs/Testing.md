@@ -7,6 +7,8 @@ This document describes the Bencode_Lib test coverage strategy, including unit, 
 - Verify the public API boundary through a dedicated public-header compile test.
 - Validate file I/O helpers with `Bencode::fromFile()` and `Bencode::toFile()`.
 - Ensure custom extension points work by testing `IParser` and `IStringify` injection.
+- Verify `Bencode::operator[]` access patterns for dictionaries and lists.
+- Validate traversal semantics with `IAction`-based tree visitor tests.
 - Keep the embedded-mode tests separate from the main library tests.
 - Expose benchmark targets for optional performance verification.
 
@@ -15,6 +17,7 @@ This document describes the Bencode_Lib test coverage strategy, including unit, 
 - `Bencode_Lib_Unit_Tests`
   - Main unit/integration test executable.
   - Executes the full Catch2-based test suite.
+  - Verifies the normal build configuration and full public API surface.
 - `Bencode_Lib_Embedded_Unit_Tests`
   - Embedded-mode test harness with reduced runtime features.
 - `Bencode_Lib_PublicHeader_CompileTest`
