@@ -132,6 +132,8 @@ public:
 Bencode doc(makeStringify<MyStringify>());
 ```
 
+`Bencode_Optional_Stringify.hpp` is only required for the built-in JSON/XML/YAML stringifier classes. Custom `IStringify` implementations work in all build variants, including minimal and embedded.
+
 ## Minimal Mode Example
 For a minimal build without file I/O or optional stringifiers, configure the project like:
 

@@ -8,6 +8,7 @@ Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode 
 - **Bencode Decoding**: Parse Bencode-formatted data into a native C++ node tree.
 - **Flexible I/O**: Read and write Bencode via in-memory buffers (`BufferSource`/`BufferDestination`) or files (`FileSource`/`FileDestination`). The buffer adapters are optimized for direct memory copy when transferring bytes.
 - **Custom Stringifiers**: Built-in support for converting Bencode to JSON, XML, and YAML via pluggable stringify interfaces.
+- **Custom Extension Points**: Implement `IParser` or `IStringify` directly to customize parsing or output formatting in any build variant.
 - **Runtime Construction**: Build Bencode trees programmatically using operator overloading and initializer lists.
 - **Traversal**: Walk the node tree with a custom `IAction` visitor.
 - **Error Handling**: Parsing and stringification errors throw typed exceptions with descriptive messages.
