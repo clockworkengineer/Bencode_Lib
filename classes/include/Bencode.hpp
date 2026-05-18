@@ -3,12 +3,14 @@
 //
 // Description: Public Bencode API header defining the Bencode class and library entry points for encode/decode operations.
 //
-// Only include this header (and Bencode_Core.hpp, Bencode_Optional_Stringify.hpp) for public API usage.
+// Only include this header (and Bencode_Core.hpp) for public API usage.
+// Include Bencode_Optional_Stringify.hpp separately only when JSON, XML, or YAML stringifiers are required.
 // All implementation details are internal and not required for users.
 
 
 #pragma once
 
+#include "Bencode_Config.hpp"
 #include "implementation/common/Bencode_Status.hpp"
 
 #include <cstdint>

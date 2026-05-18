@@ -5,6 +5,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "Default_Parser.hpp"
 #include "Bencode_Parser_Constants.hpp"
 #include "Default_Parser_Internal.hpp"
 

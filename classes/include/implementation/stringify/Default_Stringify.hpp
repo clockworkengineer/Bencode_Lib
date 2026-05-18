@@ -7,6 +7,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "implementation/translator/Default_Translator.hpp"
 
 #include <cstdint>
 #include <string_view>

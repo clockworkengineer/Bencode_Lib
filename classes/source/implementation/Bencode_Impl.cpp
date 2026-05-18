@@ -7,6 +7,8 @@
 //
 
 #include "Bencode_Impl.hpp"
+#include "implementation/stringify/Default_Stringify.hpp"
+#include "implementation/parser/Default_Parser.hpp"
 
 namespace Bencode_Lib {
 

@@ -4,6 +4,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "implementation/parser/Default_Parser.hpp"
 #include "implementation/stringify/JSON_Stringify.hpp"
 #include "implementation/stringify/XML_Stringify.hpp"
 
