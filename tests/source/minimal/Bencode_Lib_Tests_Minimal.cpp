@@ -109,6 +109,12 @@ TEST_CASE("Minimal build supports buffer-based parse/stringify",
   REQUIRE(destination.toString() == "i123e");
 }
 
+TEST_CASE("Minimal build file I/O stubs deny file operations safely",
+          "[Bencode][Minimal][FileIO][Security]") {
+  REQUIRE_THROWS_AS(Bencode::fromFile("dummy.torrent"), Error);
+  REQUIRE_THROWS_AS(Bencode::toFile("dummy.torrent", "i1e"), Error);
+}
+
 TEST_CASE("Minimal build supports custom parser and custom stringify",
           "[Bencode][Minimal][IParser][IStringify]") {
   auto parser = std::make_unique<MinimalParser>();

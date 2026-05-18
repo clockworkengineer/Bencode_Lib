@@ -67,6 +67,14 @@ TEST_CASE("Parse generated Exception", "[Bencode][Parse][Exception]") {
   SECTION("Parse negative zero integer.", "[Bencode][Parse][Exception]") {
     REQUIRE_THROWS_AS(bStringify.parse(BufferSource{"i-0e"}), SyntaxError);
   }
+  SECTION("Parse integer with multiple sign characters.",
+          "[Bencode][Parse][Exception]") {
+    REQUIRE_THROWS_AS(bStringify.parse(BufferSource{"i--1e"}), SyntaxError);
+  }
+  SECTION("Parse valid integer followed by trailing junk.",
+          "[Bencode][Parse][Exception]") {
+    REQUIRE_THROWS_AS(bStringify.parse(BufferSource{"i42ea"}), SyntaxError);
+  }
   SECTION("Parse list with unterminated nested list.",
           "[Bencode][Parse][Exception]") {
     REQUIRE_THROWS_AS(bStringify.parse(BufferSource{"lli1ei2ee"}), SyntaxError);

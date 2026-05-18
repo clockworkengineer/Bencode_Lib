@@ -28,6 +28,14 @@ Bencode_Lib is designed around the following attributes of a high-quality librar
 - **Compatibility and Portability:** modern C++23 support across GCC, Clang, and MSVC with platform-specific I/O backends.
 - **Low Dependency Footprint:** optional features are gated so consumers only use the code they need.
 
+## Security Guarantees
+
+- When `BENCODE_ENABLE_EXCEPTIONS=OFF`, parse operations return a `ParseStatus` result instead of throwing exceptions.
+- No-exceptions mode is explicitly tested for failure reporting, so invalid or malformed input is handled safely.
+- When `BENCODE_ENABLE_FILE_IO=OFF`, file-based helpers are disabled at compile time and `fromFile()`/`toFile()` calls fail cleanly through the disabled file I/O implementation.
+- The library avoids hidden file I/O or exception assumptions in minimal and embedded build profiles.
+- Embedded mode additionally enforces bounded container sizes and deterministic failure behavior for reduced-risk environments.
+
 ## Quick Start
 
 1. Create a build directory and configure the project:

@@ -75,7 +75,7 @@ std::string result = destination.toString();
 
 ### No-exceptions mode
 
-When `BENCODE_ENABLE_EXCEPTIONS` is disabled, parse functions return `ParseStatus` instead of throwing. Use `ParseStatus::ok()` to verify success.
+When `BENCODE_ENABLE_EXCEPTIONS` is disabled, parse functions return `ParseStatus` instead of throwing. Use `ParseStatus::ok()` to verify success. This ensures invalid input is reported safely without relying on exception handling.
 
 ### Fixed-capacity containers
 
