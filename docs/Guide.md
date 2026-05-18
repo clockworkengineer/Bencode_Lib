@@ -4,6 +4,17 @@ This guide explains how to use the Bencode_Lib library to parse, create, and man
 
 ## Getting Started
 
+Bencode_Lib is documented with clear public API boundaries, build variant guidance, and extension points for custom parsers and stringifiers.
+
+### Library Attributes
+
+Bencode_Lib is built to satisfy the following library design goals:
+
+- **Intuitive API:** root headers expose only the public interface; internal headers are private.
+- **Comprehensive documentation:** usage, package, API, and examples are all documented.
+- **Configurable builds:** optional stringifiers, file I/O, and embedded mode can be enabled or disabled at build time.
+- **Customizability:** pluggable `IStringify` and `IParser` extension points enable custom output and parsing logic.
+
 1. **Include the library headers:**
    ```cpp
    #include "Bencode.hpp"
@@ -82,6 +93,10 @@ Bencode::toFile("output.torrent", doc.root().toString());
 ```
 
 > Note: file-based helpers require `BENCODE_ENABLE_FILE_IO=ON`.
+>
+> Optional JSON, XML, and YAML stringify support is enabled by CMake options. Include `Bencode_Optional_Stringify.hpp` to access these stringifier headers when the corresponding build options are enabled.
+>
+> Minimal builds disable optional stringifiers and file-based I/O, so only buffer-based parse/stringify is available.
 
 ## Error Handling
 All parsing errors throw `SyntaxError` exceptions. Use try/catch to handle errors.

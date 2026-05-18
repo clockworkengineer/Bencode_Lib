@@ -73,6 +73,7 @@ Interface for custom stringification (encoding) logic.
 - `virtual void stringify(const Node &bNode, IDestination &destination) const = 0;`
 - Implement and pass to `Bencode` for custom output formats.
 - Use `makeStringify<T>()` to create a `std::unique_ptr<IStringify>` for the `Bencode` constructor.
+- Optional built-in stringifier implementations are controlled by `BENCODE_ENABLE_JSON_STRINGIFY`, `BENCODE_ENABLE_XML_STRINGIFY`, and `BENCODE_ENABLE_YAML_STRINGIFY`.
 - If you store the result in a variable, pass it with `std::move(...)`.
 
 ## Variants

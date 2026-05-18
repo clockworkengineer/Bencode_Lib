@@ -12,6 +12,21 @@ Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode 
 - **Traversal**: Walk the node tree with a custom `IAction` visitor.
 - **Error Handling**: Parsing and stringification errors throw typed exceptions with descriptive messages.
 
+## Library Design Principles
+
+Bencode_Lib is designed around the following attributes of a high-quality library:
+
+- **Intuitive API Design:** clean root headers, explicit optional feature imports, and consistent public interfaces.
+- **Comprehensive Documentation:** README, guide, API reference, package docs, and examples document usage and build variants.
+- **High Reliability:** deterministic parse/stringify behavior, clear error reporting, and stable build profiles.
+- **Performance and Efficiency:** buffer-based I/O, minimal build variants, and optional extensions only when enabled.
+- **Maintainability:** private implementation headers, consistent CMake target boundaries, and modular build options.
+- **Flexibility and Customization:** pluggable `IStringify`/`IParser` extension points and optional JSON/XML/YAML stringify modules.
+- **Strong Security:** explicit parser limits and safe behavior when file I/O or exceptions are disabled.
+- **High Testability:** built-in unit tests, public header compile checks, and dedicated variant coverage.
+- **Compatibility and Portability:** modern C++23 support across GCC, Clang, and MSVC with platform-specific I/O backends.
+- **Low Dependency Footprint:** optional features are gated so consumers only use the code they need.
+
 ## Quick Start
 
 1. Create a build directory and configure the project:
@@ -36,7 +51,9 @@ Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode 
    ```
 
 > Use `Bencode_Core.hpp` when you need node types, buffer I/O helpers, or low-level access. Keep implementation headers private.
-
+>
+> Optional stringify helpers are available via `Bencode_Optional_Stringify.hpp` when the corresponding CMake options are enabled.
+>
 ## Recommended Build Profiles
 
 - **Default**: `-DBENCODE_BUILD_TESTS=ON -DBENCODE_BUILD_EXAMPLES=ON`

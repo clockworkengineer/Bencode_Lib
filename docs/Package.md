@@ -22,6 +22,10 @@ When installed, these headers are available under `include/`.
 
 Internal headers under `classes/include/implementation/` are not part of the public API and are not included in the installed include path.
 
+### Optional Stringifiers and Minimal Builds
+
+`Bencode_Optional_Stringify.hpp` is the public helper for JSON, XML, and YAML stringifier headers. The actual implementation classes are enabled only when the corresponding CMake options are set to `ON`. In the minimal variant (`BENCODE_BUILD_MINIMAL=ON`), optional stringifiers and file-based I/O are disabled.
+
 ## Installing the Library
 
 Build and install:

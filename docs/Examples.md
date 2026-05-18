@@ -50,7 +50,21 @@ public:
         return Node::make<Integer>(123);
     }
 };
-Bencode doc(nullptr, new MyParser());
+Bencode doc(nullptr, std::make_unique<MyParser>());
+```
+
+## Optional Stringifier Example
+```cpp
+#include "Bencode_Optional_Stringify.hpp"
+
+class MyStringify : public Bencode_Lib::IStringify {
+public:
+    void stringify(const Node &bNode, IDestination &destination) const override {
+        destination.add("custom output");
+    }
+};
+
+Bencode doc(makeStringify<MyStringify>());
 ```
 
 ## Custom Stringify Example
