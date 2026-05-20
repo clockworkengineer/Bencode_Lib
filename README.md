@@ -102,6 +102,8 @@ Bencode_Lib is designed to compile cleanly with modern C++23 toolchains on:
 
 The build supports both Debug and Release profiles, and all library targets request C++23 via `target_compile_features(... PUBLIC cxx_std_23)`.
 
+The installed CMake package exports the `Bencode_Lib` namespace targets and includes package configuration files for downstream use. This makes the library easy to consume from other CMake projects.
+
 The library selects file I/O implementation automatically:
 
 - `classes/source/implementation/file/Bencode_File_POSIX.cpp` for POSIX platforms

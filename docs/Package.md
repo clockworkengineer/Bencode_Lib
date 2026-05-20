@@ -4,6 +4,12 @@
 
 Bencode_Lib can be built as a normal desktop library, a minimal core variant, or an embedded variant.
 
+The library is intended for modern C++23 toolchains and is tested against:
+
+- GCC
+- Clang
+- MSVC
+
 The library exports the following targets:
 
 - `Bencode_Lib::Bencode_Lib` — standard library with all enabled features.
@@ -54,6 +60,22 @@ The following headers provide the supported public API:
 - `Bencode_Optional_Stringify.hpp`
 
 Internal headers under `classes/include/implementation/` are private and should not be included directly.
+
+### Package Configuration Files
+
+The installed package exports the following CMake files under `lib/cmake/Bencode_Lib/`:
+
+- `Bencode_LibConfig.cmake`
+- `Bencode_LibConfigVersion.cmake`
+- `BencodeTargets.cmake`
+
+The package exports these targets:
+
+- `Bencode_Lib::Bencode_Lib`
+- `Bencode_Lib::Bencode_Lib_Minimal`
+- `Bencode_Lib::Bencode_Lib_Embedded`
+
+Use `find_package(Bencode_Lib REQUIRED)` and link against the appropriate target in downstream projects.
 
 ## Installing the Library
 
