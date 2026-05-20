@@ -2,7 +2,8 @@
 //
 // Description: Interface defining how Bencode nodes are serialized to an output destination.
 //
-
+// Implement this interface to customize Bencode output formatting without relying
+// on the optional built-in JSON/XML/YAML stringifiers.
 #pragma once
 
 #include <memory>

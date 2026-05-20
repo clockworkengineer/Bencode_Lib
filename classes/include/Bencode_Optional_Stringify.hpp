@@ -3,7 +3,8 @@
 // Description: Optional stringify module headers for JSON, XML, and YAML.
 //
 // Include this header only when the corresponding optional stringify modules
-// are enabled in CMake.
+// are enabled in CMake. If no optional stringifiers are enabled, this header
+// compiles as a no-op.
 
 #pragma once
 

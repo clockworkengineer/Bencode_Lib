@@ -2,7 +2,8 @@
 //
 // Description: Interface that defines how Bencode output is delivered to a destination sink.
 //
-
+// Implement this interface to customize how Bencode data is written to a target
+// buffer, file, or external stream.
 #pragma once
 
 #include <stdexcept>
@@ -12,7 +13,7 @@
 namespace Bencode_Lib {
 
 // ====================================================================
-// Interface for writing destination stream during JSON stringification
+// Interface for writing destination stream during Bencode stringification
 // ====================================================================
 class IDestination {
 public:
