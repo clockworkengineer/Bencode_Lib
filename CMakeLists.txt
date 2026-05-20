@@ -133,33 +133,97 @@ set(BENCODE_IMPLEMENTATION_HEADERS
   classes/include/implementation/variants/Bencode_Variant.hpp
 )
 
-set(BENCODE_INCLUDES
+set(BENCODE_COMMON_INCLUDES
   ${BENCODE_PUBLIC_HEADERS}
   ${BENCODE_INTERFACE_HEADERS}
   ${BENCODE_IMPLEMENTATION_HEADERS}
 )
 
+set(BENCODE_FILE_IO_INCLUDES)
 if(BENCODE_ENABLE_FILE_IO)
-  list(APPEND BENCODE_INCLUDES
+  list(APPEND BENCODE_FILE_IO_INCLUDES
     classes/include/implementation/io/Bencode_FileSource.hpp
     classes/include/implementation/io/Bencode_FileDestination.hpp
   )
 endif()
 
+set(BENCODE_OPTIONAL_STRINGIFY_INCLUDES)
 if(BENCODE_ENABLE_JSON_STRINGIFY)
-  list(APPEND BENCODE_INCLUDES
+  list(APPEND BENCODE_OPTIONAL_STRINGIFY_INCLUDES
     classes/include/implementation/stringify/JSON_Stringify.hpp
   )
 endif()
 
 if(BENCODE_ENABLE_XML_STRINGIFY)
-  list(APPEND BENCODE_INCLUDES
+  list(APPEND BENCODE_OPTIONAL_STRINGIFY_INCLUDES
     classes/include/implementation/stringify/XML_Stringify.hpp
   )
 endif()
 
 if(BENCODE_ENABLE_YAML_STRINGIFY)
-  list(APPEND BENCODE_INCLUDES
+  list(APPEND BENCODE_OPTIONAL_STRINGIFY_INCLUDES
+    classes/include/implementation/stringify/YAML_Stringify.hpp
+  )
+endif()
+
+set(BENCODE_INCLUDES
+  ${BENCODE_COMMON_INCLUDES}
+  ${BENCODE_FILE_IO_INCLUDES}
+  ${BENCODE_OPTIONAL_STRINGIFY_INCLUDES}
+)
+
+set(BENCODE_MINIMAL_INCLUDES
+  ${BENCODE_COMMON_INCLUDES}
+)
+
+set(BENCODE_INSTALLABLE_IMPLEMENTATION_COMMON_HEADERS
+  classes/include/implementation/common/Bencode_Error.hpp
+)
+
+set(BENCODE_INSTALLABLE_IMPLEMENTATION_NODE_HEADERS
+  classes/include/implementation/node/Bencode_Node.hpp
+  classes/include/implementation/node/Bencode_Node_Creation.hpp
+  classes/include/implementation/node/Bencode_Node_Index.hpp
+  classes/include/implementation/node/Bencode_Node_Reference.hpp
+)
+
+set(BENCODE_INSTALLABLE_IMPLEMENTATION_VARIANT_HEADERS
+  classes/include/implementation/variants/Bencode_Variant.hpp
+  classes/include/implementation/variants/Bencode_Hole.hpp
+  classes/include/implementation/variants/Bencode_Integer.hpp
+  classes/include/implementation/variants/Bencode_String.hpp
+  classes/include/implementation/variants/Bencode_Dictionary.hpp
+  classes/include/implementation/variants/Bencode_List.hpp
+)
+
+set(BENCODE_INSTALLABLE_IMPLEMENTATION_IO_HEADERS
+  classes/include/implementation/io/Bencode_Sources.hpp
+  classes/include/implementation/io/Bencode_Destinations.hpp
+  classes/include/implementation/io/Bencode_BufferSource.hpp
+  classes/include/implementation/io/Bencode_BufferDestination.hpp
+)
+
+set(BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS)
+if(BENCODE_ENABLE_FILE_IO)
+  list(APPEND BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS
+    classes/include/implementation/io/Bencode_FileSource.hpp
+    classes/include/implementation/io/Bencode_FileDestination.hpp
+  )
+endif()
+
+set(BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS)
+if(BENCODE_ENABLE_JSON_STRINGIFY)
+  list(APPEND BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS
+    classes/include/implementation/stringify/JSON_Stringify.hpp
+  )
+endif()
+if(BENCODE_ENABLE_XML_STRINGIFY)
+  list(APPEND BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS
+    classes/include/implementation/stringify/XML_Stringify.hpp
+  )
+endif()
+if(BENCODE_ENABLE_YAML_STRINGIFY)
+  list(APPEND BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS
     classes/include/implementation/stringify/YAML_Stringify.hpp
   )
 endif()
@@ -169,7 +233,7 @@ add_library(${BENCODE_LIBRARY_NAME} ${BENCODE_SOURCES} ${BENCODE_INCLUDES})
 
 # Minimal core-only library variant for consumers who do not need file-based I/O or optional stringifiers
 if(BENCODE_BUILD_MINIMAL)
-  add_library(${BENCODE_LIBRARY_NAME}_Minimal ${BENCODE_MINIMAL_SOURCES} ${BENCODE_INCLUDES})
+  add_library(${BENCODE_LIBRARY_NAME}_Minimal ${BENCODE_MINIMAL_SOURCES} ${BENCODE_MINIMAL_INCLUDES})
   add_library(Bencode_Lib::Bencode_Lib_Minimal ALIAS ${BENCODE_LIBRARY_NAME}_Minimal)
 endif()
 
@@ -337,14 +401,31 @@ install(FILES
   classes/include/Bencode_Optional_Stringify.hpp
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
-install(DIRECTORY classes/include/interface/
+install(FILES ${BENCODE_INTERFACE_HEADERS}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/interface
-  FILES_MATCHING PATTERN "*.hpp"
 )
-install(DIRECTORY classes/include/implementation/
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation
-  FILES_MATCHING PATTERN "*.hpp"
+install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_COMMON_HEADERS}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/common
 )
+install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_NODE_HEADERS}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/node
+)
+install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_VARIANT_HEADERS}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/variants
+)
+install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_IO_HEADERS}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/io
+)
+if(BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS)
+  install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/io
+  )
+endif()
+if(BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS)
+  install(FILES ${BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/stringify
+  )
+endif()
 
 # Install generated config header
 install(FILES ${PROJECT_BINARY_DIR}/Bencode_Config.hpp

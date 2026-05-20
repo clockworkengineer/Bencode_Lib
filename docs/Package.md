@@ -27,13 +27,13 @@ The public API is exposed through the top-level header directory:
 
 When installed, these headers are available under `include/`.
 
-Internal headers under `classes/include/implementation/` are not part of the public API and are not intended for direct inclusion.
+Internal headers under `classes/include/implementation/` are not part of the public API and are not intended for direct inclusion. The installed package includes only the implementation headers required by the public API surface, and optional stringify headers are installed only when the corresponding build options are enabled.
 
 ### Optional Stringifiers and Minimal Builds
 
 `Bencode_Optional_Stringify.hpp` is the public helper for JSON, XML, and YAML stringifier headers. The actual implementation classes are enabled only when the corresponding CMake options are set to `ON`.
 
-In the minimal variant (`BENCODE_BUILD_MINIMAL=ON`), optional stringifiers and file-based I/O are disabled and the library builds as a lean core-only variant.
+In the minimal variant (`BENCODE_BUILD_MINIMAL=ON`), optional stringifiers and file-based I/O are disabled and the library builds as a lean core-only variant. The install rules also keep only the headers required by the enabled public API and optional features, minimizing the installed footprint for consumers.
 
 ### CMake Configuration Options
 
