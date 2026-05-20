@@ -50,6 +50,7 @@ set(TEST_SOURCES
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+# Catch2 is linked only to test executables, keeping the main library free of test-only dependencies.
 target_link_libraries(${TEST_EXECUTABLE} Bencode_Lib::Bencode_Lib Catch2::Catch2WithMain)
 target_precompile_headers(${TEST_EXECUTABLE} REUSE_FROM Bencode_Lib)
 
@@ -77,6 +78,7 @@ if(BENCODE_BUILD_MINIMAL)
   set(MINIMAL_TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Minimal_Unit_Tests)
   add_executable(${MINIMAL_TEST_EXECUTABLE} source/minimal/Bencode_Lib_Tests_Minimal.cpp)
   target_include_directories(${MINIMAL_TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+  # Minimal test target validates the reduced feature set separately from the normal build.
   target_link_libraries(${MINIMAL_TEST_EXECUTABLE} Bencode_Lib::Bencode_Lib_Minimal Catch2::Catch2WithMain)
   target_precompile_headers(${MINIMAL_TEST_EXECUTABLE} PRIVATE ${CMAKE_SOURCE_DIR}/stdafx.h)
   add_test(NAME ${MINIMAL_TEST_EXECUTABLE} COMMAND ${MINIMAL_TEST_EXECUTABLE})

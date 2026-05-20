@@ -18,10 +18,14 @@ This document describes the Bencode_Lib test coverage strategy, including unit, 
   - Main unit/integration test executable.
   - Executes the full Catch2-based test suite.
   - Verifies the normal build configuration and full public API surface.
+- `Bencode_Lib_Minimal_Unit_Tests`
+  - Minimal build target that validates the reduced feature set, including disabled file I/O and optional stringify modules.
+  - This target is only generated when `BENCODE_BUILD_MINIMAL=ON`.
 - `Bencode_Lib_Embedded_Unit_Tests`
-  - Embedded-mode test harness with reduced runtime features.
+  - Embedded-mode test harness with reduced runtime features and no exceptions.
 - `Bencode_Lib_PublicHeader_CompileTest`
   - Compile-only check that includes only `Bencode.hpp` and `Bencode_Core.hpp`.
+  - Ensures the public header boundary remains intact.
 - `Bencode_Lib_Benchmark`
   - Benchmark target for performance verification.
 - `Bencode_Lib_Embedded_Benchmark`
