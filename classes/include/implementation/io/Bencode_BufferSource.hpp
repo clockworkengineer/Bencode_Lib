@@ -8,9 +8,7 @@
 #include "interface/ISource.hpp"
 
 #include <cstddef>
-#include <cstring>
 #include <string_view>
-#include <vector>
 
 namespace Bencode_Lib {
 
@@ -18,12 +16,11 @@ class BufferSource final : public ISource {
 
 public:
   // Constructors/Destructors
-  explicit BufferSource(const std::string_view &sourceBuffer) {
+  explicit BufferSource(const std::string_view &sourceBuffer)
+      : parseData(sourceBuffer.data()), parseSize(sourceBuffer.size()) {
     if (sourceBuffer.empty()) {
       throw Error("Empty source buffer passed to be parsed.");
     }
-    parseBuffer.resize(sourceBuffer.size());
-    std::memcpy(parseBuffer.data(), sourceBuffer.data(), sourceBuffer.size());
   }
   BufferSource() = delete;
   BufferSource(const BufferSource &other) = delete;
@@ -34,7 +31,7 @@ public:
 
   [[nodiscard]] char current() const override {
     if (more()) {
-      return static_cast<char>(parseBuffer[static_cast<int>(bufferPosition)]);
+      return static_cast<char>(parseData[bufferPosition]);
     }
     return EOF;
   }
@@ -45,13 +42,14 @@ public:
     bufferPosition++;
   }
   [[nodiscard]] bool more() const override {
-    return bufferPosition < parseBuffer.size();
+    return bufferPosition < parseSize;
   }
   void reset() override { bufferPosition = 0; }
 
 private:
   std::size_t bufferPosition = 0;
-  std::vector<std::byte> parseBuffer;
+  const char *parseData = nullptr;
+  std::size_t parseSize = 0;
 };
 
 } // namespace Bencode_Lib

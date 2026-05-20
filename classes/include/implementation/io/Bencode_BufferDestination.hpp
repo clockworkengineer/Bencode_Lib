@@ -7,11 +7,8 @@
 
 #include "interface/IDestination.hpp"
 
-#include <cstddef>
-#include <cstring>
 #include <string>
 #include <string_view>
-#include <vector>
 
 namespace Bencode_Lib {
 
@@ -29,46 +26,25 @@ public:
   ~BufferDestination() override = default;
 
   void add(const std::string &sourceBuffer) override {
-    const std::size_t size = sourceBuffer.size();
-    encodeBuffer.reserve(encodeBuffer.size() + size);
-    const auto *begin = reinterpret_cast<const std::byte *>(sourceBuffer.data());
-    const auto *end = begin + size;
-    encodeBuffer.insert(encodeBuffer.end(), begin, end);
+    encodeBuffer.append(sourceBuffer);
   }
   void add(const std::string_view &sourceBuffer) override {
-    const std::size_t size = sourceBuffer.size();
-    encodeBuffer.reserve(encodeBuffer.size() + size);
-    const auto *begin = reinterpret_cast<const std::byte *>(sourceBuffer.data());
-    const auto *end = begin + size;
-    encodeBuffer.insert(encodeBuffer.end(), begin, end);
+    encodeBuffer.append(sourceBuffer);
   }
   void add(const char *sourceBuffer) override {
-    const std::size_t size = std::strlen(sourceBuffer);
-    encodeBuffer.reserve(encodeBuffer.size() + size);
-    const auto *begin = reinterpret_cast<const std::byte *>(sourceBuffer);
-    const auto *end = begin + size;
-    encodeBuffer.insert(encodeBuffer.end(), begin, end);
+    encodeBuffer.append(sourceBuffer);
   }
   void add(const char ch) override {
-    encodeBuffer.push_back(static_cast<std::byte>(ch));
+    encodeBuffer.push_back(ch);
   }
   void clear() override { encodeBuffer.clear(); }
 
   [[nodiscard]] std::size_t size() const { return encodeBuffer.size(); }
-  std::string toString() const {
-    std::string destination;
-    destination.resize(encodeBuffer.size());
-    if (!encodeBuffer.empty()) {
-      std::memcpy(destination.data(), encodeBuffer.data(), encodeBuffer.size());
-    }
-    return destination;
-  }
-  [[nodiscard]] char last() override {
-    return static_cast<char>(encodeBuffer.back());
-  }
+  std::string toString() const { return encodeBuffer; }
+  [[nodiscard]] char last() override { return encodeBuffer.back(); }
 
 private:
-  std::vector<std::byte> encodeBuffer;
+  std::string encodeBuffer;
 };
 
 } // namespace Bencode_Lib

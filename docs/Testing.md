@@ -55,6 +55,7 @@ ctest --output-on-failure
 - `fromFile()` / `toFile()` helpers are validated through integration-style tests that use temporary filesystem artifacts.
 - Minimal and embedded builds validate file I/O disabled behavior, ensuring file operations fail cleanly instead of causing undefined behavior.
 - Minimal builds also verify optional stringify support is safely disabled and the public stringify helper header remains compile-safe.
+- Benchmark targets exercise parse and stringify throughput and validate performance behavior for the normal and embedded build variants.
 - Regression tests cover malformed input, truncated data, invalid file paths, empty trees, and parse failure safety.
 - Regression coverage for empty Bencode objects ensures stringify/traverse error handling is deterministic.
 - `IParser` and `IStringify` interfaces are covered with custom implementations so the extension points remain stable.
