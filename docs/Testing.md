@@ -56,6 +56,7 @@ ctest --output-on-failure
 - Minimal and embedded builds validate file I/O disabled behavior, ensuring file operations fail cleanly instead of causing undefined behavior.
 - Minimal builds also verify optional stringify support is safely disabled and the public stringify helper header remains compile-safe.
 - Regression tests cover malformed input, truncated data, invalid file paths, empty trees, and parse failure safety.
+- Regression coverage for empty Bencode objects ensures stringify/traverse error handling is deterministic.
 - `IParser` and `IStringify` interfaces are covered with custom implementations so the extension points remain stable.
 - Benchmark targets are optional for CI, but they are configured as CTest targets and can be included in performance-oriented pipelines.
 - `Bencode_Lib_Benchmark` exercises parse/stringify throughput and validates buffer-based I/O performance for large documents.

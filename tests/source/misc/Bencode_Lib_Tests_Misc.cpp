@@ -65,6 +65,22 @@ TEST_CASE("Check Bencode error handling.", "[Bencode][Error]") {
     REQUIRE_THROWS(
         bencode.parse(FileSource{prefixTestDataPath(kNonExistantTorrent)}));
   }
+  SECTION("Stringify on an empty Bencode object throws.", "[Bencode][Error]") {
+    Bencode bencode;
+    BufferDestination destination;
+    REQUIRE_THROWS_AS(bencode.stringify(destination), std::exception);
+  }
+  SECTION("Traverse on an empty Bencode object throws.", "[Bencode][Error]") {
+    Bencode bencode;
+    struct NoOpAction : public IAction {
+      void onNode(const Node &) override {}
+      void onString(const Node &) override {}
+      void onInteger(const Node &) override {}
+      void onList(const Node &) override {}
+      void onDictionary(const Node &) override {}
+    } action;
+    REQUIRE_THROWS_AS(bencode.traverse(action), std::exception);
+  }
 }
 
 TEST_CASE("Check Bencode root() access.", "[Bencode][Root]") {
