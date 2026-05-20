@@ -92,10 +92,14 @@ list(APPEND BENCODE_MINIMAL_SOURCES ${BENCODE_FILE_IO_DISABLED_SOURCES})
 set(BENCODE_EMBEDDED_SOURCES ${BENCODE_COMMON_SOURCES})
 list(APPEND BENCODE_EMBEDDED_SOURCES ${BENCODE_FILE_IO_DISABLED_SOURCES})
 
-set(BENCODE_INCLUDES
+set(BENCODE_PUBLIC_HEADERS
   classes/include/Bencode.hpp
-  classes/include/Bencode_Status.hpp
   classes/include/Bencode_Core.hpp
+  classes/include/Bencode_Status.hpp
+  classes/include/Bencode_Optional_Stringify.hpp
+)
+
+set(BENCODE_INTERFACE_HEADERS
   classes/include/interface/Bencode_Interfaces.hpp
   classes/include/interface/IAction.hpp
   classes/include/interface/ISource.hpp
@@ -103,12 +107,15 @@ set(BENCODE_INCLUDES
   classes/include/interface/IParser.hpp
   classes/include/interface/IStringify.hpp
   classes/include/interface/ITranslator.hpp
+)
+
+set(BENCODE_IMPLEMENTATION_HEADERS
+  classes/include/implementation/Bencode_Impl.hpp
   classes/include/implementation/common/Bencode_Error.hpp
+  classes/include/implementation/node/Bencode_Node.hpp
   classes/include/implementation/node/Bencode_Node_Creation.hpp
   classes/include/implementation/node/Bencode_Node_Index.hpp
   classes/include/implementation/node/Bencode_Node_Reference.hpp
-  classes/include/implementation/node/Bencode_Node.hpp
-  classes/include/implementation/Bencode_Impl.hpp
   classes/include/implementation/parser/Default_Parser.hpp
   classes/include/implementation/stringify/Default_Stringify.hpp
   classes/include/implementation/translator/Default_Translator.hpp
@@ -124,6 +131,12 @@ set(BENCODE_INCLUDES
   classes/include/implementation/variants/Bencode_List.hpp
   classes/include/implementation/variants/Bencode_String.hpp
   classes/include/implementation/variants/Bencode_Variant.hpp
+)
+
+set(BENCODE_INCLUDES
+  ${BENCODE_PUBLIC_HEADERS}
+  ${BENCODE_INTERFACE_HEADERS}
+  ${BENCODE_IMPLEMENTATION_HEADERS}
 )
 
 if(BENCODE_ENABLE_FILE_IO)
@@ -167,11 +180,15 @@ add_library(Bencode_Lib::Bencode_Lib_Embedded ALIAS ${BENCODE_LIBRARY_NAME}_Embe
 # Namespaced alias for consistent use in examples, tests, and by consumers
 add_library(Bencode_Lib::Bencode_Lib ALIAS ${BENCODE_LIBRARY_NAME})
 
+# Public include root exported to consumers. This directory contains the
+# top-level public headers and the relative include structure used by those
+# headers.
 set(BENCODE_PUBLIC_INCLUDE_DIRS
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
 )
 
+# Private implementation headers used only for library compilation.
 set(BENCODE_PRIVATE_INCLUDE_DIRS
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/interface>
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include/implementation>
@@ -310,9 +327,23 @@ if(BENCODE_BUILD_MINIMAL)
   )
 endif()
 
-# Install headers preserving directory structure
-install(DIRECTORY classes/include/
+# Install public headers and their dependent include paths.
+# Implementation headers are kept under the internal implementation directory,
+# but are installed because the public headers reference them by relative path.
+install(FILES
+  classes/include/Bencode.hpp
+  classes/include/Bencode_Core.hpp
+  classes/include/Bencode_Status.hpp
+  classes/include/Bencode_Optional_Stringify.hpp
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(DIRECTORY classes/include/interface/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/interface
+  FILES_MATCHING PATTERN "*.hpp"
+)
+install(DIRECTORY classes/include/implementation/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation
+  FILES_MATCHING PATTERN "*.hpp"
 )
 
 # Install generated config header
