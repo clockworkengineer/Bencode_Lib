@@ -1,8 +1,10 @@
 #pragma once
 
-#include "plog/Initializers/RollingFileInitializer.h"
-#include "plog/Log.h"
 
+#include <filesystem>
+#include <algorithm>
+#include <vector>
+#include <string>
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
@@ -16,8 +18,8 @@ public:
         fileList.push_back(file.path().string());
       }
     }
-    sort(fileList.begin(), fileList.end());
-    return (fileList);
+    std::sort(fileList.begin(), fileList.end());
+    return fileList;
   }
   static std::string createFileName(const std::string &torrentFileName,
                                     const std::string &newExtension) {

@@ -3,6 +3,7 @@
 // with Bencode_Lib. Dependencies: C++20, Bencode_Lib.
 
 #include "Bencode_Utility.hpp"
+#include <iostream>
 
 namespace be = Bencode_Lib;
 
@@ -20,13 +21,13 @@ int main() {
   be::BufferDestination dest;
   doc.stringify(dest);
   std::string encoded = dest.toString();
-  PLOG_INFO << "Bencoded nested structure: " << encoded << std::endl;
+  std::cout << "Bencoded nested structure: " << encoded << std::endl;
 
   // Decode
   be::Bencode decoded(encoded);
-  PLOG_INFO << "Decoded user: " << be::NRef<be::String>(decoded["user"]).value()
+  std::cout << "Decoded user: " << be::NRef<be::String>(decoded["user"]).value()
             << std::endl;
-  PLOG_INFO << "Decoded profile age: "
+  std::cout << "Decoded profile age: "
             << be::NRef<be::Integer>(decoded["profile"]["age"]).value()
             << std::endl;
   return 0;

@@ -6,10 +6,11 @@
 // (or updated) in the root dictionary, and a modified copy is written to a
 // new .ben file.  The modified file is then re-parsed to confirm the change.
 //
-// Dependencies: C++20, PLOG, Bencode_Lib.
+// Dependencies: C++20, Bencode_Lib.
 //
 
 #include "Bencode_Utility.hpp"
+#include <iostream>
 
 namespace be = Bencode_Lib;
 
@@ -32,7 +33,7 @@ void injectComment(const std::string &fileName, const std::string &comment) {
 
   const std::string outFile = modifiedPath(fileName);
   torrent.stringify(be::FileDestination{outFile});
-  PLOG_INFO << "Written modified torrent to " << outFile;
+  std::cout << "Written modified torrent to " << outFile;
 }
 
 /// <summary>
@@ -47,36 +48,35 @@ void verifyComment(const std::string &fileName, const std::string &expected) {
   if (root.contains("comment")) {
     const auto actual = be::NRef<be::String>(root["comment"]).value();
     if (actual == expected) {
-      PLOG_INFO << "  Verified comment OK: \"" << actual << "\"";
+      std::cout << "  Verified comment OK: \"" << actual << "\"";
     } else {
-      PLOG_ERROR << "  Comment mismatch! Expected \"" << expected << "\" got \""
+      std::cerr << "  Comment mismatch! Expected \"" << expected << "\" got \""
                  << actual << "\"";
     }
   } else {
-    PLOG_ERROR << "  'comment' field missing after round-trip in " << modFile;
+    std::cerr << "  'comment' field missing after round-trip in " << modFile;
   }
 }
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    init(plog::debug, "Bencode_Modify_Torrent.log");
-    PLOG_INFO << "Bencode_Modify_Torrent started ...";
-    PLOG_INFO << be::Bencode::version();
+    std::cout << "Bencode_Modify_Torrent started ...";
+    std::cout << be::Bencode::version();
 
     const std::string newComment = "Modified by Bencode_Lib example";
 
     for (const auto &fileName : Utility::createTorrentFileList()) {
       try {
-        PLOG_INFO << "Processing " << fileName;
+        std::cout << "Processing " << fileName;
         injectComment(fileName, newComment);
         verifyComment(fileName, newComment);
       } catch (std::exception &ex) {
-        PLOG_ERROR << "Error processing " << fileName << ": " << ex.what();
+        std::cerr << "Error processing " << fileName << ": " << ex.what();
       }
     }
   } catch (std::exception &ex) {
-    PLOG_ERROR << "Error: " << ex.what();
+    std::cerr << "Error: " << ex.what();
   }
-  PLOG_INFO << "Bencode_Modify_Torrent exited.";
+  std::cout << "Bencode_Modify_Torrent exited.";
   exit(EXIT_SUCCESS);
 }

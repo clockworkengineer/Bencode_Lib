@@ -5,10 +5,11 @@
 // statistics: total file count, total download size, unique tracker URLs, and
 // a breakdown of file extensions found across all torrents.
 //
-// Dependencies: C++20, PLOG, Bencode_Lib.
+// Dependencies: C++20, Bencode_Lib.
 //
 
 #include "Bencode_Utility.hpp"
+#include <iostream>
 
 namespace be = Bencode_Lib;
 
@@ -104,9 +105,8 @@ std::string formatBytes(std::uint64_t bytes) {
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    init(plog::debug, "Bencode_Torrent_Statistics.log");
-    PLOG_INFO << "Bencode_Torrent_Statistics started ...";
-    PLOG_INFO << be::Bencode::version();
+    std::cout << "Bencode_Torrent_Statistics started ...";
+    std::cout << be::Bencode::version();
 
     TorrentStats stats;
     const auto fileList = Utility::createTorrentFileList();
@@ -116,31 +116,31 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
         be::Bencode torrent;
         torrent.parse(be::FileSource{fileName});
         accumulateStats(torrent, stats);
-        PLOG_INFO << "Processed " << fileName;
+        std::cout << "Processed " << fileName;
       } catch (std::exception &ex) {
-        PLOG_ERROR << "Failed to process " << fileName << ": " << ex.what();
+        std::cerr << "Failed to process " << fileName << ": " << ex.what();
       }
     }
 
-    PLOG_INFO << "=== Torrent Statistics ===";
-    PLOG_INFO << "  Torrents processed : " << fileList.size();
-    PLOG_INFO << "  Total files        : " << stats.totalFiles;
-    PLOG_INFO << "  Total size         : " << formatBytes(stats.totalBytes)
+    std::cout << "=== Torrent Statistics ===";
+    std::cout << "  Torrents processed : " << fileList.size();
+    std::cout << "  Total files        : " << stats.totalFiles;
+    std::cout << "  Total size         : " << formatBytes(stats.totalBytes)
               << "  (" << stats.totalBytes << " bytes)";
 
-    PLOG_INFO << "=== Unique Trackers (" << stats.trackers.size() << ") ===";
+    std::cout << "=== Unique Trackers (" << stats.trackers.size() << ") ===";
     for (const auto &tracker : stats.trackers) {
-      PLOG_INFO << "  " << tracker;
+      std::cout << "  " << tracker;
     }
 
-    PLOG_INFO << "=== File Extensions ===";
+    std::cout << "=== File Extensions ===";
     for (const auto &[ext, count] : stats.extensionCounts) {
-      PLOG_INFO << "  " << ext << " : " << count;
+      std::cout << "  " << ext << " : " << count;
     }
 
   } catch (std::exception &ex) {
-    PLOG_ERROR << "Error: " << ex.what();
+    std::cerr << "Error: " << ex.what();
   }
-  PLOG_INFO << "Bencode_Torrent_Statistics exited.";
+  std::cout << "Bencode_Torrent_Statistics exited.";
   exit(EXIT_SUCCESS);
 }

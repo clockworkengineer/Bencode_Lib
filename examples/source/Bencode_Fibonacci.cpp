@@ -5,10 +5,11 @@
 // sequence to the array stored in fibonacci.ben; if the file does
 // not exist then create the initial sequence of li0ei1ee.
 //
-// Dependencies: C++20, PLOG, Bencode_Lib.
+// Dependencies: C++20, Bencode_Lib.
 //
 
 #include "Bencode_Utility.hpp"
+#include <iostream>
 
 namespace be = Bencode_Lib;
 
@@ -46,15 +47,14 @@ void nextFibonacci() {
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
-    init(plog::debug, "Bencode_Fibonacci.log");
-    PLOG_INFO << "Bencode_Fibonacci started ...";
+    std::cout << "Bencode_Fibonacci started ...";
     // Log version
-    PLOG_INFO << be::Bencode::version();
+    std::cout << be::Bencode::version();
     // Update current sequence
     nextFibonacci();
   } catch (std::exception &ex) {
-    PLOG_ERROR << "Error: " << ex.what();
+    std::cerr << "Error: " << ex.what();
   }
-  PLOG_INFO << "Bencode_Fibonacci exited.";
+  std::cout << "Bencode_Fibonacci exited.";
   exit(EXIT_SUCCESS);
 }

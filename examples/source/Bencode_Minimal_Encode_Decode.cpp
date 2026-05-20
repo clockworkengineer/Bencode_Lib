@@ -4,6 +4,7 @@
 // Dependencies: C++20, Bencode_Lib.
 
 #include "Bencode_Utility.hpp"
+#include <iostream>
 
 namespace be = Bencode_Lib;
 
@@ -18,7 +19,7 @@ int main() {
         bencodeDict.stringify(dest);
         encoded = dest.toString();
     }
-    PLOG_INFO << "Bencoded string: " << encoded << std::endl;
+    std::cout << "Bencoded string: " << encoded << std::endl;
 
     // Decode the string
     be::Bencode decoded;
@@ -26,7 +27,7 @@ int main() {
         be::BufferSource src(encoded);
         decoded.parse(src);
     }
-    PLOG_INFO << "Decoded name: " << be::NRef<be::String>(decoded["name"]).value() << std::endl;
-    PLOG_INFO << "Decoded age: " << be::NRef<be::String>(decoded["age"]).value() << std::endl;
+    std::cout << "Decoded name: " << be::NRef<be::String>(decoded["name"]).value() << std::endl;
+    std::cout << "Decoded age: " << be::NRef<be::String>(decoded["age"]).value() << std::endl;
     return 0;
 }

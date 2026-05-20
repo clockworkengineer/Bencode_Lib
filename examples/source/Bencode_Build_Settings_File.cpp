@@ -5,10 +5,11 @@
 // Bencode at runtime. The settings are written to a .ben file and then read
 // back, accessed via key operators, and their values displayed.
 //
-// Dependencies: C++20, PLOG, Bencode_Lib.
+// Dependencies: C++20, Bencode_Lib.
 //
 
 #include "Bencode_Utility.hpp"
+#include <iostream>
 
 namespace be = Bencode_Lib;
 
@@ -36,7 +37,7 @@ void writeSettings() {
   settings["network"]["timeout"] = 30;
   // Write to file
   settings.stringify(be::FileDestination{settingsFilePath()});
-  PLOG_INFO << "Settings written to " << settingsFilePath();
+  std::cout << "Settings written to " << settingsFilePath();
 }
 
 /// <summary>
@@ -69,31 +70,30 @@ void readSettings() {
   const auto netTimeout =
       be::NRef<be::Integer>(settings["network"]["timeout"]).value();
 
-  PLOG_INFO << "=== Application ===";
-  PLOG_INFO << "  name    : " << appName;
-  PLOG_INFO << "  version : " << appVersion;
-  PLOG_INFO << "  debug   : " << appDebug;
-  PLOG_INFO << "=== Window ===";
-  PLOG_INFO << "  width      : " << winWidth;
-  PLOG_INFO << "  height     : " << winHeight;
-  PLOG_INFO << "  fullscreen : " << winFullscreen;
-  PLOG_INFO << "  title      : " << winTitle;
-  PLOG_INFO << "=== Network ===";
-  PLOG_INFO << "  host    : " << netHost;
-  PLOG_INFO << "  port    : " << netPort;
-  PLOG_INFO << "  timeout : " << netTimeout;
+  std::cout << "=== Application ===";
+  std::cout << "  name    : " << appName;
+  std::cout << "  version : " << appVersion;
+  std::cout << "  debug   : " << appDebug;
+  std::cout << "=== Window ===";
+  std::cout << "  width      : " << winWidth;
+  std::cout << "  height     : " << winHeight;
+  std::cout << "  fullscreen : " << winFullscreen;
+  std::cout << "  title      : " << winTitle;
+  std::cout << "=== Network ===";
+  std::cout << "  host    : " << netHost;
+  std::cout << "  port    : " << netPort;
+  std::cout << "  timeout : " << netTimeout;
 }
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
-    init(plog::debug, "Bencode_Build_Settings_File.log");
-    PLOG_INFO << "Bencode_Build_Settings_File started ...";
-    PLOG_INFO << be::Bencode::version();
+    std::cout << "Bencode_Build_Settings_File started ...";
+    std::cout << be::Bencode::version();
     writeSettings();
     readSettings();
   } catch (std::exception &ex) {
-    PLOG_ERROR << "Error: " << ex.what();
+    std::cerr << "Error: " << ex.what();
   }
-  PLOG_INFO << "Bencode_Build_Settings_File exited.";
+  std::cout << "Bencode_Build_Settings_File exited.";
   exit(EXIT_SUCCESS);
 }

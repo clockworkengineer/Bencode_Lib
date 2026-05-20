@@ -5,20 +5,20 @@
 // of the Bencode class, indexing/key operators plus the use of initializer
 // lists.
 //
-// Dependencies: C++20, PLOG, Bencode_Lib.
+// Dependencies: C++20, Bencode_Lib.
 //
 
 #include "Bencode_Utility.hpp"
+#include <iostream>
 
 namespace be = Bencode_Lib;
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
-    init(plog::debug, "Bencode_Create_At_Runtime.log");
-    PLOG_INFO << "Bencode_Create_At_Runtime started ...";
+    std::cout << "Bencode_Create_At_Runtime started ...";
     // Log version
-    PLOG_INFO << be::Bencode::version();
+    std::cout << be::Bencode::version();
     // create an empty structure (null)
     be::Bencode bStringify;
     // add a number that is stored as double (note the implicit conversion of
@@ -41,7 +41,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
                           {"array", be::Node{23.22, 33, 55, 99.99}}};
     be::BufferDestination destination;
     bStringify.stringify(destination);
-    PLOG_INFO << destination.toString();
+    std::cout << destination.toString();
     destination.clear();
     // create Bencode using an initializer list and nesting array/objects using
     // Node{}.
@@ -55,10 +55,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
         {"object", be::Node{{"currency", "USD"},
                              {"value", be::Node{23.22, 33, 55, 99.99}}}}};
     bStringify2.stringify(destination);
-    PLOG_INFO << destination.toString();
+    std::cout << destination.toString();
   } catch (std::exception &ex) {
-    PLOG_ERROR << "Error: " << ex.what();
+    std::cerr << "Error: " << ex.what();
   }
-  PLOG_INFO << "Bencode_Create_At_Runtime exited.";
+  std::cout << "Bencode_Create_At_Runtime exited.";
   exit(EXIT_SUCCESS);
 }
