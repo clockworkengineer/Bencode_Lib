@@ -75,9 +75,10 @@ The public API is exposed through the top-level headers under `classes/include`.
 
 - `Bencode.hpp`
 - `Bencode_Core.hpp`
+- `Bencode_Status.hpp`
 - `Bencode_Optional_Stringify.hpp` (optional helper)
 
-Internal implementation headers are intentionally hidden from public include paths.
+Internal implementation headers are not intended for direct inclusion. The public root headers provide the supported consumer API.
 
 ## Compatibility and Portability
 

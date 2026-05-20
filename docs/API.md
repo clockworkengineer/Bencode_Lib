@@ -5,6 +5,16 @@ This document provides a detailed overview of the main classes, types, and funct
 ## Namespaces
 - `Bencode_Lib` — All public API is contained within this namespace.
 
+## Public Header Boundary
+The public API is exposed through the top-level headers:
+
+- `Bencode.hpp`
+- `Bencode_Core.hpp`
+- `Bencode_Status.hpp`
+- `Bencode_Optional_Stringify.hpp`
+
+Internal headers under `classes/include/implementation/` are private and should not be included directly.
+
 ## Core Classes and Interfaces
 
 ### Bencode

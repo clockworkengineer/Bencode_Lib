@@ -1,6 +1,9 @@
 // File: Bencode_Optional_Stringify.hpp
 //
 // Description: Optional stringify module headers for JSON, XML, and YAML.
+//
+// Include this header only when the corresponding optional stringify modules
+// are enabled in CMake.
 
 #pragma once
 

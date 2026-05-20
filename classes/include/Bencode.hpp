@@ -11,7 +11,7 @@
 #pragma once
 
 #include "Bencode_Config.hpp"
-#include "implementation/common/Bencode_Status.hpp"
+#include "Bencode_Status.hpp"
 
 #include <cstdint>
 #include <initializer_list>

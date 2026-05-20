@@ -22,7 +22,6 @@
 #include "implementation/io/Bencode_Sources.hpp"
 #include "implementation/io/Bencode_Destinations.hpp"
 #include "implementation/common/Bencode_Error.hpp"
-#include "implementation/common/Bencode_Status.hpp"
 
 // Default parser/stringify and translator implementations are internal.
 // Public users should include only the core API and optional modules explicitly.

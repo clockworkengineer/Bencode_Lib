@@ -94,6 +94,7 @@ list(APPEND BENCODE_EMBEDDED_SOURCES ${BENCODE_FILE_IO_DISABLED_SOURCES})
 
 set(BENCODE_INCLUDES
   classes/include/Bencode.hpp
+  classes/include/Bencode_Status.hpp
   classes/include/Bencode_Core.hpp
   classes/include/interface/Bencode_Interfaces.hpp
   classes/include/interface/IAction.hpp

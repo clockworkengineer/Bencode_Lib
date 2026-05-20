@@ -16,11 +16,12 @@ The public API is exposed through the top-level header directory:
 
 - `classes/include/Bencode.hpp`
 - `classes/include/Bencode_Core.hpp`
+- `classes/include/Bencode_Status.hpp`
 - `classes/include/Bencode_Optional_Stringify.hpp`
 
 When installed, these headers are available under `include/`.
 
-Internal headers under `classes/include/implementation/` are not part of the public API and are not included in the installed include path.
+Internal headers under `classes/include/implementation/` are not part of the public API and are not intended for direct inclusion.
 
 ### Optional Stringifiers and Minimal Builds
 

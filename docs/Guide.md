@@ -48,9 +48,10 @@ Only the public root headers are intended for consumer inclusion:
 
 - `Bencode.hpp`
 - `Bencode_Core.hpp`
+- `Bencode_Status.hpp`
 - `Bencode_Optional_Stringify.hpp`
 
-All implementation-specific headers remain hidden from public include paths.
+All implementation-specific headers remain private and should not be included directly by consumers.
 
 ## API Stability
 
