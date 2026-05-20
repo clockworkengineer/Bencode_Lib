@@ -14,6 +14,77 @@ Bencode_Lib is built to satisfy the following library design goals:
 - **Comprehensive documentation:** usage, package, API, and examples are all documented.
 - **Configurable builds:** optional stringifiers, file I/O, and embedded mode can be enabled or disabled at build time.
 - **Customizability:** pluggable `IStringify` and `IParser` extension points enable custom output and parsing logic.
+- **Clear build variant behavior:** minimal and embedded builds are explicitly documented and tested.
+
+### Build Options
+
+Build-time flags shape feature availability and public API behavior:
+
+- `-DBENCODE_BUILD_MINIMAL=ON`
+  - Produces a core variant without file-based I/O or optional stringify extensions.
+  - `BENCODE_ENABLE_FILE_IO` is set to `OFF` and `BENCODE_ENABLE_JSON_STRINGIFY`, `BENCODE_ENABLE_XML_STRINGIFY`, `BENCODE_ENABLE_YAML_STRINGIFY` are disabled.
+- `-DBENCODE_EMBEDDED_MODE=ON`
+  - Produces an embedded variant with `BENCODE_ENABLE_EXCEPTIONS=OFF`, `BENCODE_ENABLE_DYNAMIC_ALLOCATION=OFF`, and `BENCODE_ENABLE_FILE_IO=OFF`.
+- `-DBENCODE_ENABLE_FILE_IO=OFF`
+  - Disables file-based helpers and file source/destination code.
+- `-DBENCODE_ENABLE_JSON_STRINGIFY=OFF`, `-DBENCODE_ENABLE_XML_STRINGIFY=OFF`, `-DBENCODE_ENABLE_YAML_STRINGIFY=OFF`
+  - Disable the corresponding built-in stringify modules.
+- `-DBENCODE_ENABLE_EXCEPTIONS=OFF`
+  - Causes parse entry points to return `ParseStatus` instead of throwing exceptions.
+
+### Optional Stringifiers
+
+The built-in JSON, XML, and YAML stringify modules are exposed through `Bencode_Optional_Stringify.hpp`. Include this helper only when the matching CMake option is enabled.
+
+```cpp
+#include "Bencode.hpp"
+#include "Bencode_Optional_Stringify.hpp"
+using namespace Bencode_Lib;
+
+Bencode b(makeStringify<JSON_Stringify>());
+```
+
+Custom `IStringify` implementations are supported in all build variants:
+
+```cpp
+#include "Bencode.hpp"
+
+class MyStringify : public Bencode_Lib::IStringify {
+public:
+    void stringify(const Node &bNode, IDestination &destination) const override {
+        destination.add("custom output");
+    }
+};
+
+Bencode b(makeStringify<MyStringify>());
+```
+
+### Minimal Build Guidance
+
+In a minimal build, file-based I/O and optional stringify helpers are disabled, but custom parser/stringify support and buffer-based I/O remain available.
+
+```bash
+cmake .. -DBENCODE_BUILD_MINIMAL=ON \
+  -DBENCODE_ENABLE_FILE_IO=OFF \
+  -DBENCODE_ENABLE_JSON_STRINGIFY=OFF \
+  -DBENCODE_ENABLE_XML_STRINGIFY=OFF \
+  -DBENCODE_ENABLE_YAML_STRINGIFY=OFF
+```
+
+Use `Bencode.hpp`, `Bencode_Core.hpp`, and `Bencode_Status.hpp` for public API access. If you need custom output formatting, provide your own `IStringify` implementation.
+
+### Embedded Build Guidance
+
+Embedded builds have safer runtime constraints and are documented in `docs/EMBEDDED.md`.
+
+```bash
+cmake .. -DBENCODE_EMBEDDED_MODE=ON \
+  -DBENCODE_ENABLE_EXCEPTIONS=OFF \
+  -DBENCODE_ENABLE_DYNAMIC_ALLOCATION=OFF \
+  -DBENCODE_ENABLE_FILE_IO=OFF
+```
+
+The embedded variant is intended for low-resource, deterministic environments and still supports custom `IParser` and `IStringify` implementations.
 
 1. **Include the library headers:**
    ```cpp

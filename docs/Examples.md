@@ -55,12 +55,36 @@ Bencode doc(nullptr, std::make_unique<MyParser>());
 
 ## Optional Stringifier Example
 ```cpp
+#include "Bencode.hpp"
 #include "Bencode_Optional_Stringify.hpp"
+using namespace Bencode_Lib;
 
-class MyStringify : public Bencode_Lib::IStringify {
+// Only compile this example when JSON stringify is enabled.
+Bencode doc(makeStringify<JSON_Stringify>());
+```
+
+## Minimal Build Example
+
+In a minimal build, file-based helpers and built-in stringify modules are disabled. Use buffer-based I/O and custom extension points instead.
+
+```bash
+cmake .. -DBENCODE_BUILD_MINIMAL=ON \
+  -DBENCODE_ENABLE_FILE_IO=OFF \
+  -DBENCODE_ENABLE_JSON_STRINGIFY=OFF \
+  -DBENCODE_ENABLE_XML_STRINGIFY=OFF \
+  -DBENCODE_ENABLE_YAML_STRINGIFY=OFF
+```
+
+```cpp
+#include "Bencode.hpp"
+#include "Bencode_Core.hpp"
+#include "Bencode_Status.hpp"
+using namespace Bencode_Lib;
+
+class MyStringify : public IStringify {
 public:
     void stringify(const Node &bNode, IDestination &destination) const override {
-        destination.add("custom output");
+        destination.add("minimal output");
     }
 };
 

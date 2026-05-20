@@ -26,7 +26,19 @@ Bencode_Lib is designed around the following attributes of a high-quality librar
 - **Strong Security:** explicit parser limits and safe behavior when file I/O or exceptions are disabled.
 - **High Testability:** built-in unit tests, public header compile checks, and dedicated variant coverage.
 - **Compatibility and Portability:** modern C++23 support across GCC, Clang, and MSVC with platform-specific I/O backends.
-- **Low Dependency Footprint:** optional features are gated so consumers only use the code they need.
+- **Low Dependency Footprint:** optional features are gated so consumers only use only the code they need.
+
+## Build Configuration and Optional Features
+
+Bencode_Lib is built to support multiple usage scenarios via CMake feature flags. The available options include:
+
+- `BENCODE_BUILD_MINIMAL`: build a smaller library focused on core Bencode parsing/stringifying and buffer-based I/O only.
+- `BENCODE_EMBEDDED_MODE`: enable embedded mode with no exceptions, no dynamic allocation, and no file-based I/O.
+- `BENCODE_ENABLE_FILE_IO`: control whether `Bencode::fromFile()` / `Bencode::toFile()` and file source/destination support are compiled.
+- `BENCODE_ENABLE_JSON_STRINGIFY`, `BENCODE_ENABLE_XML_STRINGIFY`, `BENCODE_ENABLE_YAML_STRINGIFY`: enable the built-in optional stringify modules.
+- `BENCODE_ENABLE_EXCEPTIONS`: when disabled, parse operations return a `ParseStatus` result instead of throwing.
+
+Use `Bencode_Optional_Stringify.hpp` only when one or more built-in stringify modules are enabled. Custom `IStringify` and `IParser` implementations work in all build variants, including minimal and embedded.
 
 ## Security Guarantees
 

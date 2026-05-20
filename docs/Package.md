@@ -25,7 +25,35 @@ Internal headers under `classes/include/implementation/` are not part of the pub
 
 ### Optional Stringifiers and Minimal Builds
 
-`Bencode_Optional_Stringify.hpp` is the public helper for JSON, XML, and YAML stringifier headers. The actual implementation classes are enabled only when the corresponding CMake options are set to `ON`. In the minimal variant (`BENCODE_BUILD_MINIMAL=ON`), optional stringifiers and file-based I/O are disabled.
+`Bencode_Optional_Stringify.hpp` is the public helper for JSON, XML, and YAML stringifier headers. The actual implementation classes are enabled only when the corresponding CMake options are set to `ON`.
+
+In the minimal variant (`BENCODE_BUILD_MINIMAL=ON`), optional stringifiers and file-based I/O are disabled and the library builds as a lean core-only variant.
+
+### CMake Configuration Options
+
+The following options are the primary knobs used to configure the library:
+
+- `BENCODE_BUILD_MINIMAL`
+  - Build a smaller, core-only library variant with buffer-based parse/stringify and no optional file or stringify features.
+- `BENCODE_EMBEDDED_MODE`
+  - Build an embedded variant with the embedded runtime constraints in effect.
+- `BENCODE_ENABLE_FILE_IO`
+  - Enable or disable file-based helpers such as `Bencode::fromFile()` and `Bencode::toFile()`.
+- `BENCODE_ENABLE_JSON_STRINGIFY`, `BENCODE_ENABLE_XML_STRINGIFY`, `BENCODE_ENABLE_YAML_STRINGIFY`
+  - Enable or disable the built-in optional stringify modules.
+- `BENCODE_ENABLE_EXCEPTIONS`
+  - When disabled, parse entry points return `ParseStatus` instead of throwing exceptions.
+
+### Public Headers
+
+The following headers provide the supported public API:
+
+- `Bencode.hpp`
+- `Bencode_Core.hpp`
+- `Bencode_Status.hpp`
+- `Bencode_Optional_Stringify.hpp`
+
+Internal headers under `classes/include/implementation/` are private and should not be included directly.
 
 ## Installing the Library
 
