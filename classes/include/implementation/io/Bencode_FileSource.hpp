@@ -10,6 +10,7 @@
 #include "interface/ISource.hpp"
 
 #include <cstdio>
+#include <memory>
 #include <string>
 #include <string_view>
 
@@ -20,24 +21,25 @@ class FileSource final : public ISource {
 public:
   // Constructors/Destructors
   explicit FileSource(const std::string_view &sourceFileName)
-      : source(nullptr), currentChar(EOF), hasPeek(false),
-        filename(sourceFileName) {
+      : currentChar(EOF), hasPeek(false), filename(sourceFileName) {
 #ifdef _MSC_VER
-    if (fopen_s(&source, filename.c_str(), "rb") != 0 || !source) {
+    FILE *rawSource = nullptr;
+    if (fopen_s(&rawSource, filename.c_str(), "rb") != 0 || !rawSource) {
 #else
-    source = std::fopen(filename.c_str(), "rb");
-    if (!source) {
+    FILE *rawSource = std::fopen(filename.c_str(), "rb");
+    if (!rawSource) {
 #endif
       throw Error(
           "Bencode file input stream failed to open or does not exist.");
     }
+    source.reset(rawSource);
   }
   FileSource() = delete;
   FileSource(const FileSource &other) = delete;
   FileSource &operator=(const FileSource &other) = delete;
   FileSource(FileSource &&other) = delete;
   FileSource &operator=(FileSource &&other) = delete;
-  ~FileSource() override { close(); }
+  ~FileSource() override = default;
 
   char current() const override {
     ensurePeek();
@@ -50,7 +52,7 @@ public:
     if (!hasPeek) {
       ensurePeek();
     }
-    std::fgetc(source);
+    std::fgetc(source.get());
     hasPeek = false;
   }
   bool more() const override {
@@ -59,7 +61,7 @@ public:
   }
   void reset() override {
     if (source) {
-      std::rewind(source);
+      std::rewind(source.get());
       hasPeek = false;
       currentChar = EOF;
     }
@@ -67,8 +69,7 @@ public:
   std::string getFileName() { return filename; }
   void close() {
     if (source) {
-      std::fclose(source);
-      source = nullptr;
+      source.reset();
       hasPeek = false;
       currentChar = EOF;
     }
@@ -79,14 +80,14 @@ private:
     if (hasPeek || !source) {
       return;
     }
-    currentChar = std::fgetc(source);
+    currentChar = std::fgetc(source.get());
     if (currentChar != EOF) {
-      std::ungetc(currentChar, source);
+      std::ungetc(currentChar, source.get());
     }
     hasPeek = true;
   }
 
-  mutable FILE *source;
+  mutable std::unique_ptr<FILE, decltype(&std::fclose)> source{nullptr, &std::fclose};
   mutable int currentChar;
   mutable bool hasPeek;
   std::string filename;

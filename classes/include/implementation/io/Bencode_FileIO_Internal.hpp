@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdio>
+#include <memory>
 #include <string>
 #include <string_view>
 
@@ -32,7 +33,7 @@ public:
   operator FILE *() const noexcept;
 
 private:
-  FILE *file_;
+  std::unique_ptr<FILE, decltype(&std::fclose)> file_{nullptr, &std::fclose};
 };
 
 std::string readBencodeString(FILE *bencodeFile);

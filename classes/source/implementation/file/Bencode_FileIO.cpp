@@ -18,42 +18,33 @@
 
 namespace Bencode_Lib {
 
-Bencode_FileHandle::Bencode_FileHandle(const std::string_view &path, Mode mode)
-    : file_(nullptr) {
+Bencode_FileHandle::Bencode_FileHandle(const std::string_view &path, Mode mode) {
   std::string pathString(path);
+  FILE *rawFile = nullptr;
   if (mode == Mode::Read) {
-    openBencodeFileForRead(pathString, file_);
+    openBencodeFileForRead(pathString, rawFile);
   } else {
-    openBencodeFileForWrite(pathString, file_);
+    openBencodeFileForWrite(pathString, rawFile);
   }
+  file_.reset(rawFile);
 }
 
-Bencode_FileHandle::~Bencode_FileHandle() {
-  if (file_) {
-    std::fclose(file_);
-  }
-}
+Bencode_FileHandle::~Bencode_FileHandle() = default;
 
 Bencode_FileHandle::Bencode_FileHandle(Bencode_FileHandle &&other) noexcept
-    : file_(other.file_) {
-  other.file_ = nullptr;
-}
+    : file_(std::move(other.file_)) {}
 
 Bencode_FileHandle &Bencode_FileHandle::operator=(
     Bencode_FileHandle &&other) noexcept {
   if (this != &other) {
-    if (file_) {
-      std::fclose(file_);
-    }
-    file_ = other.file_;
-    other.file_ = nullptr;
+    file_ = std::move(other.file_);
   }
   return *this;
 }
 
 bool Bencode_FileHandle::isOpen() const noexcept { return file_ != nullptr; }
-FILE *Bencode_FileHandle::get() const noexcept { return file_; }
-Bencode_FileHandle::operator FILE *() const noexcept { return file_; }
+FILE *Bencode_FileHandle::get() const noexcept { return file_.get(); }
+Bencode_FileHandle::operator FILE *() const noexcept { return file_.get(); }
 
 static void ensureFileOpen(FILE *bencodeFile, const char *message) {
   if (!bencodeFile) {

@@ -8,6 +8,7 @@
 #include "interface/ISource.hpp"
 
 #include <cstddef>
+#include <string>
 #include <string_view>
 
 namespace Bencode_Lib {
@@ -17,8 +18,9 @@ class BufferSource final : public ISource {
 public:
   // Constructors/Destructors
   explicit BufferSource(const std::string_view &sourceBuffer)
-      : parseData(sourceBuffer.data()), parseSize(sourceBuffer.size()) {
-    if (sourceBuffer.empty()) {
+      : parseBuffer(sourceBuffer), parseData(parseBuffer.data()),
+        parseSize(parseBuffer.size()) {
+    if (parseBuffer.empty()) {
       throw Error("Empty source buffer passed to be parsed.");
     }
   }
@@ -48,6 +50,7 @@ public:
 
 private:
   std::size_t bufferPosition = 0;
+  std::string parseBuffer;
   const char *parseData = nullptr;
   std::size_t parseSize = 0;
 };

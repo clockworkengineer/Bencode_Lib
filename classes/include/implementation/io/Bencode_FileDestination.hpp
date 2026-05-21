@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <cstdio>
 #include <cstring>
+#include <memory>
 #include <string>
 #include <string_view>
 
@@ -22,24 +23,26 @@ class FileDestination final : public IDestination {
 public:
   // Constructors/Destructors
   explicit FileDestination(const std::string_view filename)
-      : destination(nullptr), filename(filename), length(0), lastChar(0) {
+      : filename(filename), length(0), lastChar(0) {
 #ifdef _MSC_VER
-    if (fopen_s(&destination, this->filename.c_str(), "wb") != 0 ||
-        !destination) {
+    FILE *rawDestination = nullptr;
+    if (fopen_s(&rawDestination, this->filename.c_str(), "wb") != 0 ||
+        !rawDestination) {
 #else
-    destination = std::fopen(this->filename.c_str(), "wb");
-    if (!destination) {
+    FILE *rawDestination = std::fopen(this->filename.c_str(), "wb");
+    if (!rawDestination) {
 #endif
       throw Error("Bencode file output stream failed to open or could not be "
                   "created.");
     }
+    destination.reset(rawDestination);
   }
   FileDestination() = delete;
   FileDestination(const FileDestination &other) = delete;
   FileDestination &operator=(const FileDestination &other) = delete;
   FileDestination(FileDestination &&other) = delete;
   FileDestination &operator=(FileDestination &&other) = delete;
-  ~FileDestination() override { close(); }
+  ~FileDestination() override = default;
 
   void add(const std::string &bytes) override {
     writeBytes(bytes.data(), bytes.length());
@@ -53,17 +56,17 @@ public:
   void add(const char ch) override { writeBytes(&ch, 1); }
 
   void clear() override {
-    if (destination) {
-      std::fclose(destination);
-    }
+    destination.reset();
 #ifdef _MSC_VER
-    if (fopen_s(&destination, filename.c_str(), "wb") != 0 || !destination) {
+    FILE *rawDestination = nullptr;
+    if (fopen_s(&rawDestination, filename.c_str(), "wb") != 0 || !rawDestination) {
 #else
-    destination = std::fopen(filename.c_str(), "wb");
-    if (!destination) {
+    FILE *rawDestination = std::fopen(filename.c_str(), "wb");
+    if (!rawDestination) {
 #endif
       throw Error("File output stream failed to open or could not be created.");
     }
+    destination.reset(rawDestination);
     length = 0;
     lastChar = 0;
   }
@@ -73,10 +76,7 @@ public:
 
   std::string getFileName() { return filename; }
   void close() {
-    if (destination) {
-      std::fclose(destination);
-      destination = nullptr;
-    }
+    destination.reset();
   }
 
 private:
@@ -84,18 +84,18 @@ private:
     if (!destination) {
       throw Error("File output stream is not open.");
     }
-    std::size_t written = std::fwrite(data, 1, size, destination);
+    std::size_t written = std::fwrite(data, 1, size, destination.get());
     if (written != size) {
       throw Error("Failed to write bytes to file output stream.");
     }
-    std::fflush(destination);
+    std::fflush(destination.get());
     length += written;
     if (size > 0) {
       lastChar = data[size - 1];
     }
   }
 
-  FILE *destination;
+  std::unique_ptr<FILE, decltype(&std::fclose)> destination{nullptr, &std::fclose};
   std::string filename;
   std::size_t length{};
   char lastChar{};
