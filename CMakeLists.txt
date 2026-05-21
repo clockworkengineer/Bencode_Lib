@@ -12,6 +12,7 @@ option(BENCODE_BUILD_TESTS "Build unit tests" ON)
 option(BENCODE_BUILD_EXAMPLES "Build examples" OFF)
 option(BENCODE_BUILD_BENCHMARKS "Build performance benchmark executable" ON)
 option(BENCODE_BUILD_MINIMAL "Build minimal library variant with core parse/stringify and buffer-based I/O" OFF)
+option(BENCODE_BUILD_FUZZERS "Build fuzz target(s) for parser input" OFF)
 
 # Minimal library variant is intended for consumer builds that want a smaller public surface
 # and do not require file-based I/O or the optional stringifier extensions.

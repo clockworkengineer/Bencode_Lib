@@ -110,6 +110,11 @@ This document captures a concrete hardening plan for `Bencode_Lib`. The library 
 4. Extend CMake warning options and sanitizer support in `CMakeLists.txt`.
 5. Audit `classes/include/implementation` APIs for safe ownership semantics and remove or encapsulate any unsafe raw pointer usage.
 
+## Progress
+
+- Implemented the parser fuzz harness in `tests/source/fuzz/Bencode_Lib_Fuzz_Parser.cpp`.
+- Added optional fuzz-target build support in `tests/CMakeLists.txt` and `CMakeLists.txt` via `BENCODE_BUILD_FUZZERS`.
+
 ## Notes
 
 - The library already has a good foundation for hardening due to its configurability and test scaffolding.

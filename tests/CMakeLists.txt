@@ -178,6 +178,27 @@ endif()
 
 add_test(NAME ${TEST_EXECUTABLE} COMMAND ${TEST_EXECUTABLE})
 
+if(BENCODE_BUILD_FUZZERS)
+  add_executable(Bencode_Lib_Fuzz_Parser source/fuzz/Bencode_Lib_Fuzz_Parser.cpp)
+  target_include_directories(Bencode_Lib_Fuzz_Parser PUBLIC ${PROJECT_SOURCE_DIR}/include)
+  target_link_libraries(Bencode_Lib_Fuzz_Parser Bencode_Lib::Bencode_Lib)
+  target_precompile_headers(Bencode_Lib_Fuzz_Parser REUSE_FROM Bencode_Lib)
+
+  if(NOT MSVC)
+    target_compile_options(Bencode_Lib_Fuzz_Parser PRIVATE
+      -Wall
+      -Wextra
+      -Wpedantic
+      $<$<BOOL:${BENCODE_ENABLE_SANITIZERS}>:-fsanitize=address,undefined>
+    )
+    target_link_options(Bencode_Lib_Fuzz_Parser PRIVATE
+      $<$<BOOL:${BENCODE_ENABLE_SANITIZERS}>:-fsanitize=address,undefined>
+    )
+  endif()
+
+  add_test(NAME Bencode_Lib_Fuzz_Parser COMMAND Bencode_Lib_Fuzz_Parser)
+endif()
+
 if(BENCODE_BUILD_BENCHMARKS)
   add_executable(Bencode_Lib_Benchmark source/benchmark/Bencode_Lib_Benchmark.cpp)
   target_include_directories(Bencode_Lib_Benchmark PUBLIC ${PROJECT_SOURCE_DIR}/include)
