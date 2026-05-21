@@ -29,7 +29,7 @@ option(BENCODE_ENABLE_JSON_STRINGIFY "Enable JSON stringify support" ON)
 option(BENCODE_ENABLE_XML_STRINGIFY "Enable XML stringify support" ON)
 option(BENCODE_ENABLE_YAML_STRINGIFY "Enable YAML stringify support" ON)
 option(BENCODE_WARNINGS_AS_ERRORS "Treat warnings as errors" OFF)
-option(BENCODE_ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer for test targets" OFF)
+option(BENCODE_ENABLE_SANITIZERS "Enable AddressSanitizer, UndefinedBehaviorSanitizer, IntegerSanitizer, and BoundsSanitizer for test targets" OFF)
 
 # Setup library version
 configure_file(Bencode_Config.h.in Bencode_Config.hpp @ONLY)
@@ -278,6 +278,9 @@ else()
     -Wall
     -Wextra
     -Wpedantic
+    -Wconversion
+    -Wshadow
+    -Wformat
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
   )
 endif()

@@ -125,18 +125,27 @@ else()
     -Wall
     -Wextra
     -Wpedantic
+    -Wconversion
+    -Wshadow
+    -Wformat
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
   )
   target_compile_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE
     -Wall
     -Wextra
     -Wpedantic
+    -Wconversion
+    -Wshadow
+    -Wformat
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
   )
   target_compile_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
     -Wall
     -Wextra
     -Wpedantic
+    -Wconversion
+    -Wshadow
+    -Wformat
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
   )
 
@@ -145,33 +154,36 @@ else()
       -Wall
       -Wextra
       -Wpedantic
+      -Wconversion
+      -Wshadow
+      -Wformat
       $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:-Werror>
     )
   endif()
 
   if(BENCODE_ENABLE_SANITIZERS AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(${TEST_EXECUTABLE} PRIVATE
-      -fsanitize=address,undefined
+      -fsanitize=address,undefined,integer,bounds
       -fno-omit-frame-pointer
     )
-    target_link_options(${TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined)
+    target_link_options(${TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined,integer,bounds)
     target_compile_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE
-      -fsanitize=address,undefined
+      -fsanitize=address,undefined,integer,bounds
       -fno-omit-frame-pointer
     )
-    target_link_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE -fsanitize=address,undefined)
+    target_link_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE -fsanitize=address,undefined,integer,bounds)
     target_compile_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
-      -fsanitize=address,undefined
+      -fsanitize=address,undefined,integer,bounds
       -fno-omit-frame-pointer
     )
-    target_link_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined)
+    target_link_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined,integer,bounds)
 
     if(BENCODE_BUILD_MINIMAL)
       target_compile_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE
-        -fsanitize=address,undefined
+        -fsanitize=address,undefined,integer,bounds
         -fno-omit-frame-pointer
       )
-      target_link_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined)
+      target_link_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined,integer,bounds)
     endif()
   endif()
 endif()
@@ -189,10 +201,13 @@ if(BENCODE_BUILD_FUZZERS)
       -Wall
       -Wextra
       -Wpedantic
-      $<$<BOOL:${BENCODE_ENABLE_SANITIZERS}>:-fsanitize=address,undefined>
+      -Wconversion
+      -Wshadow
+      -Wformat
+      $<$<BOOL:${BENCODE_ENABLE_SANITIZERS}>:-fsanitize=address,undefined,integer,bounds>
     )
     target_link_options(Bencode_Lib_Fuzz_Parser PRIVATE
-      $<$<BOOL:${BENCODE_ENABLE_SANITIZERS}>:-fsanitize=address,undefined>
+      $<$<BOOL:${BENCODE_ENABLE_SANITIZERS}>:-fsanitize=address,undefined,integer,bounds>
     )
   endif()
 
