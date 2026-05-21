@@ -143,7 +143,7 @@ Node &Bencode_Impl::getOrCreateDictionaryEntry(const std::string_view &key) {
 }
 
 Node &Bencode_Impl::getOrCreateListEntry(std::size_t index) {
-  return getOrCreateRootEntry<List>(static_cast<int>(index));
+  return getOrCreateRootEntry<List>(index);
 }
 
 template <typename Container>

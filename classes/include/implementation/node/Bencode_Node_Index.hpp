@@ -7,13 +7,13 @@
 
 namespace Bencode_Lib {
 // List
-inline Node &Node::operator[](const int index) {
+inline Node &Node::operator[](const std::size_t index) {
   if (isA<Hole>(*this)) {
     *this = make<List>();
   }
   return NRef<List>(*this)[index];
 }
-inline const Node &Node::operator[](const int index) const {
+inline const Node &Node::operator[](const std::size_t index) const {
   return NRef<const List>(*this)[index];
 }
 // Dictionary

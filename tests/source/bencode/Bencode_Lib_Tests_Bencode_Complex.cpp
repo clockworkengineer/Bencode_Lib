@@ -238,8 +238,8 @@ TEST_CASE("Check Bencode create complex Bencode structures.",
   SECTION("Sequential list built in a loop stringifies correctly.",
           "[Bencode][Create][Complex][List]") {
     Bencode bencode;
-    for (int i = 0; i < 5; i++) {
-      bencode[i] = i + 1;
+    for (std::size_t i = 0; i < 5; ++i) {
+      bencode[i] = static_cast<int>(i + 1);
     }
     BufferDestination destination;
     REQUIRE_NOTHROW(bencode.stringify(destination));

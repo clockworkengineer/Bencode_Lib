@@ -111,8 +111,8 @@ struct Node {
   Node &operator[](const std::string_view &key);
   const Node &operator[](const std::string_view &key) const;
   // operator[] for list: returns value at index, throws if out of bounds
-  Node &operator[](int index);
-  const Node &operator[](int index) const;
+  Node &operator[](std::size_t index);
+  const Node &operator[](std::size_t index) const;
   // Check if dictionary contains key
   [[nodiscard]] bool contains(std::string_view key) const noexcept;
   // Safe access: throws if key not found

@@ -55,7 +55,7 @@ private:
         buffer[writeIndex++] = temp[--tempIndex];
       }
     }
-    destination.add(std::string_view(buffer, writeIndex));
+    destination.add(std::string_view(buffer, static_cast<std::string_view::size_type>(writeIndex)));
   }
 
   static unsigned long long integerToUnsigned(Bencode::IntegerType value) {

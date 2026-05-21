@@ -32,11 +32,11 @@ struct List : Variant {
   [[nodiscard]] ListEntries &value() { return bNodeList; }
   [[nodiscard]] const ListEntries &value() const { return bNodeList; }
   // Get Node at index
-  Node &operator[](const int index) {
+  Node &operator[](const std::size_t index) {
     validateIndex(index);
     return bNodeList[index];
   }
-  const Node &operator[](const int index) const {
+  const Node &operator[](const std::size_t index) const {
     validateIndex(index);
     return bNodeList[index];
   }
@@ -52,8 +52,8 @@ struct List : Variant {
 
 private:
   // ensure the index is within the bounds
-  void validateIndex(const int index) const {
-    if (!(index >= 0 && index < static_cast<int>(bNodeList.size()))) {
+  void validateIndex(const std::size_t index) const {
+    if (index >= bNodeList.size()) {
       throw Node::Error("Invalid index used in list.");
     }
   }

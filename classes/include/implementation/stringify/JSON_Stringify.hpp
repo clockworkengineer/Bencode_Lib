@@ -50,7 +50,7 @@ private:
   }
   static void stringifyDictionary(const Node &bNode, IDestination &destination)  {
     destination.add('{');
-    int commas = NRef<Dictionary>(bNode).value().size();
+    auto commas = NRef<Dictionary>(bNode).value().size();
     for (const auto &bNodeNext : NRef<Dictionary>(bNode).value()) {
       destination.add("\"");
       destination.add(bNodeNext.getKey());
@@ -62,7 +62,7 @@ private:
     destination.add('}');
   }
   static void stringifyList(const Node &bNode, IDestination &destination)  {
-    int commas = NRef<List>(bNode).value().size();
+    auto commas = NRef<List>(bNode).value().size();
     destination.add('[');
     for (const auto &bNodeNext : NRef<List>(bNode).value()) {
       stringifyNodes(bNodeNext, destination);
