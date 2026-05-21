@@ -115,6 +115,7 @@ This document captures a concrete hardening plan for `Bencode_Lib`. The library 
 - Implemented the parser fuzz harness in `tests/source/fuzz/Bencode_Lib_Fuzz_Parser.cpp`.
 - Added optional fuzz-target build support in `tests/CMakeLists.txt` and `CMakeLists.txt` via `BENCODE_BUILD_FUZZERS`.
 - Audited implementation APIs for ownership safety and replaced manual `FILE*` management with `std::unique_ptr<FILE, decltype(&std::fclose)>` in file I/O adapters.
+- Extended public-header compilation hygiene coverage by including all public headers in the public header compile test.
 
 ## Notes
 

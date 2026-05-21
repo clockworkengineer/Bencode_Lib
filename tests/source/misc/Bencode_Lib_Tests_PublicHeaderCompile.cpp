@@ -1,5 +1,7 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "Bencode_Status.hpp"
+#include "Bencode_Optional_Stringify.hpp"
 
 int main() {
   Bencode_Lib::Bencode b;
