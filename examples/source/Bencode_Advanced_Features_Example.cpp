@@ -2,11 +2,8 @@
 // Description: Demonstrates advanced features like parser depth and custom
 // error handling in Bencode_Lib. Dependencies: C++20, Bencode_Lib.
 
-#include "Bencode.hpp"
-#include "implementation/parser/Default_Parser.hpp"
-#include "implementation/variants/Bencode_String.hpp"
-#include "implementation/common/Bencode_Error.hpp"
 #include "Bencode_Utility.hpp"
+#include "implementation/parser/Default_Parser.hpp"
 
 namespace be = Bencode_Lib;
 
