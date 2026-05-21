@@ -10,7 +10,6 @@
 
 #include "Bencode_Utility.hpp"
 #include "Bencode_TorrentInfo.hpp"
-#include <iostream>
 
 namespace be = Bencode_Lib;
 

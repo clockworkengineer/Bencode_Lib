@@ -1,7 +1,7 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "Bencode_Utility.hpp"
 
-#include <iostream>
 #include <string>
 
 using namespace Bencode_Lib;

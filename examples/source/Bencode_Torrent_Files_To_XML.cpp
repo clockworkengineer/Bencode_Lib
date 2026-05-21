@@ -9,7 +9,6 @@
 
 #include "Bencode_Utility.hpp"
 #include "XML_Stringify.hpp"
-#include <iostream>
 
 namespace be = Bencode_Lib;
 

@@ -9,7 +9,6 @@
 
 #include "Bencode_Utility.hpp"
 #include "Bencode_Analyzer.hpp"
-#include <iostream>
 
 namespace be = Bencode_Lib;
 

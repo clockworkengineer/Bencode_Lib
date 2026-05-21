@@ -6,7 +6,7 @@
 #include "implementation/parser/Default_Parser.hpp"
 #include "implementation/variants/Bencode_String.hpp"
 #include "implementation/common/Bencode_Error.hpp"
-#include <iostream>
+#include "Bencode_Utility.hpp"
 
 namespace be = Bencode_Lib;
 
