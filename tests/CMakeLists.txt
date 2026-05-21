@@ -26,8 +26,10 @@ set(TEST_SOURCES
   source/bencode/Bencode_Lib_Tests_Bencode_Complex.cpp
   source/bencode/Bencode_Lib_Tests_Bencode_Dictionary.cpp
   source/bencode/Bencode_Lib_Tests_Bencode_List.cpp
+  source/parser/Bencode_Lib_Tests_Parse_Boundary.cpp
   source/parser/Bencode_Lib_Tests_Parse_Collection.cpp
   source/parser/Bencode_Lib_Tests_Parse_Exception.cpp
+  source/parser/Bencode_Lib_Tests_Parse_EdgeCases.cpp
   source/parser/Bencode_Lib_Tests_Parse_Misc.cpp
   source/parser/Bencode_Lib_Tests_Parse_Simple.cpp
   source/stringify/Bencode_Lib_Tests_Stringify_Collection.cpp
@@ -50,6 +52,7 @@ set(TEST_SOURCES
 
 add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
 target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
 # Catch2 is linked only to test executables, keeping the main library free of test-only dependencies.
 target_link_libraries(${TEST_EXECUTABLE} Bencode_Lib::Bencode_Lib Catch2::Catch2WithMain)
 target_precompile_headers(${TEST_EXECUTABLE} REUSE_FROM Bencode_Lib)
@@ -78,6 +81,7 @@ if(BENCODE_BUILD_MINIMAL)
   set(MINIMAL_TEST_EXECUTABLE ${BENCODE_LIBRARY_NAME}_Minimal_Unit_Tests)
   add_executable(${MINIMAL_TEST_EXECUTABLE} source/minimal/Bencode_Lib_Tests_Minimal.cpp)
   target_include_directories(${MINIMAL_TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
   # Minimal test target validates the reduced feature set separately from the normal build.
   target_link_libraries(${MINIMAL_TEST_EXECUTABLE} Bencode_Lib::Bencode_Lib_Minimal Catch2::Catch2WithMain)
   target_precompile_headers(${MINIMAL_TEST_EXECUTABLE} PRIVATE ${CMAKE_SOURCE_DIR}/stdafx.h)

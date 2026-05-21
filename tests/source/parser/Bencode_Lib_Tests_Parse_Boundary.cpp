@@ -9,11 +9,8 @@ TEST_CASE("Parse fails fast on max depth exceeded", "[Bencode][Parse][Boundary][
     REQUIRE_THROWS(b.parse(source));
 }
 
-TEST_CASE("Parse empty file returns error", "[Bencode][Parse][File][Boundary]") {
-    Bencode b;
-    // Simulate empty file source
-    BufferSource source{std::string{}};
-    REQUIRE_THROWS(b.parse(source));
+TEST_CASE("Empty BufferSource construction fails for empty input", "[Bencode][Parse][File][Boundary]") {
+    REQUIRE_THROWS_AS(BufferSource(std::string{}), ISource::Error);
 }
 
 TEST_CASE("Parse string at max allowed length", "[Bencode][Parse][String][Boundary]") {
