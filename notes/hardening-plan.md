@@ -117,6 +117,7 @@ This document captures a concrete hardening plan for `Bencode_Lib`. The library 
 - Audited implementation APIs for ownership safety and replaced manual `FILE*` management with `std::unique_ptr<FILE, decltype(&std::fclose)>` in file I/O adapters.
 - Extended public-header compilation hygiene coverage by including all public headers in the public header compile test.
 - Added embedded-mode compile-time assertions for file I/O, dynamic allocation, and exception configuration.
+- Added a release packaging validation target and package-check script to verify the installed header set.
 
 ## Notes
 

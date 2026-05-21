@@ -141,6 +141,7 @@ set(BENCODE_COMMON_INCLUDES
 )
 
 set(BENCODE_FILE_IO_INCLUDES)
+
 if(BENCODE_ENABLE_FILE_IO)
   list(APPEND BENCODE_FILE_IO_INCLUDES
     classes/include/implementation/io/Bencode_FileSource.hpp
@@ -149,6 +150,7 @@ if(BENCODE_ENABLE_FILE_IO)
 endif()
 
 set(BENCODE_OPTIONAL_STRINGIFY_INCLUDES)
+
 if(BENCODE_ENABLE_JSON_STRINGIFY)
   list(APPEND BENCODE_OPTIONAL_STRINGIFY_INCLUDES
     classes/include/implementation/stringify/JSON_Stringify.hpp
@@ -205,6 +207,7 @@ set(BENCODE_INSTALLABLE_IMPLEMENTATION_IO_HEADERS
 )
 
 set(BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS)
+
 if(BENCODE_ENABLE_FILE_IO)
   list(APPEND BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS
     classes/include/implementation/io/Bencode_FileSource.hpp
@@ -213,19 +216,25 @@ if(BENCODE_ENABLE_FILE_IO)
 endif()
 
 set(BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS)
+
 if(BENCODE_ENABLE_JSON_STRINGIFY)
   list(APPEND BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS
     classes/include/implementation/stringify/JSON_Stringify.hpp
+    classes/include/implementation/translator/Default_Translator.hpp
   )
 endif()
+
 if(BENCODE_ENABLE_XML_STRINGIFY)
   list(APPEND BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS
     classes/include/implementation/stringify/XML_Stringify.hpp
+    classes/include/implementation/translator/Default_Translator.hpp
   )
 endif()
+
 if(BENCODE_ENABLE_YAML_STRINGIFY)
   list(APPEND BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS
     classes/include/implementation/stringify/YAML_Stringify.hpp
+    classes/include/implementation/translator/Default_Translator.hpp
   )
 endif()
 
@@ -420,11 +429,13 @@ install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_VARIANT_HEADERS}
 install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_IO_HEADERS}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/io
 )
+
 if(BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS)
   install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/io
   )
 endif()
+
 if(BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS)
   install(FILES ${BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/stringify
@@ -460,4 +471,13 @@ install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/Bencode_LibConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/Bencode_LibConfigVersion.cmake
   DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+)
+
+set(PACKAGE_CHECK_STAGING_DIR ${CMAKE_BINARY_DIR}/package_check_install)
+add_custom_target(Bencode_Lib_PackageCheck
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${PACKAGE_CHECK_STAGING_DIR}
+  COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR} --prefix ${PACKAGE_CHECK_STAGING_DIR}
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/PackageCheck.cmake -- --install-prefix ${PACKAGE_CHECK_STAGING_DIR}
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  COMMENT "Install library into a temporary staging area and validate package contents"
 )

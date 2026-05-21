@@ -160,6 +160,37 @@ File I/O is selected based on the platform and build options:
 
 The installed CMake package configuration is generated consistently for all builds and exports separate targets for the standard, minimal, and embedded variants.
 
+## Release Packaging Hardening
+
+Bencode_Lib includes a package validation step that installs the library into a temporary staging area and verifies the installed header set.
+
+Run the release packaging check after building the library:
+
+```bash
+cmake --build build --target Bencode_Lib_PackageCheck
+```
+
+This validation ensures the installed package contains only the supported public headers and the implementation headers required by the public API. It also rejects unintended private/internal headers from the installation layout.
+
+### Minimum Release Build Requirements
+
+- Compiler support:
+  - GCC 11 or newer
+  - Clang 12 or newer
+  - MSVC 2019 or newer
+- Build type:
+  - `-DCMAKE_BUILD_TYPE=Release`
+- Sanitizer support (recommended for release testing):
+  - `-DBENCODE_ENABLE_SANITIZERS=ON`
+  - enables AddressSanitizer, UndefinedBehaviorSanitizer, IntegerSanitizer, and BoundsSanitizer for test targets.
+
+### Supported safe modes
+
+- `BENCODE_BUILD_MINIMAL=ON`
+  - builds a lean core-only variant with optional file I/O/stringify support disabled.
+- `BENCODE_EMBEDDED_MODE=ON`
+  - builds a hardened embedded variant with fixed limits, no exceptions, no file I/O, and no dynamic allocation.
+
 ## API Stability
 
 The stable, published API includes:
