@@ -8,6 +8,23 @@
 // Bencode Core
 // ============
 #include "Bencode_Config.hpp"
+
+static_assert(BENCODE_MAX_NODE_COUNT > 0,
+              "BENCODE_MAX_NODE_COUNT must be positive.");
+static_assert(BENCODE_MAX_CONTAINER_SIZE > 0,
+              "BENCODE_MAX_CONTAINER_SIZE must be positive.");
+static_assert(BENCODE_MAX_STRING_LENGTH > 0,
+              "BENCODE_MAX_STRING_LENGTH must be positive.");
+
+#if defined(BENCODE_EMBEDDED_MODE) && (BENCODE_EMBEDDED_MODE == 1)
+static_assert(BENCODE_ENABLE_FILE_IO == 0,
+              "Embedded mode requires BENCODE_ENABLE_FILE_IO=0.");
+static_assert(BENCODE_ENABLE_DYNAMIC_ALLOCATION == 0,
+              "Embedded mode requires BENCODE_ENABLE_DYNAMIC_ALLOCATION=0.");
+static_assert(BENCODE_ENABLE_EXCEPTIONS == 0,
+              "Embedded mode requires BENCODE_ENABLE_EXCEPTIONS=0.");
+#endif
+
 #include "interface/Bencode_Interfaces.hpp"
 #include "implementation/variants/Bencode_Variant.hpp"
 #include "implementation/node/Bencode_Node.hpp"
