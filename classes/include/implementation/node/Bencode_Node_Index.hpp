@@ -40,10 +40,16 @@ inline bool Node::contains(std::string_view key) const noexcept {
 }
 
 inline Node &Node::at(std::string_view key) {
+  if (!isA<Dictionary>(*this)) {
+    throw Node::Error("Type error: Node is not a dictionary.");
+  }
   return NRef<Dictionary>(*this).at(key);
 }
 
 inline const Node &Node::at(std::string_view key) const {
+  if (!isA<Dictionary>(*this)) {
+    throw Node::Error("Type error: Node is not a dictionary.");
+  }
   return NRef<const Dictionary>(*this).at(key);
 }
 } // namespace Bencode_Lib
