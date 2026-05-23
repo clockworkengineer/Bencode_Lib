@@ -1,3 +1,8 @@
+// File: Bencode_Analyzer.hpp
+//
+// Description: Analyzer helper for example applications that introspects
+// Bencode node trees and gathers runtime statistics.
+//
 #pragma once
 
 #include "Bencode.hpp"
@@ -8,11 +13,17 @@ public:
   Bencode_Analyzer() = default;
   ~Bencode_Analyzer() override = default;
   // Add Node details to analysis
+  /// <summary>
+  /// Called for each node visited during analysis.
+  /// </summary>
   void
   onNode([[maybe_unused]] const Bencode_Lib::Node &bNode) override {
     totalNodes++;
   }
   // Add string details to analysis
+  /// <summary>
+  /// Extract string-specific statistics from a node.
+  /// </summary>
   void onString(const Bencode_Lib::Node &bNode) override {
     const auto &bNodeString =Bencode_Lib::NRef<Bencode_Lib::String>(bNode);
     totalStrings++;
@@ -22,12 +33,18 @@ public:
     uniqueStrings.insert(bNodeString.value());
   }
   // Add integer details to analysis
+  /// <summary>
+  /// Extract integer-specific statistics from a node.
+  /// </summary>
   void
   onInteger([[maybe_unused]] const Bencode_Lib::Node &bNode) override {
     totalIntegers++;
     sizeInBytes += sizeof(Bencode_Lib::Integer);
   }
   // Add list details to analysis
+  /// <summary>
+  /// Extract list-specific statistics from a node.
+  /// </summary>
   void onList(const Bencode_Lib::Node &bNode) override {
     const auto &bNodeList =Bencode_Lib::NRef<Bencode_Lib::List>(bNode);
     totalLists++;
@@ -38,6 +55,9 @@ public:
     }
   }
   // Add dictionary details to analysis
+  /// <summary>
+  /// Extract dictionary-specific statistics from a node.
+  /// </summary>
   void onDictionary(const Bencode_Lib::Node &bNode) override {
     const auto &bNodeDictionary =
        Bencode_Lib::NRef<Bencode_Lib::Dictionary>(bNode);
@@ -55,6 +75,9 @@ public:
     }
   }
   // Output analysis details
+  /// <summary>
+  /// Format the gathered analysis statistics as a string.
+  /// </summary>
   [[nodiscard]] std::string dump() const {
     std::stringstream os;
     os << "\n------------------Bencode Tree Stats------------------\n";
@@ -82,6 +105,9 @@ public:
     os << "Bencode Tree contains " << totalIntegers << " integers.\n";
     return (os.str());
   }
+  /// <summary>
+  /// Dump the memory sizes of internal Bencode node data structures.
+  /// </summary>
   static std::string dumpNodeSizes() {
     std::stringstream os;
     os << "\n--------------------Bencode_Lib::Node "
@@ -100,6 +126,9 @@ public:
        << " in bytes.\n";
     return (os.str());
   }
+  /// <summary>
+  /// Dump the system numeric type sizes used by the example.
+  /// </summary>
   static std::string dumpNumericSizes() {
     std::stringstream os;
     os << "\n--------------------System Numeric Sizes---------------------\n";

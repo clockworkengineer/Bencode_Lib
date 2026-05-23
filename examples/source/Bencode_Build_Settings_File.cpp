@@ -1,3 +1,4 @@
+// File: Bencode_Build_Settings_File.cpp
 //
 // Program: Bencode_Build_Settings_File
 //
@@ -12,6 +13,9 @@
 
 namespace be = Bencode_Lib;
 
+/// <summary>
+/// Get the settings file path used by the example.
+/// </summary>
 std::string settingsFilePath() {
   return (std::filesystem::current_path() / "files" / "settings.ben").string();
 }
@@ -84,6 +88,9 @@ void readSettings() {
   std::cout << "  timeout : " << netTimeout;
 }
 
+/// <summary>
+/// Example entry point that writes and reads Bencode settings data.
+/// </summary>
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     std::cout << "Bencode_Build_Settings_File started ...";

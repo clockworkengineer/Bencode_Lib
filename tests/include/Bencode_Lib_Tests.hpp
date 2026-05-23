@@ -1,3 +1,8 @@
+// File: Bencode_Lib_Tests.hpp
+//
+// Description: Catch2 test helper header for Bencode_Lib unit tests and common
+// utilities.
+//
 #pragma once
 
 #include "catch2/catch_all.hpp"

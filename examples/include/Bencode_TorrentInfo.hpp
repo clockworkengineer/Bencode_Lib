@@ -1,3 +1,8 @@
+// File: Bencode_TorrentInfo.hpp
+//
+// Description: Torrent metadata helper utilities for parsing common torrent
+// metadata from Bencode dictionaries.
+//
 #pragma once
 
 #include "Bencode.hpp"
@@ -11,6 +16,9 @@ struct TorrentInfo {
   using Integer = Bencode_Lib::Integer;
   // File details
   struct FileDetails {
+    /// <summary>
+    /// Construct file detail metadata for a torrent file entry.
+    /// </summary>
     FileDetails(const std::string &path, const std::uint64_t length)
         : path(std::move(path)), length(length) {}
     std::string path;       // Full file path name
@@ -18,6 +26,9 @@ struct TorrentInfo {
   };
   // Constructors/destructors
   TorrentInfo() = default;
+  /// <summary>
+  /// Construct TorrentInfo and load metadata from the given file.
+  /// </summary>
   explicit TorrentInfo(const std::string &fileName) { load(fileName); }
   TorrentInfo(const TorrentInfo &other) = delete;
   TorrentInfo &operator=(const TorrentInfo &other) = delete;
@@ -32,18 +43,27 @@ struct TorrentInfo {
   std::string dump();
 
 private:
+  /// <summary>
+  /// Retrieve a string field from a Bencode dictionary.
+  /// </summary>
   static std::string_view getString(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
       return (Bencode_Lib::NRef<String>(bNode[field]).value());
     }
     return ("");
   }
+  /// <summary>
+  /// Retrieve an integer field from a Bencode dictionary.
+  /// </summary>
   static std::uint64_t getInteger(const Dictionary &bNode, const char *field) {
     if (bNode.contains(field)) {
       return (Bencode_Lib::NRef<Integer>(bNode[field]).value());
     }
     return (0);
   }
+  /// <summary>
+  /// Extract the announce-list of tracker URLs from the torrent metadata.
+  /// </summary>
   static std::vector<std::string> getAnnounceList(const Dictionary &bNode) {
     // This is meant to be a simple list of strings but for some reason each
     // string is encased in its own list for an extra level (bug ?).
@@ -58,6 +78,9 @@ private:
     }
     return (std::vector<std::string>{});
   }
+  /// <summary>
+  /// Construct the file path string from a torrent file dictionary.
+  /// </summary>
   static std::string getFilePath(const Dictionary &bNode) {
     if (bNode.contains("path")) {
       std::filesystem::path path{};
@@ -68,6 +91,9 @@ private:
     }
     return ("");
   }
+  /// <summary>
+  /// Build the list of file details from the torrent metadata dictionary.
+  /// </summary>
   static std::vector<TorrentInfo::FileDetails> getFilesList(const Dictionary &bNode) {
     if (bNode.contains("files")) {
       std::vector<FileDetails> fileList;

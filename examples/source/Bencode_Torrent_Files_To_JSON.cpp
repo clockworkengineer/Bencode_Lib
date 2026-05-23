@@ -1,3 +1,4 @@
+// File: Bencode_Torrent_Files_To_JSON.cpp
 //
 // Program:  Bencode_Files_To_JSON
 //
@@ -12,6 +13,9 @@
 
 namespace be = Bencode_Lib;
 
+/// <summary>
+/// Example entry point that converts torrent metadata to JSON.
+/// </summary>
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     const be::Bencode bStringify(be::makeStringify<be::JSON_Stringify>());

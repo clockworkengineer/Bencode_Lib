@@ -1,3 +1,4 @@
+// File: Bencode_Read_Torrent_Files.cpp
 //
 // Program: Bencode_Bencode_Read_Torrent_Files
 //
@@ -13,6 +14,9 @@
 
 namespace be = Bencode_Lib;
 
+/// <summary>
+/// Example entry point that reads torrent files and prints their metadata.
+/// </summary>
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.

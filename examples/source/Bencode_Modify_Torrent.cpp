@@ -1,3 +1,4 @@
+// File: Bencode_Modify_Torrent.cpp
 //
 // Program: Bencode_Modify_Torrent
 //
@@ -57,6 +58,9 @@ void verifyComment(const std::string &fileName, const std::string &expected) {
   }
 }
 
+/// <summary>
+/// Example entry point that modifies torrent metadata and writes it back.
+/// </summary>
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     std::cout << "Bencode_Modify_Torrent started ...";

@@ -1,3 +1,4 @@
+// File: Bencode_Torrent_Statistics.cpp
 //
 // Program: Bencode_Torrent_Statistics
 //
@@ -102,6 +103,9 @@ std::string formatBytes(std::uint64_t bytes) {
   return oss.str();
 }
 
+/// <summary>
+/// Example entry point that collects statistics from torrent files.
+/// </summary>
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     std::cout << "Bencode_Torrent_Statistics started ...";

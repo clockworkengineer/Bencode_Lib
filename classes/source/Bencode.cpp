@@ -1,18 +1,13 @@
+// File: Bencode.cpp
+//
+// Description: Perform Bencode stringify/parse to/from a byte
+// buffer or file. Supports public Bencode API operations and file
+// I/O helpers.
 //
 // Class: Bencode
 //
-// Description: Perform Bencode stringify/parse to/from a byte
-// buffer or file.It is also possible to customize this with the
-// ISource and IDestination interfaces if required. Although Bencoded
-// data is treated as std::byte externally, this library uses char and
-// std::string internally.
-//
-// For an in-depth description of the Bencode specification refer to its
-// Wiki page at https://en.wikipedia.org/wiki/Bencode.
-//
 // Dependencies: C++20 - Language standard features used.
 //
-
 #include "Bencode_Impl.hpp"
 
 namespace Bencode_Lib {
@@ -59,6 +54,9 @@ Bencode::ParseResultType Bencode::parse(ISource &source) const {
   return implementation->parse(source);
 }
 
+/// <summary>
+/// Implementation of the rvalue source overload for parse.
+/// </summary>
 Bencode::ParseResultType Bencode::parse(ISource &&source) const {
   return implementation->parse(std::move(source));
 }
@@ -71,6 +69,9 @@ Bencode::ParseResultType Bencode::parse(ISource &&source) const {
 void Bencode::stringify(IDestination &destination) const {
   implementation->stringify(destination);
 }
+/// <summary>
+/// Implementation of the rvalue destination overload for stringify.
+/// </summary>
 void Bencode::stringify(IDestination &&destination) const {
   implementation->stringify(std::move(destination));
 }
@@ -92,6 +93,9 @@ void Bencode::traverse(IAction &action) const {
 /// </summary>
 /// <returns>Root of Node encoded tree.</returns>
 Node &Bencode::root() { return implementation->root(); }
+/// <summary>
+/// Retrieve the constant root node of the parsed Bencode tree.
+/// </summary>
 const Node &Bencode::root() const { return implementation->root(); }
 /// <summary>
 /// Return object entry for the passed in keys.
@@ -100,6 +104,9 @@ const Node &Bencode::root() const { return implementation->root(); }
 Node &Bencode::operator[](const std::string_view &key) {
   return (*implementation)[key];
 }
+/// <summary>
+/// Retrieve a constant dictionary entry by key.
+/// </summary>
 const Node &Bencode::operator[](const std::string_view &key) const {
   return (*implementation)[key];
 }
@@ -110,6 +117,9 @@ const Node &Bencode::operator[](const std::string_view &key) const {
 Node &Bencode::operator[](const std::size_t index) {
   return (*implementation)[index];
 }
+/// <summary>
+/// Retrieve a constant list entry by index.
+/// </summary>
 const Node &Bencode::operator[](const std::size_t index) const {
   return (*implementation)[index];
 }

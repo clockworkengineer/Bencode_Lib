@@ -1,4 +1,3 @@
-
 // File: Bencode.hpp
 //
 // Description: Public Bencode API header defining the Bencode class and library entry points for encode/decode operations.

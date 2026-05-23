@@ -1,6 +1,4 @@
-
-//
-// Class: Bencode_Impl_FileIO
+// File: Bencode_FileIO.cpp
 //
 // Description: Public wrapper implementation for Bencode file-based I/O.
 //              Platform-specific file open behavior is selected by CMake.
@@ -18,6 +16,9 @@
 
 namespace Bencode_Lib {
 
+/// <summary>
+/// Open a platform-specific file handle for Bencode I/O.
+/// </summary>
 Bencode_FileHandle::Bencode_FileHandle(const std::string_view &path, Mode mode) {
   std::string pathString(path);
   FILE *rawFile = nullptr;
@@ -31,9 +32,15 @@ Bencode_FileHandle::Bencode_FileHandle(const std::string_view &path, Mode mode) 
 
 Bencode_FileHandle::~Bencode_FileHandle() = default;
 
+/// <summary>
+/// Move-construct a file handle.
+/// </summary>
 Bencode_FileHandle::Bencode_FileHandle(Bencode_FileHandle &&other) noexcept
     : file_(std::move(other.file_)) {}
 
+/// <summary>
+/// Move-assign a file handle.
+/// </summary>
 Bencode_FileHandle &Bencode_FileHandle::operator=(
     Bencode_FileHandle &&other) noexcept {
   if (this != &other) {
@@ -42,16 +49,33 @@ Bencode_FileHandle &Bencode_FileHandle::operator=(
   return *this;
 }
 
+/// <summary>
+/// Query whether the file handle is currently open.
+/// </summary>
 bool Bencode_FileHandle::isOpen() const noexcept { return file_ != nullptr; }
+
+/// <summary>
+/// Get the underlying FILE pointer for the open handle.
+/// </summary>
 FILE *Bencode_FileHandle::get() const noexcept { return file_.get(); }
+
+/// <summary>
+/// Convert the file handle to a raw FILE pointer.
+/// </summary>
 Bencode_FileHandle::operator FILE *() const noexcept { return file_.get(); }
 
+/// <summary>
+/// Verify that the underlying FILE pointer is open.
+/// </summary>
 static void ensureFileOpen(FILE *bencodeFile, const char *message) {
   if (!bencodeFile) {
     throw Error(message);
   }
 }
 
+/// <summary>
+/// Open a file or throw a Bencode error if the file cannot be opened.
+/// </summary>
 static Bencode_FileHandle openFileOrThrow(const std::string_view &fileName,
                                           Bencode_FileHandle::Mode mode,
                                           const char *errorMessage) {
@@ -62,6 +86,9 @@ static Bencode_FileHandle openFileOrThrow(const std::string_view &fileName,
   return file;
 }
 
+/// <summary>
+/// Write a Bencode string into the open file stream.
+/// </summary>
 void writeBencodeString(FILE *bencodeFile,
                         const std::string_view bencodeString) {
   ensureFileOpen(bencodeFile, "File stream is not open for writing.");
@@ -72,6 +99,9 @@ void writeBencodeString(FILE *bencodeFile,
   }
 }
 
+/// <summary>
+/// Read the entire contents of the opened Bencode file into a string.
+/// </summary>
 std::string readBencodeString(FILE *bencodeFile) {
   ensureFileOpen(bencodeFile, "File stream is not open for reading.");
 
@@ -92,6 +122,9 @@ std::string readBencodeString(FILE *bencodeFile) {
   return std::string(buffer.begin(), buffer.end());
 }
 
+/// <summary>
+/// Read a Bencode file and return its contents as a string.
+/// </summary>
 std::string Bencode_Impl::fromFile(const std::string_view &fileName) {
   Bencode_FileHandle file = openFileOrThrow(
       fileName, Bencode_FileHandle::Mode::Read,
@@ -100,6 +133,9 @@ std::string Bencode_Impl::fromFile(const std::string_view &fileName) {
   return readBencodeString(file.get());
 }
 
+/// <summary>
+/// Write a Bencode string to a file.
+/// </summary>
 void Bencode_Impl::toFile(const std::string_view &fileName,
                           const std::string_view &bencodeString) {
   Bencode_FileHandle file = openFileOrThrow(

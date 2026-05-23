@@ -1,4 +1,5 @@
-
+// File: Bencode_Minimal_Encode_Decode.cpp
+//
 // Program: Bencode_Minimal_Encode_Decode
 // Description: Minimal example of encoding and decoding using Bencode_Lib.
 // Dependencies: C++20, Bencode_Lib.
@@ -7,6 +8,9 @@
 
 namespace be = Bencode_Lib;
 
+/// <summary>
+/// Example entry point demonstrating minimal encode/decode operations.
+/// </summary>
 int main() {
     // Encode a dictionary
     be::Bencode bencodeDict;

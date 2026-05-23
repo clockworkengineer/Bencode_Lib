@@ -1,3 +1,4 @@
+// File: Bencode_Fibonacci.cpp
 //
 // Program: Bencode_Fibonacci
 //
@@ -43,6 +44,9 @@ void nextFibonacci() {
   bStringify.stringify(be::FileDestination{bStringifyFibonacciFile()});
 }
 
+/// <summary>
+/// Example entry point that updates a Fibonacci sequence stored in Bencode.
+/// </summary>
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.

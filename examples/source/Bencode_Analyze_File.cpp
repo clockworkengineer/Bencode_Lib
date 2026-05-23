@@ -1,3 +1,4 @@
+// File: Bencode_Analyze_File.cpp
 //
 // Program: Bencode_Analyze_File
 //
@@ -27,6 +28,9 @@ void processBencodeFile(const std::string_view &fileName)
   std::cout << "Finished " << fileName << ".";
 }
 
+/// <summary>
+/// Example entry point that parses and analyzes torrent files.
+/// </summary>
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
   // Initialise logging.

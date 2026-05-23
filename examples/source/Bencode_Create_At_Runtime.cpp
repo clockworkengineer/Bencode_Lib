@@ -1,3 +1,4 @@
+// File: Bencode_Create_At_Runtime.cpp
 //
 // Program: Bencode_Create_At_Runtime
 //
@@ -12,6 +13,9 @@
 
 namespace be = Bencode_Lib;
 
+/// <summary>
+/// Example entry point that constructs Bencode data at runtime.
+/// </summary>
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
   try {
     // Initialise logging.
