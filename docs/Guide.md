@@ -183,13 +183,15 @@ try {
 ## Custom Parsing
 You can implement your own parser by inheriting from `IParser` and passing it to the `Bencode` constructor.
 ```cpp
+#include <memory>
+
 class MyParser : public Bencode_Lib::IParser {
 public:
-    Node parse(ISource &source) override {
+    Node parseImpl(ISource &source) override {
         // Custom parsing logic
     }
 };
-Bencode doc(nullptr, new MyParser());
+Bencode doc(nullptr, std::make_unique<MyParser>());
 ```
 
 ## Custom Stringify

@@ -43,9 +43,11 @@ try {
 
 ## Custom Parser Example
 ```cpp
+#include <memory>
+
 class MyParser : public Bencode_Lib::IParser {
 public:
-    Node parse(ISource &source) override {
+    Node parseImpl(ISource &source) override {
         // Custom parsing logic
         return Node::make<Integer>(123);
     }
@@ -116,7 +118,8 @@ public:
     // ...
 };
 Bencode doc("d3:foo3:bare");
-doc.traverse(MyAction());
+MyAction action;
+doc.traverse(action);
 ```
 
 ---

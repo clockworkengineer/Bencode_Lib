@@ -7,8 +7,8 @@
 namespace be = Bencode_Lib;
 
 int main() {
-  // Read Bencode data from a file
-  std::string fileData = be::Bencode::fromFile("large_example.torrent");
+  // Read Bencode data from an example torrent file.
+  std::string fileData = be::Bencode::fromFile("files/file01.torrent");
   be::Bencode doc(fileData);
   // Print root node type (as integer value)
   // 0: integer, 1: string, 2: list, 3: dictionary (see Variant::Type enum in

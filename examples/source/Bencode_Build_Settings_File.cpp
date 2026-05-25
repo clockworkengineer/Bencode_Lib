@@ -24,21 +24,22 @@ std::string settingsFilePath() {
 /// Build a settings structure and write it to a Bencode file.
 /// </summary>
 void writeSettings() {
-  be::Bencode settings;
-  // Application section
-  settings["application"]["name"] = "MyApp";
-  settings["application"]["version"] = 2;
-  settings["application"]["debug"] = 0;
-  // Window section
-  settings["window"]["width"] = 1280;
-  settings["window"]["height"] = 720;
-  settings["window"]["fullscreen"] = 0;
-  settings["window"]["title"] = "My Application Window";
-  // Network section
-  settings["network"]["host"] = "localhost";
-  settings["network"]["port"] = 8080;
-  settings["network"]["timeout"] = 30;
-  // Write to file
+  be::Bencode::DictionaryInitializerType config = {
+      {"application", be::Bencode::DictionaryInitializerType{
+                              {"name", std::string("MyApp")},
+                              {"version", 2},
+                              {"debug", 0}}},
+      {"window", be::Bencode::DictionaryInitializerType{
+                       {"width", 1280},
+                       {"height", 720},
+                       {"fullscreen", 0},
+                       {"title", std::string("My Application Window")}}},
+      {"network", be::Bencode::DictionaryInitializerType{
+                        {"host", std::string("localhost")},
+                        {"port", 8080},
+                        {"timeout", 30}}}};
+
+  be::Bencode settings(config);
   settings.stringify(be::FileDestination{settingsFilePath()});
   std::cout << "Settings written to " << settingsFilePath();
 }

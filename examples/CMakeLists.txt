@@ -41,9 +41,16 @@ endfunction()
 # Get example program list
 file(GLOB EXAMPLE_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/source/ "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
 
+# Copy example input files into the example build directory so runtime examples can find them.
+add_custom_target(copy_example_files ALL
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  ${CMAKE_CURRENT_SOURCE_DIR}/files
+  ${CMAKE_CURRENT_BINARY_DIR}/files
+  COMMENT "Copy example files into build/examples/files"
+)
+
 # Build each program
 foreach(EXAMPLE_PROGRAM ${EXAMPLE_SOURCES})
   process_file(${EXAMPLE_PROGRAM})
+  add_dependencies(${EXAMPLE_PROGRAM} copy_example_files)
 endforeach(EXAMPLE_PROGRAM ${EXAMPLE_SOURCES})
-
-add_custom_command(TARGET Bencode_Analyze_File.cpp POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/files ${PROJECT_BINARY_DIR}/files)
