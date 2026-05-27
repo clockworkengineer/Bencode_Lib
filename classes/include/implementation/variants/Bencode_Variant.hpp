@@ -5,12 +5,14 @@
 
 #pragma once
 
+#include <cstdint>
+
 namespace Bencode_Lib {
 
 struct Variant {
   enum class Type : std::uint8_t { base = 0, dictionary, list, integer, string, hole };
   // Constructors/Destructors
-  explicit Variant(const Type nodeType = Type::base) : nodeType(nodeType) {}
+  explicit Variant(const Type type = Type::base) : nodeType(type) {}
   Variant(const Variant &other) = default;
   Variant &operator=(const Variant &other) = default;
   Variant(Variant &&other) = default;

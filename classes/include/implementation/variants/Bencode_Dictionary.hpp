@@ -21,8 +21,8 @@ struct DictionaryEntry {
   DictionaryEntry() = default;
 
   template <typename Key>
-  DictionaryEntry(Key &&key, Node &&bNode)
-      : key(std::forward<Key>(key)), bNode(std::move(bNode)) {}
+  DictionaryEntry(Key &&keyArg, Node &&nodeArg)
+      : key(std::forward<Key>(keyArg)), bNode(std::move(nodeArg)) {}
 
   [[nodiscard]] std::string_view getKey() const { return key; }
   [[nodiscard]] Node &getNode() { return bNode; }

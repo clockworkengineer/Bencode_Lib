@@ -33,7 +33,8 @@ public:
   operator FILE *() const noexcept;
 
 private:
-  std::unique_ptr<FILE, decltype(&std::fclose)> file_{nullptr, &std::fclose};
+  using FileDeleter = int (*)(FILE *);
+  std::unique_ptr<FILE, FileDeleter> file_{nullptr, &std::fclose};
 };
 
 std::string readBencodeString(FILE *bencodeFile);

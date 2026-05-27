@@ -87,7 +87,8 @@ private:
     hasPeek = true;
   }
 
-  mutable std::unique_ptr<FILE, decltype(&std::fclose)> source{nullptr, &std::fclose};
+  using FileDeleter = int (*)(FILE *);
+  mutable std::unique_ptr<FILE, FileDeleter> source{nullptr, &std::fclose};
   mutable int currentChar;
   mutable bool hasPeek;
   std::string filename;

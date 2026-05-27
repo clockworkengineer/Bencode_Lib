@@ -22,8 +22,8 @@ class FileDestination final : public IDestination {
 
 public:
   // Constructors/Destructors
-  explicit FileDestination(const std::string_view filename)
-      : filename(filename), length(0), lastChar(0) {
+  explicit FileDestination(const std::string_view fileName)
+      : filename(fileName), length(0), lastChar(0) {
 #ifdef _MSC_VER
     FILE *rawDestination = nullptr;
     if (fopen_s(&rawDestination, this->filename.c_str(), "wb") != 0 ||
@@ -95,7 +95,8 @@ private:
     }
   }
 
-  std::unique_ptr<FILE, decltype(&std::fclose)> destination{nullptr, &std::fclose};
+  using FileDeleter = int (*)(FILE *);
+  std::unique_ptr<FILE, FileDeleter> destination{nullptr, &std::fclose};
   std::string filename;
   std::size_t length{};
   char lastChar{};
