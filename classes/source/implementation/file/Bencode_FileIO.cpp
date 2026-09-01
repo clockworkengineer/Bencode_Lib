@@ -1,14 +1,7 @@
-// File: Bencode_FileIO.cpp
-//
-// Description: Public wrapper implementation for Bencode file-based I/O.
-//              Platform-specific file open behavior is selected by CMake.
-//
-// Dependencies: C++20 - Language standard features used.
-//
-
 #include "Bencode_Impl.hpp"
 #include "Bencode_Error.hpp"
 #include "Bencode_FileIO_Internal.hpp"
+#include "implementation/io/Bencode_FileService.hpp"
 
 #include <cstdio>
 #include <string>
@@ -123,9 +116,9 @@ std::string readBencodeString(FILE *bencodeFile) {
 }
 
 /// <summary>
-/// Read a Bencode file and return its contents as a string.
+/// Read a Bencode file and return its contents as a string via Bencode_FileService.
 /// </summary>
-std::string Bencode_Impl::fromFile(const std::string_view &fileName) {
+std::string Bencode_FileService::readFromFile(const std::string_view &fileName) {
   Bencode_FileHandle file = openFileOrThrow(
       fileName, Bencode_FileHandle::Mode::Read,
       "Bencode file input stream failed to open or does not exist.");
@@ -134,15 +127,30 @@ std::string Bencode_Impl::fromFile(const std::string_view &fileName) {
 }
 
 /// <summary>
-/// Write a Bencode string to a file.
+/// Write a Bencode string to a file via Bencode_FileService.
 /// </summary>
-void Bencode_Impl::toFile(const std::string_view &fileName,
-                          const std::string_view &bencodeString) {
+void Bencode_FileService::writeToFile(const std::string_view &fileName,
+                                      const std::string_view &bencodeString) {
   Bencode_FileHandle file = openFileOrThrow(
       fileName, Bencode_FileHandle::Mode::Write,
       "Bencode file output stream failed to open or could not be created.");
 
   writeBencodeString(file.get(), bencodeString);
+}
+
+/// <summary>
+/// Read a Bencode file and return its contents as a string (forwarded to Bencode_FileService).
+/// </summary>
+std::string Bencode_Impl::fromFile(const std::string_view &fileName) {
+  return Bencode_FileService::readFromFile(fileName);
+}
+
+/// <summary>
+/// Write a Bencode string to a file (forwarded to Bencode_FileService).
+/// </summary>
+void Bencode_Impl::toFile(const std::string_view &fileName,
+                          const std::string_view &bencodeString) {
+  Bencode_FileService::writeToFile(fileName, bencodeString);
 }
 
 } // namespace Bencode_Lib

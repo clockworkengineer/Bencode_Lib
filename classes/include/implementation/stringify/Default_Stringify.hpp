@@ -79,7 +79,7 @@ private:
     appendUnsigned(destination, static_cast<unsigned long long>(value));
   }
 
-  static void stringifyNodes(const Node &bNode, IDestination &destination) {
+  void stringifyNodes(const Node &bNode, IDestination &destination) const {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
@@ -93,8 +93,8 @@ private:
       throw Error("Unknown Node type encountered during encoding.");
     }
   }
-  static void stringifyDictionary(const Node &bNode,
-                                  IDestination &destination) {
+  void stringifyDictionary(const Node &bNode,
+                                  IDestination &destination) const {
     destination.add('d');
     for (const auto &bNodeNext : NRef<Dictionary>(bNode).value()) {
       appendSize(destination, bNodeNext.getKey().length());
@@ -104,19 +104,19 @@ private:
     }
     destination.add('e');
   }
-  static void stringifyList(const Node &bNode, IDestination &destination) {
+  void stringifyList(const Node &bNode, IDestination &destination) const {
     destination.add('l');
     for (const auto &bNodeNext : NRef<List>(bNode).value()) {
       stringifyNodes(bNodeNext, destination);
     }
     destination.add('e');
   }
-  static void stringifyInteger(const Node &bNode, IDestination &destination) {
+  void stringifyInteger(const Node &bNode, IDestination &destination) const {
     destination.add('i');
     appendInteger(destination, NRef<Integer>(bNode).value());
     destination.add('e');
   }
-  static void stringifyString(const Node &bNode, IDestination &destination) {
+  void stringifyString(const Node &bNode, IDestination &destination) const {
     appendSize(destination, NRef<String>(bNode).value().length());
     destination.add(':');
     destination.add(NRef<String>(bNode).value());

@@ -16,7 +16,7 @@ public:
   // Constructors/destructors
   explicit XML_Stringify(std::unique_ptr<ITranslator> translator =
                            std::make_unique<XML_Translator>())
-        {xmlTranslator = std::move(translator);}
+      : xmlTranslator(std::move(translator)) {}
   XML_Stringify(const XML_Stringify &other) = delete;
   XML_Stringify &operator=(const XML_Stringify &other) = delete;
   XML_Stringify(XML_Stringify &&other) = delete;
@@ -37,7 +37,7 @@ public:
   }
 
 private:
-  static void stringifyNodes(const Node &bNode, IDestination &destination)  {
+  void stringifyNodes(const Node &bNode, IDestination &destination) const {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination);
     } else if (isA<List>(bNode)) {
@@ -51,7 +51,7 @@ private:
       throw Error("Unknown Node type encountered during encoding.");
     }
   }
-  static void stringifyDictionary(const Node &bNode, IDestination &destination)  {
+  void stringifyDictionary(const Node &bNode, IDestination &destination) const {
     for (const auto &bNodeNext : NRef<Dictionary>(bNode).value()) {
       auto elementName = std::string(bNodeNext.getKey());
       std::ranges::replace(elementName, ' ', '-');
@@ -60,7 +60,7 @@ private:
       destination.add("</" + elementName + ">");
     }
   }
-  static void stringifyList(const Node &bNode, IDestination &destination)  {
+  void stringifyList(const Node &bNode, IDestination &destination) const {
     if (NRef<List>(bNode).value().size() > 1) {
       for (const auto &bNodeNext : NRef<List>(bNode).value()) {
         destination.add("<Row>");
@@ -72,13 +72,13 @@ private:
       destination.add("</Row>");
     }
   }
-  static void stringifyInteger(const Node &bNode, IDestination &destination) {
+  void stringifyInteger(const Node &bNode, IDestination &destination) const {
     destination.add(std::to_string(NRef<Integer>(bNode).value()));
   }
-  static void stringifyString(const Node &bNode, IDestination &destination)  {
-    destination.add(xmlTranslator->to(NRef<String>(bNode).value()));
+  void stringifyString(const Node &bNode, IDestination &destination) const {
+    destination.add(xmlTranslator ? xmlTranslator->to(NRef<String>(bNode).value()) : NRef<String>(bNode).value());
   }
 
-  inline static std::unique_ptr<ITranslator> xmlTranslator;
+  std::unique_ptr<ITranslator> xmlTranslator;
 };
 } // namespace Bencode_Lib

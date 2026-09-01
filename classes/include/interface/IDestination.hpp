@@ -32,9 +32,9 @@ public:
   // ========================
   // Add bytes to destination
   // ========================
-  virtual void add(const std::string &bytes) = 0;
+  virtual void add(const std::string &bytes) { add(std::string_view(bytes)); }
   virtual void add(const std::string_view &bytes) = 0;
-  virtual void add(const char *bytes) = 0;
+  virtual void add(const char *bytes) { add(std::string_view(bytes)); }
   // ============================
   // Add character to destination
   // ============================
@@ -44,8 +44,8 @@ public:
   // ==============================
   virtual void clear() = 0;
   // =================================
-  // Return the last character written
+  // Return the last character written (optional default)
   // =================================
-  virtual char last() = 0;
+  virtual char last() { return '\0'; }
 };
 } // namespace Bencode_Lib

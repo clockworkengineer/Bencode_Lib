@@ -9,6 +9,8 @@
 #include "Bencode_Core.hpp"
 #include "../common/Bencode_Parser_Constants.hpp"
 
+#include "Parser_Config.hpp"
+
 namespace Bencode_Lib {
 
 class Default_Parser final : public IParser {
@@ -17,7 +19,7 @@ public:
   constexpr static unsigned long kMaxParserDepth =
       ParserConstants::DEFAULT_MAX_PARSER_DEPTH;
   // Constructors/Destructors
-  Default_Parser() = default;
+  explicit Default_Parser(ParserConfig config = {}) : parserConfig(config) {}
   Default_Parser(const Default_Parser &other) = delete;
   Default_Parser &operator=(const Default_Parser &other) = delete;
   Default_Parser(Default_Parser &&other) = delete;
@@ -31,9 +33,12 @@ public:
 #endif
   // Get/Set parser max recursion depth
   static void setMaxParserDepth(const unsigned long depth) {
-    maxParserDepth = depth;
+    defaultConfig.maxParserDepth = depth;
   }
-  static unsigned long getMaxParserDepth() { return maxParserDepth; }
+  static unsigned long getMaxParserDepth() { return defaultConfig.maxParserDepth; }
+
+  [[nodiscard]] const ParserConfig &getConfig() const { return parserConfig; }
+  void setConfig(const ParserConfig &config) { parserConfig = config; }
 
 private:
   // Parser functions
@@ -81,7 +86,8 @@ private:
   [[nodiscard]] static ParseStatus parseIterative(ISource &source,
                                                   Node &destination);
 #endif
-  inline static unsigned long maxParserDepth{kMaxParserDepth};
+  ParserConfig parserConfig{};
+  inline static ParserConfig defaultConfig{};
 };
 
 } // namespace Bencode_Lib

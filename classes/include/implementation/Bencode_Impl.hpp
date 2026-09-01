@@ -103,21 +103,30 @@ private:
 template <typename T>
 void Bencode_Impl::traverseNodes(T &bNode, IAction &action) {
   action.onNode(bNode);
-  if (isA<Integer>(bNode)) {
+  switch (bNode.getVariant().getNodeType()) {
+  case Variant::Type::integer:
     action.onInteger(bNode);
-  } else if (isA<String>(bNode)) {
+    break;
+  case Variant::Type::string:
     action.onString(bNode);
-  } else if (isA<Dictionary>(bNode)) {
+    break;
+  case Variant::Type::dictionary: {
     action.onDictionary(bNode);
     for (auto &entry : NRef<Dictionary>(bNode).value()) {
       traverseNodes(entry.getNode(), action);
     }
-  } else if (isA<List>(bNode)) {
+    break;
+  }
+  case Variant::Type::list: {
     action.onList(bNode);
     for (auto &entry : NRef<List>(bNode).value()) {
       traverseNodes(entry, action);
     }
-  } else if (isA<Hole>(bNode)) {
+    break;
+  }
+  case Variant::Type::hole:
+  case Variant::Type::base:
+  default:
     throw Error("Unknown Node type encountered during tree traversal.");
   }
 }

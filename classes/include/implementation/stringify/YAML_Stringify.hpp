@@ -15,9 +15,8 @@ class YAML_Stringify final : public IStringify {
 public:
   // Constructors/destructors
   explicit YAML_Stringify(std::unique_ptr<ITranslator> translator =
-                              std::make_unique<Default_Translator>()) {
-    yamlTranslator = std::move(translator);
-  }
+                              std::make_unique<Default_Translator>())
+      : yamlTranslator(std::move(translator)) {}
   YAML_Stringify(const YAML_Stringify &other) = delete;
   YAML_Stringify &operator=(const YAML_Stringify &other) = delete;
   YAML_Stringify(YAML_Stringify &&other) = delete;
@@ -31,12 +30,36 @@ public:
   /// <param name="bNode">Node structure to be traversed.</param>
   /// <param name="destination">Destination stream for stringified YAML.</param>
   void stringify(const Node &bNode, IDestination &destination) const override {
-    destination.add("---\n");
-    stringifyNodes(bNode, destination, 0);
-    destination.add("...\n");
+    TrackingDestinationAdapter tracker(destination);
+    tracker.add("---\n");
+    stringifyNodes(bNode, tracker, 0);
+    tracker.add("...\n");
   }
 
 private:
+  class TrackingDestinationAdapter final : public IDestination {
+  public:
+    explicit TrackingDestinationAdapter(IDestination &wrapped) : dest(wrapped) {}
+    void add(const std::string_view &bytes) override {
+      if (!bytes.empty()) {
+        lastChar = bytes.back();
+      }
+      dest.add(bytes);
+    }
+    void add(char ch) override {
+      lastChar = ch;
+      dest.add(ch);
+    }
+    void clear() override {
+      lastChar = '\0';
+      dest.clear();
+    }
+    char last() override { return lastChar; }
+  private:
+    IDestination &dest;
+    char lastChar{'\0'};
+  };
+
   static auto calculateIndent(IDestination &destination,
                               const unsigned long indent) {
     if (destination.last() == '\n') {
@@ -44,8 +67,8 @@ private:
     }
     return std::string("");
   }
-  static void stringifyNodes(const Node &bNode, IDestination &destination,
-                             const unsigned long indent) {
+  void stringifyNodes(const Node &bNode, IDestination &destination,
+                             const unsigned long indent) const {
     if (isA<Dictionary>(bNode)) {
       stringifyDictionary(bNode, destination, indent);
     } else if (isA<List>(bNode)) {
@@ -59,8 +82,8 @@ private:
       throw Error("Unknown Node type encountered during encoding.");
     }
   }
-  static void stringifyDictionary(const Node &bNode, IDestination &destination,
-                                  const unsigned long indent) {
+  void stringifyDictionary(const Node &bNode, IDestination &destination,
+                                  const unsigned long indent) const {
     if (!NRef<Dictionary>(bNode).value().empty()) {
       for (const auto &entryNode : NRef<Dictionary>(bNode).value()) {
         destination.add(calculateIndent(destination, indent));
@@ -78,8 +101,8 @@ private:
       destination.add("{}\n");
     }
   }
-  static void stringifyList(const Node &bNode, IDestination &destination,
-                            const unsigned long indent) {
+  void stringifyList(const Node &bNode, IDestination &destination,
+                            const unsigned long indent) const {
     if (!NRef<List>(bNode).value().empty()) {
       for (const auto &bNodeNext : NRef<List>(bNode).value()) {
         destination.add(calculateIndent(destination, indent) + "- ");
@@ -89,14 +112,14 @@ private:
       destination.add("[]\n");
     }
   }
-  static void stringifyInteger(const Node &bNode, IDestination &destination) {
+  void stringifyInteger(const Node &bNode, IDestination &destination) const {
     destination.add(std::to_string(NRef<Integer>(bNode).value()) + "\n");
   }
-  static void stringifyString(const Node &bNode, IDestination &destination) {
-    destination.add("\"" + yamlTranslator->to(NRef<String>(bNode).value()) +
+  void stringifyString(const Node &bNode, IDestination &destination) const {
+    destination.add("\"" + (yamlTranslator ? yamlTranslator->to(NRef<String>(bNode).value()) : NRef<String>(bNode).value()) +
                     "\"" + "\n");
   }
 
-  inline static std::unique_ptr<ITranslator> yamlTranslator;
+  std::unique_ptr<ITranslator> yamlTranslator;
 };
 } // namespace Bencode_Lib
