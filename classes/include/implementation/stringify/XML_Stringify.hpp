@@ -76,7 +76,11 @@ private:
     destination.add(std::to_string(NRef<Integer>(bNode).value()));
   }
   void stringifyString(const Node &bNode, IDestination &destination) const {
-    destination.add(xmlTranslator ? xmlTranslator->to(NRef<String>(bNode).value()) : NRef<String>(bNode).value());
+    if (xmlTranslator) {
+      destination.add(xmlTranslator->to(NRef<String>(bNode).value()));
+    } else {
+      destination.add(NRef<String>(bNode).value());
+    }
   }
 
   std::unique_ptr<ITranslator> xmlTranslator;

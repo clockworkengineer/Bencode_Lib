@@ -116,8 +116,13 @@ private:
     destination.add(std::to_string(NRef<Integer>(bNode).value()) + "\n");
   }
   void stringifyString(const Node &bNode, IDestination &destination) const {
-    destination.add("\"" + (yamlTranslator ? yamlTranslator->to(NRef<String>(bNode).value()) : NRef<String>(bNode).value()) +
-                    "\"" + "\n");
+    destination.add("\"");
+    if (yamlTranslator) {
+      destination.add(yamlTranslator->to(NRef<String>(bNode).value()));
+    } else {
+      destination.add(NRef<String>(bNode).value());
+    }
+    destination.add("\"\n");
   }
 
   std::unique_ptr<ITranslator> yamlTranslator;

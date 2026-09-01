@@ -76,7 +76,11 @@ private:
   }
   void stringifyString(const Node &bNode, IDestination &destination) const {
     destination.add("\"");
-    destination.add(jsonTranslator ? jsonTranslator->to(NRef<String>(bNode).value()) : NRef<String>(bNode).value());
+    if (jsonTranslator) {
+      destination.add(jsonTranslator->to(NRef<String>(bNode).value()));
+    } else {
+      destination.add(NRef<String>(bNode).value());
+    }
     destination.add("\"");
   }
 
