@@ -1,5 +1,10 @@
 # Bencode_Lib
 
+[![CI](https://github.com/clockworkengineer/Bencode_Lib/actions/workflows/ci.yml/badge.svg)](https://github.com/clockworkengineer/Bencode_Lib/actions/workflows/ci.yml)
+[![C++23](https://img.shields.io/badge/C%2B%2B-23-blue.svg)](https://en.cppreference.com/w/cpp/23)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.txt)
+[![Buy Me a Coffee](https://img.shields.io/badge/Donate-Buy%20Me%20A%20Coffee-orange.svg)](https://www.buymeacoffee.com/clockworkengineer)
+
 Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode format. Bencode is a simple and efficient serialization format commonly used in peer-to-peer (P2P) file sharing applications, such as BitTorrent.
 
 ## Features
@@ -442,7 +447,7 @@ ctest --output-on-failure
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE.txt).
 
 ## Acknowledgments
 
