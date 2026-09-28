@@ -37,6 +37,8 @@ set(REQUIRED_PUBLIC_HEADERS
     Bencode.hpp
     Bencode_Core.hpp
     Bencode_Status.hpp
+    Bencode_View.hpp
+    Bencode_Serialization.hpp
     Bencode_Optional_Stringify.hpp
 )
 
@@ -49,6 +51,7 @@ endforeach()
 set(ALLOWED_IMPLEMENTATION_HEADERS
     implementation/common/Bencode_Error.hpp
     implementation/common/Bencode_Status.hpp
+    implementation/common/Bencode_Parser_Constants.hpp
     implementation/node/Bencode_Node.hpp
     implementation/node/Bencode_Node_Creation.hpp
     implementation/node/Bencode_Node_Index.hpp
@@ -66,6 +69,7 @@ set(ALLOWED_IMPLEMENTATION_HEADERS
     implementation/io/Bencode_BufferDestination.hpp
     implementation/io/Bencode_FileSource.hpp
     implementation/io/Bencode_FileDestination.hpp
+    implementation/view/Bencode_NodeView.hpp
     implementation/translator/Default_Translator.hpp
     implementation/translator/XML_Translator.hpp
     implementation/stringify/JSON_Stringify.hpp

@@ -208,6 +208,7 @@ set(BENCODE_MINIMAL_INCLUDES
 set(BENCODE_INSTALLABLE_IMPLEMENTATION_COMMON_HEADERS
   classes/include/implementation/common/Bencode_Error.hpp
   classes/include/implementation/common/Bencode_Status.hpp
+  classes/include/implementation/common/Bencode_Parser_Constants.hpp
 )
 
 set(BENCODE_INSTALLABLE_IMPLEMENTATION_NODE_HEADERS
