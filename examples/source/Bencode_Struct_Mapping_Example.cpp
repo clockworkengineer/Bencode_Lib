@@ -30,10 +30,13 @@ int main() {
   std::cout << "===========================================\n\n";
 
   // 1. Populate C++ domain object
-  Metainfo originalTorrent{
-      "http://tracker.archlinux.org:6969/announce",
-      {3879731200LL, "archlinux-x86_64.iso", 524288, {std::byte{0xDE}, std::byte{0xAD}, std::byte{0xBE}, std::byte{0xEF}}},
-      "Arch Linux 2026 Release"};
+  Metainfo originalTorrent;
+  originalTorrent.announce = "http://tracker.archlinux.org:6969/announce";
+  originalTorrent.info.name = "archlinux-x86_64.iso";
+  originalTorrent.info.length = 3879731200LL;
+  originalTorrent.info.piece_length = 524288;
+  originalTorrent.info.pieces = {std::byte{0xDE}, std::byte{0xAD}, std::byte{0xBE}, std::byte{0xEF}};
+  originalTorrent.comment = "Arch Linux 2026 Release";
 
   // 2. Encode to canonical Bencode string in a single line
   std::string bencoded = Bencode_Lib::Bencode::from_object(originalTorrent).encode();
