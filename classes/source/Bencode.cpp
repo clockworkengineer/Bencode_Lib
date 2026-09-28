@@ -9,6 +9,7 @@
 // Dependencies: C++20 - Language standard features used.
 //
 #include "Bencode_Impl.hpp"
+#include "implementation/parser/Sax_Parser.hpp"
 
 namespace Bencode_Lib {
 
@@ -87,6 +88,35 @@ Bencode::ParseResultType Bencode::parse(ISource &&source) const {
 /// </summary>
 Bencode::ParseResultType Bencode::parse(const std::string_view &bencodeString) const {
   return parse(BufferSource{bencodeString});
+}
+
+/// <summary>
+/// Stream Bencode events directly into an ISaxHandler from an ISource reference.
+/// </summary>
+Bencode::SaxResultType Bencode::parseSax(ISource &source, ISaxHandler &handler) {
+#if BENCODE_ENABLE_EXCEPTIONS
+  return SaxParser::parseOrThrow(source, handler, getMaxParserDepth());
+#else
+  return SaxParser::parse(source, handler, getMaxParserDepth());
+#endif
+}
+
+/// <summary>
+/// Stream Bencode events directly into an ISaxHandler from an rvalue ISource.
+/// </summary>
+Bencode::SaxResultType Bencode::parseSax(ISource &&source, ISaxHandler &handler) {
+  return parseSax(source, handler);
+}
+
+/// <summary>
+/// Stream Bencode events directly into an ISaxHandler from a string_view buffer.
+/// </summary>
+Bencode::SaxResultType Bencode::parseSax(const std::string_view &bencodeString, ISaxHandler &handler) {
+#if BENCODE_ENABLE_EXCEPTIONS
+  return SaxParser::parseOrThrow(bencodeString, handler, getMaxParserDepth());
+#else
+  return SaxParser::parse(bencodeString, handler, getMaxParserDepth());
+#endif
 }
 
 /// <summary>

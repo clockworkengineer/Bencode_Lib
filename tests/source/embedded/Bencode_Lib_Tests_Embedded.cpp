@@ -5,6 +5,7 @@
 
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "interface/ISaxHandler.hpp"
 
 using namespace Bencode_Lib;
 
@@ -118,4 +119,44 @@ TEST_CASE("Embedded mode binary span accessors work without allocation",
   REQUIRE((*asBin)[0] == std::byte{0xAA});
   REQUIRE((*asBin)[1] == std::byte{0xBB});
 }
+
+TEST_CASE("Embedded mode streaming SAX parser", "[Bencode][Embedded][SAX]") {
+  class EmbeddedSaxHandler : public ISaxHandler {
+  public:
+    int64_t foundInt = 0;
+    std::string foundStr;
+    bool listStarted = false;
+    bool listEnded = false;
+    bool dictStarted = false;
+    bool dictEnded = false;
+    int keyCount = 0;
+
+    bool on_integer(int64_t val) override {
+      foundInt = val;
+      return true;
+    }
+    bool on_string(std::string_view sv) override {
+      foundStr = std::string(sv);
+      return true;
+    }
+    bool on_list_begin() override { listStarted = true; return true; }
+    bool on_list_end() override { listEnded = true; return true; }
+    bool on_dictionary_begin() override { dictStarted = true; return true; }
+    bool on_dictionary_key(std::string_view) override { keyCount++; return true; }
+    bool on_dictionary_end() override { dictEnded = true; return true; }
+  };
+
+  EmbeddedSaxHandler handler;
+  BufferSource source{"d4:datal4:itemi100eee"};
+  ParseStatus status = Bencode::parseSax(source, handler);
+  REQUIRE(status.ok());
+  REQUIRE(handler.dictStarted);
+  REQUIRE(handler.dictEnded);
+  REQUIRE(handler.listStarted);
+  REQUIRE(handler.listEnded);
+  REQUIRE(handler.keyCount == 1);
+  REQUIRE(handler.foundInt == 100);
+  REQUIRE(handler.foundStr == "item");
+}
+
 

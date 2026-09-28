@@ -32,6 +32,7 @@ if(NOT BENCODE_EMBEDDED_MODE)
     source/parser/Bencode_Lib_Tests_Parse_Exception.cpp
     source/parser/Bencode_Lib_Tests_Parse_EdgeCases.cpp
     source/parser/Bencode_Lib_Tests_Parse_Misc.cpp
+    source/parser/Bencode_Lib_Tests_Parse_Sax.cpp
     source/parser/Bencode_Lib_Tests_Parse_Simple.cpp
     source/stringify/Bencode_Lib_Tests_Stringify_Collection.cpp
     source/stringify/Bencode_Lib_Tests_Stringify_Simple.cpp

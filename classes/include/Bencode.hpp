@@ -32,6 +32,7 @@ class IParser;
 class ISource;
 class IDestination;
 class IAction;
+class ISaxHandler;
 class Bencode_Impl;
 struct Node;
 
@@ -84,6 +85,13 @@ public:
   ParseResultType parse(ISource &source) const;
   ParseResultType parse(ISource &&source) const;
   ParseResultType parse(const std::string_view &bencodeString) const;
+
+  using SaxResultType = std::conditional_t<BENCODE_ENABLE_EXCEPTIONS, bool, ParseStatus>;
+
+  // Streaming SAX parser: emit events directly to handler without constructing a DOM tree
+  static SaxResultType parseSax(ISource &source, ISaxHandler &handler);
+  static SaxResultType parseSax(ISource &&source, ISaxHandler &handler);
+  static SaxResultType parseSax(const std::string_view &bencodeString, ISaxHandler &handler);
   // Stringify Bencode from Node tree
   void stringify(IDestination &destination) const;
   void stringify(IDestination &&destination) const;

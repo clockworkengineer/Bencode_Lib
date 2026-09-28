@@ -11,6 +11,7 @@ namespace Bencode_Lib {
 
 enum class ErrorCode : int {
   None = 0,
+  UserAborted,
   SyntaxError,
   UnexpectedToken,
   IntegerOverflow,

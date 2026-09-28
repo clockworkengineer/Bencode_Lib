@@ -54,6 +54,7 @@ set(BENCODE_LIBRARY_NAME "${PROJECT_NAME}")
 set(BENCODE_COMMON_SOURCES
   classes/source/Bencode.cpp
   classes/source/implementation/Bencode_Impl.cpp
+  classes/source/implementation/parser/Sax_Parser.cpp
 )
 
 set(BENCODE_PARSER_EXCEPTION_SOURCES
@@ -106,6 +107,7 @@ list(APPEND BENCODE_MINIMAL_SOURCES ${BENCODE_FILE_IO_DISABLED_SOURCES})
 set(BENCODE_EMBEDDED_SOURCES
   classes/source/Bencode.cpp
   classes/source/implementation/Bencode_Impl.cpp
+  classes/source/implementation/parser/Sax_Parser.cpp
   ${BENCODE_PARSER_STATUS_SOURCES}
   ${BENCODE_FILE_IO_DISABLED_SOURCES}
 )
@@ -125,6 +127,7 @@ set(BENCODE_INTERFACE_HEADERS
   classes/include/interface/IParser.hpp
   classes/include/interface/IStringify.hpp
   classes/include/interface/ITranslator.hpp
+  classes/include/interface/ISaxHandler.hpp
 )
 
 set(BENCODE_IMPLEMENTATION_HEADERS
@@ -135,6 +138,7 @@ set(BENCODE_IMPLEMENTATION_HEADERS
   classes/include/implementation/node/Bencode_Node_Index.hpp
   classes/include/implementation/node/Bencode_Node_Reference.hpp
   classes/include/implementation/parser/Default_Parser.hpp
+  classes/include/implementation/parser/Sax_Parser.hpp
   classes/include/implementation/stringify/Default_Stringify.hpp
   classes/include/implementation/translator/Default_Translator.hpp
   classes/include/implementation/translator/XML_Translator.hpp

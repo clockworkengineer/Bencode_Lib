@@ -1,5 +1,6 @@
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
+#include "interface/ISaxHandler.hpp"
 
 #include <chrono>
 #include <cstdlib>
@@ -39,7 +40,7 @@ static void printUsage(const char *programName) {
       << "  count: number of dictionary entries (default 5000)\n"
       << "  value-size: bytes per value string (default 128)\n"
       << "  iterations: number of parse/stringify iterations (default 5)\n"
-      << "  mode: roundtrip|parse|stringify (default roundtrip)\n";
+      << "  mode: roundtrip|parse|stringify|sax (default roundtrip)\n";
 }
 
 static bool parseArg(const char *arg, size_t &output) {
@@ -52,7 +53,7 @@ static bool parseArg(const char *arg, size_t &output) {
   }
 }
 
-enum class BenchmarkMode { Roundtrip, ParseOnly, StringifyOnly };
+enum class BenchmarkMode { Roundtrip, ParseOnly, StringifyOnly, SaxOnly };
 
 static bool parseModeArg(const char *arg, BenchmarkMode &mode) {
   const std::string value(arg);
@@ -68,6 +69,10 @@ static bool parseModeArg(const char *arg, BenchmarkMode &mode) {
     mode = BenchmarkMode::StringifyOnly;
     return true;
   }
+  if (value == "sax") {
+    mode = BenchmarkMode::SaxOnly;
+    return true;
+  }
   return false;
 }
 
@@ -77,6 +82,8 @@ static std::string modeName(BenchmarkMode mode) {
     return "parse-only";
   case BenchmarkMode::StringifyOnly:
     return "stringify-only";
+  case BenchmarkMode::SaxOnly:
+    return "sax-only";
   case BenchmarkMode::Roundtrip:
   default:
     return "roundtrip";
@@ -276,12 +283,55 @@ int main(int argc, char *argv[]) {
     return std::pair<double, double>{parseSeconds, stringifySeconds};
   };
 
+  auto runSaxBenchmark = [&](int iterations) {
+    class BenchmarkSaxHandler : public ISaxHandler {
+    public:
+      size_t keys = 0;
+      size_t bytes = 0;
+      bool on_integer(int64_t) override { return true; }
+      bool on_string(std::string_view sv) override { bytes += sv.size(); return true; }
+      bool on_list_begin() override { return true; }
+      bool on_list_end() override { return true; }
+      bool on_dictionary_begin() override { return true; }
+      bool on_dictionary_key(std::string_view) override { keys++; return true; }
+      bool on_dictionary_end() override { return true; }
+    };
+
+    double seconds = 0.0;
+    for (int i = 0; i < iterations; ++i) {
+      BenchmarkSaxHandler handler;
+      BufferSource source(encoded);
+      const auto start = high_resolution_clock::now();
+#if BENCODE_ENABLE_EXCEPTIONS
+      bool ok = Bencode::parseSax(source, handler);
+      if (!ok) {
+        std::cerr << "SAX iteration " << (i + 1) << " failed\n";
+        std::exit(1);
+      }
+#else
+      ParseStatus status = Bencode::parseSax(source, handler);
+      if (!status.ok()) {
+        std::cerr << "SAX iteration " << (i + 1) << " failed: " << status.message << "\n";
+        std::exit(1);
+      }
+#endif
+      const auto end = high_resolution_clock::now();
+      const double iterationTime = duration<double>(end - start).count();
+      seconds += iterationTime;
+      std::cout << "SAX iteration " << (i + 1) << ": " << iterationTime << " s ("
+                << handler.keys << " keys parsed)\n";
+    }
+    return seconds;
+  };
+
   double parseSeconds = 0.0;
   double stringifySeconds = 0.0;
   if (mode == BenchmarkMode::ParseOnly) {
     parseSeconds = runParseBenchmark(iterations);
   } else if (mode == BenchmarkMode::StringifyOnly) {
     stringifySeconds = runStringifyBenchmark(iterations);
+  } else if (mode == BenchmarkMode::SaxOnly) {
+    parseSeconds = runSaxBenchmark(iterations);
   } else {
     auto result = runRoundtripBenchmark(iterations);
     parseSeconds = result.first;
