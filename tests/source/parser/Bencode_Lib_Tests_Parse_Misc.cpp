@@ -89,26 +89,33 @@ TEST_CASE("Check string overflow handling.", "[Bencode][String][Overflow]") {
 }
 TEST_CASE("Check parse depth handling.", "[Bencode][Parse][Depth]") {
   const Bencode bEncoder;
+  const auto initialDepth = Bencode::getMaxParserDepth();
   SECTION("Parse 2 nested list.", "[Bencode][Parse][Depth]") {
     REQUIRE_NOTHROW(bEncoder.parse(BufferSource("llee")));
   }
-  SECTION("Parse 11 nested list.", "[Bencode][Parse][Depth]") {
+  SECTION("Parse 11 nested list with depth 10.", "[Bencode][Parse][Depth]") {
+    Bencode::setMaxParserDepth(10);
     REQUIRE_THROWS_WITH(bEncoder.parse(BufferSource("lllllllllleeeeeeeeee")),
                         "Bencode Syntax Error: Maximum parser depth exceeded.");
+    Bencode::setMaxParserDepth(initialDepth);
   }
   SECTION("Get default maximum parser depth.", "[Bencode][Parse][Depth]") {
-    REQUIRE(Default_Parser::getMaxParserDepth() == 10);
+    REQUIRE(Default_Parser::getMaxParserDepth() == BENCODE_MAX_NESTING_DEPTH);
+    REQUIRE(Bencode::getMaxParserDepth() == BENCODE_MAX_NESTING_DEPTH);
   }
   SECTION("Set default maximum parser depth.", "[Bencode][Parse][Depth]") {
-    Default_Parser::setMaxParserDepth(20);
+    Bencode::setMaxParserDepth(20);
+    REQUIRE(Bencode::getMaxParserDepth() == 20);
     REQUIRE(Default_Parser::getMaxParserDepth() == 20);
+    Bencode::setMaxParserDepth(initialDepth);
   }
   SECTION("Set default maximum parser depth and check new value works.",
           "[Bencode][Parse][Depth]") {
-    Default_Parser::setMaxParserDepth(20);
-    REQUIRE(Default_Parser::getMaxParserDepth() == 20);
+    Bencode::setMaxParserDepth(20);
+    REQUIRE(Bencode::getMaxParserDepth() == 20);
     REQUIRE_NOTHROW(
         bEncoder.parse(BufferSource("llllllllllllllleeeeeeeeeeeeeee")));
+    Bencode::setMaxParserDepth(initialDepth);
   }
 }
 TEST_CASE("Bencode for parse of a table of negative integers",
@@ -175,25 +182,28 @@ TEST_CASE("Check string max length get/set round-trip.",
 }
 TEST_CASE("Check parse depth boundary conditions.", "[Bencode][Parse][Depth]") {
   const Bencode bEncoder;
-  SECTION("Parse depth exactly at default limit succeeds.",
+  const auto initialDepth = Bencode::getMaxParserDepth();
+  SECTION("Parse depth exactly at limit succeeds.",
           "[Bencode][Parse][Depth]") {
-    Default_Parser::setMaxParserDepth(10);
+    Bencode::setMaxParserDepth(10);
     // 10 nested lists = depth 10, which is the limit — should pass
     REQUIRE_NOTHROW(bEncoder.parse(BufferSource("llllllllleeeeeeeee")));
+    Bencode::setMaxParserDepth(initialDepth);
   }
-  SECTION("Parse depth one over default limit throws.",
+  SECTION("Parse depth one over limit throws.",
           "[Bencode][Parse][Depth]") {
-    Default_Parser::setMaxParserDepth(10);
+    Bencode::setMaxParserDepth(10);
     REQUIRE_THROWS_WITH(bEncoder.parse(BufferSource("lllllllllleeeeeeeeee")),
                         "Bencode Syntax Error: Maximum parser depth exceeded.");
+    Bencode::setMaxParserDepth(initialDepth);
   }
   SECTION("Depth limit applies to nested dictionaries too.",
           "[Bencode][Parse][Depth]") {
-    Default_Parser::setMaxParserDepth(4);
+    Bencode::setMaxParserDepth(4);
     // 5 nested dicts exceeds depth 4
     REQUIRE_THROWS_WITH(
         bEncoder.parse(BufferSource("d1:ad1:bd1:cd1:dd1:ei0eeeee")),
         "Bencode Syntax Error: Maximum parser depth exceeded.");
-    Default_Parser::setMaxParserDepth(10);
+    Bencode::setMaxParserDepth(initialDepth);
   }
 }

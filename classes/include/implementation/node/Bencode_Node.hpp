@@ -6,9 +6,11 @@
 #pragma once
 
 #include <atomic>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <span>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -133,12 +135,15 @@ struct Node {
   // Safe accessors returning std::optional
   [[nodiscard]] std::optional<std::string_view> get_string(std::string_view key) const noexcept;
   [[nodiscard]] std::optional<int64_t> get_int(std::string_view key) const noexcept;
+  [[nodiscard]] std::optional<std::span<const std::byte>> get_binary(std::string_view key) const noexcept;
   [[nodiscard]] std::string_view value_or(std::string_view key, std::string_view fallback) const noexcept;
   [[nodiscard]] int64_t value_or(std::string_view key, int64_t fallback) const noexcept;
+  [[nodiscard]] std::span<const std::byte> binary_or(std::string_view key, std::span<const std::byte> fallback = {}) const noexcept;
 
   // Safe direct conversions for current node
   [[nodiscard]] std::optional<std::string_view> as_string() const noexcept;
   [[nodiscard]] std::optional<int64_t> as_int() const noexcept;
+  [[nodiscard]] std::optional<std::span<const std::byte>> as_binary() const noexcept;
   // Interrogate variant
   [[nodiscard]] bool isEmpty() const {
     return std::holds_alternative<std::monostate>(bNodeVariant);

@@ -1,4 +1,6 @@
 #include "Bencode_Lib_Tests.hpp"
+#include <cstddef>
+#include <span>
 
 TEST_CASE("Check R-Value reference stringify/parse.",
           "[Bencode][Node][Reference]") {
@@ -319,5 +321,52 @@ TEST_CASE("Check Node safe accessors and try_get.", "[Node][Accessors]") {
     Bencode bInt("i42e");
     REQUIRE(bInt.root().as_int() == 42);
     REQUIRE_FALSE(bInt.root().as_string().has_value());
+  }
+
+  SECTION("Binary data accessors get_binary, binary_or, and as_binary.") {
+    const std::string rawBinary("\x00\x01\x02\xFF\x00\xAA", 6);
+    const std::string encoded = "d4:hash6:" + rawBinary + "4:name3:Bobe";
+    Bencode b(encoded);
+    const auto &root = b.root();
+
+    auto binOpt = root.get_binary("hash");
+    REQUIRE(binOpt.has_value());
+    REQUIRE(binOpt->size() == 6);
+    REQUIRE((*binOpt)[0] == std::byte{0x00});
+    REQUIRE((*binOpt)[1] == std::byte{0x01});
+    REQUIRE((*binOpt)[2] == std::byte{0x02});
+    REQUIRE((*binOpt)[3] == std::byte{0xFF});
+    REQUIRE((*binOpt)[4] == std::byte{0x00});
+    REQUIRE((*binOpt)[5] == std::byte{0xAA});
+
+    REQUIRE_FALSE(root.get_binary("missing").has_value());
+
+    const std::byte fallbackBytes[] = {std::byte{0xDE}, std::byte{0xAD}};
+    std::span<const std::byte> fallbackSpan(fallbackBytes);
+
+    auto existingSpan = root.binary_or("hash", fallbackSpan);
+    REQUIRE(existingSpan.size() == 6);
+    REQUIRE(existingSpan[0] == std::byte{0x00});
+
+    auto missingSpan = root.binary_or("missing", fallbackSpan);
+    REQUIRE(missingSpan.size() == 2);
+    REQUIRE(missingSpan[0] == std::byte{0xDE});
+    REQUIRE(missingSpan[1] == std::byte{0xAD});
+
+    // Test as_binary directly on a string/binary node
+    const std::string rawStr("\x00\xAB\x00\xEF", 4);
+    Bencode bRaw("4:" + rawStr);
+    auto asBin = bRaw.root().as_binary();
+    REQUIRE(asBin.has_value());
+    REQUIRE(asBin->size() == 4);
+    REQUIRE((*asBin)[0] == std::byte{0x00});
+    REQUIRE((*asBin)[1] == std::byte{0xAB});
+    REQUIRE((*asBin)[2] == std::byte{0x00});
+    REQUIRE((*asBin)[3] == std::byte{0xEF});
+
+    // Non-string node should return nullopt for as_binary
+    Bencode bInt("i42e");
+    REQUIRE_FALSE(bInt.root().as_binary().has_value());
+    REQUIRE_FALSE(b.root().as_binary().has_value());
   }
 }

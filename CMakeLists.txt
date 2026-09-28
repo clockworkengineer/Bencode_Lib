@@ -27,6 +27,7 @@ if(BENCODE_EMBEDDED_MODE)
   set(BENCODE_ENABLE_JSON_STRINGIFY OFF CACHE BOOL "Embedded mode requires JSON stringifier to be disabled" FORCE)
   set(BENCODE_ENABLE_XML_STRINGIFY OFF CACHE BOOL "Embedded mode requires XML stringifier to be disabled" FORCE)
   set(BENCODE_ENABLE_YAML_STRINGIFY OFF CACHE BOOL "Embedded mode requires YAML stringifier to be disabled" FORCE)
+  set(BENCODE_MAX_NESTING_DEPTH 64 CACHE STRING "Maximum collection nesting depth during parsing" FORCE)
 endif()
 
 # Embedded library alias uses fixed limits, no exceptions, no file I/O, and no dynamic allocation.
@@ -36,6 +37,7 @@ option(BENCODE_ENABLE_DYNAMIC_ALLOCATION "Enable dynamic allocations for contain
 set(BENCODE_MAX_NODE_COUNT 256 CACHE STRING "Maximum total node count in embedded mode")
 set(BENCODE_MAX_CONTAINER_SIZE 64 CACHE STRING "Maximum number of elements in embedded lists/dictionaries")
 set(BENCODE_MAX_STRING_LENGTH 16384 CACHE STRING "Maximum string length in embedded mode" FORCE)
+set(BENCODE_MAX_NESTING_DEPTH 128 CACHE STRING "Maximum collection nesting depth during parsing")
 option(BENCODE_ENABLE_JSON_STRINGIFY "Enable JSON stringify support" ON)
 option(BENCODE_ENABLE_XML_STRINGIFY "Enable XML stringify support" ON)
 option(BENCODE_ENABLE_YAML_STRINGIFY "Enable YAML stringify support" ON)
@@ -382,6 +384,7 @@ target_compile_definitions(${BENCODE_LIBRARY_NAME}
   BENCODE_MAX_NODE_COUNT=${BENCODE_MAX_NODE_COUNT}
   BENCODE_MAX_CONTAINER_SIZE=${BENCODE_MAX_CONTAINER_SIZE}
   BENCODE_MAX_STRING_LENGTH=${BENCODE_MAX_STRING_LENGTH}
+  BENCODE_MAX_NESTING_DEPTH=${BENCODE_MAX_NESTING_DEPTH}
 )
 
 target_compile_definitions(${BENCODE_LIBRARY_NAME}_Embedded
@@ -396,6 +399,7 @@ target_compile_definitions(${BENCODE_LIBRARY_NAME}_Embedded
   BENCODE_MAX_NODE_COUNT=${BENCODE_MAX_NODE_COUNT}
   BENCODE_MAX_CONTAINER_SIZE=${BENCODE_MAX_CONTAINER_SIZE}
   BENCODE_MAX_STRING_LENGTH=${BENCODE_MAX_STRING_LENGTH}
+  BENCODE_MAX_NESTING_DEPTH=64
 )
 
 if(BENCODE_BUILD_MINIMAL)
@@ -411,6 +415,7 @@ if(BENCODE_BUILD_MINIMAL)
     BENCODE_MAX_NODE_COUNT=${BENCODE_MAX_NODE_COUNT}
     BENCODE_MAX_CONTAINER_SIZE=${BENCODE_MAX_CONTAINER_SIZE}
     BENCODE_MAX_STRING_LENGTH=${BENCODE_MAX_STRING_LENGTH}
+    BENCODE_MAX_NESTING_DEPTH=${BENCODE_MAX_NESTING_DEPTH}
   )
 endif()
 

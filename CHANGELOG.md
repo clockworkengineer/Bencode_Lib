@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.3.0] - 2026-09-28
 
+### Added
+- **Configurable Recursion Nesting Depth Limits**: Introduced `BENCODE_MAX_NESTING_DEPTH` CMake cache option (defaults to 128 in standard mode, 64 in embedded mode) preventing stack overflow DoS from maliciously crafted deeply nested Bencode collections. Added `Bencode::setMaxParserDepth(depth)` and `Bencode::getMaxParserDepth()` to configure parser limits dynamically.
+- **First-Class Zero-Copy Binary Span Accessors**: Added `Node::as_binary()`, `Node::get_binary(key)`, and `Node::binary_or(key, fallback)` returning `std::span<const std::byte>` to safely handle arbitrary binary byte strings (such as 20-byte BitTorrent SHA-1 hashes) without heap copying or character encoding corruption across both standard and embedded allocations.
+
 ### Fixed
 - **Incomplete Type Unique Pointer Default Arguments**: Replaced constructor default `std::unique_ptr<T> = nullptr` parameters in `Bencode` and `Bencode_Impl` with explicit overloads to avoid Clang 18 incomplete-type `sizeof` instantiation errors.
 - **Precompiled Header Feature Synchronization**: Propagated compiler and linker sanitizer flags (`-fsanitize=address,undefined,...`) with `PUBLIC` visibility across all library targets so AST/PCH files and test translation units share identical target features.

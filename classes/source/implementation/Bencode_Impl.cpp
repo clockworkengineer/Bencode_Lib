@@ -257,4 +257,12 @@ Node &Bencode_Impl::getOrCreateRootEntry(Key &&key) {
   }
 }
 
+void Bencode_Impl::setMaxParserDepth(unsigned long depth) {
+  Default_Parser::setMaxParserDepth(depth);
+}
+
+unsigned long Bencode_Impl::getMaxParserDepth() {
+  return Default_Parser::getMaxParserDepth();
+}
+
 } // namespace Bencode_Lib

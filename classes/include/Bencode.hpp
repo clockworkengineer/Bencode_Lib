@@ -110,6 +110,9 @@ public:
   static std::string fromFile(const std::string_view &fileName);
   static void toFile(const std::string_view &fileName,
            const std::string_view &bencodeString);
+  // Parser recursion depth limit
+  static void setMaxParserDepth(unsigned long depth);
+  [[nodiscard]] static unsigned long getMaxParserDepth();
 
 private:
   void ensureImplementation() const;

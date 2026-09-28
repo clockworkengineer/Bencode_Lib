@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "Bencode_Config.hpp"
+
 namespace Bencode_Lib {
 namespace ParserConstants {
 // Bencode type indicators
@@ -26,6 +28,6 @@ constexpr char STRING_PLUS = '+';
 constexpr char COLON = ':';
 constexpr char END = 'e';
 // Parser settings
-constexpr unsigned long DEFAULT_MAX_PARSER_DEPTH = 10;
+constexpr unsigned long DEFAULT_MAX_PARSER_DEPTH = BENCODE_MAX_NESTING_DEPTH;
 } // namespace ParserConstants
 } // namespace Bencode_Lib

@@ -15,6 +15,8 @@ static_assert(BENCODE_MAX_CONTAINER_SIZE > 0,
               "BENCODE_MAX_CONTAINER_SIZE must be positive.");
 static_assert(BENCODE_MAX_STRING_LENGTH > 0,
               "BENCODE_MAX_STRING_LENGTH must be positive.");
+static_assert(BENCODE_MAX_NESTING_DEPTH > 0,
+              "BENCODE_MAX_NESTING_DEPTH must be positive.");
 
 #if defined(BENCODE_EMBEDDED_MODE) && (BENCODE_EMBEDDED_MODE == 1)
 static_assert(BENCODE_ENABLE_FILE_IO == 0,

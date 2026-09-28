@@ -18,6 +18,8 @@ Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode 
 - **Runtime Construction**: Build Bencode trees programmatically using operator overloading and initializer lists.
 - **Traversal**: Walk the node tree with a custom `IAction` visitor.
 - **Error Handling**: Parsing and stringification errors throw typed exceptions with descriptive messages.
+- **Binary Safety**: First-class zero-copy `std::span<const std::byte>` accessors (`as_binary()`, `get_binary()`, `binary_or()`) to safely handle raw binary byte strings and BitTorrent 20-byte SHA-1 hashes without character encoding issues or heap copies.
+- **Configurable Recursion Limits**: Defend against stack overflow DoS attacks via configurable max nesting depth (`BENCODE_MAX_NESTING_DEPTH`, default 128 in normal mode, 64 in embedded mode), adjustable dynamically via `Bencode::setMaxParserDepth()`.
 
 ## Library Design Principles
 
@@ -40,6 +42,7 @@ Bencode_Lib is built to support multiple usage scenarios via CMake feature flags
 
 - `BENCODE_BUILD_MINIMAL`: build a smaller library focused on core Bencode parsing/stringifying and buffer-based I/O only.
 - `BENCODE_EMBEDDED_MODE`: enable embedded mode with no exceptions, no dynamic allocation, and no file-based I/O.
+- `BENCODE_MAX_NESTING_DEPTH`: maximum collection nesting depth during parsing (default 128; forced 64 in embedded mode).
 - `BENCODE_ENABLE_FILE_IO`: control whether `Bencode::fromFile()` / `Bencode::toFile()` and file source/destination support are compiled.
 - `BENCODE_ENABLE_JSON_STRINGIFY`, `BENCODE_ENABLE_XML_STRINGIFY`, `BENCODE_ENABLE_YAML_STRINGIFY`: enable the built-in optional stringify modules.
 - `BENCODE_ENABLE_EXCEPTIONS`: when disabled, parse operations return a `ParseStatus` result instead of throwing.
@@ -48,6 +51,7 @@ Use `Bencode_Optional_Stringify.hpp` only when one or more built-in stringify mo
 
 ## Security Guarantees
 
+- **Stack Overflow Prevention**: Recursive collection depth is strictly bounded by `BENCODE_MAX_NESTING_DEPTH` (or dynamic `setMaxParserDepth`), safely terminating parsing before recursion can exhaust thread stack space.
 - When `BENCODE_ENABLE_EXCEPTIONS=OFF`, parse operations return a `ParseStatus` result instead of throwing exceptions.
 - No-exceptions mode is explicitly tested for failure reporting, so invalid or malformed input is handled safely.
 - When `BENCODE_ENABLE_FILE_IO=OFF`, file-based helpers are disabled at compile time and `fromFile()`/`toFile()` calls fail cleanly through the disabled file I/O implementation.
@@ -81,10 +85,15 @@ int main() {
     }
     std::cout << "Rank: " << bencode["rank"].as_int().value_or(0) << "\n";
 
-    // 3. Modifying data
+    // 3. Zero-copy binary span access (e.g. BitTorrent piece hashes or raw buffers)
+    if (auto binData = bencode["user"].as_binary()) {
+        std::cout << "Bytes length: " << binData->size() << "\n";
+    }
+
+    // 4. Modifying data
     bencode["status"] = std::string("active");
 
-    // 4. Direct encoding to std::string
+    // 5. Direct encoding to std::string
     std::string encoded = bencode.encode();
     std::cout << "Encoded: " << encoded << "\n";
 

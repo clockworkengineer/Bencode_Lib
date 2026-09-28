@@ -1,5 +1,8 @@
 #include "catch2/catch_all.hpp"
 
+#include <cstddef>
+#include <span>
+
 #include "Bencode.hpp"
 #include "Bencode_Core.hpp"
 
@@ -63,3 +66,56 @@ TEST_CASE("Embedded test target defines exception support off",
   FAIL("Embedded test target must compile with exception support disabled");
 #endif
 }
+
+TEST_CASE("Embedded mode enforces nesting depth limits",
+          "[Bencode][Embedded]") {
+  REQUIRE(BENCODE_MAX_NESTING_DEPTH == 64);
+  const auto initialDepth = Bencode::getMaxParserDepth();
+  REQUIRE(initialDepth == 64);
+
+  Bencode bencoder;
+  Bencode::setMaxParserDepth(3);
+  REQUIRE(Bencode::getMaxParserDepth() == 3);
+
+  // 4 nested lists exceeds max parser depth 3
+  BufferSource deepSource{"llllleeeee"};
+  ParseStatus status = bencoder.parse(deepSource);
+  REQUIRE_FALSE(status.ok());
+  REQUIRE(status.code == ErrorCode::SyntaxError);
+
+  Bencode::setMaxParserDepth(initialDepth);
+}
+
+TEST_CASE("Embedded mode binary span accessors work without allocation",
+          "[Bencode][Embedded]") {
+  const std::string rawBinary("\x00\xFF\x42", 3);
+  const std::string encoded = "d3:dat3:" + rawBinary + "e";
+  Bencode b;
+  ParseStatus status = b.parse(BufferSource{encoded});
+  REQUIRE(status.ok());
+
+  const auto &root = b.root();
+  auto binOpt = root.get_binary("dat");
+  REQUIRE(binOpt.has_value());
+  REQUIRE(binOpt->size() == 3);
+  REQUIRE((*binOpt)[0] == std::byte{0x00});
+  REQUIRE((*binOpt)[1] == std::byte{0xFF});
+  REQUIRE((*binOpt)[2] == std::byte{0x42});
+
+  REQUIRE_FALSE(root.get_binary("nonexistent").has_value());
+
+  const std::byte fallbackBytes[] = {std::byte{0x11}};
+  auto fallbackSpan = root.binary_or("nonexistent", fallbackBytes);
+  REQUIRE(fallbackSpan.size() == 1);
+  REQUIRE(fallbackSpan[0] == std::byte{0x11});
+
+  const std::string rawNodeStr("\xAA\xBB", 2);
+  Bencode bRaw;
+  REQUIRE(bRaw.parse(BufferSource{"2:" + rawNodeStr}).ok());
+  auto asBin = bRaw.root().as_binary();
+  REQUIRE(asBin.has_value());
+  REQUIRE(asBin->size() == 2);
+  REQUIRE((*asBin)[0] == std::byte{0xAA});
+  REQUIRE((*asBin)[1] == std::byte{0xBB});
+}
+

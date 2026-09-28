@@ -172,4 +172,27 @@ inline std::optional<int64_t> Node::as_int() const noexcept {
   return std::nullopt;
 }
 
+inline std::optional<std::span<const std::byte>> Node::get_binary(std::string_view key) const noexcept {
+  if (const auto *str = try_get<String>(key)) {
+    const std::string_view sv = str->value();
+    return std::span<const std::byte>(reinterpret_cast<const std::byte *>(sv.data()), sv.size());
+  }
+  return std::nullopt;
+}
+
+inline std::span<const std::byte> Node::binary_or(std::string_view key, std::span<const std::byte> fallback) const noexcept {
+  if (auto bin = get_binary(key)) {
+    return *bin;
+  }
+  return fallback;
+}
+
+inline std::optional<std::span<const std::byte>> Node::as_binary() const noexcept {
+  if (!isEmpty() && isA<String>(*this)) {
+    const std::string_view sv = NRef<const String>(*this).value();
+    return std::span<const std::byte>(reinterpret_cast<const std::byte *>(sv.data()), sv.size());
+  }
+  return std::nullopt;
+}
+
 } // namespace Bencode_Lib

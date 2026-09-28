@@ -203,4 +203,19 @@ void Bencode::toFile(const std::string_view &fileName,
 std::string Bencode::fromFile(const std::string_view &fileName) {
   return Bencode_Impl::fromFile(fileName);
 }
+
+/// <summary>
+/// Set the maximum parser recursion depth.
+/// </summary>
+void Bencode::setMaxParserDepth(const unsigned long depth) {
+  Bencode_Impl::setMaxParserDepth(depth);
+}
+
+/// <summary>
+/// Get the maximum parser recursion depth.
+/// </summary>
+unsigned long Bencode::getMaxParserDepth() {
+  return Bencode_Impl::getMaxParserDepth();
+}
+
 } // namespace Bencode_Lib
