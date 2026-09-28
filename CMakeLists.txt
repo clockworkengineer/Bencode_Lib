@@ -20,6 +20,15 @@ option(BENCODE_BUILD_FUZZERS "Build fuzz target(s) for parser input" OFF)
 # and do not require file-based I/O or the optional stringifier extensions.
 option(BENCODE_EMBEDDED_MODE "Enable embedded build mode" OFF)
 
+if(BENCODE_EMBEDDED_MODE)
+  set(BENCODE_ENABLE_EXCEPTIONS OFF CACHE BOOL "Embedded mode requires exceptions to be disabled" FORCE)
+  set(BENCODE_ENABLE_FILE_IO OFF CACHE BOOL "Embedded mode requires file I/O to be disabled" FORCE)
+  set(BENCODE_ENABLE_DYNAMIC_ALLOCATION OFF CACHE BOOL "Embedded mode requires dynamic allocation to be disabled" FORCE)
+  set(BENCODE_ENABLE_JSON_STRINGIFY OFF CACHE BOOL "Embedded mode requires JSON stringifier to be disabled" FORCE)
+  set(BENCODE_ENABLE_XML_STRINGIFY OFF CACHE BOOL "Embedded mode requires XML stringifier to be disabled" FORCE)
+  set(BENCODE_ENABLE_YAML_STRINGIFY OFF CACHE BOOL "Embedded mode requires YAML stringifier to be disabled" FORCE)
+endif()
+
 # Embedded library alias uses fixed limits, no exceptions, no file I/O, and no dynamic allocation.
 option(BENCODE_ENABLE_EXCEPTIONS "Enable exception support" ON)
 option(BENCODE_ENABLE_FILE_IO "Enable file-based I/O support" ON)
@@ -92,8 +101,12 @@ endif()
 
 set(BENCODE_MINIMAL_SOURCES ${BENCODE_COMMON_SOURCES})
 list(APPEND BENCODE_MINIMAL_SOURCES ${BENCODE_FILE_IO_DISABLED_SOURCES})
-set(BENCODE_EMBEDDED_SOURCES ${BENCODE_COMMON_SOURCES})
-list(APPEND BENCODE_EMBEDDED_SOURCES ${BENCODE_FILE_IO_DISABLED_SOURCES})
+set(BENCODE_EMBEDDED_SOURCES
+  classes/source/Bencode.cpp
+  classes/source/implementation/Bencode_Impl.cpp
+  ${BENCODE_PARSER_STATUS_SOURCES}
+  ${BENCODE_FILE_IO_DISABLED_SOURCES}
+)
 
 set(BENCODE_PUBLIC_HEADERS
   classes/include/Bencode.hpp

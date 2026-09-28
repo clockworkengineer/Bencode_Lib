@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.18.1)
 
 project("Bencode_Lib Examples" VERSION 1.2.0 DESCRIPTION "Bencode_Lib example programs")
 
+if(BENCODE_EMBEDDED_MODE)
+  return()
+endif()
+
 function(process_file target)
   add_executable(${target} ${CMAKE_CURRENT_SOURCE_DIR}/source/${target})
   target_include_directories(${target} PUBLIC
