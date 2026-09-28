@@ -120,6 +120,22 @@ Bencode::SaxResultType Bencode::parseSax(const std::string_view &bencodeString, 
 }
 
 /// <summary>
+/// Parse raw Bencode payload into destination BencodeView returning ParseStatus.
+/// </summary>
+ParseStatus Bencode::parseView(std::string_view bencodeString, BencodeView &destination) {
+  return BencodeView::parse(bencodeString, destination, getMaxParserDepth());
+}
+
+#if BENCODE_ENABLE_EXCEPTIONS
+/// <summary>
+/// Parse raw Bencode payload into a zero-copy BencodeView tree.
+/// </summary>
+BencodeView Bencode::parseView(std::string_view bencodeString) {
+  return BencodeView::parse(bencodeString, getMaxParserDepth());
+}
+#endif
+
+/// <summary>
 /// Take Node structure and create a Bencode encoding for it in the
 /// destination stream.
 /// </summary>

@@ -40,7 +40,7 @@ static void printUsage(const char *programName) {
       << "  count: number of dictionary entries (default 5000)\n"
       << "  value-size: bytes per value string (default 128)\n"
       << "  iterations: number of parse/stringify iterations (default 5)\n"
-      << "  mode: roundtrip|parse|stringify|sax (default roundtrip)\n";
+      << "  mode: roundtrip|parse|stringify|sax|view (default roundtrip)\n";
 }
 
 static bool parseArg(const char *arg, size_t &output) {
@@ -53,7 +53,7 @@ static bool parseArg(const char *arg, size_t &output) {
   }
 }
 
-enum class BenchmarkMode { Roundtrip, ParseOnly, StringifyOnly, SaxOnly };
+enum class BenchmarkMode { Roundtrip, ParseOnly, StringifyOnly, SaxOnly, ViewOnly };
 
 static bool parseModeArg(const char *arg, BenchmarkMode &mode) {
   const std::string value(arg);
@@ -73,6 +73,10 @@ static bool parseModeArg(const char *arg, BenchmarkMode &mode) {
     mode = BenchmarkMode::SaxOnly;
     return true;
   }
+  if (value == "view") {
+    mode = BenchmarkMode::ViewOnly;
+    return true;
+  }
   return false;
 }
 
@@ -84,6 +88,8 @@ static std::string modeName(BenchmarkMode mode) {
     return "stringify-only";
   case BenchmarkMode::SaxOnly:
     return "sax-only";
+  case BenchmarkMode::ViewOnly:
+    return "view-only (zero-copy)";
   case BenchmarkMode::Roundtrip:
   default:
     return "roundtrip";
@@ -324,6 +330,26 @@ int main(int argc, char *argv[]) {
     return seconds;
   };
 
+  auto runViewBenchmark = [&](int iterations) {
+    double seconds = 0.0;
+    for (int i = 0; i < iterations; ++i) {
+      const auto start = high_resolution_clock::now();
+      BencodeView view;
+      ParseStatus status = BencodeView::parse(encoded, view);
+      if (!status.ok()) {
+        std::cerr << "View parse iteration " << (i + 1)
+                  << " failed: " << status.message << "\n";
+        std::exit(1);
+      }
+      const auto end = high_resolution_clock::now();
+      const double iterationTime = duration<double>(end - start).count();
+      seconds += iterationTime;
+      std::cout << "View iteration " << (i + 1) << ": " << iterationTime << " s ("
+                << view.root().size() << " root entries)\n";
+    }
+    return seconds;
+  };
+
   double parseSeconds = 0.0;
   double stringifySeconds = 0.0;
   if (mode == BenchmarkMode::ParseOnly) {
@@ -332,6 +358,8 @@ int main(int argc, char *argv[]) {
     stringifySeconds = runStringifyBenchmark(iterations);
   } else if (mode == BenchmarkMode::SaxOnly) {
     parseSeconds = runSaxBenchmark(iterations);
+  } else if (mode == BenchmarkMode::ViewOnly) {
+    parseSeconds = runViewBenchmark(iterations);
   } else {
     auto result = runRoundtripBenchmark(iterations);
     parseSeconds = result.first;

@@ -33,6 +33,9 @@ public:
   iterator end() noexcept { return data_.data() + size_; }
   const_iterator end() const noexcept { return data_.data() + size_; }
 
+  T *data() noexcept { return data_.data(); }
+  const T *data() const noexcept { return data_.data(); }
+
   [[nodiscard]] size_type size() const noexcept { return size_; }
   [[nodiscard]] bool empty() const noexcept { return size_ == 0; }
   [[nodiscard]] size_type capacity() const noexcept { return Capacity; }

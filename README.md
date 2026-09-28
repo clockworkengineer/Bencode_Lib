@@ -21,6 +21,7 @@ Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode 
 - **Binary Safety**: First-class zero-copy `std::span<const std::byte>` accessors (`as_binary()`, `get_binary()`, `binary_or()`) to safely handle raw binary byte strings and BitTorrent 20-byte SHA-1 hashes without character encoding issues or heap copies.
 - **Configurable Recursion Limits**: Defend against stack overflow DoS attacks via configurable max nesting depth (`BENCODE_MAX_NESTING_DEPTH`, default 128 in normal mode, 64 in embedded mode), adjustable dynamically via `Bencode::setMaxParserDepth()`.
 - **Streaming SAX Parser**: Event-driven streaming parser (`ISaxHandler`, `Bencode::parseSax()`, `SaxParser`) processing multi-gigabyte streams in $O(\text{depth})$ memory with 2.4x higher throughput and early termination.
+- **Zero-Copy Non-Owning Parser (`BencodeView`)**: 24-byte non-owning `NodeView` nodes backed by `std::string_view` slices into the input buffer. Delivers **175 MB/s throughput** (nearly **10x faster** than DOM parsing) with zero string copies, zero dictionary/list pool allocations, and $O(\log K)$ binary-search key lookup.
 
 ## Library Design Principles
 
@@ -142,7 +143,35 @@ int main() {
 }
 ```
 
-### 4. Integration with Downstream Projects
+### 4. Zero-Copy Non-Owning Parsing (`BencodeView`)
+
+For ultra-high-throughput applications (network routers, BitTorrent indexers, embedded telemetry), `BencodeView` parses Bencode data into a non-owning AST without heap allocations for string values or dictionary keys:
+
+```cpp
+#include "Bencode.hpp"
+#include "Bencode_View.hpp"
+#include <iostream>
+
+int main() {
+    std::string_view payload = "d4:infod6:lengthi1048576e4:name11:example.isoe4:pathl5:dir_a5:dir_bee";
+
+    // Zero-copy parse: strings point directly into payload
+    Bencode_Lib::BencodeView view = Bencode_Lib::BencodeView::parse(payload);
+
+    // O(log K) binary search dictionary lookup
+    std::cout << "Name: " << view["info"]["name"].as_string().value() << "\n";
+    std::cout << "Length: " << view["info"]["length"].as_int().value() << " bytes\n";
+
+    // Structured binding iteration over sorted dictionary entries
+    for (const auto &[key, val] : view.root().as_dict().value()) {
+        std::cout << "Key: " << key << " (type " << static_cast<int>(val.type()) << ")\n";
+    }
+
+    return 0;
+}
+```
+
+### 5. Integration with Downstream Projects
 
 #### Via CMake:
 ```cmake

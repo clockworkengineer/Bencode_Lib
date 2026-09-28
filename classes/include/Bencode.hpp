@@ -27,6 +27,7 @@ namespace Bencode_Lib {
 // ============================
 // Bencode forward declarations
 // ============================
+class BencodeView;
 class IStringify;
 class IParser;
 class ISource;
@@ -92,6 +93,12 @@ public:
   static SaxResultType parseSax(ISource &source, ISaxHandler &handler);
   static SaxResultType parseSax(ISource &&source, ISaxHandler &handler);
   static SaxResultType parseSax(const std::string_view &bencodeString, ISaxHandler &handler);
+
+  // Zero-copy non-owning view parser
+  static ParseStatus parseView(std::string_view bencodeString, BencodeView &destination);
+#if BENCODE_ENABLE_EXCEPTIONS
+  [[nodiscard]] static BencodeView parseView(std::string_view bencodeString);
+#endif
   // Stringify Bencode from Node tree
   void stringify(IDestination &destination) const;
   void stringify(IDestination &&destination) const;
@@ -128,3 +135,6 @@ private:
 };
 
 } // namespace Bencode_Lib
+ 
+#include "Bencode_View.hpp"
+

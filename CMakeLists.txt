@@ -55,6 +55,7 @@ set(BENCODE_COMMON_SOURCES
   classes/source/Bencode.cpp
   classes/source/implementation/Bencode_Impl.cpp
   classes/source/implementation/parser/Sax_Parser.cpp
+  classes/source/implementation/view/Bencode_View.cpp
 )
 
 set(BENCODE_PARSER_EXCEPTION_SOURCES
@@ -108,6 +109,7 @@ set(BENCODE_EMBEDDED_SOURCES
   classes/source/Bencode.cpp
   classes/source/implementation/Bencode_Impl.cpp
   classes/source/implementation/parser/Sax_Parser.cpp
+  classes/source/implementation/view/Bencode_View.cpp
   ${BENCODE_PARSER_STATUS_SOURCES}
   ${BENCODE_FILE_IO_DISABLED_SOURCES}
 )
@@ -116,6 +118,7 @@ set(BENCODE_PUBLIC_HEADERS
   classes/include/Bencode.hpp
   classes/include/Bencode_Core.hpp
   classes/include/Bencode_Status.hpp
+  classes/include/Bencode_View.hpp
   classes/include/Bencode_Optional_Stringify.hpp
 )
 
@@ -133,6 +136,7 @@ set(BENCODE_INTERFACE_HEADERS
 set(BENCODE_IMPLEMENTATION_HEADERS
   classes/include/implementation/Bencode_Impl.hpp
   classes/include/implementation/common/Bencode_Error.hpp
+  classes/include/implementation/view/Bencode_NodeView.hpp
   classes/include/implementation/node/Bencode_Node.hpp
   classes/include/implementation/node/Bencode_Node_Creation.hpp
   classes/include/implementation/node/Bencode_Node_Index.hpp
@@ -227,6 +231,10 @@ set(BENCODE_INSTALLABLE_IMPLEMENTATION_IO_HEADERS
   classes/include/implementation/io/Bencode_Destinations.hpp
   classes/include/implementation/io/Bencode_BufferSource.hpp
   classes/include/implementation/io/Bencode_BufferDestination.hpp
+)
+
+set(BENCODE_INSTALLABLE_IMPLEMENTATION_VIEW_HEADERS
+  classes/include/implementation/view/Bencode_NodeView.hpp
 )
 
 set(BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS)
@@ -490,6 +498,9 @@ install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_VARIANT_HEADERS}
 )
 install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_IO_HEADERS}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/io
+)
+install(FILES ${BENCODE_INSTALLABLE_IMPLEMENTATION_VIEW_HEADERS}
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/view
 )
 
 if(BENCODE_INSTALLABLE_IMPLEMENTATION_FILE_HEADERS)

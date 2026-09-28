@@ -159,4 +159,31 @@ TEST_CASE("Embedded mode streaming SAX parser", "[Bencode][Embedded][SAX]") {
   REQUIRE(handler.foundStr == "item");
 }
 
+TEST_CASE("Embedded mode zero-copy BencodeView parser", "[Bencode][Embedded][View]") {
+  SECTION("Successful parse and access") {
+    BencodeView view;
+    std::string_view data = "d3:fooi42e4:listli1ei2eee";
+    ParseStatus status = Bencode::parseView(data, view);
+    REQUIRE(status.ok());
+    REQUIRE(view.root().is_dict());
+    REQUIRE(view.root().size() == 2);
+    REQUIRE(view.root().get_int("foo").value() == 42);
+
+    auto listNode = view.root().get("list");
+    REQUIRE(listNode.has_value());
+    REQUIRE(listNode->is_list());
+    REQUIRE(listNode->size() == 2);
+    REQUIRE(listNode->get(0)->as_int().value() == 1);
+    REQUIRE(listNode->get(1)->as_int().value() == 2);
+  }
+
+  SECTION("Error reporting without exceptions") {
+    BencodeView view;
+    std::string_view invalidData = "d3:fooi42"; // truncated
+    ParseStatus status = BencodeView::parse(invalidData, view);
+    REQUIRE_FALSE(status.ok());
+    REQUIRE(status.code == ErrorCode::MissingEndTerminator);
+  }
+}
+
 
