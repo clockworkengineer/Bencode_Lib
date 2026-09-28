@@ -23,6 +23,7 @@ Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode 
 - **Streaming SAX Parser**: Event-driven streaming parser (`ISaxHandler`, `Bencode::parseSax()`, `SaxParser`) processing multi-gigabyte streams in $O(\text{depth})$ memory with 2.4x higher throughput and early termination.
 - **Zero-Copy Non-Owning Parser (`BencodeView`)**: 24-byte non-owning `NodeView` nodes backed by `std::string_view` slices into the input buffer. Delivers **175 MB/s throughput** (nearly **10x faster** than DOM parsing) with zero string copies, zero dictionary/list pool allocations, and $O(\log K)$ binary-search key lookup.
 - **Ergonomic Struct Object Mapping**: Type-safe C++23 concept-based reflection and mapping between user structs and Bencode dictionaries via `to_bencode()` / `from_bencode()`, with 1-line macros (`BENCODE_DEFINE_TYPE_NON_INTRUSIVE`, `BENCODE_STRUCT`), `Node::get<T>()`, and `Bencode::parse_object<T>()` supporting direct zero-copy extraction from `BencodeView`.
+- **C++23 Named Modules Support**: First-class support for C++20/C++23 modules via primary module interface `classes/modules/Bencode_Lib.cppm`. Enables instantaneous compilation and header isolation using `import Bencode_Lib;` across modern toolchains (Clang 18+, MSVC 2022, GCC 14+).
 
 ## Library Design Principles
 
@@ -215,7 +216,42 @@ int main() {
 }
 ```
 
-### 6. Integration with Downstream Projects
+### 6. Modern C++23 Named Modules (`import Bencode_Lib;`)
+
+Consumers with C++20/C++23 toolchains (Clang 18+, MSVC 2022 17.5+, GCC 14+) can consume Bencode_Lib as a named module without header parsing overhead:
+
+```cpp
+import Bencode_Lib;
+#include <iostream>
+
+int main() {
+    // 1. DOM API
+    Bencode_Lib::Bencode bencode;
+    bencode.parse("d4:ranki1e4:user3:Bobe");
+    std::cout << "User: " << bencode["user"].as_string().value_or("") << "\n";
+
+    // 2. Zero-Copy View API
+    auto view = Bencode_Lib::BencodeView::parse("d4:spami42ee");
+    std::cout << "Spam: " << view["spam"].as_int().value_or(0) << "\n";
+
+    return 0;
+}
+```
+
+To compile with Clang:
+```bash
+# 1. Precompile the module interface unit
+clang++ -std=c++23 -DBENCODE_ENABLE_EXCEPTIONS=1 -DBENCODE_ENABLE_FILE_IO=1 -DBENCODE_ENABLE_DYNAMIC_ALLOCATION=1 \
+  -I<install-dir>/include --precompile -x c++-module <install-dir>/include/modules/Bencode_Lib.cppm -o Bencode_Lib.pcm
+
+# 2. Compile module BMI to object
+clang++ -std=c++23 -c Bencode_Lib.pcm -o Bencode_Lib.o
+
+# 3. Compile your application
+clang++ -std=c++23 -fprebuilt-module-path=. main.cpp Bencode_Lib.o -lBencode_Lib -o my_app
+```
+
+### 7. Integration with Downstream Projects
 
 #### Via CMake:
 ```cmake
@@ -239,9 +275,9 @@ g++ -std=c++23 main.cpp $(pkg-config --cflags --libs bencode_lib) -o my_app
 - **Minimal**: `-DBENCODE_BUILD_MINIMAL=ON -DBENCODE_ENABLE_FILE_IO=OFF -DBENCODE_ENABLE_JSON_STRINGIFY=OFF -DBENCODE_ENABLE_XML_STRINGIFY=OFF -DBENCODE_ENABLE_YAML_STRINGIFY=OFF`
 - **Embedded**: `-DBENCODE_EMBEDDED_MODE=ON -DBENCODE_ENABLE_EXCEPTIONS=OFF -DBENCODE_ENABLE_DYNAMIC_ALLOCATION=OFF -DBENCODE_ENABLE_FILE_IO=OFF`
 
-## Public Header Boundary
+## Public Header & Module Boundary
 
-The public API is exposed through the top-level headers under `classes/include`. Consumers should include only:
+The public API is exposed through the top-level headers under `classes/include` and the C++23 module interface:
 
 - `Bencode.hpp` (DOM AST, encoders, decoders, parser depth controls, struct object mapping)
 - `Bencode_View.hpp` (Zero-copy non-owning `BencodeView` AST and binary-search lookup)
@@ -249,6 +285,7 @@ The public API is exposed through the top-level headers under `classes/include`.
 - `Bencode_Core.hpp` (Core types, aliases, buffer I/O interfaces)
 - `Bencode_Status.hpp` (Status codes for no-exceptions mode)
 - `Bencode_Optional_Stringify.hpp` (JSON/XML/YAML conversion helpers)
+- `classes/modules/Bencode_Lib.cppm` (C++23 Named Module interface for `import Bencode_Lib;`)
 
 Internal implementation headers are not intended for direct inclusion. The public root headers provide the supported consumer API.
 

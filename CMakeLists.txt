@@ -482,8 +482,14 @@ install(FILES
   classes/include/Bencode.hpp
   classes/include/Bencode_Core.hpp
   classes/include/Bencode_Status.hpp
+  classes/include/Bencode_View.hpp
+  classes/include/Bencode_Serialization.hpp
   classes/include/Bencode_Optional_Stringify.hpp
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(FILES
+  classes/modules/Bencode_Lib.cppm
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/modules
 )
 install(FILES ${BENCODE_INTERFACE_HEADERS}
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/interface

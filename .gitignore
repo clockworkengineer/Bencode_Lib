@@ -13,3 +13,5 @@
 *.tar.gz
 *.tar.Z
 *.zip
+gcm.cache/
+*.pcm
