@@ -16,8 +16,12 @@ namespace Bencode_Lib {
 class Bencode_Impl {
 
 public:
-  explicit Bencode_Impl(std::unique_ptr<IStringify> stringify = nullptr,
-                        std::unique_ptr<IParser> parser = nullptr);
+  Bencode_Impl();
+  explicit Bencode_Impl(std::unique_ptr<IStringify> stringify);
+  explicit Bencode_Impl(std::unique_ptr<IParser> parser);
+  Bencode_Impl(std::unique_ptr<IStringify> stringify,
+               std::unique_ptr<IParser> parser);
+  explicit Bencode_Impl(std::nullptr_t);
   Bencode_Impl(const Bencode_Impl &other) = delete;
   Bencode_Impl &operator=(const Bencode_Impl &other) = delete;
   Bencode_Impl(Bencode_Impl &&other) noexcept;

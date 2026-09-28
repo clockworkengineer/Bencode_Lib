@@ -340,6 +340,23 @@ foreach(target IN LISTS BENCODE_LIBRARY_TARGETS)
   )
 endforeach()
 
+if(BENCODE_ENABLE_SANITIZERS)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(BENCODE_SANITIZER_FLAGS -fsanitize=address,undefined,integer,bounds -fno-omit-frame-pointer)
+    set(BENCODE_SANITIZER_LINK_FLAGS -fsanitize=address,undefined,integer,bounds)
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set(BENCODE_SANITIZER_FLAGS -fsanitize=address,undefined,bounds -fno-omit-frame-pointer)
+    set(BENCODE_SANITIZER_LINK_FLAGS -fsanitize=address,undefined,bounds)
+  endif()
+
+  if(DEFINED BENCODE_SANITIZER_FLAGS)
+    foreach(target IN LISTS BENCODE_LIBRARY_TARGETS)
+      target_compile_options(${target} PUBLIC ${BENCODE_SANITIZER_FLAGS})
+      target_link_options(${target} PUBLIC ${BENCODE_SANITIZER_LINK_FLAGS})
+    endforeach()
+  endif()
+endif()
+
 target_compile_definitions(${BENCODE_LIBRARY_NAME}
   PUBLIC
   BENCODE_EMBEDDED_MODE=$<IF:$<BOOL:${BENCODE_EMBEDDED_MODE}>,1,0>

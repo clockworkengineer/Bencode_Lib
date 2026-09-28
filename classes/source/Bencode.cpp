@@ -14,11 +14,22 @@ namespace Bencode_Lib {
 
 /// <summary>
 /// Initialise the implementation layer.
-/// </summary>
+Bencode::Bencode()
+    : implementation(std::make_unique<Bencode_Impl>()) {}
+
+Bencode::Bencode(std::unique_ptr<IStringify> stringify)
+    : implementation(std::make_unique<Bencode_Impl>(std::move(stringify))) {}
+
+Bencode::Bencode(std::unique_ptr<IParser> parser)
+    : implementation(std::make_unique<Bencode_Impl>(std::move(parser))) {}
+
 Bencode::Bencode(std::unique_ptr<IStringify> stringify,
-         std::unique_ptr<IParser> parser)
+                 std::unique_ptr<IParser> parser)
     : implementation(
       std::make_unique<Bencode_Impl>(std::move(stringify), std::move(parser))) {}
+
+Bencode::Bencode(std::nullptr_t)
+    : implementation(std::make_unique<Bencode_Impl>()) {}
 void Bencode::ensureImplementation() const {
   if (!implementation) {
     implementation = std::make_unique<Bencode_Impl>();

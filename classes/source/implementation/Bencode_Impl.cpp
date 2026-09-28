@@ -14,9 +14,18 @@ namespace Bencode_Lib {
 
 // Need size information for destructor to clean up unique_ptr to
 // stringify/parser.
-/// <summary>
-/// Construct the Bencode implementation with optional stringify and parser objects.
-/// </summary>
+Bencode_Impl::Bencode_Impl()
+    : Bencode_Impl(nullptr, nullptr) {}
+
+Bencode_Impl::Bencode_Impl(std::unique_ptr<IStringify> stringify)
+    : Bencode_Impl(std::move(stringify), nullptr) {}
+
+Bencode_Impl::Bencode_Impl(std::unique_ptr<IParser> parser)
+    : Bencode_Impl(nullptr, std::move(parser)) {}
+
+Bencode_Impl::Bencode_Impl(std::nullptr_t)
+    : Bencode_Impl(nullptr, nullptr) {}
+
 Bencode_Impl::Bencode_Impl(std::unique_ptr<IStringify> stringify,
                            std::unique_ptr<IParser> parser) {
   if (!stringify) {

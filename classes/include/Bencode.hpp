@@ -58,9 +58,14 @@ public:
     std::initializer_list<std::pair<std::string, InitializerListTypes>>;
 
   // Constructors/Destructors
+  // Construct default empty Bencode instance
+  Bencode();
   // Construct with optional custom stringify/parser (ownership transferred via unique_ptr)
-  explicit Bencode(std::unique_ptr<IStringify> stringify = nullptr,
-           std::unique_ptr<IParser> parser = nullptr);
+  explicit Bencode(std::unique_ptr<IStringify> stringify);
+  explicit Bencode(std::unique_ptr<IParser> parser);
+  Bencode(std::unique_ptr<IStringify> stringify,
+          std::unique_ptr<IParser> parser);
+  explicit Bencode(std::nullptr_t);
   // Construct and parse from Bencode string
   explicit Bencode(const std::string_view &bencodeString);
   // Construct from list
