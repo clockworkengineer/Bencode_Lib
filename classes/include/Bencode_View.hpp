@@ -65,6 +65,12 @@ public:
   [[nodiscard]] NodeView operator[](std::string_view key) const { return rootNode[key]; }
   [[nodiscard]] NodeView operator[](std::size_t index) const { return rootNode[index]; }
 
+  // Object mapping template methods
+  template <typename T>
+  [[nodiscard]] T as() const;
+  template <typename T>
+  [[nodiscard]] T get() const;
+
   [[nodiscard]] std::string_view raw() const noexcept { return rawBuffer; }
 
 private:

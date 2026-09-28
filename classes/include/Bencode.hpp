@@ -129,6 +129,18 @@ public:
   static void setMaxParserDepth(unsigned long depth);
   [[nodiscard]] static unsigned long getMaxParserDepth();
 
+  // Object mapping template methods
+  template <typename T>
+  [[nodiscard]] T get() const;
+  template <typename T>
+  [[nodiscard]] T as() const;
+  template <typename T>
+  [[nodiscard]] static Bencode from_object(const T &obj);
+#if BENCODE_ENABLE_EXCEPTIONS
+  template <typename T>
+  [[nodiscard]] static T parse_object(std::string_view bencodeString);
+#endif
+
 private:
   void ensureImplementation() const;
   mutable std::unique_ptr<Bencode_Impl> implementation;
@@ -137,4 +149,6 @@ private:
 } // namespace Bencode_Lib
  
 #include "Bencode_View.hpp"
+#include "Bencode_Serialization.hpp"
+
 

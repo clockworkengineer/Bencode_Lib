@@ -104,6 +104,12 @@ public:
 
   [[nodiscard]] std::optional<DictType> as_dict() const noexcept;
 
+  // Object mapping template methods
+  template <typename T>
+  [[nodiscard]] T as() const;
+  template <typename T>
+  [[nodiscard]] T get() const;
+
   [[nodiscard]] std::size_t size() const noexcept {
     switch (nodeType) {
     case Type::String:

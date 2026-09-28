@@ -22,6 +22,7 @@ Bencode_Lib is a C++23 library for encoding and decoding data using the Bencode 
 - **Configurable Recursion Limits**: Defend against stack overflow DoS attacks via configurable max nesting depth (`BENCODE_MAX_NESTING_DEPTH`, default 128 in normal mode, 64 in embedded mode), adjustable dynamically via `Bencode::setMaxParserDepth()`.
 - **Streaming SAX Parser**: Event-driven streaming parser (`ISaxHandler`, `Bencode::parseSax()`, `SaxParser`) processing multi-gigabyte streams in $O(\text{depth})$ memory with 2.4x higher throughput and early termination.
 - **Zero-Copy Non-Owning Parser (`BencodeView`)**: 24-byte non-owning `NodeView` nodes backed by `std::string_view` slices into the input buffer. Delivers **175 MB/s throughput** (nearly **10x faster** than DOM parsing) with zero string copies, zero dictionary/list pool allocations, and $O(\log K)$ binary-search key lookup.
+- **Ergonomic Struct Object Mapping**: Type-safe C++23 concept-based reflection and mapping between user structs and Bencode dictionaries via `to_bencode()` / `from_bencode()`, with 1-line macros (`BENCODE_DEFINE_TYPE_NON_INTRUSIVE`, `BENCODE_STRUCT`), `Node::get<T>()`, and `Bencode::parse_object<T>()` supporting direct zero-copy extraction from `BencodeView`.
 
 ## Library Design Principles
 
@@ -171,7 +172,50 @@ int main() {
 }
 ```
 
-### 5. Integration with Downstream Projects
+### 5. Ergonomic Struct Object Mapping
+
+Convert between native C++ structs and Bencode format using type-safe C++23 concepts and 1-line macros:
+
+```cpp
+#include <Bencode.hpp>
+#include <iostream>
+#include <optional>
+#include <vector>
+
+struct FileInfo {
+    int64_t length{};
+    std::vector<std::string> path;
+};
+BENCODE_DEFINE_TYPE_NON_INTRUSIVE(FileInfo, length, path)
+
+struct TorrentMeta {
+    std::string announce;
+    std::optional<std::string> comment;
+    std::vector<FileInfo> files;
+};
+// Use custom Bencode dictionary key names via BENCODE_STRUCT:
+BENCODE_STRUCT(TorrentMeta,
+    (announce, "announce"),
+    (comment, "comment"),
+    (files, "files")
+)
+
+int main() {
+    // 1. Direct one-line deserialization from raw Bencode:
+    std::string_view raw = "d8:announce27:http://tracker.example.com/5:filesld6:lengthi1024e4:pathl8:file.txteeee";
+    TorrentMeta meta = Bencode_Lib::Bencode::parse_object<TorrentMeta>(raw);
+    std::cout << "Tracker: " << meta.announce << "\n";
+    std::cout << "File: " << meta.files[0].path[0] << " (" << meta.files[0].length << " bytes)\n";
+
+    // 2. Direct serialization back to Bencode:
+    std::string encoded = Bencode_Lib::Bencode::from_object(meta).encode();
+    std::cout << "Encoded: " << encoded << "\n";
+
+    return 0;
+}
+```
+
+### 6. Integration with Downstream Projects
 
 #### Via CMake:
 ```cmake
@@ -199,10 +243,12 @@ g++ -std=c++23 main.cpp $(pkg-config --cflags --libs bencode_lib) -o my_app
 
 The public API is exposed through the top-level headers under `classes/include`. Consumers should include only:
 
-- `Bencode.hpp`
-- `Bencode_Core.hpp`
-- `Bencode_Status.hpp`
-- `Bencode_Optional_Stringify.hpp` (optional helper)
+- `Bencode.hpp` (DOM AST, encoders, decoders, parser depth controls, struct object mapping)
+- `Bencode_View.hpp` (Zero-copy non-owning `BencodeView` AST and binary-search lookup)
+- `Bencode_Serialization.hpp` (C++23 serialization concepts, custom converters, and reflection macros)
+- `Bencode_Core.hpp` (Core types, aliases, buffer I/O interfaces)
+- `Bencode_Status.hpp` (Status codes for no-exceptions mode)
+- `Bencode_Optional_Stringify.hpp` (JSON/XML/YAML conversion helpers)
 
 Internal implementation headers are not intended for direct inclusion. The public root headers provide the supported consumer API.
 

@@ -144,6 +144,14 @@ struct Node {
   [[nodiscard]] std::optional<std::string_view> as_string() const noexcept;
   [[nodiscard]] std::optional<int64_t> as_int() const noexcept;
   [[nodiscard]] std::optional<std::span<const std::byte>> as_binary() const noexcept;
+
+  // Object mapping template methods
+  template <typename T>
+  [[nodiscard]] T get() const;
+  template <typename T>
+  [[nodiscard]] T as() const;
+  template <typename T>
+  [[nodiscard]] static Node from_object(const T &obj);
   // Interrogate variant
   [[nodiscard]] bool isEmpty() const {
     return std::holds_alternative<std::monostate>(bNodeVariant);

@@ -119,6 +119,7 @@ set(BENCODE_PUBLIC_HEADERS
   classes/include/Bencode_Core.hpp
   classes/include/Bencode_Status.hpp
   classes/include/Bencode_View.hpp
+  classes/include/Bencode_Serialization.hpp
   classes/include/Bencode_Optional_Stringify.hpp
 )
 

@@ -51,7 +51,8 @@ if(NOT BENCODE_EMBEDDED_MODE)
     source/io/Bencode_Tests_File_FromFile.cpp
     source/io/Bencode_Lib_Tests_ToFile.cpp
     source/io/Bencode_Lib_Tests_CustomParserStringify.cpp
-    source/view/Bencode_Lib_Tests_View.cpp)
+    source/view/Bencode_Lib_Tests_View.cpp
+    source/serialization/Bencode_Lib_Tests_Serialization.cpp)
 
   add_executable(${TEST_EXECUTABLE} ${TEST_SOURCES})
   target_include_directories(${TEST_EXECUTABLE} PUBLIC ${PROJECT_SOURCE_DIR}/include)
