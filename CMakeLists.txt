@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.21)
 
 project("Bencode_Lib" VERSION 1.2.0 DESCRIPTION "Bencode C++ Library" LANGUAGES CXX)
 
+include(GNUInstallDirs)
+
 # C++ options
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -181,6 +183,7 @@ set(BENCODE_MINIMAL_INCLUDES
 
 set(BENCODE_INSTALLABLE_IMPLEMENTATION_COMMON_HEADERS
   classes/include/implementation/common/Bencode_Error.hpp
+  classes/include/implementation/common/Bencode_Status.hpp
 )
 
 set(BENCODE_INSTALLABLE_IMPLEMENTATION_NODE_HEADERS
@@ -192,6 +195,7 @@ set(BENCODE_INSTALLABLE_IMPLEMENTATION_NODE_HEADERS
 
 set(BENCODE_INSTALLABLE_IMPLEMENTATION_VARIANT_HEADERS
   classes/include/implementation/variants/Bencode_Variant.hpp
+  classes/include/implementation/variants/Bencode_FixedVector.hpp
   classes/include/implementation/variants/Bencode_Hole.hpp
   classes/include/implementation/variants/Bencode_Integer.hpp
   classes/include/implementation/variants/Bencode_String.hpp
@@ -216,10 +220,13 @@ if(BENCODE_ENABLE_FILE_IO)
 endif()
 
 set(BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS)
+set(BENCODE_OPTIONAL_INSTALL_TRANSLATOR_HEADERS)
 
 if(BENCODE_ENABLE_JSON_STRINGIFY)
   list(APPEND BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS
     classes/include/implementation/stringify/JSON_Stringify.hpp
+  )
+  list(APPEND BENCODE_OPTIONAL_INSTALL_TRANSLATOR_HEADERS
     classes/include/implementation/translator/Default_Translator.hpp
   )
 endif()
@@ -227,6 +234,9 @@ endif()
 if(BENCODE_ENABLE_XML_STRINGIFY)
   list(APPEND BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS
     classes/include/implementation/stringify/XML_Stringify.hpp
+  )
+  list(APPEND BENCODE_OPTIONAL_INSTALL_TRANSLATOR_HEADERS
+    classes/include/implementation/translator/XML_Translator.hpp
     classes/include/implementation/translator/Default_Translator.hpp
   )
 endif()
@@ -234,8 +244,14 @@ endif()
 if(BENCODE_ENABLE_YAML_STRINGIFY)
   list(APPEND BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS
     classes/include/implementation/stringify/YAML_Stringify.hpp
+  )
+  list(APPEND BENCODE_OPTIONAL_INSTALL_TRANSLATOR_HEADERS
     classes/include/implementation/translator/Default_Translator.hpp
   )
+endif()
+
+if(BENCODE_OPTIONAL_INSTALL_TRANSLATOR_HEADERS)
+  list(REMOVE_DUPLICATES BENCODE_OPTIONAL_INSTALL_TRANSLATOR_HEADERS)
 endif()
 
 # Bencode library target
@@ -260,6 +276,7 @@ add_library(Bencode_Lib::Bencode_Lib ALIAS ${BENCODE_LIBRARY_NAME})
 set(BENCODE_PUBLIC_INCLUDE_DIRS
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/classes/include>
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 # Private implementation headers used only for library compilation.
@@ -304,6 +321,11 @@ if(BENCODE_BUILD_MINIMAL)
 endif()
 
 foreach(target IN LISTS BENCODE_LIBRARY_TARGETS)
+  set_target_properties(${target} PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+  )
+
   target_include_directories(${target}
     PUBLIC
     ${BENCODE_PUBLIC_INCLUDE_DIRS}
@@ -374,8 +396,6 @@ if(BENCODE_BUILD_EXAMPLES)
   add_subdirectory(examples)
 endif()
 
-# Install rules
-include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 set(CMAKECONFIG_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
@@ -386,6 +406,7 @@ install(TARGETS ${BENCODE_LIBRARY_NAME}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 install(TARGETS ${BENCODE_LIBRARY_NAME}_Embedded
@@ -393,6 +414,7 @@ install(TARGETS ${BENCODE_LIBRARY_NAME}_Embedded
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 if(BENCODE_BUILD_MINIMAL)
@@ -401,6 +423,7 @@ if(BENCODE_BUILD_MINIMAL)
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   )
 endif()
 
@@ -442,6 +465,12 @@ if(BENCODE_OPTIONAL_INSTALL_STRINGIFY_HEADERS)
   )
 endif()
 
+if(BENCODE_OPTIONAL_INSTALL_TRANSLATOR_HEADERS)
+  install(FILES ${BENCODE_OPTIONAL_INSTALL_TRANSLATOR_HEADERS}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/implementation/translator
+  )
+endif()
+
 # Install generated config header
 install(FILES ${PROJECT_BINARY_DIR}/Bencode_Config.hpp
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -472,6 +501,52 @@ install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/Bencode_LibConfigVersion.cmake
   DESTINATION ${CMAKECONFIG_INSTALL_DIR}
 )
+
+# Generate and install pkg-config file
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/bencode_lib.pc.in
+  ${CMAKE_CURRENT_BINARY_DIR}/bencode_lib.pc
+  @ONLY
+)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/bencode_lib.pc
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
+
+# CPack packaging configuration
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_VENDOR "Bencode_Lib Contributors")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+set(CPACK_SOURCE_GENERATOR "TGZ;ZIP")
+set(CPACK_SOURCE_IGNORE_FILES
+  "/.git/"
+  "/build.*/"
+  "/Release/"
+  "/Debug/"
+  "\\\\.swp$"
+  "\\\\.DS_Store$"
+)
+include(CPack)
+
+# Doxygen documentation
+find_package(Doxygen OPTIONAL_COMPONENTS dot)
+if(DOXYGEN_FOUND)
+  set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
+  set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+  configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+  add_custom_target(docs
+    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating API documentation with Doxygen"
+    VERBATIM
+  )
+endif()
 
 set(PACKAGE_CHECK_STAGING_DIR ${CMAKE_BINARY_DIR}/package_check_install)
 add_custom_target(Bencode_Lib_PackageCheck

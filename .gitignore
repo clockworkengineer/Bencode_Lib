@@ -8,3 +8,8 @@
 /.vs/
 /cmake-build-debug/
 /.idea/
+/_CPack_Packages/
+/package_check_install/
+*.tar.gz
+*.tar.Z
+*.zip

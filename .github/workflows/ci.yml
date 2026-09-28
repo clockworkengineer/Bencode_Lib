@@ -1,0 +1,101 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Ubuntu - GCC 13 (Release + Examples + Benchmarks)
+            os: ubuntu-24.04
+            cxx: g++-13
+            cc: gcc-13
+            build_type: Release
+            cmake_flags: >-
+              -DBENCODE_BUILD_TESTS=ON
+              -DBENCODE_BUILD_EXAMPLES=ON
+              -DBENCODE_BUILD_BENCHMARKS=ON
+              -DBENCODE_WARNINGS_AS_ERRORS=ON
+
+          - name: Ubuntu - Clang 18 (Release + Sanitizers)
+            os: ubuntu-24.04
+            cxx: clang++-18
+            cc: clang-18
+            build_type: Debug
+            cmake_flags: >-
+              -DBENCODE_BUILD_TESTS=ON
+              -DBENCODE_ENABLE_SANITIZERS=ON
+              -DBENCODE_BUILD_FUZZERS=ON
+              -DBENCODE_WARNINGS_AS_ERRORS=ON
+
+          - name: Ubuntu - GCC 13 (Embedded Mode)
+            os: ubuntu-24.04
+            cxx: g++-13
+            cc: gcc-13
+            build_type: Release
+            cmake_flags: >-
+              -DBENCODE_BUILD_TESTS=ON
+              -DBENCODE_EMBEDDED_MODE=ON
+              -DBENCODE_WARNINGS_AS_ERRORS=ON
+
+          - name: Ubuntu - GCC 13 (Minimal Mode)
+            os: ubuntu-24.04
+            cxx: g++-13
+            cc: gcc-13
+            build_type: Release
+            cmake_flags: >-
+              -DBENCODE_BUILD_TESTS=ON
+              -DBENCODE_BUILD_MINIMAL=ON
+              -DBENCODE_WARNINGS_AS_ERRORS=ON
+
+          - name: macOS - AppleClang (Release + Tests)
+            os: macos-latest
+            build_type: Release
+            cmake_flags: >-
+              -DBENCODE_BUILD_TESTS=ON
+              -DBENCODE_BUILD_EXAMPLES=ON
+              -DBENCODE_BUILD_BENCHMARKS=ON
+              -DBENCODE_WARNINGS_AS_ERRORS=ON
+
+          - name: Windows - MSVC 2022 (Release + Tests)
+            os: windows-2022
+            build_type: Release
+            cmake_flags: >-
+              -DBENCODE_BUILD_TESTS=ON
+              -DBENCODE_BUILD_EXAMPLES=ON
+              -DBENCODE_BUILD_BENCHMARKS=ON
+              -DBENCODE_WARNINGS_AS_ERRORS=ON
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Compiler Environment (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          echo "CXX=${{ matrix.cxx }}" >> $GITHUB_ENV
+          echo "CC=${{ matrix.cc }}" >> $GITHUB_ENV
+
+      - name: Configure CMake
+        run: >
+          cmake -B build
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          ${{ matrix.cmake_flags }}
+
+      - name: Build Targets
+        run: cmake --build build --config ${{ matrix.build_type }} -j 4
+
+      - name: Run Test Suite
+        run: ctest --test-dir build -C ${{ matrix.build_type }} --output-on-failure
+
+      - name: Validate Packaging & Downstream Integration
+        if: runner.os == 'Linux' && !contains(matrix.name, 'Embedded') && !contains(matrix.name, 'Minimal')
+        run: cmake --build build --target Bencode_Lib_PackageCheck

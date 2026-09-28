@@ -69,8 +69,8 @@ public:
   Bencode(const DictionaryInitializerType &dictionary);
   Bencode(const Bencode &other) = delete;
   Bencode &operator=(const Bencode &other) = delete;
-  Bencode(Bencode &&other) = delete;
-  Bencode &operator=(Bencode &&other) = delete;
+  Bencode(Bencode &&other) noexcept;
+  Bencode &operator=(Bencode &&other) noexcept;
   ~Bencode();
 
   using ParseResultType = std::conditional_t<BENCODE_ENABLE_EXCEPTIONS, void, ParseStatus>;
@@ -78,9 +78,15 @@ public:
   // Parse Bencode into Node tree
   ParseResultType parse(ISource &source) const;
   ParseResultType parse(ISource &&source) const;
+  ParseResultType parse(const std::string_view &bencodeString) const;
   // Stringify Bencode from Node tree
   void stringify(IDestination &destination) const;
   void stringify(IDestination &&destination) const;
+#if BENCODE_ENABLE_DYNAMIC_ALLOCATION
+  // Convenience stringification to std::string
+  [[nodiscard]] std::string stringify() const;
+  [[nodiscard]] std::string encode() const;
+#endif
   // Return Bencode_Lib version
   [[nodiscard]] static std::string version();
   // Return Node tree root
@@ -101,7 +107,8 @@ public:
            const std::string_view &bencodeString);
 
 private:
-  const std::unique_ptr<Bencode_Impl> implementation;
+  void ensureImplementation() const;
+  mutable std::unique_ptr<Bencode_Impl> implementation;
 };
 
 } // namespace Bencode_Lib

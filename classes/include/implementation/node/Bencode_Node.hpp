@@ -6,7 +6,9 @@
 #pragma once
 
 #include <atomic>
+#include <cstdint>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -120,23 +122,23 @@ struct Node {
   const Node &at(std::string_view key) const;
   // Try to get value for key as type T, returns pointer or nullptr if not found or type mismatch
   template <typename T>
-  const T* try_get(const std::string_view& key) const noexcept {
-    if (!contains(key)) return nullptr;
-    const Node& n = (*this)[key];
-    if (auto val = std::get_if<T>(&n.getVariant())) {
-      return val;
-    }
-    return nullptr;
-  }
+  const T* try_get(std::string_view key) const noexcept;
   template <typename T>
-  T* try_get(const std::string_view& key) noexcept {
-    if (!contains(key)) return nullptr;
-    Node& n = (*this)[key];
-    if (auto val = std::get_if<T>(&n.getVariant())) {
-      return val;
-    }
-    return nullptr;
-  }
+  T* try_get(std::string_view key) noexcept;
+  template <typename T>
+  const T* try_get(std::size_t index) const noexcept;
+  template <typename T>
+  T* try_get(std::size_t index) noexcept;
+
+  // Safe accessors returning std::optional
+  [[nodiscard]] std::optional<std::string_view> get_string(std::string_view key) const noexcept;
+  [[nodiscard]] std::optional<int64_t> get_int(std::string_view key) const noexcept;
+  [[nodiscard]] std::string_view value_or(std::string_view key, std::string_view fallback) const noexcept;
+  [[nodiscard]] int64_t value_or(std::string_view key, int64_t fallback) const noexcept;
+
+  // Safe direct conversions for current node
+  [[nodiscard]] std::optional<std::string_view> as_string() const noexcept;
+  [[nodiscard]] std::optional<int64_t> as_int() const noexcept;
   // Interrogate variant
   [[nodiscard]] bool isEmpty() const {
     return std::holds_alternative<std::monostate>(bNodeVariant);

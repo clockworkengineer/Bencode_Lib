@@ -51,31 +51,60 @@ Use `Bencode_Optional_Stringify.hpp` only when one or more built-in stringify mo
 
 ## Quick Start
 
-1. Create a build directory and configure the project:
-   ```bash
-   mkdir -p build
-   cd build
-   cmake .. -DCMAKE_BUILD_TYPE=Release -DBENCODE_BUILD_TESTS=ON -DBENCODE_BUILD_EXAMPLES=ON
-   cmake --build .
-   ```
-2. Install the library (optional):
-   ```bash
-   cmake --install .
-   ```
-3. Link against the installed target:
-   ```cmake
-   find_package(Bencode_Lib REQUIRED)
-   target_link_libraries(my_target PRIVATE Bencode_Lib::Bencode_Lib)
-   ```
-4. In your code include only the public root header:
-   ```cpp
-   #include "Bencode.hpp"
-   ```
+### 1. Build and Install
+```bash
+cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DBENCODE_BUILD_TESTS=ON -DBENCODE_BUILD_EXAMPLES=ON
+cmake --build build -j
+ctest --test-dir build --output-on-failure
+sudo cmake --install build
+```
 
-> Use `Bencode_Core.hpp` when you need node types, buffer I/O helpers, or low-level access. Keep implementation headers private.
->
-> Optional stringify helpers are available via `Bencode_Optional_Stringify.hpp` when the corresponding CMake options are enabled.
->
+### 2. Basic Usage in C++
+
+```cpp
+#include <Bencode.hpp>
+#include <iostream>
+
+int main() {
+    // 1. Parsing directly from a string_view
+    Bencode bencode;
+    bencode.parse("d4:ranki1e4:user4:Bobe");
+
+    // 2. Safe and expressive node accessors
+    if (auto user = bencode["user"].as_string()) {
+        std::cout << "User: " << *user << "\n";
+    }
+    std::cout << "Rank: " << bencode["rank"].as_int().value_or(0) << "\n";
+
+    // 3. Modifying data
+    bencode["status"] = std::string("active");
+
+    // 4. Direct encoding to std::string
+    std::string encoded = bencode.encode();
+    std::cout << "Encoded: " << encoded << "\n";
+
+    return 0;
+}
+```
+
+### 3. Integration with Downstream Projects
+
+#### Via CMake:
+```cmake
+find_package(Bencode_Lib REQUIRED)
+target_link_libraries(my_app PRIVATE Bencode_Lib::Bencode_Lib)
+```
+
+#### Via pkg-config:
+```bash
+g++ -std=c++23 main.cpp $(pkg-config --cflags --libs bencode_lib) -o my_app
+```
+
+#### Via vcpkg or Conan:
+- **vcpkg**: Add `"bencode-lib"` to your `vcpkg.json`.
+- **Conan**: Use the provided `conanfile.py` with `conan create .`.
+
+
 ## Recommended Build Profiles
 
 - **Default**: `-DBENCODE_BUILD_TESTS=ON -DBENCODE_BUILD_EXAMPLES=ON`

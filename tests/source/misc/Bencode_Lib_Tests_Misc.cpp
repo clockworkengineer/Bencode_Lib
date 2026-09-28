@@ -212,3 +212,112 @@ TEST_CASE("Check Bencode parse/stringify round-trips.",
     REQUIRE(destination.toString() == original);
   }
 }
+
+TEST_CASE("Check Bencode move semantics and convenience APIs.", "[Bencode][API]") {
+  SECTION("Move constructor transfers state cleanly.") {
+    Bencode original("d3:agei30e4:name4:Johne");
+    REQUIRE(original["name"].as_string().value_or("") == "John");
+
+    Bencode moved(std::move(original));
+    REQUIRE(moved["name"].as_string().value_or("") == "John");
+    REQUIRE(moved["age"].as_int().value_or(0) == 30);
+  }
+
+  SECTION("Move assignment transfers state cleanly.") {
+    Bencode b1("d3:numi99e5:title4:teste");
+    Bencode b2;
+    b2 = std::move(b1);
+    REQUIRE(b2["title"].as_string().value_or("") == "test");
+    REQUIRE(b2["num"].as_int().value_or(0) == 99);
+  }
+
+  SECTION("Direct parse(string_view) and stringify() / encode().") {
+    Bencode b;
+    b.parse("d4:city6:Londone");
+    REQUIRE(b["city"].as_string().value_or("") == "London");
+
+    std::string encoded = b.stringify();
+    REQUIRE(encoded == "d4:city6:Londone");
+    REQUIRE(b.encode() == "d4:city6:Londone");
+  }
+
+  SECTION("Operations on moved-from Bencode are safe.") {
+    Bencode b1("i123e");
+    Bencode b2 = std::move(b1);
+    REQUIRE(b2.root().as_int().value_or(0) == 123);
+
+    // b1 is moved-from, calling operations should not crash
+    b1.parse("i456e");
+    REQUIRE(b1.root().as_int().value_or(0) == 456);
+  }
+}
+
+TEST_CASE("Check Node safe accessors and try_get.", "[Node][Accessors]") {
+  SECTION("try_get on dictionary entries.") {
+    Bencode b("d3:agei28e4:listli1ei2ee4:name5:Alicee");
+    const auto &root = b.root();
+
+    const auto *str = root.try_get<String>("name");
+    REQUIRE(str != nullptr);
+    REQUIRE(str->value() == "Alice");
+
+    const auto *num = root.try_get<Integer>("age");
+    REQUIRE(num != nullptr);
+    REQUIRE(num->value() == 28);
+
+    const auto *list = root.try_get<List>("list");
+    REQUIRE(list != nullptr);
+    REQUIRE(list->value().size() == 2);
+
+    REQUIRE(root.try_get<String>("age") == nullptr);
+    REQUIRE(root.try_get<Integer>("name") == nullptr);
+    REQUIRE(root.try_get<String>("non_existent") == nullptr);
+  }
+
+  SECTION("try_get on list elements.") {
+    Bencode b("li10ei20e4:teste");
+    const auto &root = b.root();
+
+    const auto *first = root.try_get<Integer>(0);
+    REQUIRE(first != nullptr);
+    REQUIRE(first->value() == 10);
+
+    const auto *second = root.try_get<Integer>(1);
+    REQUIRE(second != nullptr);
+    REQUIRE(second->value() == 20);
+
+    const auto *third = root.try_get<String>(2);
+    REQUIRE(third != nullptr);
+    REQUIRE(third->value() == "test");
+
+    REQUIRE(root.try_get<Integer>(2) == nullptr);
+    REQUIRE(root.try_get<Integer>(99) == nullptr);
+  }
+
+  SECTION("Convenience accessors get_string, get_int, value_or.") {
+    Bencode b("d4:ranki1e4:user3:Bobe");
+    const auto &root = b.root();
+
+    REQUIRE(root.get_string("user") == "Bob");
+    REQUIRE_FALSE(root.get_string("missing").has_value());
+
+    REQUIRE(root.get_int("rank") == 1);
+    REQUIRE_FALSE(root.get_int("missing").has_value());
+
+    REQUIRE(root.value_or("user", "guest") == "Bob");
+    REQUIRE(root.value_or("non_existent", "guest") == "guest");
+
+    REQUIRE(root.value_or("rank", 999) == 1);
+    REQUIRE(root.value_or("missing_int", 999) == 999);
+  }
+
+  SECTION("Direct conversions as_string and as_int.") {
+    Bencode bStr("5:hello");
+    REQUIRE(bStr.root().as_string() == "hello");
+    REQUIRE_FALSE(bStr.root().as_int().has_value());
+
+    Bencode bInt("i42e");
+    REQUIRE(bInt.root().as_int() == 42);
+    REQUIRE_FALSE(bInt.root().as_string().has_value());
+  }
+}

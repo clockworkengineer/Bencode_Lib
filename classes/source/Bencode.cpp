@@ -19,6 +19,14 @@ Bencode::Bencode(std::unique_ptr<IStringify> stringify,
          std::unique_ptr<IParser> parser)
     : implementation(
       std::make_unique<Bencode_Impl>(std::move(stringify), std::move(parser))) {}
+void Bencode::ensureImplementation() const {
+  if (!implementation) {
+    implementation = std::make_unique<Bencode_Impl>();
+  }
+}
+
+Bencode::Bencode(Bencode &&other) noexcept = default;
+Bencode &Bencode::operator=(Bencode &&other) noexcept = default;
 Bencode::~Bencode() = default;
 /// <summary>
 /// Bencode constructor. Pass a Bencode string to be initially parsed.
@@ -51,6 +59,7 @@ std::string Bencode::version() { return Bencode_Impl::version(); }
 /// <param name="source">Reference to input interface used to parse Bencoded
 /// stream.</param> <returns></returns>
 Bencode::ParseResultType Bencode::parse(ISource &source) const {
+  ensureImplementation();
   return implementation->parse(source);
 }
 
@@ -58,8 +67,17 @@ Bencode::ParseResultType Bencode::parse(ISource &source) const {
 /// Implementation of the rvalue source overload for parse.
 /// </summary>
 Bencode::ParseResultType Bencode::parse(ISource &&source) const {
+  ensureImplementation();
   return implementation->parse(std::move(source));
 }
+
+/// <summary>
+/// Parse Bencode directly from a string_view buffer.
+/// </summary>
+Bencode::ParseResultType Bencode::parse(const std::string_view &bencodeString) const {
+  return parse(BufferSource{bencodeString});
+}
+
 /// <summary>
 /// Take Node structure and create a Bencode encoding for it in the
 /// destination stream.
@@ -67,14 +85,35 @@ Bencode::ParseResultType Bencode::parse(ISource &&source) const {
 /// <param name="destination">Reference to interface used to facilitate the
 /// output stream.</param> <returns></returns>
 void Bencode::stringify(IDestination &destination) const {
+  ensureImplementation();
   implementation->stringify(destination);
 }
 /// <summary>
 /// Implementation of the rvalue destination overload for stringify.
 /// </summary>
 void Bencode::stringify(IDestination &&destination) const {
+  ensureImplementation();
   implementation->stringify(std::move(destination));
 }
+
+#if BENCODE_ENABLE_DYNAMIC_ALLOCATION
+/// <summary>
+/// Convenience stringification returning an std::string.
+/// </summary>
+std::string Bencode::stringify() const {
+  BufferDestination destination;
+  stringify(destination);
+  return destination.toString();
+}
+
+/// <summary>
+/// Synonym for stringify().
+/// </summary>
+std::string Bencode::encode() const {
+  return stringify();
+}
+#endif
+
 /// <summary>
 /// Recursively traverse JNode structure calling IAction methods (read-only)
 ///  or to change the Bencode tree node directly.
@@ -82,32 +121,42 @@ void Bencode::stringify(IDestination &&destination) const {
 /// <param name="action">Action methods to call during traversal.</param>
 /// Traverse using non-const Bencode so can change the Bencode tree
 [[maybe_unused]] void Bencode::traverse(IAction &action) {
+  ensureImplementation();
   implementation->traverse(action);
 }
 // Traverse using const Bencode so cannot change the Bencode tree
 void Bencode::traverse(IAction &action) const {
+  ensureImplementation();
   std::as_const(*implementation).traverse(action);
 }
 /// <summary>
 /// Get the root of Node tree.
 /// </summary>
 /// <returns>Root of Node encoded tree.</returns>
-Node &Bencode::root() { return implementation->root(); }
+Node &Bencode::root() {
+  ensureImplementation();
+  return implementation->root();
+}
 /// <summary>
 /// Retrieve the constant root node of the parsed Bencode tree.
 /// </summary>
-const Node &Bencode::root() const { return implementation->root(); }
+const Node &Bencode::root() const {
+  ensureImplementation();
+  return implementation->root();
+}
 /// <summary>
 /// Return object entry for the passed in keys.
 /// </summary>
 /// <param name="key">Dictionary entry (Node) key.</param>
 Node &Bencode::operator[](const std::string_view &key) {
+  ensureImplementation();
   return (*implementation)[key];
 }
 /// <summary>
 /// Retrieve a constant dictionary entry by key.
 /// </summary>
 const Node &Bencode::operator[](const std::string_view &key) const {
+  ensureImplementation();
   return (*implementation)[key];
 }
 /// <summary>
@@ -115,12 +164,14 @@ const Node &Bencode::operator[](const std::string_view &key) const {
 /// </summary>
 /// <param name="index">Array entry (Node) index.</param>
 Node &Bencode::operator[](const std::size_t index) {
+  ensureImplementation();
   return (*implementation)[index];
 }
 /// <summary>
 /// Retrieve a constant list entry by index.
 /// </summary>
 const Node &Bencode::operator[](const std::size_t index) const {
+  ensureImplementation();
   return (*implementation)[index];
 }
 /// <summary>

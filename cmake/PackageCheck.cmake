@@ -48,11 +48,13 @@ endforeach()
 
 set(ALLOWED_IMPLEMENTATION_HEADERS
     implementation/common/Bencode_Error.hpp
+    implementation/common/Bencode_Status.hpp
     implementation/node/Bencode_Node.hpp
     implementation/node/Bencode_Node_Creation.hpp
     implementation/node/Bencode_Node_Index.hpp
     implementation/node/Bencode_Node_Reference.hpp
     implementation/variants/Bencode_Variant.hpp
+    implementation/variants/Bencode_FixedVector.hpp
     implementation/variants/Bencode_Hole.hpp
     implementation/variants/Bencode_Integer.hpp
     implementation/variants/Bencode_String.hpp
@@ -65,8 +67,8 @@ set(ALLOWED_IMPLEMENTATION_HEADERS
     implementation/io/Bencode_FileSource.hpp
     implementation/io/Bencode_FileDestination.hpp
     implementation/translator/Default_Translator.hpp
+    implementation/translator/XML_Translator.hpp
     implementation/stringify/JSON_Stringify.hpp
-    implementation/stringify/Default_Translator.hpp
     implementation/stringify/XML_Stringify.hpp
     implementation/stringify/YAML_Stringify.hpp
 )
@@ -85,4 +87,76 @@ foreach(header IN LISTS INSTALLED_IMPLEMENTATION_HEADERS)
     endif()
 endforeach()
 
-message(STATUS "Package contents validated successfully.")
+message(STATUS "Validating downstream consumer compilation with find_package(Bencode_Lib)...")
+
+set(TEST_DIR "${INSTALL_PREFIX}/test_consumer")
+file(MAKE_DIRECTORY "${TEST_DIR}")
+
+file(WRITE "${TEST_DIR}/CMakeLists.txt" [=[
+cmake_minimum_required(VERSION 3.21)
+project(PackageCheckConsumer CXX)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(Bencode_Lib REQUIRED CONFIG HINTS "${CMAKE_CURRENT_LIST_DIR}/..")
+
+add_executable(consumer_app main.cpp)
+target_link_libraries(consumer_app PRIVATE Bencode_Lib::Bencode_Lib)
+]=])
+
+file(WRITE "${TEST_DIR}/main.cpp" [=[
+#include <Bencode.hpp>
+#include <Bencode_Core.hpp>
+#include <Bencode_Optional_Stringify.hpp>
+#include <iostream>
+
+int main() {
+    Bencode_Lib::Bencode b;
+    b.parse("d3:agei25e4:name4:Janee");
+    if (b["name"].as_string().value_or("") != "Jane") {
+        return 1;
+    }
+    Bencode_Lib::BufferDestination dest;
+    Bencode_Lib::JSON_Stringify jsonStringify;
+    jsonStringify.stringify(b.root(), dest);
+    if (dest.toString().empty()) {
+        return 2;
+    }
+    std::cout << "Downstream consumer execution successful: " << dest.toString() << std::endl;
+    return 0;
+}
+]=])
+
+execute_process(
+    COMMAND "${CMAKE_COMMAND}" -B "${TEST_DIR}/build" -S "${TEST_DIR}"
+    RESULT_VARIABLE config_res
+    OUTPUT_VARIABLE config_out
+    ERROR_VARIABLE config_err
+)
+if(NOT config_res EQUAL 0)
+    message(FATAL_ERROR "Downstream consumer CMake configure failed:\n${config_out}\n${config_err}")
+endif()
+
+execute_process(
+    COMMAND "${CMAKE_COMMAND}" --build "${TEST_DIR}/build"
+    RESULT_VARIABLE build_res
+    OUTPUT_VARIABLE build_out
+    ERROR_VARIABLE build_err
+)
+if(NOT build_res EQUAL 0)
+    message(FATAL_ERROR "Downstream consumer CMake build failed:\n${build_out}\n${build_err}")
+endif()
+
+execute_process(
+    COMMAND "${TEST_DIR}/build/consumer_app"
+    RESULT_VARIABLE run_res
+    OUTPUT_VARIABLE run_out
+    ERROR_VARIABLE run_err
+)
+if(NOT run_res EQUAL 0)
+    message(FATAL_ERROR "Downstream consumer application run failed:\n${run_out}\n${run_err}")
+endif()
+
+file(REMOVE_RECURSE "${TEST_DIR}")
+
+message(STATUS "Package contents and downstream consumer validated successfully.")

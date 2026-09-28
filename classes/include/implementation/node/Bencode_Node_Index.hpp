@@ -73,4 +73,103 @@ inline const Node &Node::at(std::string_view key) const {
   }
   return NRef<const Dictionary>(*this).at(key);
 }
+
+template <typename T>
+inline const T* Node::try_get(std::string_view key) const noexcept {
+  if (!contains(key)) {
+    return nullptr;
+  }
+  const Node& n = (*this)[key];
+  if (isA<T>(n)) {
+    return &NRef<const T>(n);
+  }
+  return nullptr;
+}
+
+template <typename T>
+inline T* Node::try_get(std::string_view key) noexcept {
+  if (!contains(key)) {
+    return nullptr;
+  }
+  Node& n = (*this)[key];
+  if (isA<T>(n)) {
+    return &NRef<T>(n);
+  }
+  return nullptr;
+}
+
+template <typename T>
+inline const T* Node::try_get(std::size_t index) const noexcept {
+  if (isEmpty() || !isA<List>(*this)) {
+    return nullptr;
+  }
+  const auto &list = NRef<const List>(*this);
+  if (index >= list.value().size()) {
+    return nullptr;
+  }
+  const Node &n = list.value()[index];
+  if (isA<T>(n)) {
+    return &NRef<const T>(n);
+  }
+  return nullptr;
+}
+
+template <typename T>
+inline T* Node::try_get(std::size_t index) noexcept {
+  if (isEmpty() || !isA<List>(*this)) {
+    return nullptr;
+  }
+  auto &list = NRef<List>(*this);
+  if (index >= list.value().size()) {
+    return nullptr;
+  }
+  Node &n = list.value()[index];
+  if (isA<T>(n)) {
+    return &NRef<T>(n);
+  }
+  return nullptr;
+}
+
+inline std::optional<std::string_view> Node::get_string(std::string_view key) const noexcept {
+  if (const auto *str = try_get<String>(key)) {
+    return str->value();
+  }
+  return std::nullopt;
+}
+
+inline std::optional<int64_t> Node::get_int(std::string_view key) const noexcept {
+  if (const auto *num = try_get<Integer>(key)) {
+    return num->value();
+  }
+  return std::nullopt;
+}
+
+inline std::string_view Node::value_or(std::string_view key, std::string_view fallback) const noexcept {
+  if (const auto *str = try_get<String>(key)) {
+    return str->value();
+  }
+  return fallback;
+}
+
+inline int64_t Node::value_or(std::string_view key, int64_t fallback) const noexcept {
+  if (const auto *num = try_get<Integer>(key)) {
+    return num->value();
+  }
+  return fallback;
+}
+
+inline std::optional<std::string_view> Node::as_string() const noexcept {
+  if (!isEmpty() && isA<String>(*this)) {
+    return NRef<const String>(*this).value();
+  }
+  return std::nullopt;
+}
+
+inline std::optional<int64_t> Node::as_int() const noexcept {
+  if (!isEmpty() && isA<Integer>(*this)) {
+    return NRef<const Integer>(*this).value();
+  }
+  return std::nullopt;
+}
+
 } // namespace Bencode_Lib

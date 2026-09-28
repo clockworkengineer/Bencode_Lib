@@ -161,29 +161,27 @@ else()
     )
   endif()
 
-  if(BENCODE_ENABLE_SANITIZERS AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(${TEST_EXECUTABLE} PRIVATE
-      -fsanitize=address,undefined,integer,bounds
-      -fno-omit-frame-pointer
-    )
-    target_link_options(${TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined,integer,bounds)
-    target_compile_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE
-      -fsanitize=address,undefined,integer,bounds
-      -fno-omit-frame-pointer
-    )
-    target_link_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE -fsanitize=address,undefined,integer,bounds)
-    target_compile_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE
-      -fsanitize=address,undefined,integer,bounds
-      -fno-omit-frame-pointer
-    )
-    target_link_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined,integer,bounds)
+  if(BENCODE_ENABLE_SANITIZERS)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      set(BENCODE_TEST_SANITIZER_FLAGS -fsanitize=address,undefined,integer,bounds -fno-omit-frame-pointer)
+      set(BENCODE_TEST_SANITIZER_LINK_FLAGS -fsanitize=address,undefined,integer,bounds)
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+      set(BENCODE_TEST_SANITIZER_FLAGS -fsanitize=address,undefined,bounds -fno-omit-frame-pointer)
+      set(BENCODE_TEST_SANITIZER_LINK_FLAGS -fsanitize=address,undefined,bounds)
+    endif()
 
-    if(BENCODE_BUILD_MINIMAL)
-      target_compile_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE
-        -fsanitize=address,undefined,integer,bounds
-        -fno-omit-frame-pointer
-      )
-      target_link_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE -fsanitize=address,undefined,integer,bounds)
+    if(DEFINED BENCODE_TEST_SANITIZER_FLAGS)
+      target_compile_options(${TEST_EXECUTABLE} PRIVATE ${BENCODE_TEST_SANITIZER_FLAGS})
+      target_link_options(${TEST_EXECUTABLE} PRIVATE ${BENCODE_TEST_SANITIZER_LINK_FLAGS})
+      target_compile_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE ${BENCODE_TEST_SANITIZER_FLAGS})
+      target_link_options(Bencode_Lib_PublicHeader_CompileTest PRIVATE ${BENCODE_TEST_SANITIZER_LINK_FLAGS})
+      target_compile_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE ${BENCODE_TEST_SANITIZER_FLAGS})
+      target_link_options(${EMBEDDED_TEST_EXECUTABLE} PRIVATE ${BENCODE_TEST_SANITIZER_LINK_FLAGS})
+
+      if(BENCODE_BUILD_MINIMAL)
+        target_compile_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE ${BENCODE_TEST_SANITIZER_FLAGS})
+        target_link_options(${MINIMAL_TEST_EXECUTABLE} PRIVATE ${BENCODE_TEST_SANITIZER_LINK_FLAGS})
+      endif()
     endif()
   endif()
 endif()
@@ -204,14 +202,14 @@ if(BENCODE_BUILD_FUZZERS)
       -Wconversion
       -Wshadow
       -Wformat
-      $<$<BOOL:${BENCODE_ENABLE_SANITIZERS}>:-fsanitize=address,undefined,integer,bounds>
     )
-    target_link_options(Bencode_Lib_Fuzz_Parser PRIVATE
-      $<$<BOOL:${BENCODE_ENABLE_SANITIZERS}>:-fsanitize=address,undefined,integer,bounds>
-    )
+    if(BENCODE_ENABLE_SANITIZERS AND DEFINED BENCODE_TEST_SANITIZER_FLAGS)
+      target_compile_options(Bencode_Lib_Fuzz_Parser PRIVATE ${BENCODE_TEST_SANITIZER_FLAGS})
+      target_link_options(Bencode_Lib_Fuzz_Parser PRIVATE ${BENCODE_TEST_SANITIZER_LINK_FLAGS})
+    endif()
   endif()
 
-  add_test(NAME Bencode_Lib_Fuzz_Parser COMMAND Bencode_Lib_Fuzz_Parser)
+  add_test(NAME Bencode_Lib_Fuzz_Parser COMMAND Bencode_Lib_Fuzz_Parser ${CMAKE_CURRENT_SOURCE_DIR}/files/singlefile.torrent)
 endif()
 
 if(BENCODE_BUILD_BENCHMARKS)

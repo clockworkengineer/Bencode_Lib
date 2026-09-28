@@ -30,8 +30,8 @@ Bencode_Impl::Bencode_Impl(std::unique_ptr<IStringify> stringify,
 }
 
 /// <summary>
-/// Destroy the implementation instance and release owned resources.
-/// </summary>
+Bencode_Impl::Bencode_Impl(Bencode_Impl &&other) noexcept = default;
+Bencode_Impl &Bencode_Impl::operator=(Bencode_Impl &&other) noexcept = default;
 Bencode_Impl::~Bencode_Impl() = default;
 
 namespace {
