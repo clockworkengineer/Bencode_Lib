@@ -5,7 +5,7 @@ import os
 
 class BencodeLibConan(ConanFile):
     name = "bencode_lib"
-    version = "1.2.0"
+    version = "1.3.0"
     license = "MIT"
     author = "Bencode_Lib Contributors"
     url = "https://github.com/clockworkengineer/Bencode_Lib"

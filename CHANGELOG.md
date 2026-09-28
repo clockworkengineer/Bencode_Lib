@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-09-28
+
+### Fixed
+- **Incomplete Type Unique Pointer Default Arguments**: Replaced constructor default `std::unique_ptr<T> = nullptr` parameters in `Bencode` and `Bencode_Impl` with explicit overloads to avoid Clang 18 incomplete-type `sizeof` instantiation errors.
+- **Precompiled Header Feature Synchronization**: Propagated compiler and linker sanitizer flags (`-fsanitize=address,undefined,...`) with `PUBLIC` visibility across all library targets so AST/PCH files and test translation units share identical target features.
+- **Embedded Mode Constraints Enforcement**: Automatically disable exceptions, file I/O, dynamic allocations, and optional stringification modules in CMake when `BENCODE_EMBEDDED_MODE=ON`, and guard heap-dependent test targets.
+
 ## [1.2.0] - 2026-09-28
 
 ### Added
