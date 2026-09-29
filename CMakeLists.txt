@@ -326,6 +326,7 @@ if(MSVC)
     /W4
     /permissive-
     /Zc:__cplusplus
+    /Zc:preprocessor
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
 else()
@@ -363,7 +364,12 @@ foreach(target IN LISTS BENCODE_LIBRARY_TARGETS)
   )
 
   target_compile_features(${target} PUBLIC cxx_std_23)
-  target_compile_options(${target} PRIVATE ${BENCODE_WARNING_OPTIONS})
+  target_compile_options(${target}
+    PUBLIC
+      $<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
+    PRIVATE
+      ${BENCODE_WARNING_OPTIONS}
+  )
   target_precompile_headers(${target}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h
   )

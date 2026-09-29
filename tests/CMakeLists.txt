@@ -98,6 +98,7 @@ if(MSVC)
       /W4
       /permissive-
       /Zc:__cplusplus
+      /Zc:preprocessor
       /wd4324 # Catch2: structure padded due to alignment specifier
       $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
     )
@@ -106,6 +107,7 @@ if(MSVC)
     /W4
     /permissive-
     /Zc:__cplusplus
+    /Zc:preprocessor
     /wd4324 # Catch2: structure padded due to alignment specifier
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
@@ -113,6 +115,7 @@ if(MSVC)
     /W4
     /permissive-
     /Zc:__cplusplus
+    /Zc:preprocessor
     /wd4324 # Catch2: structure padded due to alignment specifier
     $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
   )
@@ -122,6 +125,7 @@ if(MSVC)
       /W4
       /permissive-
       /Zc:__cplusplus
+      /Zc:preprocessor
       /wd4324 # Catch2: structure padded due to alignment specifier
       $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
     )
@@ -203,6 +207,7 @@ if(BENCODE_BUILD_BENCHMARKS)
         /W4
         /permissive-
         /Zc:__cplusplus
+        /Zc:preprocessor
         $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
       )
     else()
@@ -233,6 +238,7 @@ if(BENCODE_BUILD_BENCHMARKS)
       /W4
       /permissive-
       /Zc:__cplusplus
+      /Zc:preprocessor
       $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
     )
   else()

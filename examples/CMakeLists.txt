@@ -28,6 +28,7 @@ function(process_file target)
       /W4
       /permissive-
       /Zc:__cplusplus
+      /Zc:preprocessor
       $<$<BOOL:${BENCODE_WARNINGS_AS_ERRORS}>:/WX>
     )
   else()

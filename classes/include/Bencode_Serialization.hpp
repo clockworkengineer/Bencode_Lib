@@ -419,47 +419,14 @@ inline Node to_node(const T &obj) {
 
 #define BENCODE_EXPAND(x) x
 
-#define BENCODE_GET_ARG_COUNT( \
+#define BENCODE_GET_ARG_COUNT_IMPL( \
     _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, \
     _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, \
     _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, \
     _31, _32, N, ...) N
 
-#define BENCODE_FE_1(M, x) M(x)
-#define BENCODE_FE_2(M, x, ...) M(x) BENCODE_FE_1(M, __VA_ARGS__)
-#define BENCODE_FE_3(M, x, ...) M(x) BENCODE_FE_2(M, __VA_ARGS__)
-#define BENCODE_FE_4(M, x, ...) M(x) BENCODE_FE_3(M, __VA_ARGS__)
-#define BENCODE_FE_5(M, x, ...) M(x) BENCODE_FE_4(M, __VA_ARGS__)
-#define BENCODE_FE_6(M, x, ...) M(x) BENCODE_FE_5(M, __VA_ARGS__)
-#define BENCODE_FE_7(M, x, ...) M(x) BENCODE_FE_6(M, __VA_ARGS__)
-#define BENCODE_FE_8(M, x, ...) M(x) BENCODE_FE_7(M, __VA_ARGS__)
-#define BENCODE_FE_9(M, x, ...) M(x) BENCODE_FE_8(M, __VA_ARGS__)
-#define BENCODE_FE_10(M, x, ...) M(x) BENCODE_FE_9(M, __VA_ARGS__)
-#define BENCODE_FE_11(M, x, ...) M(x) BENCODE_FE_10(M, __VA_ARGS__)
-#define BENCODE_FE_12(M, x, ...) M(x) BENCODE_FE_11(M, __VA_ARGS__)
-#define BENCODE_FE_13(M, x, ...) M(x) BENCODE_FE_12(M, __VA_ARGS__)
-#define BENCODE_FE_14(M, x, ...) M(x) BENCODE_FE_13(M, __VA_ARGS__)
-#define BENCODE_FE_15(M, x, ...) M(x) BENCODE_FE_14(M, __VA_ARGS__)
-#define BENCODE_FE_16(M, x, ...) M(x) BENCODE_FE_15(M, __VA_ARGS__)
-#define BENCODE_FE_17(M, x, ...) M(x) BENCODE_FE_16(M, __VA_ARGS__)
-#define BENCODE_FE_18(M, x, ...) M(x) BENCODE_FE_17(M, __VA_ARGS__)
-#define BENCODE_FE_19(M, x, ...) M(x) BENCODE_FE_18(M, __VA_ARGS__)
-#define BENCODE_FE_20(M, x, ...) M(x) BENCODE_FE_19(M, __VA_ARGS__)
-#define BENCODE_FE_21(M, x, ...) M(x) BENCODE_FE_20(M, __VA_ARGS__)
-#define BENCODE_FE_22(M, x, ...) M(x) BENCODE_FE_21(M, __VA_ARGS__)
-#define BENCODE_FE_23(M, x, ...) M(x) BENCODE_FE_22(M, __VA_ARGS__)
-#define BENCODE_FE_24(M, x, ...) M(x) BENCODE_FE_23(M, __VA_ARGS__)
-#define BENCODE_FE_25(M, x, ...) M(x) BENCODE_FE_24(M, __VA_ARGS__)
-#define BENCODE_FE_26(M, x, ...) M(x) BENCODE_FE_25(M, __VA_ARGS__)
-#define BENCODE_FE_27(M, x, ...) M(x) BENCODE_FE_26(M, __VA_ARGS__)
-#define BENCODE_FE_28(M, x, ...) M(x) BENCODE_FE_27(M, __VA_ARGS__)
-#define BENCODE_FE_29(M, x, ...) M(x) BENCODE_FE_28(M, __VA_ARGS__)
-#define BENCODE_FE_30(M, x, ...) M(x) BENCODE_FE_29(M, __VA_ARGS__)
-#define BENCODE_FE_31(M, x, ...) M(x) BENCODE_FE_30(M, __VA_ARGS__)
-#define BENCODE_FE_32(M, x, ...) M(x) BENCODE_FE_31(M, __VA_ARGS__)
-
-#define BENCODE_FOR_EACH(M, ...) \
-  BENCODE_EXPAND(BENCODE_EXPAND(BENCODE_GET_ARG_COUNT(__VA_ARGS__, \
+#define BENCODE_GET_ARG_COUNT(...) \
+  BENCODE_EXPAND(BENCODE_GET_ARG_COUNT_IMPL(__VA_ARGS__, \
     BENCODE_FE_32, BENCODE_FE_31, BENCODE_FE_30, \
     BENCODE_FE_29, BENCODE_FE_28, BENCODE_FE_27, BENCODE_FE_26, \
     BENCODE_FE_25, BENCODE_FE_24, BENCODE_FE_23, BENCODE_FE_22, \
@@ -468,7 +435,46 @@ inline Node to_node(const T &obj) {
     BENCODE_FE_13, BENCODE_FE_12, BENCODE_FE_11, BENCODE_FE_10, \
     BENCODE_FE_9, BENCODE_FE_8, BENCODE_FE_7, BENCODE_FE_6, \
     BENCODE_FE_5, BENCODE_FE_4, BENCODE_FE_3, BENCODE_FE_2, \
-    BENCODE_FE_1))(M, __VA_ARGS__))
+    BENCODE_FE_1))
+
+#define BENCODE_FE_1(M, x) M(x)
+#define BENCODE_FE_2(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_1(M, __VA_ARGS__))
+#define BENCODE_FE_3(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_2(M, __VA_ARGS__))
+#define BENCODE_FE_4(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_3(M, __VA_ARGS__))
+#define BENCODE_FE_5(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_4(M, __VA_ARGS__))
+#define BENCODE_FE_6(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_5(M, __VA_ARGS__))
+#define BENCODE_FE_7(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_6(M, __VA_ARGS__))
+#define BENCODE_FE_8(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_7(M, __VA_ARGS__))
+#define BENCODE_FE_9(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_8(M, __VA_ARGS__))
+#define BENCODE_FE_10(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_9(M, __VA_ARGS__))
+#define BENCODE_FE_11(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_10(M, __VA_ARGS__))
+#define BENCODE_FE_12(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_11(M, __VA_ARGS__))
+#define BENCODE_FE_13(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_12(M, __VA_ARGS__))
+#define BENCODE_FE_14(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_13(M, __VA_ARGS__))
+#define BENCODE_FE_15(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_14(M, __VA_ARGS__))
+#define BENCODE_FE_16(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_15(M, __VA_ARGS__))
+#define BENCODE_FE_17(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_16(M, __VA_ARGS__))
+#define BENCODE_FE_18(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_17(M, __VA_ARGS__))
+#define BENCODE_FE_19(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_18(M, __VA_ARGS__))
+#define BENCODE_FE_20(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_19(M, __VA_ARGS__))
+#define BENCODE_FE_21(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_20(M, __VA_ARGS__))
+#define BENCODE_FE_22(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_21(M, __VA_ARGS__))
+#define BENCODE_FE_23(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_22(M, __VA_ARGS__))
+#define BENCODE_FE_24(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_23(M, __VA_ARGS__))
+#define BENCODE_FE_25(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_24(M, __VA_ARGS__))
+#define BENCODE_FE_26(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_25(M, __VA_ARGS__))
+#define BENCODE_FE_27(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_26(M, __VA_ARGS__))
+#define BENCODE_FE_28(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_27(M, __VA_ARGS__))
+#define BENCODE_FE_29(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_28(M, __VA_ARGS__))
+#define BENCODE_FE_30(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_29(M, __VA_ARGS__))
+#define BENCODE_FE_31(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_30(M, __VA_ARGS__))
+#define BENCODE_FE_32(M, x, ...) M(x) BENCODE_EXPAND(BENCODE_FE_31(M, __VA_ARGS__))
+
+#define BENCODE_FOR_EACH_HELPER(action, ...) \
+  BENCODE_EXPAND(action(__VA_ARGS__))
+
+#define BENCODE_FOR_EACH(M, ...) \
+  BENCODE_FOR_EACH_HELPER(BENCODE_GET_ARG_COUNT(__VA_ARGS__), M, __VA_ARGS__)
 
 // ============================================================================
 // Public Macros for Ergonomic Struct Mapping
@@ -490,8 +496,8 @@ inline Node to_node(const T &obj) {
 #define BENCODE_PAIR_FIRST(a, b) a
 #define BENCODE_PAIR_SECOND(a, b) b
 
-#define BENCODE_GET_FIRST(pair) BENCODE_PAIR_FIRST pair
-#define BENCODE_GET_SECOND(pair) BENCODE_PAIR_SECOND pair
+#define BENCODE_GET_FIRST(pair) BENCODE_EXPAND(BENCODE_PAIR_FIRST pair)
+#define BENCODE_GET_SECOND(pair) BENCODE_EXPAND(BENCODE_PAIR_SECOND pair)
 
 #define BENCODE_TO_PAIR(pair) ::Bencode_Lib::to_bencode_field(node, BENCODE_GET_SECOND(pair), val.BENCODE_GET_FIRST(pair));
 #define BENCODE_FROM_PAIR(pair) ::Bencode_Lib::from_bencode_field(node, BENCODE_GET_SECOND(pair), val.BENCODE_GET_FIRST(pair));
