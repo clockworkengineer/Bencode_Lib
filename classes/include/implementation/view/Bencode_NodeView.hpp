@@ -129,39 +129,13 @@ public:
   [[nodiscard]] std::optional<NodeView> get(std::size_t index) const noexcept;
 
   // Convenience accessors for dictionary children
-  [[nodiscard]] std::optional<std::string_view> get_string(std::string_view key) const noexcept {
-    if (auto node = get(key)) {
-      return node->as_string();
-    }
-    return std::nullopt;
-  }
-
-  [[nodiscard]] std::optional<int64_t> get_int(std::string_view key) const noexcept {
-    if (auto node = get(key)) {
-      return node->as_int();
-    }
-    return std::nullopt;
-  }
-
-  [[nodiscard]] std::optional<std::span<const std::byte>> get_binary(std::string_view key) const noexcept {
-    if (auto node = get(key)) {
-      return node->as_binary();
-    }
-    return std::nullopt;
-  }
-
-  [[nodiscard]] std::string_view value_or(std::string_view key, std::string_view fallback) const noexcept {
-    return get_string(key).value_or(fallback);
-  }
-
-  [[nodiscard]] int64_t value_or(std::string_view key, int64_t fallback) const noexcept {
-    return get_int(key).value_or(fallback);
-  }
-
+  [[nodiscard]] std::optional<std::string_view> get_string(std::string_view key) const noexcept;
+  [[nodiscard]] std::optional<int64_t> get_int(std::string_view key) const noexcept;
+  [[nodiscard]] std::optional<std::span<const std::byte>> get_binary(std::string_view key) const noexcept;
+  [[nodiscard]] std::string_view value_or(std::string_view key, std::string_view fallback) const noexcept;
+  [[nodiscard]] int64_t value_or(std::string_view key, int64_t fallback) const noexcept;
   [[nodiscard]] std::span<const std::byte> binary_or(std::string_view key,
-                                                     std::span<const std::byte> fallback = {}) const noexcept {
-    return get_binary(key).value_or(fallback);
-  }
+                                                     std::span<const std::byte> fallback = {}) const noexcept;
 
   // Dictionary indexing
   NodeView operator[](std::string_view key) const;
@@ -186,6 +160,40 @@ inline std::optional<NodeView::DictType> NodeView::as_dict() const noexcept {
     return DictType(static_cast<const DictEntry *>(spanValue.ptr), spanValue.len);
   }
   return std::nullopt;
+}
+
+inline std::optional<std::string_view> NodeView::get_string(std::string_view key) const noexcept {
+  if (auto node = get(key)) {
+    return node->as_string();
+  }
+  return std::nullopt;
+}
+
+inline std::optional<int64_t> NodeView::get_int(std::string_view key) const noexcept {
+  if (auto node = get(key)) {
+    return node->as_int();
+  }
+  return std::nullopt;
+}
+
+inline std::optional<std::span<const std::byte>> NodeView::get_binary(std::string_view key) const noexcept {
+  if (auto node = get(key)) {
+    return node->as_binary();
+  }
+  return std::nullopt;
+}
+
+inline std::string_view NodeView::value_or(std::string_view key, std::string_view fallback) const noexcept {
+  return get_string(key).value_or(fallback);
+}
+
+inline int64_t NodeView::value_or(std::string_view key, int64_t fallback) const noexcept {
+  return get_int(key).value_or(fallback);
+}
+
+inline std::span<const std::byte> NodeView::binary_or(std::string_view key,
+                                                   std::span<const std::byte> fallback) const noexcept {
+  return get_binary(key).value_or(fallback);
 }
 
 inline std::optional<NodeView> NodeView::get(std::string_view key) const noexcept {

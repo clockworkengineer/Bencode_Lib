@@ -60,9 +60,9 @@ foreach(EXAMPLE_PROGRAM ${EXAMPLE_SOURCES})
   add_dependencies(${EXAMPLE_PROGRAM} copy_example_files)
 endforeach(EXAMPLE_PROGRAM ${EXAMPLE_SOURCES})
 
-# C++23 Named Modules Example Target
+# C++23 Named Modules Example Target (Linux / macOS toolchains with Clang 17+)
 find_program(CLANG_COMPILER_BIN NAMES clang++-18 clang++-17 clang++)
-if(CLANG_COMPILER_BIN AND NOT BENCODE_EMBEDDED_MODE)
+if(CLANG_COMPILER_BIN AND NOT BENCODE_EMBEDDED_MODE AND NOT WIN32)
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/Bencode_Modules_Example
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/modules_build
