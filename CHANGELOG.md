@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0] - 2026-09-28
+## [1.4.0] - 2026-10-01
 
 ### Added
 - **Configurable Recursion Nesting Depth Limits**: Introduced `BENCODE_MAX_NESTING_DEPTH` CMake cache option (defaults to 128 in standard mode, 64 in embedded mode) preventing stack overflow DoS from maliciously crafted deeply nested Bencode collections. Added `Bencode::setMaxParserDepth(depth)` and `Bencode::getMaxParserDepth()` to configure parser limits dynamically.
@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Zero-Copy Non-Owning Parser (`BencodeView`)**: Added zero-copy non-owning parser and 24-byte `NodeView` AST (`BencodeView`, `Bencode::parseView()`) where all strings and keys are non-owning `std::string_view` slices into the input buffer. Features a two-pass parser architecture pre-reserving contiguous child spans, achieving **175 MB/s throughput** (nearly 10x faster than DOM parsing) with $O(\log K)$ binary-search key lookup and zero string/dictionary heap allocations.
 - **Ergonomic Struct Object Mapping**: Added C++23 concept-based reflection and object mapping (`BencodeSerializable`, `BencodeDeserializable`, `ViewBencodeDeserializable`) supporting custom `to_bencode()` and `from_bencode()` customization points. Provides zero-overhead macros (`BENCODE_DEFINE_TYPE_NON_INTRUSIVE` and `BENCODE_STRUCT` with custom key mapping), template helpers (`Node::get<T>()`, `Node::from_object(obj)`, `NodeView::get<T>()`, `Bencode::parse_object<T>()`), out-of-the-box support for primitives, `std::vector`, `std::map`, `std::optional`, binary buffers, and zero-allocation direct deserialization from `BencodeView`.
 - **Modern C++23 Named Modules (`import Bencode_Lib;`)**: Added standard C++20/C++23 primary module interface unit `classes/modules/Bencode_Lib.cppm`. Enables header isolation, compile-time speedups, and modern module consumption (`import Bencode_Lib;`) across Clang 18+, MSVC 2022, and GCC 14+ toolchains, backed by automated integration build target and test in CMake.
+
+### Fixed
+- **Packaging and Install Validation**: Added `Bencode_NodeView`, `Bencode_Parser_Constants`, and new headers to package check validation.
+- **Cross-Platform Compatibility**: Fixed MSVC preprocessor macro expansion (`/Zc:preprocessor`), fixed GCC 13 aggregate temporary inlining false positive in Release mode, guarded modules example against AppleClang, and defined `NodeView` accessor methods after `DictEntry` to prevent incomplete type instantiation on MSVC.
+
+## [1.3.0] - 2026-09-28
 
 ### Fixed
 - **Incomplete Type Unique Pointer Default Arguments**: Replaced constructor default `std::unique_ptr<T> = nullptr` parameters in `Bencode` and `Bencode_Impl` with explicit overloads to avoid Clang 18 incomplete-type `sizeof` instantiation errors.
